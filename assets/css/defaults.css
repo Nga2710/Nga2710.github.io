@@ -1,1 +1,496 @@
+html {
+  background-size: 70%;
+  background-color: #262626;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+@font-face {
+  src: url(Minecrafter.Reg.ttf);
+  font-family: minecraft;
+}
+* {
+  color: white;
+  font-family: sans-serif;
+  user-select: none;
+}
+::-webkit-scrollbar {
+  background-color: #262626;
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #171717;
+  border: 3px solid #777777;
+  border-radius: 5px;
+}
+@media screen and (max-width: 768px) {
+  .search {
+    margin-bottom: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    order: 4;
+  }
+  header {
+    font-size: 26px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  footer {
+    font-size: 13px;
+    height: auto;
+  }
+  .page_display {
+    display: grid;
+    grid-template-areas: "right" "left";
+    grid-template-columns: 1fr;
+  }
+  .h {
+    font-size: 16.8px;
+    margin: 5px;
+  }
+  .p {
+    font-size: 14px;
+  }
+  .note {
+    font-size: 7px;
+  }
+}
+/*----------Header----------*/
+header {
+  align-items: center;
+  background-color: #171717;
+  border-bottom: 2px solid #777777;
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.sidebarIcon {
+  cursor: pointer;
+  height: 45px;
+  margin: 5px;
+  width: 45px;
+}
+.sidebarIconClose {
+  content: url(../media/book_close.png);
+}
+.sidebarIconOpen {
+  content: url(../media/book_open.png);
+}
+.sidebarIconHide {
+  display: none;
+}
 
+.headerTitle {
+  cursor: pointer;
+  margin-top: 3px;
+  font-family: minecraft;
+  font-size: 30px;
+  text-decoration: none;
+}
+.search {
+  margin-left: auto;
+  margin-right: 3%;
+  height: 30px;
+  width: 220px;
+}
+.searchBar {
+  align-items: center;
+  border-bottom: 2px solid #777777;
+  display: flex;
+}
+.searchIcon {
+  content: url(../media/search_icon.gif);
+  cursor: pointer;
+  height: 32px;
+  margin: 0px;
+  width: 32px;
+}
+.searchInput {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  height: 100%;
+  outline: none;
+  width: 100%;
+}
+.searchBox {
+  background-color: #171717;
+  border: 4px solid #777777;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: default;
+  overflow-y: auto;
+  font-size: 20px;
+  text-decoration: none;
+}
+.searchBoxHide {
+  display: none;
+}
+.searchBox li {
+  display: block;
+  outline: 1px solid #777777;
+  overflow-x: auto;
+  padding: 5px;
+}
+.sidebar {
+  height: auto;
+  position: fixed;
+  width: auto;
+  z-index: 2;
+}
+
+.sidebarClose {
+  display: none;
+}
+
+/*----------Body----------*/
+body {}
+/*+++++Dropdown+++++*/
+.dropdown {}
+.dropdown:before {
+  color: red;
+}
+.dropdownActive {
+  cursor: not-allowed;
+}
+.dropdownActive:before {
+  color: lime;
+  transform: rotate(90deg);
+}
+.dropdownHide {
+  display: none;
+}
+.dropdownShow {
+  display: block;
+}
+.dropdownTab {
+  padding-left: 20px;
+}
+/*+++++Title++++*/
+.index:before {
+  content: "Trang Chủ";
+}
+.dialogue-generator:before {
+  content: "Dialogue Generator"
+}
+.encode-decode:before {
+  content: "Encode & Decode";
+}
+.uuid-generator:before {
+  content: "Uuid Generator";
+}
+/*+++++Img+++++*/
+.indeximg {
+  content: url(../media/index.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_sign {
+  content: url(../media/icon_sign.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_confirm {
+  content: url(../media/confirm.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_warning {
+  content: url(../media/icon_warning.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_bookshelf {
+  content: url(../media/bookshelf_flat.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_lock {
+  content: url(../media/icon_lock.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_unlock {
+  content: url(../media/icon_unlock.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_x {
+  content: url(../media/icon_x.png);
+  height: 30px;
+  margin: 5px 5px 5px 5px;
+  width: 30px;
+}
+.icon_code {
+  content: url(../media/icon_code.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.copyb {
+  content: url(../media/copyimg.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.copyb:active {
+  content: url(../media/copyimg_active.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.createuuid {
+  content: url(../media/createuuid.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.icon_dialogue {
+  content: url(../media/icon_dialogue.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+
+/*+++++Color+++++*/
+.black {
+  color: #000000;
+}
+.red {
+  color: #ff0000;
+}
+.green {
+  color: #00ff00;
+}
+.blue {
+  color: #0000ff;
+}
+.white {
+  color: #ffffff;
+}
+.cyan {
+  color: #00ffff;
+}
+.purple {
+  color: #ff00ff;
+}
+.yellow {
+  color: #ffff00;
+}
+.orange {
+  color: #ff7800;
+}
+/*----------Footer----------*/
+footer {}
+.social {
+  align-items: center;
+  display: flex;
+}
+.footerLink {
+  font-size: 20px;
+  text-decoration: none;
+}
+.socialLogo {
+  height: 40px;
+  margin: 5px;
+  margin-right: 7px;
+  width: 40px;
+}
+.logoYoutube {
+  content: url(../media/logo_youtube.png);
+}
+.logoTwitter {
+  content: url(../media/logo_twitter.png);
+}
+.logoFacebook {
+  content: url(../media/logo_facebook.png);
+}
+.copyright {
+  align-items: center;
+  display: flex;
+  margin: 5px 0 5px 0;
+}
+.copyright1 {
+  align-items: center;
+  display: flex;
+}
+.copyrightSide:before {
+  content: "|";
+  margin-left: 3px;
+  margin-right: 3px;
+}
+/*----------Unknown----------*/
+textarea {
+  resize: none;
+  outline: none;
+  border: 4px solid #777777;
+  margin: 20px 20px 20px 20px;
+  background: url(../media/sign_spruce.png) repeat center;
+  background-size: 70px;
+}
+.background {
+  background-color: transparent;
+}
+.ru:link {
+  color: #3b82f6;
+  text-decoration: none;
+}
+.createuuid:active {
+  animation: createuuid 0.3s;
+  content: url(../media/createuuid_hover.png);
+}
+
+@keyframes createuuid {
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+button {
+  background-color: transparent;
+  font-size: 20px;
+}
+.button {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.uuid {
+  cursor: text;
+  font-size: 30px;
+  margin: 30px 0 30px 0;
+  text-align: center;
+  user-select: text;
+}
+content {
+  display: flex;
+  flex-direction: column;
+}
+.contentHeader {
+  align-self: center;
+  background-color: #171717;
+  border: 2px solid #777777;
+  font-size: 30px;
+  margin: 15px;
+  margin-bottom: 0;
+  padding: 10px;
+}
+.contentBox {
+  border-radius: 0px;
+  background-color: #171717;
+  border: 2px solid #777777;
+  margin: 15px;
+  margin-bottom: 0;
+}
+.contentGroup {
+  align-items: center;
+  display: flex;
+  margin: 10px;
+}
+.contentIcon {
+  height: 45px;
+  margin-right: 5px;
+  width: 45px;
+}
+.contentTitle {
+  border-bottom: 2px solid #777777;
+  font-size: 30px;
+  padding-bottom: 2px;
+  width: fit-content;
+}
+.contentText::before {
+  content: "➤";
+  display: inline-block;
+  margin-right: 5px;
+}
+
+header {
+  background-color: #171717;
+  border-bottom: 4px solid #777777;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-top: -8px;
+  height: 100px;
+  font-size: 50px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.title {
+  cursor: pointer;
+  text-decoration: none;
+  font-family: minecraft;
+}
+footer {
+  background-color: #171717;
+  border-top: 4px solid #777777;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 90px;
+  font-size: 20px;
+  height: auto;
+}
+
+.page_display {
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: auto 1fr;
+  grid-column-gap: 10px;
+}
+.left {
+  grid-area: left;
+}
+.right {
+  grid-area: right;
+}
+.slot {
+  display: grid;
+}
+.box {
+  background-color: #171717;
+  border: 4px solid #777777;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.h {
+  background: url(../media/sign_darkoak.png) repeat center;
+  background-size: contain;
+  border-radius: 1px;
+  cursor: default;
+  font-size: 40px;
+  justify-self: center;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+}
+.p {
+  cursor: default;
+  font-size: 20px;
+  margin: 5px;
+}
+.tab {
+  margin-left: 20px;
+  border-left: 2px solid #777777;
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  padding: 3px;
+}
+
+.note {
+  color: #ff1212;
+  font-size: 12px;
+  font-style: italic;
+  vertical-align: super;
+  cursor: help;
+}
+.textWip:after {
+  content: " (WIP) ";
+  color: yellow;
+}
