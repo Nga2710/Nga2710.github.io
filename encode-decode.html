@@ -1,0 +1,128 @@
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="assets/css/defaults.css">
+  <style>
+    .encode-decode:before {
+      color: yellow;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Encode & Decode | Ngà's Book</title>
+  <meta property="og:title" content="Encode & Decode | Ngà's Book">
+  <meta name="twitter:title" content="Encode & Decode | Ngà's Book">
+  <meta name="description" content="Mã hóa và giải mã json">
+  <meta property="og:description" content="Mã hóa và giải mã Json">
+  <meta name="twitter:description" content="Mã hóa và giải mã Json">
+  <meta property="og:image" content="assets/media/icon_code.png">
+  <meta name="twitter:image" content="assets/media/icon_code.png">
+  <meta property="og:url" content="https://nga2710.github.io/encode-decode.html">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:site_name" content="Ngà's Book">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
+  <script src="assets/js/defaults.js"></script>
+</head>
+<body onload="defaults()" class="background">
+  <div id="script"></div>
+  <header id="header"></header>
+  <div id="sidebar"></div>
+  <div class="slot box">
+    <img class="icon_code">
+    <div class="yellow h">
+      Encode & Decode
+    </div>
+    <div class="contentBox">
+      <textarea placeholder="{ }" id="text" style="height: 100px; width: 80%;"></textarea></textarea>
+      <br><br>
+      <span>
+        <img class="icon_lock" id="encode">
+        <img class="icon_unlock" id="decode">
+        <img class="copyb" onclick="ctrlcopycode()">
+        <img class="icon_x" onclick="ctrldeletecode()">
+      </span>
+      <script>
+        var imgencode = document.getElementById("encode");
+        var imgdecode = document.getElementById("decode");
+        var str, resultStr, text, hex, n;
+        imgencode.onclick = () => {
+          text = document.querySelector("textarea");
+          str = text.value;
+          resultStr = '';
+          let replace = false;
+          for (let i = 0; i < str.length; i++) {
+            let char = str[i];
+            if (char == '"') {
+              replace = !replace;
+              resultStr += '"'
+              continue;
+            }
+            if (!replace) {
+              resultStr += char;
+              continue;
+            }
+            if (char == "\134" && str[i+1] != "u") {
+              alert('Văn bản của bạn có sử dụng mã " \134 ", chương trình sẽ mã hóa nó, có thể sẽ không giống với ý định của bạn.');
+            };
+            if (char == "\134" && str[i+1] == "n") {
+              alert('Hệ thống phát hiện bạn đang sử dụng "\134n" hãy xuống dòng theo cách thông thường. Đừng lo chương trình sẽ mã hóa nó giúp bạn.');
+            };
+            hex = (str.charCodeAt(i)).toString(16);
+            if (hex.length == 1) {
+              hex = '000' + hex;
+            }
+            if (hex.length == 2) {
+              hex = '00' + hex;
+            }
+            if (hex.length == 3) {
+              hex = '0' + hex;
+            }
+            resultStr += '\134u' + hex;
+          }
+          text.value = resultStr;
+        };
+        imgdecode.onclick = () => {
+          text = document.querySelector("textarea");
+          str = text.value;
+          resultStr = '';
+          hex = '';
+          let replace = false;
+          for (let i = 0; i < str.length; i++) {
+            let char = str[i];
+            if (char == '"') {
+              replace = !replace;
+              resultStr += char;
+              continue;
+            }
+            if (!replace) {
+              resultStr += char;
+              continue;
+            }
+            if (char == "\134" && str[i+1] == "u" && i+4 <= str.length) {
+              hex = '';
+              hex += str[i+2] + str[i+3] + str[i+4] + str[i+5];
+              resultStr += String.fromCharCode(parseInt(hex/*.substr(n, 4)*/, 16));
+              i += 5;
+            } else resultStr += char;
+          }
+          text.value = resultStr;
+        };
+        function ctrlcopycode() {
+          var text = document.getElementById("text");
+          text.select();
+          document.execCommand("copy");
+        };
+        function ctrldeletecode() {
+          var text = document.getElementById("text");
+          text.select();
+          document.execCommand("delete");
+        };
+      </script>
+    </div>
+    <br>
+  </div>
+  <footer id="footer"></footer>
+</body>
+</html>
