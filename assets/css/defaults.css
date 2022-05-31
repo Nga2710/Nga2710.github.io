@@ -1,9 +1,10 @@
 html {
   background-size: 70%;
   background-color: #262626;
-  margin-left: 0px;
-  margin-right: 0px;
+  margin-left: 100px;
+  margin-right: 100px;
 }
+
 @font-face {
   src: url(Minecrafter.Reg.ttf);
   font-family: minecraft;
@@ -22,39 +23,7 @@ html {
   border: 3px solid #777777;
   border-radius: 5px;
 }
-@media screen and (max-width: 768px) {
-  .search {
-    margin-bottom: 1%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    order: 4;
-  }
-  header {
-    font-size: 26px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  footer {
-    font-size: 13px;
-    height: auto;
-  }
-  .page_display {
-    display: grid;
-    grid-template-areas: "right" "left";
-    grid-template-columns: 1fr;
-  }
-  .h {
-    font-size: 16.8px;
-    margin: 5px;
-  }
-  .p {
-    font-size: 14px;
-  }
-  .note {
-    font-size: 7px;
-  }
-}
+
 /*----------Header----------*/
 header {
   align-items: center;
@@ -440,7 +409,8 @@ footer {
 
 .page_display {
   display: grid;
-  grid-template-areas: "left right";
+  grid-template-areas: 
+  "left right";
   grid-template-columns: auto 1fr;
   grid-column-gap: 10px;
 }
@@ -453,6 +423,7 @@ footer {
 .slot {
   display: grid;
 }
+
 .box {
   background-color: #171717;
   border: 4px solid #777777;
@@ -475,14 +446,6 @@ footer {
   font-size: 20px;
   margin: 5px;
 }
-.tab {
-  margin-left: 20px;
-  border-left: 2px solid #777777;
-  border-bottom-left-radius: 8px;
-  border-top-left-radius: 8px;
-  padding: 3px;
-}
-
 .note {
   color: #ff1212;
   font-size: 12px;
@@ -493,4 +456,40 @@ footer {
 .textWip:after {
   content: " (WIP) ";
   color: yellow;
+}
+
+@media screen and (max-width: 768px) {
+  .search {
+    margin-bottom: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    order: 4;
+  }
+  header {
+    font-size: 26px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  footer {
+    font-size: 13px;
+    height: auto;
+  }
+  .page_display {
+    display: grid;
+    grid-template-areas:
+    "right"
+    "left";
+    grid-template-columns: 1fr;
+  }
+  .h {
+    font-size: 16.8px;
+    margin: 5px;
+  }
+  .p {
+    font-size: 14px;
+  }
+  .note {
+    font-size: 7px;
+  }
 }
