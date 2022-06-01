@@ -1,0 +1,289 @@
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="assets/css/defaults.css">
+  <style>
+    .dialogue-generator:before {
+      color: yellow;
+    }
+    .dialogueSpace {
+      margin-bottom: 20px;
+    }
+    .dialogueFlex {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dialogue Generator | Ngà's Book</title>
+  <meta property="og:title" content="Dialogue Generator | Ngà's Book">
+  <meta name="twitter:title" content="Dialogue Generator | Ngà's Book">
+  <meta name="description" content="Tạo Json của dialogue">
+  <meta property="og:description" content="Tạo Json của dialogue">
+  <meta name="twitter:description" content="Tạo Json của dialogue">
+  <meta property="og:image" content="assets/media/icon_dialogue.png">
+  <meta name="twitter:image" content="assets/media/icon_dialogue.png">
+  <meta property="og:url" content="https://nga2710.github.io/dialogue-generator.html">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:site_name" content="Ngà's Book">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
+  <script src="assets/js/defaults.js"></script>
+</head>
+<body onload="defaults()" class="background">
+  <div id="script"></div>
+  <header id="header"></header>
+  <div id="sidebar"></div>
+  <div class="slot box">
+    <img class="icon_dialogue icond">
+    <div class="yellow h">
+      Dialogue Generator
+    </div>
+    <div class="contentBox">
+      <div class="dialogueFlex">
+        <div>
+          <div class="dialogueSpace">
+            <div class="contentText">
+              Tên File <span class="note">Bắt buộc</span>
+            </div>
+            <input id="fileName" type="text" class="wood_b" placeholder="Nhập tên File">.json
+          </div>
+          <div class="dialogueSpace">
+            <div class="contentText">
+              scene_tag (id bảng) <span class="note">Bắt buộc</span>
+            </div>
+            <input id="scene_tag" type="text" class="wood_b" placeholder="Nhập id bảng">
+          </div>
+          <div class="dialogueSpace">
+            <div class="contentText">
+              npc_name (tên bảng)
+            </div>
+            <input id="npc_name" type="text" class="wood_b" placeholder="Nhập tên bảng">
+          </div>
+          <div class="dialogueSpace">
+            <div class="contentText">
+              text (đoạn hội thoại)
+            </div>
+            <textarea id="text" type="text" class="wood_b" placeholder="Nhập đoạn hội thoại" rows="3"></textarea>
+          </div>
+        </div>
+        <div>
+          <div class="contentText">
+            on_open_commands (chạy commands khi mở bảng)
+          </div>
+          <textarea id="on_open_commands" type="text" class="wood_b" placeholder="Nhập Command" rows="3"></textarea>
+          <div class="contentText">
+            on_close_commands (chạy commands khi đóng bảng)
+          </div>
+          <textarea id="on_close_commands" type="text" class="wood_b" placeholder="Nhập Command" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="dialogueSpace">
+        <div class="contentText">
+          buttons (các nút bấm) <span class="note">Nếu bạn muốn có nút trống không hãy nhập dấu cách/ấn Space</span>
+        </div>
+        <div class="dialogueFlex">
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name1" type="text" class="wood_b" placeholder="Nhập tên nút 1">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands2" type="text" class="wood_b" placeholder="Nhập Command 1" rows="3"></textarea>
+          </div>
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name2" type="text" class="wood_b" placeholder="Nhập tên nút 2">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands2" type="text" class="wood_b" placeholder="Nhập Command 2" rows="3"></textarea>
+          </div>
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name3" type="text" class="wood_b" placeholder="Nhập tên nút 3">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands3" type="text" class="wood_b" placeholder="Nhập Command 3" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="dialogueFlex">
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name4" type="text" class="wood_b" placeholder="Nhập tên nút 4">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands4" type="text" class="wood_b" placeholder="Nhập Command 4" rows="3"></textarea>
+          </div>
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name5" type="text" class="wood_b" placeholder="Nhập tên nút 5">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands5" type="text" class="wood_b" placeholder="Nhập Command 5" rows="3"></textarea>
+          </div>
+          <div class="dropdownTab">
+            <div class="contentText">
+              name (tên nút bấm)
+            </div>
+            <input id="name6" type="text" class="wood_b" placeholder="Nhập tên nút 6">
+            <div class="contentText">
+              commands (lệnh)
+            </div>
+            <textarea id="commands6" type="text" class="wood_b" placeholder="Nhập Command 6" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="button">
+        <img id="saveFile" class="icond button">
+      </div>
+      <script>
+        const saveFile = document.getElementById('saveFile');
+        saveFile.addEventListener('click', e => {
+          let fileName = document.getElementById('fileName').value;
+          let scene_tag = document.getElementById('scene_tag').value;
+          let npc_name = document.getElementById('npc_name').value;
+          var text = document.getElementById('text').value;
+          var buttons = ``;
+          let button1 = ``;
+          let name1 = document.getElementById('name1').value;
+          let commands1 = document.getElementById('commands1').value;
+          let button2 = ``;
+          let name2 = document.getElementById('name2').value;
+          let commands2 = document.getElementById('commands2').value;
+          let button3 = ``;
+          let name3 = document.getElementById('name3').value;
+          let commands3 = document.getElementById('commands3').value;
+          let button4 = ``;
+          let name4 = document.getElementById('name4').value;
+          let commands4 = document.getElementById('commands4').value;
+          let button5 = ``;
+          let name5 = document.getElementById('name5').value;
+          let commands5 = document.getElementById('commands5').value;
+          let button6 = ``;
+          let name6 = document.getElementById('name6').value;
+          let commands6 = document.getElementById('commands6').value;
+          var on_open_commands = document.getElementById('on_open_commands').value;
+          var on_close_commands = document.getElementById('on_close_commands').value;
+          npc_name = checkName(npc_name);
+          if (!text)
+            text = ``;
+          else {
+            text = text.replaceAll("\n", "\\n")
+            text = text.replaceAll("\"", "\\\"");
+          }
+          button1 = checkButton(button1, name1, commands1);
+          button2 = checkButton(button2, name2, commands2);
+          button3 = checkButton(button3, name3, commands3);
+          button4 = checkButton(button4, name4, commands4);
+          button5 = checkButton(button5, name5, commands5);
+          button6 = checkButton(button6, name6, commands6);
+          buttons += groupButton(button1);
+          buttons += groupButton(button2);
+          buttons += groupButton(button3);
+          buttons += groupButton(button4);
+          buttons += groupButton(button5);
+          buttons += groupButton(button6);
+          buttons = buttons.replace(`,`, ``);
+          if (!on_open_commands)
+            on_open_commands = ``;
+          else {
+            on_open_commands = on_open_commands.replaceAll("\"", "\\\"");
+            on_open_commands = `\n\t\t\t\t\t\"${on_open_commands.replaceAll("\n", "\",\n\t\t\t\t\t\"")}\"\n\t\t\t\t`;
+          }
+          if (!on_close_commands)
+            on_close_commands = ``;
+          else {
+            on_close_commands = on_close_commands.replaceAll("\"", "\\\"");
+            on_close_commands = `\n\t\t\t\t\t\"${on_close_commands.replaceAll("\n", "\",\n\t\t\t\t\t\"")}\"\n\t\t\t\t`;
+          }
+          const dialogue =
+          `{
+          "format_version": "1.17",
+          "minecraft:npc_dialogue": {
+          "scenes": [
+          {
+          "scene_tag": "${scene_tag}",
+          "npc_name": "${npc_name}",
+          "text": "${text}",
+          "on_open_commands": [${on_open_commands}],
+          "on_close_commands": [${on_close_commands}]
+          "buttons": [${buttons}\n\t\t\t\t],
+          }
+          ]
+          }\n}`;
+          if (fileName && scene_tag)
+            downloadFile(fileName, dialogue);
+          else
+            changeText("Điền thiếu");
+        });
+        function checkButton(buttonValue, nameValue, commandsValue) {
+          if (nameValue || commandsValue) {
+            nameValue = checkName(nameValue);
+            commandsValue = checkCommands(commandsValue);
+            buttonValue =
+            `\n\t\t\t\t\t{
+            \t\t\t"name": "${nameValue}",
+            \t\t\t"commands": [${commandsValue}]
+            \t\t\t}`;
+            return buttonValue;
+          } else
+            return ``;
+        }
+        function checkName(checkValue) {
+          if (!checkValue)
+            checkValue = ``;
+          else
+            checkValue = checkValue.replaceAll("\"", "\\\"");
+          return checkValue;
+        }
+        function checkCommands(checkValue) {
+          if (!checkValue)
+            checkValue = ``;
+          else {
+            checkValue = checkValue.replaceAll("\"", "\\\"");
+            checkValue = `\n\t\t\t\t\t\t\t\"${checkValue.replaceAll("\n", "\",\n\t\t\t\t\t\t\t\"")}\"\n\t\t\t\t\t\t`;
+          }
+          return checkValue;
+        }
+        function groupButton(buttonValue) {
+          if (buttonValue != ``)
+            return `,${buttonValue}`;
+          else
+            return ``;
+        }
+        function downloadFile(fileName, dialogue) {
+          const element = document.createElement('a');
+          const blob = new Blob([dialogue], {
+            type: 'plain/text'
+          });
+          const fileUrl = URL.createObjectURL(blob);
+          element.setAttribute('href', fileUrl);
+          element.setAttribute('download', `${fileName}.json`);
+          element.style.display = 'none';
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        };
+      </script>
+    </div>
+    <br>
+  </div>
+  <footer id="footer"></footer>
+</body>
+</html>

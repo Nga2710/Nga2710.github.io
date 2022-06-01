@@ -30,18 +30,18 @@
   <header id="header"></header>
   <div id="sidebar"></div>
   <div class="slot box">
-    <img class="icon_code">
+    <img class="icon_code icond">
     <div class="yellow h">
       Encode & Decode
     </div>
     <div class="contentBox">
-      <textarea placeholder="{ }" id="text" style="height: 100px; width: 80%;"></textarea></textarea>
+      <textarea class="wood_b" placeholder="{ }" id="text" style="height: 100px; width: 80%; margin: 20px 20px 20px 20px;"></textarea>
       <br><br>
       <span>
-        <img class="icon_lock" id="encode">
-        <img class="icon_unlock" id="decode">
-        <img class="copyb" onclick="ctrlcopycode()">
-        <img class="icon_x" onclick="ctrldeletecode()">
+        <img class="icon_lock icond" id="encode">
+        <img class="icon_unlock icond" id="decode">
+        <img class="copyb icond" onclick="ctrlcopycode()">
+        <img class="icon_x icond" onclick="ctrldeletecode()">
       </span>
       <script>
         var imgencode = document.getElementById("encode");
@@ -67,7 +67,7 @@
               alert('Văn bản của bạn có sử dụng mã " \134 ", chương trình sẽ mã hóa nó, có thể sẽ không giống với ý định của bạn.');
             };
             if (char == "\134" && str[i+1] == "n") {
-              alert('Hệ thống phát hiện bạn đang sử dụng "\134n" hãy xuống dòng theo cách thông thường. Đừng lo chương trình sẽ mã hóa nó giúp bạn.');
+              alert('Chương trình phát hiện bạn đang sử dụng "\134n" hãy xuống dòng theo cách thông thường. Đừng lo chương trình sẽ mã hóa nó giúp bạn.');
             };
             hex = (str.charCodeAt(i)).toString(16);
             if (hex.length == 1) {
@@ -81,6 +81,9 @@
             }
             resultStr += '\134u' + hex;
           }
+          if (replace) {
+            alert('Bạn chưa đóng ngoặc kép, có thể việc mã hóa sẽ không hoạt động theo ý muốn.');
+          };
           text.value = resultStr;
         };
         imgdecode.onclick = () => {
@@ -107,6 +110,9 @@
               i += 5;
             } else resultStr += char;
           }
+          if (replace) {
+            alert('Bạn chưa đóng ngoặc kép, có thể việc giải mã sẽ không hoạt động theo ý muốn.');
+          };
           text.value = resultStr;
         };
         function ctrlcopycode() {
