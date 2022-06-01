@@ -19,7 +19,7 @@ let header = `
 <div class="sidebarIcon sidebarIconClose" onclick="sidebarOpen()"></div>
 <div class="sidebarIcon sidebarIconOpen sidebarIconHide" onclick="sidebarClose()"></div>
 <div class="headerTitle">Nga's Book</div>
-<a class="indeximg" href="index.html"></a>
+<a class="indeximg icond" href="index.html"></a>
 <div class="search">
 <div class="searchBar">
 <div class="searchIcon" onclick="searchEnter()"></div>
@@ -55,6 +55,9 @@ let sidebar = `
         <div class="dropdownTab dropdownHide">
           <div class="contentText">
             <a class="ru" href="encode-decode.html" title="Encode & Decode"><span class="blue encode-decode"></span></a>
+          </div>
+          <div class="contentText">
+            <a class="ru" href="dialogue-generator.html" title="Dialogue Generator"><span class="blue dialogue-generator"></span></a>
           </div>
           <div class="contentText">
             <a class="ru" href="uuid-generator.html" title="Uuid Generator"><span class="blue uuid-generator"></span></a>
