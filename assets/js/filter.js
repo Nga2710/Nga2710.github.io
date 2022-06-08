@@ -1,12 +1,11 @@
 let filter = [
     "Trang Chủ",
-    "Brewing Guide",
-    "Trading Guide",
-    "Encode & Decode",
-    "Uuid Generator",
+    "Văn Bản Thô",
+    "Tạo Json Của Dialogue",
+    "Mã Hóa & Giải Mã Json",
+    "Tạo Uuid",
     "apple"
 ];
-
 let minecraft = [
 "apple"
 ];

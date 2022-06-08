@@ -46,23 +46,20 @@ function searchFilter(searchValue) {
   if (searchValue === "Trang chủ") {
     window.open("https://nga2710.github.io/index.html", "_self");
   }
-  if (searchValue === "Server Aternos") {
-    window.open("https://nga2710.github.io/minecraft/aternos-server.html", "_self");
+  if (searchValue === "Văn Bản Thô") {
+    window.open("https://nga2710.github.io/rawText.html", "_self");
   }
-  if (searchValue === "Brewing Guide") {
-    window.open("https://nga2710.github.io/minecraft/brewing-guide.html", "_self");
+  if (searchValue === "Tạo Json Của Dialouge") {
+    window.open("https://nga2710.github.io/dialogue-generator.html", "_self");
   }
-  if (searchValue === "Trading Guide") {
-    window.open("https://nga2710.github.io/minecraft/trading-guide.html", "_self");
+  if (searchValue === "Mã Hóa & Giải Mã json") {
+    window.open("https://nga2710.github.io/encode-decode.html", "_self");
   }
-  if (searchValue === "Encode & Decode") {
-    window.open("https://nga2710.github.io/minecraft/encode-decode.html", "_self");
-  }
-  if (searchValue === "Uuid Generator") {
-    window.open("https://nga2710.github.io/minecraft/uuid-generator.html", "_self");
+  if (searchValue === "Tạo Uuid") {
+    window.open("https://nga2710.github.io/uuid-generator.html", "_self");
   }
   if (minecraft.includes(searchValue)) {
-    window.open("https://minecraft.fandom.com/" + searchValue + ".html", "_self");
+    window.open("https://minecraft.fandom.com/" + searchValue, "_self");
   }
 }
 

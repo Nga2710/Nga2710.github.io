@@ -16,9 +16,9 @@ let scriptList = [
   "dropdown"
 ];
 let header = `
-<div class="sidebarIcon sidebarIconClose" onclick="sidebarOpen()"></div>
-<div class="sidebarIcon sidebarIconOpen sidebarIconHide" onclick="sidebarClose()"></div>
-<div class="headerTitle">Nga's Book</div>
+<div class="icond sidebarIconClose" onclick="sidebarOpen()"></div>
+<div class="icond sidebarIconOpen sidebarIconHide" onclick="sidebarClose()"></div>
+<div class="headerTitle">BDev-Book</div>
 <a class="indeximg icond" href="index.html"></a>
 <div class="search">
 <div class="searchBar">
@@ -34,36 +34,38 @@ let sidebar = `
     <div class="h">
       Mục lục
     </div>
-    <div class="p contentBox" style="overflow-y: auto; height: auto; max-height: 128px;">
+    <div class="p contentBox" style="overflow-y: auto; height: auto; max-height: 256px;">
+    <div style="margin: 5px">
       <div class="contentText">
-        <a class="ru" href="index.html" title="Trang chủ"><span class="blue index"></span></a>
+        <a class="ru" href="index.html" title="Trang Chủ"><span class="blue index"></span></a>
       </div>
       <div>
         <div class="contentText dropdown">
-          <span>Documentation</span>
+          <span>Tài liệu</span>
         </div>
         <div class="dropdownTab dropdownHide">
           <div class="contentText">
-            <a class="ru" href="i.html" title="..."><span class="blue"></span></a>
+            <a class="ru" href="rawText.html" title="Văn Bản Thô"><span class="blue rawText"></span></a>
           </div>
         </div>
       </div>
       <div>
         <div class="contentText dropdown">
-          <span>Tools</span>
+          <span>Công cụ</span>
         </div>
         <div class="dropdownTab dropdownHide">
           <div class="contentText">
-            <a class="ru" href="encode-decode.html" title="Encode & Decode"><span class="blue encode-decode"></span></a>
+            <a class="ru" href="encode-decode.html" title="Mã Hóa & Giải Mã Json"><span class="blue encode-decode"></span></a>
           </div>
           <div class="contentText">
-            <a class="ru" href="dialogue-generator.html" title="Dialogue Generator"><span class="blue dialogue-generator"></span></a>
+            <a class="ru" href="dialogue-generator.html" title="Tạo Json Của Dialogue"><span class="blue dialogue-generator"></span></a>
           </div>
           <div class="contentText">
-            <a class="ru" href="uuid-generator.html" title="Uuid Generator"><span class="blue uuid-generator"></span></a>
+            <a class="ru" href="uuid-generator.html" title="Tạo Uuid"><span class="blue uuid-generator"></span></a>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -72,11 +74,9 @@ let sidebar = `
 let footer = `
 <div>
 <a class="social footerLink" href="https://youtube.com/c/Nga2710?sub_confirmation=1" target="_blank"><div class="socialLogo logoYoutube"></div>
-Youtube GreenVN</a>
+Youtube Green</a>
 <a class="social footerLink" href="https://twitter.com/Nga2710?s=0" target="_blank"><div class="socialLogo logoTwitter"></div>
 Twitter @Nga2710</a>
-<a class="social footerLink" href="https://www.facebook.com/tdtnga" target="_blank"><div class="socialLogo logoFacebook"></div>
-Facebook Thanh Ngà</a>
 </div>
 <div class="copyright">
 <div class="copyright1">
@@ -84,7 +84,7 @@ Copyright©2021-<div class="year"></div>
 </div>
 <div class="copyrightSide"></div>
 <div class="copyright2">
-Web by GreenVN
+Created by Green
 </div>
 <div class="copyrightSide"></div>
 <div class="copyright3">
