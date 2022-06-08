@@ -8,18 +8,18 @@
     }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Encode & Decode | Ngà's Book</title>
-  <meta property="og:title" content="Encode & Decode | Ngà's Book">
-  <meta name="twitter:title" content="Encode & Decode | Ngà's Book">
-  <meta name="description" content="Mã hóa và giải mã json">
-  <meta property="og:description" content="Mã hóa và giải mã Json">
-  <meta name="twitter:description" content="Mã hóa và giải mã Json">
+  <title>Mã Hóa & Giải Mã | BDev-Book</title>
+  <meta property="og:title" content="Mã Hóa & Giải Mã | BDev-Book">
+  <meta name="twitter:title" content="Mã Hóa & Giải Mã | BDev-Book">
+  <meta name="description" content="Giúp bạn không bị trộm code, đồng thời cũng trộm được code của đứa khác :>">
+  <meta property="og:description" content="Giúp bạn không bị trộm code, đồng thời cũng trộm được code của đứa khác :>">
+  <meta name="twitter:description" content="Giúp bạn không bị trộm code, đồng thời cũng trộm được code của đứa khác :>">
   <meta property="og:image" content="assets/media/icon_code.png">
   <meta name="twitter:image" content="assets/media/icon_code.png">
   <meta property="og:url" content="https://nga2710.github.io/encode-decode.html">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
-  <meta property="og:site_name" content="Ngà's Book">
+  <meta property="og:site_name" content="BDev-Book">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
@@ -32,7 +32,7 @@
   <div class="slot box">
     <img class="icon_code icond">
     <div class="yellow h">
-      Encode & Decode
+      Mã Hóa & Giải Mã
     </div>
     <div class="contentBox">
       <textarea class="wood_b" placeholder="{ }" id="text" style="height: 100px; width: 80%; margin: 20px 20px 20px 20px;"></textarea>
@@ -44,14 +44,16 @@
         <img class="icon_x icond" onclick="ctrldeletecode()">
       </span>
       <script>
-        var imgencode = document.getElementById("encode");
-        var imgdecode = document.getElementById("decode");
-        var str, resultStr, text, hex, n;
+        var imgencode = document.getElementById("encode"),
+        imgdecode = document.getElementById("decode"),
+        str, resultStr, text, hex;
         imgencode.onclick = () => {
           text = document.querySelector("textarea");
           str = text.value;
           resultStr = '';
           let replace = false;
+          var detect134 = false,
+          detectn = false;
           for (let i = 0; i < str.length; i++) {
             let char = str[i];
             if (char == '"') {
@@ -63,11 +65,13 @@
               resultStr += char;
               continue;
             }
-            if (char == "\134" && str[i+1] != "u") {
-              alert('Văn bản của bạn có sử dụng mã " \134 ", chương trình sẽ mã hóa nó, có thể sẽ không giống với ý định của bạn.');
+            if (!detect134 && char == "\134") {
+              alert('Văn bản của bạn có sử dụng mã "\134", chương trình sẽ mã hóa nó, có thể sẽ không giống với ý định của bạn.');
+              detect134 = !detect134;
             };
-            if (char == "\134" && str[i+1] == "n") {
+            if (!detectn && char == "\134" && str[i+1] == "n") {
               alert('Chương trình phát hiện bạn đang sử dụng "\134n" hãy xuống dòng theo cách thông thường. Đừng lo chương trình sẽ mã hóa nó giúp bạn.');
+              detectn = !detectn;
             };
             hex = (str.charCodeAt(i)).toString(16);
             if (hex.length == 1) {
@@ -103,7 +107,7 @@
               resultStr += char;
               continue;
             }
-            if (char == "\134" && str[i+1] == "u" && i+4 <= str.length) {
+            if (char == "\134" && str[i+1] == "u" && i+6 <= str.length) {
               hex = '';
               hex += str[i+2] + str[i+3] + str[i+4] + str[i+5];
               resultStr += String.fromCharCode(parseInt(hex/*.substr(n, 4)*/, 16));
@@ -113,6 +117,9 @@
           if (replace) {
             alert('Bạn chưa đóng ngoặc kép, có thể việc giải mã sẽ không hoạt động theo ý muốn.');
           };
+          if (text.value == resultStr) {
+            alert("Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \134uXXXX")
+          } else
           text.value = resultStr;
         };
         function ctrlcopycode() {
@@ -127,7 +134,6 @@
         };
       </script>
     </div>
-    <br>
   </div>
   <footer id="footer"></footer>
 </body>

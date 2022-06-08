@@ -6,27 +6,23 @@
     .dialogue-generator:before {
       color: yellow;
     }
-    .dialogueSpace {
-      margin-bottom: 20px;
-    }
-    .dialogueFlex {
-      display: flex;
-      flex-wrap: wrap;
+    .buttonHide {
+      display: none;
     }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dialogue Generator | Ngà's Book</title>
-  <meta property="og:title" content="Dialogue Generator | Ngà's Book">
-  <meta name="twitter:title" content="Dialogue Generator | Ngà's Book">
-  <meta name="description" content="Tạo Json của dialogue">
-  <meta property="og:description" content="Tạo Json của dialogue">
-  <meta name="twitter:description" content="Tạo Json của dialogue">
+  <title>Tạo npc_dialogue | BDev-Book</title>
+  <meta property="og:title" content="Tạo npc_dialogue | BDev-Book">
+  <meta name="twitter:title" content="Tạo npc_dialogue | BDev-Book">
+  <meta name="description" content="Tạo json của dialogue dễ dàng hơn">
+  <meta property="og:description" content="Tạo json của dialogue dễ dàng hơn">
+  <meta name="twitter:description" content="Tạo json của dialogue dễ dàng hơn">
   <meta property="og:image" content="assets/media/icon_dialogue.png">
   <meta name="twitter:image" content="assets/media/icon_dialogue.png">
   <meta property="og:url" content="https://nga2710.github.io/dialogue-generator.html">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
-  <meta property="og:site_name" content="Ngà's Book">
+  <meta property="og:site_name" content="BDev-Book">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
@@ -39,250 +35,445 @@
   <div class="slot box">
     <img class="icon_dialogue icond">
     <div class="yellow h">
-      Dialogue Generator(rawtext ver)<div class="textWIP"></div>
+      Tạo npc_dialogue<br>(rawtext)<div class="textWIP"></div>
     </div>
     <div class="contentBox">
-      <div class="dialogueFlex">
-        <div>
-          <div class="dialogueSpace">
-            <div class="contentText">
-              Tên File <span class="note">Bắt buộc</span>
+      <div style="margin: 10px">
+        <div style="display: flex; flex-wrap: wrap;">
+          <div>
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                Tên File <span class="note">Bắt buộc</span>
+              </div>
+              <div class="wood_b fileName" style="width: 80%">
+                <input style="background-color: transparent; outline: none; border: none; width: 80%" id="fileName" placeholder="Nhập tên File"><span class="cyan">.json</span>
+              </div>
             </div>
-            <input id="fileName" type="text" class="wood_b" placeholder="Nhập tên File">.json
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                scene_tag (id bảng) <span class="note">Bắt buộc</span>
+              </div>
+              <input id="scene_tag" class="wood_b scene_tag" placeholder="Nhập id bảng">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                npc_name (tên bảng)
+              </div>
+              <input id="npc_name" class="wood_b" placeholder="Nhập tên bảng">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                text (đoạn hội thoại)
+              </div>
+              <textarea id="text" class="wood_b" placeholder="Nhập đoạn hội thoại" rows="3"></textarea>
+            </div>
           </div>
-          <div class="dialogueSpace">
-            <div class="contentText">
-              scene_tag (id bảng) <span class="note">Bắt buộc</span>
+          <div>
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                on_open_commands
+                <div>
+                  (chạy commands khi mở bảng)
+                </div>
+              </div>
+              <textarea id="on_open_commands" class="wood_b" placeholder="Nhập commands" rows="3"></textarea>
             </div>
-            <input id="scene_tag" type="text" class="wood_b" placeholder="Nhập id bảng">
-          </div>
-          <div class="dialogueSpace">
-            <div class="contentText">
-              npc_name (tên bảng)
+            <div style="margin-bottom: 20px;">
+              <div class="contentText">
+                on_close_commands
+                <div>
+                  (chạy commands khi đóng bảng)
+                </div>
+              </div>
+              <textarea id="on_close_commands" class="wood_b" placeholder="Nhập commands" rows="3"></textarea>
             </div>
-            <input id="npc_name" type="text" class="wood_b" placeholder="Nhập tên bảng">
-          </div>
-          <div class="dialogueSpace">
-            <div class="contentText">
-              text (đoạn hội thoại)
-            </div>
-            <textarea id="text" type="text" class="wood_b" placeholder="Nhập đoạn hội thoại" rows="3"></textarea>
           </div>
         </div>
-        <div>
-          <div class="contentText">
-            on_open_commands (chạy commands khi mở bảng)
-          </div>
-          <textarea id="on_open_commands" type="text" class="wood_b" placeholder="Nhập Command" rows="3"></textarea>
-          <div class="contentText">
-            on_close_commands (chạy commands khi đóng bảng)
-          </div>
-          <textarea id="on_close_commands" type="text" class="wood_b" placeholder="Nhập Command" rows="3"></textarea>
-        </div>
-      </div>
-      <div class="dialogueSpace">
         <div class="contentText">
-          buttons (các nút bấm) <span class="note">Nếu bạn muốn có nút trống không hãy nhập dấu cách/ấn Space</span>
+          buttons (các nút bấm)
         </div>
-        <div class="dialogueFlex">
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+        <div style="display: flex; flex-wrap: wrap;">
+          <div style="margin-left: 20px" class="buttonGroup1">
+            <span class="toggle_off button1off" onclick="toggle_on1()"></span><span class="toggle_on button1on toggleHide" onclick="toggle_off1()"></span>
+            <span class="contentText">Nút 1</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name1" class="wood_b" placeholder="Nhập tên nút 1">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands1" class="wood_b" placeholder="Nhập commands 1" rows="3"></textarea>
             </div>
-            <input id="name1" type="text" class="wood_b" placeholder="Nhập tên nút 1">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands2" type="text" class="wood_b" placeholder="Nhập Command 1" rows="3"></textarea>
           </div>
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+          <div style="margin-left: 20px" class="buttonGroup2 buttonHide">
+            <span class="toggle_off button2off" onclick="toggle_on2()"></span><span class="toggle_on button2on toggleHide" onclick="toggle_off2()"></span>
+            <span class="contentText">Nút 2</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name2" class="wood_b" placeholder="Nhập tên nút 2">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands2" class="wood_b" placeholder="Nhập commands 2" rows="3"></textarea>
             </div>
-            <input id="name2" type="text" class="wood_b" placeholder="Nhập tên nút 2">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands2" type="text" class="wood_b" placeholder="Nhập Command 2" rows="3"></textarea>
           </div>
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+          <div style="margin-left: 20px" class="buttonGroup3 buttonHide">
+            <span class="toggle_off button3off" onclick="toggle_on3()"></span><span class="toggle_on button3on toggleHide" onclick="toggle_off3()"></span>
+            <span class="contentText">Nút 3</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name3" class="wood_b" placeholder="Nhập tên nút 3">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands3" class="wood_b" placeholder="Nhập commands 3" rows="3"></textarea>
             </div>
-            <input id="name3" type="text" class="wood_b" placeholder="Nhập tên nút 3">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands3" type="text" class="wood_b" placeholder="Nhập Command 3" rows="3"></textarea>
           </div>
-        </div>
-        <div class="dialogueFlex">
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+          <div style="margin-left: 20px" class="buttonGroup4 buttonHide">
+            <span class="toggle_off button4off" onclick="toggle_on4()"></span><span class="toggle_on button4on toggleHide" onclick="toggle_off4()"></span>
+            <span class="contentText">Nút 4</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name4" class="wood_b" placeholder="Nhập tên nút 4">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands4" class="wood_b" placeholder="Nhập commands 4" rows="3"></textarea>
             </div>
-            <input id="name4" type="text" class="wood_b" placeholder="Nhập tên nút 4">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands4" type="text" class="wood_b" placeholder="Nhập Command 4" rows="3"></textarea>
           </div>
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+          <div style="margin-left: 20px" class="buttonGroup5 buttonHide">
+            <span class="toggle_off button5off" onclick="toggle_on5()"></span><span class="toggle_on button5on toggleHide" onclick="toggle_off5()"></span>
+            <span class="contentText">Nút 5</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name5" class="wood_b" placeholder="Nhập tên nút 5">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands5" class="wood_b" placeholder="Nhập commands 5" rows="3"></textarea>
             </div>
-            <input id="name5" type="text" class="wood_b" placeholder="Nhập tên nút 5">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands5" type="text" class="wood_b" placeholder="Nhập Command 5" rows="3"></textarea>
           </div>
-          <div class="dropdownTab">
-            <div class="contentText">
-              name (tên nút bấm)
+          <div style="margin-left: 20px" class="buttonGroup6 buttonHide">
+            <span class="toggle_off button6off" onclick="toggle_on6()"></span><span class="toggle_on button6on toggleHide" onclick="toggle_off6()"></span>
+            <span class="contentText">Nút 6</span><div style="margin-left: 52px">
+              <div class="contentText">
+                name (tên nút bấm)
+              </div>
+              <input id="name6" class="wood_b" placeholder="Nhập tên nút 6">
+              <div class="contentText">
+                commands (lệnh)
+              </div>
+              <textarea id="commands6" class="wood_b" placeholder="Nhập commands 6" rows="3"></textarea>
             </div>
-            <input id="name6" type="text" class="wood_b" placeholder="Nhập tên nút 6">
-            <div class="contentText">
-              commands (lệnh)
-            </div>
-            <textarea id="commands6" type="text" class="wood_b" placeholder="Nhập Command 6" rows="3"></textarea>
           </div>
         </div>
       </div>
       <div class="button">
-        <img id="saveFile" class="icond button">
+        <img id="saveFile" class="icond">
       </div>
       <script>
+        var toggle1, toggle2, toggle3, toggle4, toggle5, toggle6, buttons = ``, buttonGroup1, buttonGroup2, buttonGroup3, buttonGroup4, buttonGroup5, buttonGroup6;
         const saveFile = document.getElementById('saveFile');
         saveFile.addEventListener('click', e => {
-          let fileName = document.getElementById('fileName').value;
-          let scene_tag = document.getElementById('scene_tag').value;
-          let npc_name = document.getElementById('npc_name').value;
-          var text = document.getElementById('text').value;
-          var buttons = ``;
-          let button1 = ``;
-          let name1 = document.getElementById('name1').value;
-          let commands1 = document.getElementById('commands1').value;
-          let button2 = ``;
-          let name2 = document.getElementById('name2').value;
-          let commands2 = document.getElementById('commands2').value;
-          let button3 = ``;
-          let name3 = document.getElementById('name3').value;
-          let commands3 = document.getElementById('commands3').value;
-          let button4 = ``;
-          let name4 = document.getElementById('name4').value;
-          let commands4 = document.getElementById('commands4').value;
-          let button5 = ``;
-          let name5 = document.getElementById('name5').value;
-          let commands5 = document.getElementById('commands5').value;
-          let button6 = ``;
-          let name6 = document.getElementById('name6').value;
-          let commands6 = document.getElementById('commands6').value;
-          var on_open_commands = document.getElementById('on_open_commands').value;
-          var on_close_commands = document.getElementById('on_close_commands').value;
-          npc_name = checkName(npc_name);
-          if (!text)
-            text = ``;
-          else {
-            text = text.replaceAll("\n", "\\n")
-            text = text.replaceAll("\"", "\\\"");
+          var fileName = document.getElementById('fileName').value,
+          scene_tag = document.getElementById('scene_tag').value,
+          npc_name = document.getElementById('npc_name').value.replace(/"/g, "\134u0022"),
+          text = document.getElementById('text').value.replace(/"/g, "\134u0022"),
+          name1 = document.getElementById('name1').value.replace(/"/g, "\134u0022"),
+          name2 = document.getElementById('name2').value.replace(/"/g, "\134u0022"),
+          name3 = document.getElementById('name3').value.replace(/"/g, "\134u0022"),
+          name4 = document.getElementById('name4').value.replace(/"/g, "\134u0022"),
+          name5 = document.getElementById('name5').value.replace(/"/g, "\134u0022"),
+          name5 = document.getElementById('name5').value.replace(/"/g, "\134u0022");
+          npc_name = toRawText(npc_name);
+          text = toRawText(text);
+          name1 = toRawText(name1);
+          name2 = toRawText(name2);
+          name3 = toRawText(name3);
+          name4 = toRawText(name4);
+          name5 = toRawText(name5);
+          name6 = toRawText(name6);
+          var commands1 = document.getElementById('commands1').value,
+          commands2 = document.getElementById('commands2').value,
+          commands3 = document.getElementById('commands3').value,
+          commands4 = document.getElementById('commands4').value,
+          commands5 = document.getElementById('commands5').value,
+          commands6 = document.getElementById('commands6').value;
+          on_open_commands = document.getElementById('on_open_commands').value,
+          on_close_commands = document.getElementById('on_close_commands').value;
+          commands1 = Fcommands(toggle1, commands1);
+          commands2 = Fcommands(toggle2, commands2);
+          commands3 = Fcommands(toggle3, commands3);
+          commands4 = Fcommands(toggle4, commands4);
+          commands5 = Fcommands(toggle5, commands5);
+          commands6 = Fcommands(toggle6, commands6);
+          /*{
+            "name": {
+              "rawtext": [
+              ]
+            },
+            "commands": [
+            ]
+          }*/
+          function Fcommands(toggleF, commandsF) {
+            if (toggleF && commandsF) {
+              commandsF = '"' + commandsF.replace(/\n/g, '", "') + '"';
+            }
+            return commandsF;
+          };
+          buttonGroup1 = toGroup(name1, commands1);
+          buttonGroup2 = toGroup(name2, commands2);
+          buttonGroup3 = toGroup(name3, commands3);
+          buttonGroup4 = toGroup(name4, commands4);
+          buttonGroup5 = toGroup(name1, commands5);
+          buttonGroup6 = toGroup(name1, commands6);
+          function toGroup(nameG, commandsG) {
+            var buttonGroup = '{"name":' + nameG + ', ' + '"commands":[' + commandsG + ']}';
+            return buttonGroup;
           }
-          button1 = checkButton(button1, name1, commands1);
-          button2 = checkButton(button2, name2, commands2);
-          button3 = checkButton(button3, name3, commands3);
-          button4 = checkButton(button4, name4, commands4);
-          button5 = checkButton(button5, name5, commands5);
-          button6 = checkButton(button6, name6, commands6);
-          buttons += groupButton(button1);
-          buttons += groupButton(button2);
-          buttons += groupButton(button3);
-          buttons += groupButton(button4);
-          buttons += groupButton(button5);
-          buttons += groupButton(button6);
-          buttons = buttons.replace(`,`, ``);
-          if (!on_open_commands)
-            on_open_commands = ``;
-          else {
-            on_open_commands = on_open_commands.replaceAll("\"", "\\\"");
-            on_open_commands = `\n\t\t\t\t\t\"${on_open_commands.replaceAll("\n", "\",\n\t\t\t\t\t\"")}\"\n\t\t\t\t`;
-          }
-          if (!on_close_commands)
-            on_close_commands = ``;
-          else {
-            on_close_commands = on_close_commands.replaceAll("\"", "\\\"");
-            on_close_commands = `\n\t\t\t\t\t\"${on_close_commands.replaceAll("\n", "\",\n\t\t\t\t\t\"")}\"\n\t\t\t\t`;
-          }
+          if (on_open_commands) {
+            on_open_commands = '"' + on_open_commands.replace(/\n/g, '", "') + '"';
+          } else on_open_commands = '';
+          if (on_close_commands) {
+            on_close_commands = '"' + on_close_commands.replace(/\n/g, '", "') + '"';
+          } else on_close_commands = '';
+          if (toggle1) {
+            buttons += buttonGroup1;
+            if (toggle2) {
+              buttons += ", " + buttonGroup2;
+              if (toggle3) {
+                buttons += ", " + buttonGroup3;
+                if (toggle4) {
+                  buttons += ", " + buttonGroup4;
+                  if (toggle5) {
+                    buttons += ", " + buttonGroup5;
+                    if (toggle6) {
+                      buttons += ", " + buttonGroup6;
+                    }
+                  }
+                }
+              }
+            }
+          } else buttons = ``;
           const dialogue =
-          `{
-          "format_version": "1.17",
-          "minecraft:npc_dialogue": {
-          "scenes": [
-          {
-          "scene_tag": "${scene_tag}",
-          "npc_name": "${npc_name}",
-          "text": "${text}",
-          "on_open_commands": [${on_open_commands}],
-          "on_close_commands": [${on_close_commands}]
-          "buttons": [${buttons}\n\t\t\t\t],
-          }
-          ]
-          }\n}`;
+          `{"format_version": "1.17", "minecraft:npc_dialogue":{"scenes":[{"scene_tag": "${scene_tag}", "npc_name":${npc_name}, "text": ${text}, "on_open_commands":[${on_open_commands}], "on_close_commands":[${on_close_commands}], "buttons":[${buttons}]}]}}`;
           if (fileName && scene_tag)
             downloadFile(fileName, dialogue);
-          else
-            changeText("Điền thiếu");
         });
-        function checkButton(buttonValue, nameValue, commandsValue) {
-          if (nameValue || commandsValue) {
-            nameValue = checkName(nameValue);
-            commandsValue = checkCommands(commandsValue);
-            buttonValue =
-            `\n\t\t\t\t\t{
-            \t\t\t"name": "${nameValue}",
-            \t\t\t"commands": [${commandsValue}]
-            \t\t\t}`;
-            return buttonValue;
-          } else
-            return ``;
-        }
-        function checkName(checkValue) {
-          if (!checkValue)
-            checkValue = ``;
-          else
-            checkValue = checkValue.replaceAll("\"", "\\\"");
-          return checkValue;
-        }
-        function checkCommands(checkValue) {
-          if (!checkValue)
-            checkValue = ``;
-          else {
-            checkValue = checkValue.replaceAll("\"", "\\\"");
-            checkValue = `\n\t\t\t\t\t\t\t\"${checkValue.replaceAll("\n", "\",\n\t\t\t\t\t\t\t\"")}\"\n\t\t\t\t\t\t`;
-          }
-          return checkValue;
-        }
-        function groupButton(buttonValue) {
-          if (buttonValue != ``)
-            return `,${buttonValue}`;
-          else
-            return ``;
+        function toRawText(texts) {
+          if (texts) {
+            var rawText = '{"rawtext":[',
+            trans = false,
+            noneText = false,
+            withS = false;
+            for (let i = 0; i < texts.length; i++) {
+              var char = texts[i];
+              if (trans && char == "|") {
+                rawText += '", "with":["';
+                withS = true;
+                continue;
+              }
+              if (withS && trans && char == ",") {
+                rawText += '", "';
+                continue;
+              }
+              if (char == "-") {
+                if (noneText) {
+                  noneText = false;
+                  if (i+1 <= texts.length) {
+                    rawText += '"}, ';
+                  } else rawText += '"}';
+                }
+                if (!trans && !noneText) {
+                  rawText += '{"translate": "';
+                  trans = true;
+                  continue;
+                }
+                if (trans) {
+                  trans = false;
+                  if (withS) {
+                    rawText += '"]';
+                    withS = false;
+                  } else rawText += '"';
+                  if (!withS && i+1 < texts.length) {
+                    rawText += "}, ";
+                  } else rawText += "}";
+                }
+                continue;
+              }
+
+              if (!trans && !noneText) {
+                rawText += '{"text": "' + char;
+                noneText = true;
+                continue;
+              }
+              rawText += char;
+            }
+            if (noneText) {
+              noneText = false;
+              rawText += '"}';
+            }
+            rawText += "]}";
+          } else rawText = '""';
+          return rawText;
         }
         function downloadFile(fileName, dialogue) {
           const element = document.createElement('a');
-          const blob = new Blob([dialogue], {
-            type: 'plain/text'
-          });
+          const blob = new Blob([dialogue],
+            {
+              type: 'plain/text'
+            });
           const fileUrl = URL.createObjectURL(blob);
-          element.setAttribute('href', fileUrl);
-          element.setAttribute('download', `${fileName}.json`);
+          element.setAttribute('href',
+            fileUrl);
+          element.setAttribute('download',
+            `${fileName}.json`);
           element.style.display = 'none';
           document.body.appendChild(element);
           element.click();
           document.body.removeChild(element);
         };
+        function toggle_on1() {
+          document.querySelector(".button1off").classList.add("toggleHide");
+          document.querySelector(".button1on").classList.remove("toggleHide");
+          document.querySelector(".buttonGroup2").classList.remove("buttonHide");
+          toggle1 = true;
+        }
+        function toggle_off1() {
+          document.querySelector(".button1off").classList.remove("toggleHide");
+          document.querySelector(".button1on").classList.add("toggleHide");
+          document.querySelector(".button2off").classList.remove("toggleHide");
+          document.querySelector(".button2on").classList.add("toggleHide");
+          document.querySelector(".button3off").classList.remove("toggleHide");
+          document.querySelector(".button3on").classList.add("toggleHide");
+          document.querySelector(".button4off").classList.remove("toggleHide");
+          document.querySelector(".button4on").classList.add("toggleHide");
+          document.querySelector(".button5off").classList.remove("toggleHide");
+          document.querySelector(".button5on").classList.add("toggleHide");
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup2").classList.add("buttonHide");
+          document.querySelector(".buttonGroup3").classList.add("buttonHide");
+          document.querySelector(".buttonGroup4").classList.add("buttonHide");
+          document.querySelector(".buttonGroup5").classList.add("buttonHide");
+          document.querySelector(".buttonGroup6").classList.add("buttonHide");
+          toggle1 = false;
+          toggle2 = false;
+          toggle3 = false;
+          toggle4 = false;
+          toggle5 = false;
+          toggle6 = false;
+        }
+        function toggle_on2() {
+          document.querySelector(".button2off").classList.add("toggleHide");
+          document.querySelector(".button2on").classList.remove("toggleHide");
+          document.querySelector(".buttonGroup3").classList.remove("buttonHide");
+          toggle2 = true;
+        }
+        function toggle_off2() {
+          document.querySelector(".button2off").classList.remove("toggleHide");
+          document.querySelector(".button2on").classList.add("toggleHide");
+          document.querySelector(".button3off").classList.remove("toggleHide");
+          document.querySelector(".button3on").classList.add("toggleHide");
+          document.querySelector(".button4off").classList.remove("toggleHide");
+          document.querySelector(".button4on").classList.add("toggleHide");
+          document.querySelector(".button5off").classList.remove("toggleHide");
+          document.querySelector(".button5on").classList.add("toggleHide");
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup3").classList.add("buttonHide");
+          document.querySelector(".buttonGroup4").classList.add("buttonHide");
+          document.querySelector(".buttonGroup5").classList.add("buttonHide");
+          document.querySelector(".buttonGroup6").classList.add("buttonHide");
+          toggle2 = false;
+          toggle3 = false;
+          toggle4 = false;
+          toggle5 = false;
+          toggle6 = false;
+        }
+        function toggle_on3() {
+          document.querySelector(".button3off").classList.add("toggleHide");
+          document.querySelector(".button3on").classList.remove("toggleHide");
+          document.querySelector(".buttonGroup4").classList.remove("buttonHide");
+          toggle3 = true;
+        }
+        function toggle_off3() {
+          document.querySelector(".button3off").classList.remove("toggleHide");
+          document.querySelector(".button3on").classList.add("toggleHide");
+          document.querySelector(".button4off").classList.remove("toggleHide");
+          document.querySelector(".button4on").classList.add("toggleHide");
+          document.querySelector(".button5off").classList.remove("toggleHide");
+          document.querySelector(".button5on").classList.add("toggleHide");
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup4").classList.add("buttonHide");
+          document.querySelector(".buttonGroup5").classList.add("buttonHide");
+          document.querySelector(".buttonGroup6").classList.add("buttonHide");
+          toggle3 = false;
+          toggle4 = false;
+          toggle5 = false;
+          toggle6 = false;
+        }
+        function toggle_on4() {
+          document.querySelector(".button4off").classList.add("toggleHide");
+          document.querySelector(".button4on").classList.remove("toggleHide");
+          document.querySelector(".buttonGroup5").classList.remove("buttonHide");
+          toggle4 = true;
+        }
+        function toggle_off4() {
+          document.querySelector(".button4off").classList.remove("toggleHide");
+          document.querySelector(".button4on").classList.add("toggleHide");
+          document.querySelector(".button5off").classList.remove("toggleHide");
+          document.querySelector(".button5on").classList.add("toggleHide");
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup5").classList.add("buttonHide");
+          document.querySelector(".buttonGroup6").classList.add("buttonHide");
+          toggle4 = false;
+          toggle5 = false;
+          toggle6 = false;
+        }
+        function toggle_on5() {
+          document.querySelector(".button5off").classList.add("toggleHide");
+          document.querySelector(".button5on").classList.remove("toggleHide");
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup6").classList.remove("buttonHide");
+          toggle5 = true;
+        }
+        function toggle_off5() {
+          document.querySelector(".button5off").classList.remove("toggleHide");
+          document.querySelector(".button5on").classList.add("toggleHide");
+          document.querySelector(".buttonGroup6").classList.add("buttonHide");
+          toggle5 = false;
+          toggle6 = false;
+        }
+        function toggle_on6() {
+          document.querySelector(".button6off").classList.add("toggleHide");
+          document.querySelector(".button6on").classList.remove("toggleHide");
+          toggle6 = true;
+        }
+        function toggle_off6() {
+          document.querySelector(".button6off").classList.remove("toggleHide");
+          document.querySelector(".button6on").classList.add("toggleHide");
+          toggle6 = false;
+        }
       </script>
     </div>
-    <br>
+  </div>
+  <div class="slot box">
+    <div class="h">
+      Thông Tin Thêm
+    </div>
+    <div class="contentBox">
+      <div class="contentText">Tính năng dịch từ ?.lang: sử dụng -abc|def,ghi- tương đương với {"translate": "abc", "with":["def","ghi"]}. Nếu không dùng "with" thì có thể chỉ ghi -abc-</div>
+      <div class="contentText">Cập nhật tiếp theo: tạo được nhiều bảng hơn :D</div>
+    </div>
   </div>
   <footer id="footer"></footer>
 </body>
