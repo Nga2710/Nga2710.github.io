@@ -11,7 +11,7 @@ html {
 * {
   color: white;
   font-family: sans-serif;
-  user-select: none;
+  user-select: text;
 }
 ::-webkit-scrollbar {
   background-color: #262626;
@@ -21,6 +21,157 @@ html {
   background-color: #171717;
   border: 3px solid #777777;
   border-radius: 5px;
+}
+
+/*----------Body----------*/
+body {}
+/*+++++Title++++*/
+.index:before {
+  content: "Trang Chủ";
+}
+.rawText:before {
+  content: "Văn Bản Thô"
+}
+.dialogue-generator:before {
+  content: "Tạo npc_dialogue"
+}
+.encode-decode:before {
+  content: "Mã Hóa & Giải Mã";
+}
+.uuid-generator:before {
+  content: "Tạo Uuid";
+}
+/*+++++Img+++++*/
+img {
+  user-select: none;
+}
+.sidebarIconClose {
+  content: url(../media/book_close.png);
+}
+.sidebarIconOpen {
+  content: url(../media/book_open.png);
+}
+.sidebarIconHide {
+  display: none;
+}
+.icond {
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px;
+}
+.toggle {}
+.toggleHide {
+  display: none;
+}
+.toggle_off {
+  content: url(../media/toggle_off.png);
+  height: 16px;
+  width: 30px;
+}
+.toggle_off:hover {
+  content: url(../media/toggle_off_hover.png);
+}
+.toggle_on {
+  content: url(../media/toggle_on.png);
+  height: 16px;
+  width: 30px;
+}
+.toggle_on:hover {
+  content: url(../media/toggle_on_hover.png);
+}
+.indeximg {
+  content: url(../media/index.png);
+}
+.icon_sign {
+  content: url(../media/icon_sign.png);
+}
+.icon_confirm {
+  content: url(../media/confirm.png);
+}
+.icon_error {
+  content: url(../media/icon_error.png);
+}
+.icon_warning {
+  content: url(../media/icon_warning.png);
+}
+.icon_lock {
+  content: url(../media/icon_lock.png);
+}
+.icon_unlock {
+  content: url(../media/icon_unlock.png);
+}
+.icon_text {
+  content: url(../media/icon_text.png);
+}
+.icon_x {
+  content: url(../media/icon_x.png);
+}
+.icon_code {
+  content: url(../media/icon_code.png);
+}
+.copyb {
+  content: url(../media/copyimg.png);
+}
+.copyb:active {
+  content: url(../media/copyimg_active.png);
+}
+.createuuid {
+  content: url(../media/createuuid.png);
+}
+.icon_dialogue {
+  content: url(../media/icon_dialogue.png);
+}
+#saveFile {
+  content: url(../media/icon_download.png);
+}
+/*+++++Color+++++*/
+.black {
+  color: #000000;
+}
+.red {
+  color: #ff0000;
+}
+.green {
+  color: #00ff00;
+}
+.blue {
+  color: #0000ff;
+}
+.white {
+  color: #ffffff;
+}
+.cyan {
+  color: #00ffff;
+}
+.purple {
+  color: #ff00ff;
+}
+.yellow {
+  color: #ffff00;
+}
+.orange {
+  color: #ffa500;
+}
+/*+++++Dropdown+++++*/
+.dropdown {}
+.dropdown:before {
+  color: red;
+  transition: 0.3s;
+}
+.dropdownActive {}
+.dropdownActive:before {
+  color: lime;
+  transition: 0.3s;
+  transform: rotate(90deg);
+}
+.dropdownHide {
+  display: none;
+}
+.dropdownShow {
+  display: block;
+}
+.dropdownTab {
+  padding-left: 20px;
 }
 /*----------Header----------*/
 header {
@@ -32,21 +183,7 @@ header {
   top: 0;
   z-index: 3;
 }
-.sidebarIcon {
-  cursor: pointer;
-  height: 45px;
-  margin: 5px;
-  width: 45px;
-}
-.sidebarIconClose {
-  content: url(../media/book_close.png);
-}
-.sidebarIconOpen {
-  content: url(../media/book_open.png);
-}
-.sidebarIconHide {
-  display: none;
-}
+
 .headerTitle {
   cursor: pointer;
   margin-top: 3px;
@@ -104,135 +241,10 @@ header {
   position: fixed;
   width: auto;
   z-index: 2;
+  transition: .3s;
 }
 .sidebarClose {
-  display: none;
-}
-/*----------Body----------*/
-body {}
-/*+++++Dropdown+++++*/
-.dropdown {}
-.dropdown:before {
-  color: red;
-}
-.dropdownActive {
-  cursor: not-allowed;
-}
-.dropdownActive:before {
-  color: lime;
-  transform: rotate(90deg);
-}
-.dropdownHide {
-  display: none;
-}
-.dropdownShow {
-  display: block;
-}
-.dropdownTab {
-  padding-left: 20px;
-}
-/*+++++Title++++*/
-.index:before {
-  content: "Trang Chủ";
-}
-.dialogue-generator:before {
-  content: "Dialogue Generator"
-}
-.encode-decode:before {
-  content: "Encode & Decode";
-}
-.uuid-generator:before {
-  content: "Uuid Generator";
-}
-/*+++++Img+++++*/
-.icond {
-  height: 45px;
-  margin: 5px 5px 5px 5px;
-  width: 45px;
-}
-.toggle_off {
-  content: url(../media/toggle_off.png);
-  height: 16px;
-  width: 30px;
-}
-.toggle_off:hover {
-  content: url(../media/toggle_off_hover.png);
-}
-.toggle_on {
-  content: url(../media/toggle_on.png);
-}
-.toggle_on:hover {
-  content: url(../media/toggle_on_hover.png);
-}
-.indeximg {
-  content: url(../media/index.png);
-}
-.icon_sign {
-  content: url(../media/icon_sign.png);
-}
-.icon_confirm {
-  content: url(../media/confirm.png);
-}
-.icon_error {
-  content: url(../media/icon_error.png);
-}
-.icon_warning {
-  content: url(../media/icon_warning.png);
-}
-.icon_lock {
-  content: url(../media/icon_lock.png);
-}
-.icon_unlock {
-  content: url(../media/icon_unlock.png);
-}
-.icon_x {
-  content: url(../media/icon_x.png);
-}
-.icon_code {
-  content: url(../media/icon_code.png);
-}
-.copyb {
-  content: url(../media/copyimg.png);
-}
-.copyb:active {
-  content: url(../media/copyimg_active.png);
-}
-.createuuid {
-  content: url(../media/createuuid.png);
-}
-.icon_dialogue {
-  content: url(../media/icon_dialogue.png);
-}
-#saveFile {
-  content: url(../media/icon_download.png);
-}
-/*+++++Color+++++*/
-.black {
-  color: #000000;
-}
-.red {
-  color: #ff0000;
-}
-.green {
-  color: #00ff00;
-}
-.blue {
-  color: #0000ff;
-}
-.white {
-  color: #ffffff;
-}
-.cyan {
-  color: #00ffff;
-}
-.purple {
-  color: #ff00ff;
-}
-.yellow {
-  color: #ffff00;
-}
-.orange {
-  color: #ff7800;
+display: none;
 }
 /*----------Footer----------*/
 footer {}
@@ -256,9 +268,6 @@ footer {}
 .logoTwitter {
   content: url(../media/logo_twitter.png);
 }
-.logoFacebook {
-  content: url(../media/logo_facebook.png);
-}
 .copyright {
   align-items: center;
   display: flex;
@@ -274,6 +283,9 @@ footer {}
   margin-right: 3px;
 }
 /*----------Unknown----------*/
+.error {
+  border: 4px solid red;
+}
 .wood_b {
   outline: none;
   border: 4px solid #777777;
@@ -321,7 +333,6 @@ button {
   background-color: #171717;
   border: 2px solid #777777;
   margin: 15px;
-  margin-bottom: 0;
 }
 .contentText::before {
   content: "➤";
@@ -354,7 +365,7 @@ footer {
 }
 .page_display {
   display: grid;
-  grid-template-areas: 
+  grid-template-areas:
   "left right";
   grid-template-columns: auto 1fr;
   grid-column-gap: 10px;
@@ -373,17 +384,19 @@ footer {
   border: 4px solid #777777;
   border-radius: 10px;
   margin-bottom: 10px;
+  transition: 0.3s;
 }
 .h {
   background: url(../media/sign_darkoak.png) repeat center;
   background-size: contain;
-  border-radius: 1px;
+  border-radius: 3px;
   cursor: default;
-  font-size: 40px;
+  font-size: 26px;
   justify-self: center;
   margin: 10px;
   padding: 5px;
   text-align: center;
+  font-weight: bold;
 }
 .p {
   cursor: default;
@@ -391,8 +404,8 @@ footer {
   margin: 5px;
 }
 .note {
-  color: #ff1212;
-  font-size: 12px;
+  color: red;
+  font-size: 14px;
   font-style: italic;
   vertical-align: super;
   cursor: help;
@@ -433,6 +446,6 @@ footer {
     font-size: 14px;
   }
   .note {
-    font-size: 7px;
+    font-size: 12px;
   }
 }
