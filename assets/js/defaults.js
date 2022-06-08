@@ -45,7 +45,7 @@ let sidebar = `
         </div>
         <div class="dropdownTab dropdownHide">
           <div class="contentText">
-            <a class="ru" href="rawText.html" title="Văn Bản Thô"><span class="blue rawText"></span></a>
+            <a class="ru" href="rawtext.html" title="Văn Bản Thô"><span class="blue rawText"></span></a>
           </div>
         </div>
       </div>
