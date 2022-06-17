@@ -8,5 +8,5 @@ function dropdownCreate() {
 }
 function dropdownActive() {
   this.classList.toggle("dropdownActive");
-  this.parentElement.querySelector(".dropdownHide").classList.toggle("dropdownShow");
+  this.parentElement.querySelector(".hide").classList.toggle("show");
 }
