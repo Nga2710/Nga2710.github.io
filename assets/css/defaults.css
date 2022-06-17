@@ -2,212 +2,244 @@ html {
   background-size: 70%;
   background-color: #262626;
   margin-left: 0px;
-  margin-right: 0px;
+  margin-right: 260px;
+  /*background: url(../media/sign_spruce.png) repeat center;
+  background-size: 700px*/
 }
 @font-face {
   src: url(Minecrafter.Reg.ttf);
-  font-family: minecraft;
+  font-family: minecraft
 }
 * {
-  color: white;
+  color: #ffffff;
   font-family: sans-serif;
-  user-select: text;
+  user-select: text
 }
 ::-webkit-scrollbar {
   background-color: #262626;
-  width: 10px;
+  width: 10px
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #171717;
-  border: 3px solid #777777;
-  border-radius: 5px;
+  background-color: var(--background);
+  border: 3px solid var(--border);
+  border-radius: 5px
 }
-
+:root {
+  --border: #777777;
+  --background: #171717
+}
+a:link {
+  text-decoration: none;
+  color: #0000ff;
+}
 /*----------Body----------*/
 body {}
 /*+++++Title++++*/
 .index:before {
-  content: "Trang Chủ";
+  content: "Trang Chủ"
 }
 .rawText:before {
   content: "Văn Bản Thô"
 }
-.dialogue-generator:before {
+.json-formattor:before {
+  content: "Định Dạng Json"
+}
+.json-validator:before {
+  content: "Kiểm Tra Json"
+}
+.npc_dialogue-generator:before {
   content: "Tạo npc_dialogue"
 }
 .encode-decode:before {
-  content: "Mã Hóa & Giải Mã";
+  content: "Mã Hóa & Giải Mã"
 }
 .uuid-generator:before {
-  content: "Tạo Uuid";
+  content: "Tạo Uuid"
 }
 /*+++++Img+++++*/
 img {
-  user-select: none;
+  user-select: none
 }
 .sidebarIconClose {
-  content: url(../media/book_close.png);
+  content: url(../media/book_close.png)
 }
 .sidebarIconOpen {
-  content: url(../media/book_open.png);
-}
-.sidebarIconHide {
-  display: none;
+  content: url(../media/book_open.png)
 }
 .icond {
   height: 45px;
   margin: 5px 5px 5px 5px;
-  width: 45px;
+  width: 45px
 }
-.toggle {}
-.toggleHide {
-  display: none;
+.icond:hover {
+  outline: 2px solid #ffff00;
+}
+.tree1 {
+  content: url(../media/tree1.png);
+  height: 1em;
+  width: 1em;
+}
+.tree2 {
+  content: url(../media/tree2.png);
+  height: 1em;
+  width: 1em;
+}
+.tree3 {
+  content: url(../media/tree3.png);
+  height: 1em;
+  width: 1em;
 }
 .toggle_off {
   content: url(../media/toggle_off.png);
-  height: 16px;
-  width: 30px;
+  height: 24px;
+  width: 45px
 }
 .toggle_off:hover {
-  content: url(../media/toggle_off_hover.png);
+  content: url(../media/toggle_off_hover.png)
 }
 .toggle_on {
   content: url(../media/toggle_on.png);
-  height: 16px;
-  width: 30px;
+  height: 24px;
+  width: 45px
 }
 .toggle_on:hover {
-  content: url(../media/toggle_on_hover.png);
+  content: url(../media/toggle_on_hover.png)
 }
 .indeximg {
-  content: url(../media/index.png);
+  content: url(../media/index.png)
+}
+.icon_format {
+  content: url(../media/icon_format.png)
 }
 .icon_sign {
-  content: url(../media/icon_sign.png);
+  content: url(../media/icon_sign.png)
 }
 .icon_confirm {
-  content: url(../media/confirm.png);
+  content: url(../media/confirm.png)
 }
 .icon_error {
-  content: url(../media/icon_error.png);
+  content: url(../media/icon_error.png)
 }
 .icon_warning {
-  content: url(../media/icon_warning.png);
+  content: url(../media/icon_warning.png)
 }
 .icon_lock {
-  content: url(../media/icon_lock.png);
+  content: url(../media/icon_lock.png)
 }
 .icon_unlock {
-  content: url(../media/icon_unlock.png);
+  content: url(../media/icon_unlock.png)
 }
 .icon_text {
-  content: url(../media/icon_text.png);
+  content: url(../media/icon_text.png)
 }
 .icon_x {
-  content: url(../media/icon_x.png);
+  content: url(../media/icon_x.png)
 }
 .icon_code {
-  content: url(../media/icon_code.png);
+  content: url(../media/icon_code.png)
 }
 .copyb {
-  content: url(../media/copyimg.png);
+  content: url(../media/copyimg.png)
 }
 .copyb:active {
-  content: url(../media/copyimg_active.png);
+  content: url(../media/copyimg_active.png)
 }
 .createuuid {
   content: url(../media/createuuid.png);
+  height: 45px;
+  margin: 5px 5px 5px 5px;
+  width: 45px
 }
 .icon_dialogue {
-  content: url(../media/icon_dialogue.png);
+  content: url(../media/icon_dialogue.png)
 }
 #saveFile {
-  content: url(../media/icon_download.png);
+  content: url(../media/icon_download.png)
 }
-/*+++++Color+++++*/
-.black {
-  color: #000000;
+/*+++++color+++++*/
+green:before {
+  content: "<";
+  color: #ffffff;
 }
-.red {
-  color: #ff0000;
+green:after {
+  content: ">";
+  color: #ffffff;
 }
-.green {
-  color: #00ff00;
+green {
+  color: #00ff00
 }
 .blue {
   color: #0000ff;
 }
-.white {
+white {
   color: #ffffff;
 }
-.cyan {
-  color: #00ffff;
-}
-.purple {
-  color: #ff00ff;
+cyan {
+  color: #00ffff
 }
 .yellow {
-  color: #ffff00;
+  color: #ffff00
 }
-.orange {
-  color: #ffa500;
+orange {
+  color: #ffa500
 }
 /*+++++Dropdown+++++*/
-.dropdown {}
 .dropdown:before {
-  color: red;
-  transition: 0.3s;
+  color: #ff0000;
+  transition: 0.3s
 }
-.dropdownActive {}
 .dropdownActive:before {
   color: lime;
   transition: 0.3s;
-  transform: rotate(90deg);
-}
-.dropdownHide {
-  display: none;
-}
-.dropdownShow {
-  display: block;
+  transform: rotate(90deg)
 }
 .dropdownTab {
-  padding-left: 20px;
+  padding-left: 1em
 }
 /*----------Header----------*/
+
 header {
+  background-color: var(--background);
+  border-bottom: 4px solid var(--border);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-top: -8px;
+  font-size: 50px;
+  margin-bottom: 10px;
+  text-align: center;
   align-items: center;
-  background-color: #171717;
-  border-bottom: 2px solid #777777;
   display: flex;
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 3
 }
-
 .headerTitle {
   cursor: pointer;
   margin-top: 3px;
   font-family: minecraft;
   font-size: 30px;
-  text-decoration: none;
+  text-decoration: none
 }
 .search {
   margin-left: auto;
   margin-right: 3%;
   height: 30px;
-  width: 220px;
+  width: 220px
+}
+.searchBoxHide {
+  display: none
 }
 .searchBar {
   align-items: center;
-  border-bottom: 2px solid #777777;
-  display: flex;
+  border-bottom: 2px solid var(--border);
+  display: flex
 }
 .searchIcon {
   content: url(../media/search_icon.gif);
   cursor: pointer;
   height: 32px;
   margin: 0px;
-  width: 32px;
+  width: 32px
 }
 .searchInput {
   background-color: transparent;
@@ -215,176 +247,174 @@ header {
   font-size: 16px;
   height: 100%;
   outline: none;
-  width: 100%;
+  width: 100%
 }
 .searchBox {
-  background-color: #171717;
-  border: 4px solid #777777;
+  background-color: var(--background);
+  border: 4px solid var(--border);
   border-radius: 10px;
   margin-bottom: 10px;
   cursor: default;
   overflow-y: auto;
   font-size: 20px;
-  text-decoration: none;
-}
-.searchBoxHide {
-  display: none;
+  text-decoration: none
 }
 .searchBox li {
   display: block;
-  outline: 1px solid #777777;
+  outline: 1px solid var(--border);
   overflow-x: auto;
-  padding: 5px;
+  padding: 5px
 }
 .sidebar {
   height: auto;
   position: fixed;
   width: auto;
   z-index: 2;
-  transition: .3s;
+  transition: .3s
 }
 .sidebarClose {
-display: none;
+  display: none
 }
 /*----------Footer----------*/
-footer {}
+
+footer {
+  background-color: var(--background);
+  border-top: 4px solid var(--border);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 90px;
+  font-size: 20px;
+  height: auto
+}
 .social {
   align-items: center;
-  display: flex;
+  display: flex
 }
 .footerLink {
   font-size: 20px;
-  text-decoration: none;
+  color: white;
 }
 .socialLogo {
   height: 40px;
   margin: 5px;
   margin-right: 7px;
-  width: 40px;
+  width: 40px
 }
 .logoYoutube {
-  content: url(../media/logo_youtube.png);
+  content: url(../media/logo_youtube.png)
 }
 .logoTwitter {
-  content: url(../media/logo_twitter.png);
+  content: url(../media/logo_twitter.png)
 }
 .copyright {
   align-items: center;
   display: flex;
-  margin: 5px 0 5px 0;
+  margin: 5px 0 5px 0
 }
 .copyright1 {
   align-items: center;
-  display: flex;
+  display: flex
 }
 .copyrightSide:before {
   content: "|";
   margin-left: 3px;
-  margin-right: 3px;
+  margin-right: 3px
 }
 /*----------Unknown----------*/
-.error {
-  border: 4px solid red;
+.hide {
+  display: none
+}
+.show {
+  display: block
 }
 .wood_b {
   outline: none;
-  border: 4px solid #777777;
+  border: 4px solid var(--border);
   background: url(../media/sign_spruce.png) repeat center;
-  background-size: 70px;
+  background-size: 70px
+}
+.wood_b_warning {
+  outline: none;
+  border: 4px solid #ff0000;
+  background: url(../media/sign_spruce.png) repeat center;
+  background-size: 70px
 }
 textarea {
   resize: none;
-  outline: none;
+  outline: none
+}
+.center {
+  align-items: center;
+  display: flex
 }
 .background {
-  background-color: transparent;
 }
-.ru:link {
-  color: #3b82f6;
-  text-decoration: none;
+.usn {
+  user-select: none
 }
+
 .createuuid:active {
-  animation: createuuid 0.3s;
-  content: url(../media/createuuid_hover.png);
+  animation: createuuid 0.2s;
+  content: url(../media/createuuid_hover.png)
 }
 @keyframes createuuid {
   100% {
-    transform: rotateZ(360deg);
+    transform: rotateZ(180deg)
   }
 }
 button {
   background-color: transparent;
-  font-size: 20px;
+  outline-color: transparent;
+  outline: none;
 }
 .button {
-  margin: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: center
 }
 .uuid {
   cursor: text;
   font-size: 30px;
   margin: 30px 0 30px 0;
   text-align: center;
-  user-select: text;
+  user-select: text
 }
-.contentBox {
+contentBox {
   border-radius: 0px;
-  background-color: #171717;
-  border: 2px solid #777777;
+  background-color: var(--background);
+  border: 2px solid var(--border);
   margin: 15px;
 }
-.contentText::before {
+
+.contentText:before {
   content: "➤";
   display: inline-block;
-  margin-right: 5px;
+  margin-right: 5px
 }
-header {
-  background-color: #171717;
-  border-bottom: 4px solid #777777;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  margin-top: -8px;
-  height: 100px;
-  font-size: 50px;
-  margin-bottom: 10px;
-  text-align: center;
-}
+
 .title {
   cursor: pointer;
   text-decoration: none;
-  font-family: minecraft;
+  font-family: minecraft
 }
-footer {
-  background-color: #171717;
-  border-top: 4px solid #777777;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 90px;
-  font-size: 20px;
-  height: auto;
-}
+
 .page_display {
   display: grid;
   grid-template-areas:
   "left right";
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 10px;
+  grid-template-columns: 75% auto;
+  grid-column-gap: 10px
 }
 .left {
-  grid-area: left;
+  grid-area: left
 }
 .right {
-  grid-area: right;
-}
-.slot {
-  display: grid;
+  grid-area: right
 }
 .box {
-  background-color: #171717;
-  border: 4px solid #777777;
+  background-color: var(--background);
+  border: 4px solid var(--border);
   border-radius: 10px;
-  margin-bottom: 10px;
-  transition: 0.3s;
+  display: grid;
+  margin-bottom: 10px
 }
 .h {
   background: url(../media/sign_darkoak.png) repeat center;
@@ -396,23 +426,24 @@ footer {
   margin: 10px;
   padding: 5px;
   text-align: center;
-  font-weight: bold;
+  font-weight: bold
 }
 .p {
   cursor: default;
   font-size: 20px;
-  margin: 5px;
+  margin: 5px
 }
-.note {
-  color: red;
+note {
+  user-select: none;
+  color: #ff0000;
   font-size: 14px;
   font-style: italic;
   vertical-align: super;
-  cursor: help;
+  cursor: help
 }
-.textWip:after {
+wip:after {
   content: " (WIP) ";
-  color: yellow;
+  color: #ffff00
 }
 @media screen and (max-width: 768px) {
   .search {
@@ -420,32 +451,39 @@ footer {
     margin-left: auto;
     margin-right: auto;
     justify-content: center;
-    order: 4;
+    order: 4
   }
   header {
     font-size: 26px;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap
   }
   footer {
     font-size: 13px;
-    height: auto;
+    height: auto
   }
   .page_display {
     display: grid;
+    grid-template-columns: 1fr
+  }
+  .left_top {
+    grid-template-areas:
+    "left"
+    "right";
+  }
+  .right_top {
     grid-template-areas:
     "right"
     "left";
-    grid-template-columns: 1fr;
   }
   .h {
     font-size: 16.8px;
-    margin: 5px;
+    margin: 5px
   }
   .p {
-    font-size: 14px;
+    font-size: 14px
   }
-  .note {
-    font-size: 12px;
+  note {
+    font-size: 12px
   }
 }
