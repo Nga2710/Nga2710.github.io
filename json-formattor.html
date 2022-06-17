@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="assets/css/defaults.css">
   <style>
-    .uuid-generator:before {
+    .json-formattor:before {
       color: yellow;
     }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tạo Uuid | BDev-Book</title>
-  <meta property="og:title" content="Tạo Uuid | BDev-Book">
-  <meta name="twitter:title" content="Tạo Uuid | BDev-Book">
-  <meta name="description" content="Tạo Uuid ngẫu nhiên dành cho Creator">
-  <meta property="og:description" content="Tạo Uuid ngẫu nhiên dành cho Creator">
-  <meta name="twitter:description" content="Tạo Uuid ngẫu nhiên dành cho Creator">
-  <meta property="og:image" content="assets/media/icon_sign.png">
-  <meta name="twitter:image" content="assets/media/icon_sign.png">
-  <meta property="og:url" content="https://nga2710.github.io/uuid-generator.html">
+  <title>Định Dạng Json | BDev-Book</title>
+  <meta property="og:title" content="Định Dạng Json | BDev-Book">
+  <meta name="twitter:title" content="Định Dạng Json | BDev-Book">
+  <meta name="description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
+  <meta property="og:description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
+  <meta name="twitter:description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
+  <meta property="og:image" content="assets/media/json_formattor.png">
+  <meta name="twitter:image" content="assets/media/json_formattor.png">
+  <meta property="og:url" content="https://nga2710.github.io/json-formattor.html">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
   <meta property="og:site_name" content="BDev-Book">
@@ -25,27 +25,32 @@
   <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
   <script src="assets/js/defaults.js"></script>
 </head>
-<body onload="generate(); defaults()" class="background">
+<body onload="defaults()" class="background">
   <div id="script"></div>
   <header id="header"></header>
   <div id="sidebar"></div>
   <div class="page_display left_top">
     <div class="left">
       <div class="box">
-        <img class="icon_sign icond">
+        <img class="icon_format icond">
         <div class="yellow h">
-          Tạo Uuid
+          Định Dạng Json<wip></wip>
         </div>
         <contentBox>
-          <div class="uuid" id="ctrlcopy" style="margin-left: 20px; margin-right: 20px">
-            ...
+          <div style="margin: 20px">
+            <textarea class="wood_b" placeholder="{ }" id="text" style="height: 16em; width: 80%;"></textarea>
+            <br><br>
+            <div>
+              <img class="icon_confirm icond" onclick="format()">
+              <img class="copyb icond" onclick="ctrlcopy1()">
+              <img class="icon_x icond" onclick="ctrldelete1()">
+            </div>
+            <div class="center">
+              <span class="toggle toggle_off"></span><span class="contentText">Kí tự thanh</span>
+            </div>
           </div>
-          <div class="button">
-            <img class="createuuid" onclick="generate()">
-            <img onclick="copy()" class="copyb icond">
-          </div>
-        </contentBox>
-      </div>
+        </div>
+      </contentBox>
     </div>
     <div class="right">
       <div class="box">
@@ -56,10 +61,7 @@
         <contentBox>
           <div style="margin: 10px">
             <div class="contentText">
-              Đây là mã uuidV4 dành cho manifest của các pack
-            </div>
-            <div class="contentText">
-              Tạo ngẫu nhiên để tránh trùng lặp, vẫn có thể sửa lại thành mã đẹp
+              Json bị lỗi sẽ dẫn tới định dạng không đúng, kiểm tra <a href="json-validator.html" title="Kiểm Tra Json">tại đây</a>
             </div>
           </div>
         </contentBox>
@@ -74,7 +76,7 @@
       <div id="loading"></div>
     </marquee>
   </div>
-  <script src="assets/js/uuid-generator.js"></script>
+  <script src="assets/js/json-formattor.js"></script>
   <script src="assets/js/ctrl.js"></script>
   <footer id="footer"></footer>
 </body>

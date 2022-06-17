@@ -1,0 +1,216 @@
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="assets/css/defaults.css">
+  <style>
+    .npc_dialogue-generator:before {
+      color: yellow;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tạo npc_dialogue | BDev-Book</title>
+  <meta property="og:title" content="Tạo npc_dialogue | BDev-Book">
+  <meta name="twitter:title" content="Tạo npc_dialogue | BDev-Book">
+  <meta name="description" content="Tạo json của dialogue dễ dàng hơn">
+  <meta property="og:description" content="Tạo json của dialogue dễ dàng hơn">
+  <meta name="twitter:description" content="Tạo json của dialogue dễ dàng hơn">
+  <meta property="og:image" content="assets/media/icon_dialogue.png">
+  <meta name="twitter:image" content="assets/media/icon_dialogue.png">
+  <meta property="og:url" content="https://nga2710.github.io/dialogue-generator.html">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:site_name" content="BDev-Book">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
+  <script src="assets/js/defaults.js"></script>
+</head>
+<body onload="defaults()" class="background">
+  <div id="script"></div>
+  <span id="top"></span>
+  <header id="header"></header>
+  <div id="sidebar"></div>
+  <div class="page_display right_top">
+    <div class="left">
+      <div class="box">
+        <img class="icon_dialogue icond">
+        <div class="yellow h">
+          Tạo npc_dialogue<br>(rawtext)<div class="textWIP"></div>
+        </div>
+        <contentBox>
+          <div style="margin: 10px">
+            <div style="display: flex; flex-wrap: wrap;">
+              <div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    Tên File <note>Bắt buộc</note>
+                  </div>
+                  <div class="wood_b fileName" style="width: 80%">
+                    <input style="background-color: transparent; outline: none; border: none; width: 80%" id="fileName" placeholder="Nhập tên File" required><cyan>.json</cyan>
+                  </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    scene_tag (id bảng) <note>Bắt buộc</note>
+                  </div>
+                  <input id="scene_tag" class="wood_b scene_tag" placeholder="Nhập id bảng" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    npc_name (tên bảng) <note>Rawtext</note>
+                  </div>
+                  <input id="npc_name" class="wood_b" placeholder="Nhập tên bảng">
+                </div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    text (đoạn hội thoại) <note>Rawtext</note>
+                  </div>
+                  <textarea id="text" class="wood_b" placeholder="Nhập đoạn hội thoại" rows="3"></textarea>
+                </div>
+              </div>
+              <div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    on_open_commands
+                    <div>
+                      (chạy commands khi mở)
+                    </div>
+                  </div>
+                  <textarea id="on_open_commands" class="wood_b" placeholder="Nhập commands" rows="3"></textarea>
+                </div>
+                <div style="margin-bottom: 20px;">
+                  <div class="contentText">
+                    on_close_commands
+                    <div>
+                      (chạy commands khi đóng)
+                    </div>
+                  </div>
+                  <textarea id="on_close_commands" class="wood_b" placeholder="Nhập commands" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="contentText">
+              buttons (các nút bấm)
+            </div>
+            <div style="display: flex; flex-wrap: wrap;">
+              <div class="buttonGroup1">
+                <span class="toggle_off buttonoff1" onclick="toggle_on1()"></span><span class="toggle_on buttonon1 hide" onclick="toggle_off1()"></span>
+                <span class="contentText">Nút 1</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name1" class="wood_b" placeholder="Nhập tên nút 1">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands1" class="wood_b" placeholder="Nhập commands 1" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="buttonGroup2 hide">
+                <span class="toggle_off buttonoff2" onclick="toggle_on2()"></span><span class="toggle_on buttonon2 hide" onclick="toggle_off2()"></span>
+                <span class="contentText">Nút 2</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name2" class="wood_b" placeholder="Nhập tên nút 2">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands2" class="wood_b" placeholder="Nhập commands 2" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="buttonGroup3 hide">
+                <span class="toggle_off buttonoff3" onclick="toggle_on3()"></span><span class="toggle_on buttonon3 hide" onclick="toggle_off3()"></span>
+                <span class="contentText">Nút 3</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name3" class="wood_b" placeholder="Nhập tên nút 3">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands3" class="wood_b" placeholder="Nhập commands 3" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="buttonGroup4 hide">
+                <span class="toggle_off buttonoff4" onclick="toggle_on4()"></span><span class="toggle_on buttonon4 hide" onclick="toggle_off4()"></span>
+                <span class="contentText">Nút 4</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name4" class="wood_b" placeholder="Nhập tên nút 4">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands4" class="wood_b" placeholder="Nhập commands 4" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="buttonGroup5 hide">
+                <span class="toggle_off buttonoff5" onclick="toggle_on5()"></span><span class="toggle_on buttonon5 hide" onclick="toggle_off5()"></span>
+                <span class="contentText">Nút 5</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name5" class="wood_b" placeholder="Nhập tên nút 5">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands5" class="wood_b" placeholder="Nhập commands 5" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="buttonGroup6 hide">
+                <span class="toggle_off buttonoff6" onclick="toggle_on6()"></span><span class="toggle_on buttonon6 hide" onclick="toggle_off6()"></span>
+                <span class="contentText">Nút 6</span><div style="margin-left: 67px">
+                  <div class="contentText">
+                    name (tên nút bấm) <note>Rawtext</note>
+                  </div>
+                  <input id="name6" class="wood_b" placeholder="Nhập tên nút 6">
+                  <div class="contentText">
+                    commands (lệnh)
+                  </div>
+                  <textarea id="commands6" class="wood_b" placeholder="Nhập commands 6" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="button">
+            <img id="saveFile" class="icond">
+          </span>
+        </contentBox>
+      </div>
+    </div>
+    <div class="right">
+      <div class="box">
+        <div class="h">
+          Hướng dẫn
+        </div>
+        <contentBox>
+          <div style="margin: 10px">
+            <div class="contentText">
+              Tính năng dịch từ ?.lang: sử dụng -abc|def,ghi- tương đương với {"translate": "abc", "with":["def", "ghi"]}. Nếu không dùng "with" thì có thể chỉ ghi -abc-
+            </div>
+            <div class="contentText">
+              Để sử dụng dấu "-" và "|" mà không kích hoạt tính năng translate ta dùng "\-" và "\|" để thay thế
+            </div>
+          </div>
+        </contentBox>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <marquee behavior="scroll" direction="left">
+      <noscript><span style="font-size: 20px; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script</span><style>
+:root {
+        --border: 4px solid #
+      }
+      </style>
+      </noscript>
+    </marquee>
+    <marquee behavior="scroll" direction="right" style="font-size: 10px;">
+      <div id="loading"></div>
+    </marquee>
+  </div>
+  <script src="assets/js/npc_dialogue-generator.js"></script>
+  <footer id="footer"></footer>
+</body>
+</html>

@@ -29,24 +29,30 @@
   <div id="script"></div>
   <header id="header"></header>
   <div id="sidebar"></div>
-  <div class="slot box">
+  <div class="box">
     <img class="icon_text icond">
     <div class="yellow h">
       Văn Bản Thô
     </div>
-    <div class="contentBox">
+    <contentBox>
       <div class="wood_b" style="margin: 10px 20px 10px 20px">
-        <span class="contentText"></span><span class="cyan">{"rawtext":[<span class="orange">...</span>]}
-        </span>
+        <span class="contentText"></span>{<cyan>"rawtext":[<green>...</green>]<cyan>}
       </div>
       <div class="wood_b" style="margin: 10px 20px 10px 20px">
-        <span class="contentText"></span><span class="cyan">{"text":"<span class="orange">...</span>"}<br>
-        <span class="contentText"></span><span class="cyan">{"selector":"<span class="orange">...</span>"}<br>
-        <span class="contentText"></span><span class="cyan">{"translate":"<span class="orange">...</span>", "with":"<span class="orange">...</span>"}</span><br>
-        <span class="contentText"></span><span class="cyan">{"score":{"name":"<span class="orange">...</span>", "objective":"<span class="orange">...</span>"}}
+        <span class="contentText"></span>{<cyan>"text":"<orange>...</orange>"</cyan>}<br>
+        <span class="contentText"></span>{<cyan>"selector":"<orange>...</orange>"</cyan>}<br>
+        <span class="contentText"></span>{<cyan>"translate":"<orange>...</orange>"<white>,</white> "with":"<orange>...</orange>"</cyan>}<br>
+        <span class="contentText"></span>{<cyan>"score":["name":"<orange>...</orange>", "objective":"<orange>...</orange>"]</cyan>}
       </div>
-    </div>
-    <br>
+    </contentBox>
+  </div>
+  <div class="box">
+    <marquee behavior="scroll" direction="left">
+      <noscript><span style="font-size: 20px; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script</span><style>:root { --border: 4px solid #}</style></noscript>
+    </marquee>
+    <marquee behavior="scroll" direction="right" style="font-size: 10px;">
+      <div id="loading"></div>
+    </marquee>
   </div>
   <footer id="footer"></footer>
 </body>

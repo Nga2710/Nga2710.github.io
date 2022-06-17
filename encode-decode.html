@@ -29,112 +29,65 @@
   <div id="script"></div>
   <header id="header"></header>
   <div id="sidebar"></div>
-  <div class="slot box">
-    <img class="icon_code icond">
-    <div class="yellow h">
-      Mã Hóa & Giải Mã
+  <div class="page_display left_top">
+    <div class="left">
+      <div class="box">
+        <img class="icon_code icond">
+        <div class="yellow h">
+          Mã Hóa & Giải Mã<br><wip></wip>
+        </div>
+        <contentBox>
+          <div style="margin: 20px">
+            <textarea class="wood_b" placeholder="{ }" id="text" style="height: 16em; width: 80%;"></textarea>
+            <br><br>
+            <div>
+              <img class="icon_lock icond" id="encode">
+              <img class="icon_unlock icond" id="decode">
+              <img class="copyb icond" onclick="ctrlcopy1()">
+              <img class="icon_x icond" onclick="ctrldelete1()">
+            </div>
+            <div class="center">
+              <span class="toggle toggle_off"></span><span class="contentText">Rút gọn đầu ra khi mã hóa</span>
+            </div>
+          </div>
+        </contentBox>
+      </div>
     </div>
-    <div class="contentBox">
-      <textarea class="wood_b" placeholder="{ }" id="text" style="height: 100px; width: 80%; margin: 20px 20px 20px 20px;"></textarea>
-      <br><br>
-      <span>
-        <img class="icon_lock icond" id="encode">
-        <img class="icon_unlock icond" id="decode">
-        <img class="copyb icond" onclick="ctrlcopycode()">
-        <img class="icon_x icond" onclick="ctrldeletecode()">
-      </span>
-      <script>
-        var imgencode = document.getElementById("encode"),
-        imgdecode = document.getElementById("decode"),
-        str, resultStr, text, hex;
-        imgencode.onclick = () => {
-          text = document.querySelector("textarea");
-          str = text.value;
-          resultStr = '';
-          let replace = false;
-          var detect134 = false,
-          detectn = false;
-          for (let i = 0; i < str.length; i++) {
-            let char = str[i];
-            if (char == '"') {
-              replace = !replace;
-              resultStr += '"'
-              continue;
-            }
-            if (!replace) {
-              resultStr += char;
-              continue;
-            }
-            if (!detect134 && char == "\134") {
-              alert('Văn bản của bạn có sử dụng mã "\134", chương trình sẽ mã hóa nó, có thể sẽ không giống với ý định của bạn.');
-              detect134 = !detect134;
-            };
-            if (!detectn && char == "\134" && str[i+1] == "n") {
-              alert('Chương trình phát hiện bạn đang sử dụng "\134n" hãy xuống dòng theo cách thông thường. Đừng lo chương trình sẽ mã hóa nó giúp bạn.');
-              detectn = !detectn;
-            };
-            hex = (str.charCodeAt(i)).toString(16);
-            if (hex.length == 1) {
-              hex = '000' + hex;
-            }
-            if (hex.length == 2) {
-              hex = '00' + hex;
-            }
-            if (hex.length == 3) {
-              hex = '0' + hex;
-            }
-            resultStr += '\134u' + hex;
-          }
-          if (replace) {
-            alert('Bạn chưa đóng ngoặc kép, có thể việc mã hóa sẽ không hoạt động theo ý muốn.');
-          };
-          text.value = resultStr;
-        };
-        imgdecode.onclick = () => {
-          text = document.querySelector("textarea");
-          str = text.value;
-          resultStr = '';
-          hex = '';
-          let replace = false;
-          for (let i = 0; i < str.length; i++) {
-            let char = str[i];
-            if (char == '"') {
-              replace = !replace;
-              resultStr += char;
-              continue;
-            }
-            if (!replace) {
-              resultStr += char;
-              continue;
-            }
-            if (char == "\134" && str[i+1] == "u" && i+6 <= str.length) {
-              hex = '';
-              hex += str[i+2] + str[i+3] + str[i+4] + str[i+5];
-              resultStr += String.fromCharCode(parseInt(hex/*.substr(n, 4)*/, 16));
-              i += 5;
-            } else resultStr += char;
-          }
-          if (replace) {
-            alert('Bạn chưa đóng ngoặc kép, có thể việc giải mã sẽ không hoạt động theo ý muốn.');
-          };
-          if (text.value == resultStr) {
-            alert("Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \134uXXXX")
-          } else
-          text.value = resultStr;
-        };
-        function ctrlcopycode() {
-          var text = document.getElementById("text");
-          text.select();
-          document.execCommand("copy");
-        };
-        function ctrldeletecode() {
-          var text = document.getElementById("text");
-          text.select();
-          document.execCommand("delete");
-        };
-      </script>
+    <div class="right">
+      <div class="box">
+        <img class="icon_warning icond">
+        <div class="h">
+          Lưu ý
+        </div>
+        <contentBox>
+          <div style="margin: 10px">
+            <div class="contentText">
+              Không sử dụng các mã "\", vì chương trình sẽ mã hóa toàn bộ kí tự. Hãy ghi theo cách thông thường
+            </div>
+            <div class="contentText">
+              Json bị lỗi có thể dẫn tới mã hóa/giải mã không đúng, kiểm tra <a href="json-validator.html" title="Kiểm Tra Json">tại đây</a>
+            </div>
+          </div>
+        </contentBox>
+      </div>
     </div>
   </div>
+  <div class="box">
+    <marquee behavior="scroll" direction="left">
+      <noscript><span style="font-size: 16x; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script, trang web sẽ không hoạt động</span></noscript>
+    </marquee>
+    <marquee behavior="scroll" direction="right" style="font-size: 10px;">
+      <div id="loading"></div>
+    </marquee>
+    <script>
+      let loading = `
+      <span>➼</span>
+      `;
+      document.getElementById("loading").innerHTML = loading;
+    </script>
+  </div>
+  <script src="assets/js/encode-decode.js"></script>
+  <script src="assets/js/ctrl.js"></script>
   <footer id="footer"></footer>
 </body>
 </html>
