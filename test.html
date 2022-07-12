@@ -3,29 +3,6 @@
   <meta charset="utf-8">
   <meta name="theme-color" content="#262626">
   <link rel="stylesheet" href="assets/css/defaults.css">
-  <style>
-    .json-formattor:before {
-      color: yellow;
-    }
-    .json-formattor:hover {
-      color: yellow;
-    }
-  </style>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Định Dạng Json | BDev-Book</title>
-  <meta property="og:title" content="Định Dạng Json | BDev-Book">
-  <meta name="twitter:title" content="Định Dạng Json | BDev-Book">
-  <meta name="description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
-  <meta property="og:description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
-  <meta name="twitter:description" content="Giúp mã của bạn ngay ngắn và dễ nhìn hơn :>">
-  <meta property="og:image" content="assets/media/json_formattor.png">
-  <meta name="twitter:image" content="assets/media/json_formattor.png">
-  <meta property="og:url" content="https://nga2710.github.io/json-formattor.html">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="720">
-  <meta property="og:site_name" content="BDev-Book">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
   <script src="assets/js/defaults.js"></script>
 </head>
@@ -42,28 +19,16 @@
         </div>
         <contentBox>
           <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="height: 16em; width: 80%;">{
-  "": false,
-  "": [
-    {
-      "": {},
-      "": 9
-    },
-    //iiiiii
-    /*iiiiii
-    iiiiii*/
-    "": ["",""],
-    "": [1,3]
-  ]
-}</textarea>
+            <textarea class="wood_b" placeholder="{ }" id="text" style="height: 16em; width: 80%;"></textarea>
             <br><br>
             <div>
-              <img class="icon_confirm icond" onclick="format()">
+              <img class="icon_confirm icond" onclick="r()">
               <img class="copyb icond" onclick="ctrlcopy1()">
               <img class="icon_x icond" onclick="ctrldelete1()">
             </div>
+
             <div class="center">
-              <span class="toggle toggle_off"></span><span class="ar">Kí tự thanh</span>
+              <span class="toggle toggle_off"></span><span class="ar"> Để chơi thôi</span>
             </div>
           </div>
         </div>
@@ -98,7 +63,37 @@
       <div id="loading"></div>
     </marquee>
   </div>
-  <script src="assets/js/json-formattor.js"></script>
+  <script>
+    var t = "";
+    function r() {
+      console.log("ok?")
+a("cobblestone", "8")
+a("oak_log", "5")
+a("dark_oak_log", "7")
+a("birch_log", "5")
+a("acacia_log", "32")
+a("jungle_log", "7")
+a("iron_ingot", "5")
+a("gold_ingot", "10")
+a("diamond", "70")
+a("netherstar", "30000")
+a("castus", "3")
+a("rotten_flesh", "7")
+a("bone", "7")
+a("gunpowder", "15")
+a("coal", "15")
+      function a(it, co) {
+        t += `      case "s ${it}":
+        data.sender.runCommand('tellraw @s[hasitem={name=${it}}] {"rawtext":[{"text":"§f[§6Sell§f]§a Bán thành công§e ×1 ${it}"}]}')
+        data.sender.runCommand("scoreboard players add @s[hasitem={name=${it}}] exp 2")
+        data.sender.runCommand("xp ${co}l @s[hasitem={name=${it}}]")
+        data.sender.runCommand("clear @s[hasitem={name=${it}}] ${it} 0 1")
+        break;\n`;
+      }
+      var text = document.getElementById("text");
+      text.value = t;
+    }
+  </script>
   <script src="assets/js/ctrl.js"></script>
   <footer id="footer"></footer>
 </body>
