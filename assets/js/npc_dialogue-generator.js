@@ -95,6 +95,7 @@ saveFile.addEventListener('click', e => {
     }
   }
 });
+//-a||-ja||ja---
 function toRawText(texts) {
   if (texts) {
     var rawText = '{"rawtext":[',

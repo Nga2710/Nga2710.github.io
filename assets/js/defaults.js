@@ -1,7 +1,7 @@
 function defaults() {
   for (let script of scriptList) {
     let scriptCreate = document.createElement('script');
-    scriptCreate.src = `assets/js/${script}.js`;
+    scriptCreate.src = `https://nga2710.github.io/assets/js/${script}.js`;
     document.getElementById("script").appendChild(scriptCreate);
   };
   document.getElementById("header").innerHTML = header;
@@ -28,13 +28,13 @@ header {
 <div class="icond sidebarIconClose" onclick="sidebarOpen()"></div>
 <div class="icond sidebarIconOpen hide" onclick="sidebarClose()"></div>
 <div class="headerTitle">BDev-Book</div>
-<a class="indeximg icond" href="index.html"></a>
+<a class="indeximg icond" href="nga2710.github.io"></a>
 <div class="search">
 <div class="searchBar">
 <div class="searchIcon" onclick="searchEnter()"></div>
 <input class="searchInput" placeholder="Nhập để tìm kiếm..." type="search">
 </div>
-<div class="searchBox searchBoxHide"></div>
+<div class="searchBox hide"></div>
 </div>
 `;
 let sidebar = `
@@ -45,37 +45,37 @@ let sidebar = `
     </div>
     <contentBox class="p" style="overflow-y: auto; height: auto; max-height: 256px;">
     <div style="margin: 5px">
-      <div class="contentText">
+      <div class="ar">
         <a href="index.html" title="Trang Chủ" class="blue index"></a>
       </div>
       <div>
-        <div class="contentText dropdown">
+        <div class="ar dropdown">
           <span>Tài liệu</span>
         </div>
         <div class="dropdownTab hide">
-          <div class="contentText">
+          <div class="ar">
             <a href="rawtext.html" title="Văn Bản Thô" class="blue rawText"></a>
           </div>
         </div>
       </div>
       <div>
-        <div class="contentText dropdown">
+        <div class="ar dropdown">
           <span>Công cụ</span>
         </div>
         <div class="dropdownTab hide">
-          <div class="contentText">
+          <div class="ar">
             <a href="json-formattor.html" title="Định dạng Json" class="blue json-formattor"></a>
           </div>
-          <div class="contentText">
+          <div class="ar">
             <a href="json-validator.html" title="Kiểm Tra Json" class="blue json-validator"></a>
           </div>
-          <div class="contentText">
+          <div class="ar">
             <a href="encode-decode.html" title="Mã Hóa & Giải Mã" class="blue encode-decode"></a>
           </div>
-          <div class="contentText">
+          <div class="ar">
             <a href="npc_dialogue-generator.html" title="Tạo Json Của Dialogue" class="blue npc_dialogue-generator"></a>
           </div>
-          <div class="contentText">
+          <div class="ar">
             <a href="uuid-generator.html" title="Tạo Uuid" class="blue uuid-generator"></a>
           </div>
         </div>
@@ -87,14 +87,16 @@ let sidebar = `
 `;
 let footer = `
 <div>
-<a class="center footerLink" href="https://youtube.com/c/Nga2710?sub_confirmation=1" target="_blank"><div class="socialLogo logoYoutube"></div>
+<a class="center footerLink" href="https://youtube.com/c/Nga2710?sub_confirmation=1" target="_blank">
+<div class="icond socialLogo logoYoutube"></div>
 Youtube Green</a>
-<a class="center footerLink" href="https://twitter.com/Nga2710?s=0" target="_blank"><div class="socialLogo logoTwitter"></div>
+<a class="center footerLink" href="https://twitter.com/Nga2710?s=0" target="_blank">
+<div class="icond socialLogo logoTwitter"></div>
 Twitter @Nga2710</a>
 </div>
 <div class="copyright">
 <div class="copyright1">
-Copyright©2021-<div class="year"></div>
+Copyright©<div class="year"></div>
 </div>
 <div class="copyrightSide"></div>
 <div class="copyright2">

@@ -18,10 +18,11 @@ function toggle_off() {
 function format() {
   var newStr = "",
   space = 0,
+  number = "0123456789",
   str = document.getElementById("text").value.replace(/ /g, "").replace(/\t/g, "").replace(/\n/g, "").replace(/":/g, '": ');
   for (let i = 0; i < str.length; i++) {
     var char = str[i];
-    if (char == ',' && str[i-1] == '"') {
+    if (char == ',' && (str[i-1] == '"' || str[i-1] == "0") {
       newStr += ",\n";
       for (let n = space; n > 0; n = n-1) {
         if (!toggle1) newStr += "  "; else newStr += "	";
@@ -76,9 +77,13 @@ function format() {
         continue;
       }
       space++;
-      newStr += "[\n";
-      for (let n = space; n > 0; n = n-1) {
-        if (!toggle1) newStr += "  "; else newStr += "	";
+      if (number.includes(char)) {
+        newStr += "[";
+      } else {
+        newStr += "[\n";
+        for (let n = space; n > 0; n = n-1) {
+          if (!toggle1) newStr += "  "; else newStr += "	";
+        }
       }
       continue;
     }
@@ -94,6 +99,9 @@ function format() {
       continue;
     }
     if (char == ']') {
+      if (str[i-1] != '"') {
+        newStr += "\n"
+      }
       if (str[i+1] == ',') {
         newStr += "],\n"; i++
       } else {

@@ -1,19 +1,19 @@
 const toggle = document.querySelector(".toggle");
-var toggle1;
+var button;
 toggle.addEventListener("click", toggle_on);
 function toggle_on() {
   toggle.addEventListener("click", toggle_off);
   toggle.removeEventListener("click", toggle_on);
   toggle.classList.add("toggle_on");
   toggle.classList.remove("toggle_off");
-  toggle1 = true;
+  button = true;
 }
 function toggle_off() {
   toggle.addEventListener("click", toggle_on);
   toggle.removeEventListener("click", toggle_off);
   toggle.classList.add("toggle_off");
   toggle.classList.remove("toggle_on");
-  toggle1 = false;
+  button = false;
 }
 var imgencode = document.getElementById("encode"),
 imgdecode = document.getElementById("decode"),
@@ -23,14 +23,33 @@ imgencode.onclick = () => {
   resultStr = '';
   let replace = false;
   for (let i = 0; i < str.length; i++) {
-    let char = str[i];
+    var char = str[i];
+    if (char == "/" && replace == false && button == true) {
+      if (str[i+1] == "*") {
+        for (var n = i+2; n < str.length; n++) {
+          if (str[n] != "*" && str[n+1] != "/") continue; else {
+            i = n; break
+          }
+        }
+        i = n;
+      }
+      if (str[i+1] == "/") {
+        for (var n = i+2; n < str.length; n++) {
+          if (str[n] != "\n") continue; else {
+            i = n; break
+          }
+        }
+        i = n;
+      }
+      continue;
+    }
     if (char == '"' && str[i-1] != "\\") {
       replace = !replace;
       resultStr += '"'
       continue;
     }
     if (!replace) {
-      if (!toggle1)
+      if (!button)
         resultStr += char; else
         if (char != " " && char != "\t" && char != "\n")
         resultStr += char;
@@ -48,9 +67,6 @@ imgencode.onclick = () => {
     }
     resultStr += '\\u' + hex;
   }
-  if (replace) {
-    alert('Bạn chưa đóng ngoặc kép, có thể việc mã hóa sẽ không hoạt động theo ý muốn.');
-  };
   text.value = resultStr;
 };
 imgdecode.onclick = () => {
@@ -60,7 +76,7 @@ imgdecode.onclick = () => {
   let replace = false;
   for (let i = 0; i < str.length; i++) {
     let char = str[i];
-    if (char == '"' && str[i-1] !="\\") {
+    if (char == '"' && str[i-1] != "\\") {
       replace = !replace;
       resultStr += char;
       continue;
@@ -70,27 +86,13 @@ imgdecode.onclick = () => {
       continue;
     }
     if (char == "\\" && str[i+1] == "u" && i+6 <= str.length) {
-      hex = '';
-      hex += str[i+2] + str[i+3] + str[i+4] + str[i+5];
+      hex = str[i+2] + str[i+3] + str[i+4] + str[i+5];
       resultStr += String.fromCharCode(parseInt(hex/*.substr(n, 4)*/, 16));
       i += 5;
     } else resultStr += char;
   }
-  if (replace) {
-    alert('Bạn chưa đóng ngoặc kép, có thể việc giải mã sẽ không hoạt động theo ý muốn.');
-  };
   if (text.value == resultStr) {
-    alert("Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\uXXXX")
+    alert("Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]")
   } else
     text.value = resultStr;
-};
-function ctrlcopy() {
-  var text = document.getElementById("text");
-  text.select();
-  document.execCommand("copy");
-};
-function ctrldelete() {
-  var text = document.getElementById("text");
-  text.select();
-  document.execCommand("delete");
 };

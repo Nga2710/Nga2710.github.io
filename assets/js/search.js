@@ -7,26 +7,26 @@ searchInput.onkeyup = (e)=> {
   let emptyArray = [];
   if (userData) {
     emptyArray = filter.filter((data)=> {
-      return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+      return data.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
     });
     emptyArray = emptyArray.map((data)=> {
       return data = '<li>' + data + '</li>';
     });
-    searchBox.classList.remove("searchBoxHide");
+    searchBox.classList.remove("hide");
     showSuggestions(emptyArray);
     let allList = searchBox.querySelectorAll("li");
     for (let i = 0; i < allList.length; i++) {
       allList[i].setAttribute("onclick", "select(this)");
     }
   } else {
-    searchBox.classList.add("searchBoxHide");
+    searchBox.classList.add("hide");
   }
 }
 
 function select(element) {
   let selectUserData = element.textContent;
   searchInput.value = selectUserData;
-  searchBox.classList.add("searchBoxHide");
+  searchBox.classList.add("hide");
   searchFilter(searchInput.value);
 }
 
@@ -40,27 +40,6 @@ function showSuggestions(list) {
     listData = list.join('');
   }
   searchBox.innerHTML = listData;
-}
-
-function searchFilter(searchValue) {
-  if (searchValue === "Trang chủ") {
-    window.open("https://nga2710.github.io/index.html", "_self");
-  }
-  if (searchValue === "Văn Bản Thô") {
-    window.open("https://nga2710.github.io/rawText.html", "_self");
-  }
-  if (searchValue === "Tạo Json Của Dialouge") {
-    window.open("https://nga2710.github.io/dialogue-generator.html", "_self");
-  }
-  if (searchValue === "Mã Hóa & Giải Mã json") {
-    window.open("https://nga2710.github.io/encode-decode.html", "_self");
-  }
-  if (searchValue === "Tạo Uuid") {
-    window.open("https://nga2710.github.io/uuid-generator.html", "_self");
-  }
-  if (minecraft.includes(searchValue)) {
-    window.open("https://minecraft.fandom.com/" + searchValue, "_self");
-  }
 }
 
 var enter = document.querySelector(".searchInput");
