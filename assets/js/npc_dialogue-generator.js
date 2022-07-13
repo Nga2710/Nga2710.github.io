@@ -10,7 +10,7 @@ saveFile.addEventListener('click', e => {
   name3 = document.getElementById('name3').value,
   name4 = document.getElementById('name4').value,
   name5 = document.getElementById('name5').value,
-  name5 = document.getElementById('name5').value;
+  name5 = document.getElementById('name6').value;
   npc_name = toRawText(npc_name);
   text = toRawText(text);
   name1 = toRawText(name1);
@@ -43,8 +43,8 @@ saveFile.addEventListener('click', e => {
   buttonGroup2 = toGroup(name2, commands2);
   buttonGroup3 = toGroup(name3, commands3);
   buttonGroup4 = toGroup(name4, commands4);
-  buttonGroup5 = toGroup(name1, commands5);
-  buttonGroup6 = toGroup(name1, commands6);
+  buttonGroup5 = toGroup(name5, commands5);
+  buttonGroup6 = toGroup(name6, commands6);
   function toGroup(nameG, commandsG) {
     var buttonGroup = '{"name":' + nameG + ', ' + '"commands":[' + commandsG + ']}';
     return buttonGroup;
@@ -95,7 +95,7 @@ saveFile.addEventListener('click', e => {
     }
   }
 });
-//-a||-ja||ja---
+//-a|-b|c|-|-
 function toRawText(texts) {
   if (texts) {
     var rawText = '{"rawtext":[',

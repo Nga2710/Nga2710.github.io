@@ -24,24 +24,23 @@ imgencode.onclick = () => {
   let replace = false;
   for (let i = 0; i < str.length; i++) {
     var char = str[i];
+    // /*hsheh*/
     if (char == "/" && replace == false && button == true) {
-      if (str[i+1] == "*") {
-        for (var n = i+2; n < str.length; n++) {
-          if (str[n] != "*" && str[n+1] != "/") continue; else {
-            i = n; break
-          }
+      i++;
+      if (str[i] == "*") {
+        for (var n = i+1; n-1 < str.length; n++) {
+          if (str[n] == "*" && str[n+1] == "/" /*&& n+1 < str.length*/) break; else continue;
         }
-        i = n;
-      }
-      if (str[i+1] == "/") {
-        for (var n = i+2; n < str.length; n++) {
-          if (str[n] != "\n") continue; else {
-            i = n; break
-          }
-        }
-        i = n;
-      }
+        i = n+1;
       continue;
+      }
+      if (str[i] == "/") {
+        for (var n = i+1; n < str.length; n++) {
+          if (str[n] != "\n") continue; else break;
+        }
+        i = n-1;
+      continue;
+      }
     }
     if (char == '"' && str[i-1] != "\\") {
       replace = !replace;
