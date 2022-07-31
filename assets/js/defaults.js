@@ -87,7 +87,7 @@ let sidebar = `
 `;
 let footer = `
 <div>
-<a class="center footerLink" href="https://youtube.com/c/Nga2710?sub_confirmation=1" target="_blank">
+<a class="center footerLink" href="https://youtube.com/channel/UC86ray6AUxDWhBewfLxT6zw" target="_blank">
 <div class="icond socialLogo logoYoutube"></div>
 Youtube Green</a>
 <a class="center footerLink" href="https://twitter.com/Nga2710?s=0" target="_blank">
