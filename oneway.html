@@ -56,7 +56,7 @@
             }
             if (hex.length == 2 && Math.random() > 0.3) {
               hex = '00' + hex;
-            } else hex = 'x' + hex;
+            } else { hex = 'x' + hex; continue;}
             if (hex.length == 3) {
               hex = '0' + hex;
             }
