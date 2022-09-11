@@ -49,7 +49,7 @@
           continue;
         }
         if (Math.random() > 0.1) {
-          if (Math.random() > 0.3) {
+        //  if (Math.random() > 0.3) {
             hex = (str.charCodeAt(i)).toString(16);
             if (hex.length == 2 && Math.random() < 0.6) {
               resultStr += '\\x' + hex;
@@ -65,11 +65,11 @@
               }
               resultStr += '\\u' + hex;
             }
-          } else {
+          }/* else {
             if (Number(str.charCodeAt(i).toString(8)) <= 177)
               resultStr += '\\' + Number(str.charCodeAt(i).toString(8)); else
               resultStr += char;
-          }
+          }*/
         } else resultStr += char;
       }
       text.value = resultStr;
