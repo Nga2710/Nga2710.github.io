@@ -48,19 +48,23 @@
             resultStr += char;
           continue;
         }
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.1) {
           if (Math.random() > 0.3) {
             hex = (str.charCodeAt(i)).toString(16);
-            if (hex.length == 1) {
-              hex = '000' + hex;
+            if (hex.length == 2 && Math.random() < 0.3) {
+              hex = '\\x' + hex;
+            } else {
+              if (hex.length == 1) {
+                hex = '000' + hex;
+              }
+              if (hex.length == 2) {
+                hex = '00' + hex;
+              }
+              if (hex.length == 3) {
+                hex = '0' + hex;
+              }
+              resultStr += '\\u' + hex;
             }
-            if (hex.length == 2 && Math.random() > 0.3) {
-              hex = '00' + hex;
-            } else { resultStr = 'x' + hex; continue;}
-            if (hex.length == 3) {
-              hex = '0' + hex;
-            }
-            resultStr += '\\u' + hex;
           } else {
             if (Number(str.charCodeAt(i).toString(8)) <= 177)
               resultStr += '\\' + Number(str.charCodeAt(i).toString(8)); else
