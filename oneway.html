@@ -1,0 +1,129 @@
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#262626">
+  <link rel="stylesheet" href="assets/css/defaults.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Định Dạng Json | BDev-Book</title>
+  <meta property="og:title" content="One Way | BDev-Book">
+  <meta name="twitter:title" content="One Way | BDev-Book">
+  <meta name="description" content="Encode?">
+  <meta property="og:description" content="Encode?">
+  <meta name="twitter:description" content="Encode?">
+  <meta property="og:image" content="assets/media/json_formattor.png">
+  <meta name="twitter:image" content="assets/media/json_formattor.png">
+  <meta property="og:url" content="https://nga2710.github.io/oneway.html">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:site_name" content="BDev-Book">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
+  <script src="assets/js/defaults.js"></script>
+  <script>
+    var str, resultStr, hex;
+    let obstr = "0a1b2c3d4e5f6789"
+    function oneway() {
+      str = document.querySelector("textarea").value;
+      resultStr = '';
+      let replace = false;
+      for (let i = 0; i < str.length; i++) {
+        var char = str[i];
+        if (char == '"' && str[i-1] != "\\") {
+          if (!replace) {
+            var lxb = '';
+            for (j = 0; j < 5; j++)
+              lxb += obstr[Math.floor(Math.random()*16)];
+            if (Math.random() < 0.5)
+              resultStr += `/*${lxb}*/`;
+            else resultStr += `//${lxb}\n`;
+          }
+          replace = !replace;
+          resultStr += '"';
+          continue;
+        }
+        if (!replace) {
+          resultStr += char;
+          continue;
+        }
+        if (Math.random() > 0.8) {
+          if (Math.random() > 0.3) {
+            hex = (str.charCodeAt(i)).toString(16);
+            if (hex.length == 1) {
+              hex = '000' + hex;
+            }
+            if (hex.length == 2 && Math.random() > 0.3) {
+              hex = '00' + hex;
+            } else hex = 'x' + hex;
+            if (hex.length == 3) {
+              hex = '0' + hex;
+            }
+            resultStr += '\\u' + hex;
+          } else {
+            if (Number(str.charCodeAt(i).toString(8)) <= 177)
+              resultStr += '\\' + Number(str.charCodeAt(i).toString(8)); else
+              resultStr += char;
+          }
+        } else resultStr += char;
+      }
+      text.value = resultStr;
+    };
+  </script>
+</head>
+<body onload="defaults()" class="background">
+  <div id="script"></div>
+  <header id="header"></header>
+  <div id="sidebar"></div>
+  <div class="page_display left_top">
+    <div class="left">
+      <div class="box">
+        <img class="icon_format icond">
+        <div class="yellow h">
+          One Way<wip></wip>
+        </div>
+        <contentBox>
+          <div style="margin: 20px">
+            <textarea class="wood_b" placeholder="{ }" id="text" style="height: 16em; width: 80%;"></textarea>
+            <br><br>
+            <div>
+              <img onclick="oneway()" class="icon_confirm icond">
+              <img class="copyb icond" onclick="ctrlcopy1()">
+              <img class="icon_x icond" onclick="ctrldelete1()">
+            </div>
+          </div>
+        </contentBox>
+      </div>
+    </div>
+    <div class="right">
+      <div class="box">
+        <img class="icon_warning icond">
+        <div class="h">
+          Lưu ý
+        </div>
+        <contentBox>
+          <div style="margin: 10px">
+            <div class="ar">
+              "One Way" chỉ là cái tên, code vẫn có thể bị giải :>
+            </div>
+          </div>
+        </contentBox>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <marquee behavior="scroll" direction="left">
+      <noscript><span style="font-size: 20px; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script</span><style>
+:root {
+        --border: 4px solid #
+      }
+      </style>
+      </noscript>
+    </marquee>
+    <marquee behavior="scroll" direction="right" style="font-size: 10px;">
+      <div id="loading"></div>
+    </marquee>
+  </div>
+  <script src="assets/js/ctrl.js"></script>
+  <footer id="footer"></footer>
+</body>
+</html>
