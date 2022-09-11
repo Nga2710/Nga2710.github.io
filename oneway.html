@@ -32,7 +32,7 @@
         if (char == '"' && str[i-1] != "\\") {
           if (!replace) {
             var lxb = '';
-            for (j = 0; j < 5; j++)
+            for (j = 0; j < 12; j++)
               lxb += obstr[Math.floor(Math.random()*16)];
             if (Math.random() < 0.5)
               resultStr += `/*${lxb}*/`;
@@ -51,8 +51,8 @@
         if (Math.random() > 0.1) {
           if (Math.random() > 0.3) {
             hex = (str.charCodeAt(i)).toString(16);
-            if (hex.length == 2 && Math.random() < 0.3) {
-              hex = '\\x' + hex;
+            if (hex.length == 2 && Math.random() < 0.6) {
+              resultStr += '\\x' + hex;
             } else {
               if (hex.length == 1) {
                 hex = '000' + hex;
