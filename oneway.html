@@ -38,12 +38,14 @@
               resultStr += `/*${lxb}*/`;
             else resultStr += `//${lxb}\n`;
           }
+
           replace = !replace;
           resultStr += '"';
           continue;
         }
         if (!replace) {
-          resultStr += char;
+          if (char != " " && char != "\t" && char != "\n")
+            resultStr += char;
           continue;
         }
         if (Math.random() > 0.8) {
