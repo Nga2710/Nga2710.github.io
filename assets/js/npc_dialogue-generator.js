@@ -86,6 +86,7 @@ saveFile.addEventListener('click', e => {
       document.querySelector(".fileName").classList.remove("wood_b");
     }
     window.open("#top", "_self");
+    toastShow("Lỗi", "Đây là những ô bắt buộc phải điền!");
     const timeout = setTimeout(reset, 3000);
     function reset() {
       document.querySelector(".fileName").classList.remove("wood_b_warning");

@@ -13,8 +13,8 @@ function ctrldelete() {
   document.execCommand("delete");
 };*/
 function ctrlcopy1() {
-  var copyText = document.getElementById("text").value;
-  navigator.clipboard.writeText(copyText);
+  var copy = document.getElementById("text").value;
+  navigator.clipboard.writeText(copy);
 };
 function ctrldelete1() {
  text.value = "";

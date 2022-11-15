@@ -91,7 +91,7 @@ imgdecode.onclick = () => {
     } else resultStr += char;
   }
   if (text.value == resultStr) {
-    alert("Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]")
+    toastShow("Lỗi", "Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]")
   } else
     text.value = resultStr;
 };

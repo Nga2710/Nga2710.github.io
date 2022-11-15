@@ -1,9 +1,9 @@
 function formatjson(level) {
   try {
     if (toggle) level = '\t';
-  text.value = JSON.stringify(JSON.parse(document.getElementById("text").value), null, level)
+    text.value = JSON.stringify(JSON.parse(document.getElementById("text").value), null, level)
   } catch (err) {
-    text.value = err;
+    toastShow("Lỗi",`${err}`);
   }
 }
 const toggle = document.querySelector(".toggle");

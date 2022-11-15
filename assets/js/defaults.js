@@ -2,6 +2,7 @@ function defaults() {
   for (let script of scriptList) {
     let scriptCreate = document.createElement('script');
     scriptCreate.src = `https://nga2710.github.io/assets/js/${script}.js`;
+    //scriptCreate.src = `assets/js/${script}.js`;
     document.getElementById("script").appendChild(scriptCreate);
   };
   document.getElementById("header").innerHTML = header;
@@ -14,7 +15,8 @@ let scriptList = [
   "sidebar",
   "filter",
   "search",
-  "dropdown"
+  "dropdown",
+"toast"
 ];
 let loading = `
 <span>➼</span>
@@ -67,9 +69,6 @@ let sidebar = `
             <a href="json-formattor.html" title="Định dạng Json" class="blue json-formattor"></a>
           </div>
           <div class="ar">
-            <a href="json-validator.html" title="Kiểm Tra Json" class="blue json-validator"></a>
-          </div>
-          <div class="ar">
             <a href="encode-decode.html" title="Mã Hóa & Giải Mã" class="blue encode-decode"></a>
           </div>
           <div class="ar">
@@ -87,7 +86,7 @@ let sidebar = `
 `;
 let footer = `
 <div>
-<a class="center footerLink" href="https://youtube.com/channel/UC86ray6AUxDWhBewfLxT6zw" target="_blank">
+<a class="center footerLink" href="https://www.youtube.com/@Nga2710" target="_blank">
 <div class="icond socialLogo logoYoutube"></div>
 Youtube Green</a>
 <a class="center footerLink" href="https://twitter.com/Nga2710?s=0" target="_blank">
