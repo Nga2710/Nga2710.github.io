@@ -330,6 +330,36 @@ footer {
   margin-right: 3px
 }
 /*----------Unknown----------*/
+	.toast {
+    background: url(../media/sign_acacia.png) repeat center;
+    background-size: 100px;
+		border: 4px solid var(--border);
+		border-radius: 10px;
+		width: 200px;
+		padding: 5px;
+		position: fixed;
+		bottom: 3%;
+		right: 1%;
+		transform: translateX(300px);
+		transition: 1s;
+	}
+	#toastCopy {
+		overflow-x: auto;
+	}
+	#toastClose {
+		content: url(../media/icon_x.png);
+		filter: brightness(100);
+		width: 12px;
+		height: 12px;
+		position: absolute;
+		top: 6px;
+		right: 6px;
+	}
+	#toastClose:hover {
+		filter: brightness(1);
+	}
+/*============================================*/
+
 .hide {
   display: none
 }
