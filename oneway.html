@@ -32,7 +32,7 @@
         if (char == '"' && str[i-1] != "\\") {
           if (!replace) {
             var lxb = '';
-            for (j = 0; j < 12; j++)
+            for (j = 0; j < Math.floor(Math.random()*20); j++)
               lxb += obstr[Math.floor(Math.random()*16)];
             if (Math.random() < 0.5)
               resultStr += `/*${lxb}*/`;
@@ -88,7 +88,7 @@
             <div>
               <img onclick="oneway()" class="icon_confirm icond">
               <img class="copyb icond" onclick="ctrlcopy1()">
-              <img class="icon_x icond" onclick="ctrldelete1()">
+              <img class="icon_trash icond" onclick="ctrldelete1()">
             </div>
           </div>
         </contentBox>
