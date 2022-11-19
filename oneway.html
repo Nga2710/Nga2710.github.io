@@ -67,10 +67,12 @@
         } else resultStr += char;
       }
       text.value = resultStr;
+      soundClick.play();
+      toastShow("Mã hóa thành công!","","s");
     };
   </script>
 </head>
-<body onload="defaults()" class="background">
+<body>
   <div id="script"></div>
   <header id="header"></header>
   <div id="sidebar"></div>
