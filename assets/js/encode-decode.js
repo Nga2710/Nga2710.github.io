@@ -1,20 +1,3 @@
-const toggle = document.querySelector(".toggle");
-var button;
-toggle.addEventListener("click", toggle_on);
-function toggle_on() {
-  toggle.addEventListener("click", toggle_off);
-  toggle.removeEventListener("click", toggle_on);
-  toggle.classList.add("toggle_on");
-  toggle.classList.remove("toggle_off");
-  button = true;
-}
-function toggle_off() {
-  toggle.addEventListener("click", toggle_on);
-  toggle.removeEventListener("click", toggle_off);
-  toggle.classList.add("toggle_off");
-  toggle.classList.remove("toggle_on");
-  button = false;
-}
 var imgencode = document.getElementById("encode"),
 imgdecode = document.getElementById("decode"),
 str, resultStr, hex;
@@ -25,21 +8,21 @@ imgencode.onclick = () => {
   for (let i = 0; i < str.length; i++) {
     var char = str[i];
     // /*hsheh*/
-    if (char == "/" && replace == false && button == true) {
+    if (char == "/" && replace == false && toggleb == true) {
       i++;
       if (str[i] == "*") {
         for (var n = i+1; n-1 < str.length; n++) {
           if (str[n] == "*" && str[n+1] == "/" /*&& n+1 < str.length*/) break; else continue;
         }
         i = n+1;
-      continue;
+        continue;
       }
       if (str[i] == "/") {
         for (var n = i+1; n < str.length; n++) {
           if (str[n] != "\n") continue; else break;
         }
         i = n-1;
-      continue;
+        continue;
       }
     }
     if (char == '"' && str[i-1] != "\\") {
@@ -48,7 +31,7 @@ imgencode.onclick = () => {
       continue;
     }
     if (!replace) {
-      if (!button)
+      if (!toggleb)
         resultStr += char; else
         if (char != " " && char != "\t" && char != "\n")
         resultStr += char;
@@ -66,7 +49,12 @@ imgencode.onclick = () => {
     }
     resultStr += '\\u' + hex;
   }
-  text.value = resultStr;
+  if (text.value == resultStr) {
+    toastShow("Lỗi", "Mã của bạn không ở dạng hoàn chỉnh!", "w")
+  } else {
+    toastShow("Đã mã hóa thành công!", "", "s");
+    text.value = resultStr;
+  }
 };
 imgdecode.onclick = () => {
   str = document.querySelector("textarea").value;
@@ -91,7 +79,9 @@ imgdecode.onclick = () => {
     } else resultStr += char;
   }
   if (text.value == resultStr) {
-    toastShow("Lỗi", "Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]")
-  } else
+    toastShow("Lỗi", "Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]", "w")
+  } else {
     text.value = resultStr;
+    toastShow("Đã giải mã thành công!", "", "s");
+  }
 };

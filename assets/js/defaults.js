@@ -1,4 +1,4 @@
-function defaults() {
+window.onload = () => {
   for (let script of scriptList) {
     let scriptCreate = document.createElement('script');
     scriptCreate.src = `https://nga2710.github.io/assets/js/${script}.js`;
@@ -10,13 +10,14 @@ function defaults() {
   document.getElementById("footer").innerHTML = footer;
   document.querySelector(".year").innerHTML = (new Date).getFullYear();
   document.getElementById("loading").innerHTML = loading;
-}
+};
 let scriptList = [
   "sidebar",
   "filter",
   "search",
   "dropdown",
-"toast"
+  "toast",
+  "sounds"
 ];
 let loading = `
 <span>➼</span>
@@ -24,7 +25,7 @@ let loading = `
 let header = `
 <style>
 header {
-  height: 100px
+height: 100px
 }
 </style>
 <div class="icond sidebarIconClose" onclick="sidebarOpen()"></div>
@@ -41,46 +42,46 @@ header {
 `;
 let sidebar = `
 <div class="sidebar sidebarClose">
-  <div class="box">
-    <div class="h">
-      Mục lục
-    </div>
-    <contentBox class="p" style="overflow-y: auto; height: auto; max-height: 256px;">
-    <div style="margin: 5px">
-      <div class="ar">
-        <a href="index.html" title="Trang Chủ" class="blue index"></a>
-      </div>
-      <div>
-        <div class="ar dropdown">
-          <span>Tài liệu</span>
-        </div>
-        <div class="dropdownTab hide">
-          <div class="ar">
-            <a href="rawtext.html" title="Văn Bản Thô" class="blue rawText"></a>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="ar dropdown">
-          <span>Công cụ</span>
-        </div>
-        <div class="dropdownTab hide">
-          <div class="ar">
-            <a href="json-formattor.html" title="Định dạng Json" class="blue json-formattor"></a>
-          </div>
-          <div class="ar">
-            <a href="encode-decode.html" title="Mã Hóa & Giải Mã" class="blue encode-decode"></a>
-          </div>
-          <div class="ar">
-            <a href="npc_dialogue-generator.html" title="Tạo Json Của Dialogue" class="blue npc_dialogue-generator"></a>
-          </div>
-          <div class="ar">
-            <a href="uuid-generator.html" title="Tạo Uuid" class="blue uuid-generator"></a>
-          </div>
-        </div>
-      </div>
-    </contentBox>
-  </div>
+<div class="box">
+<div class="h">
+Mục lục
+</div>
+<contentBox class="p" style="overflow-y: auto; height: auto; max-height: 256px;">
+<div style="margin: 5px">
+<div class="ar">
+<a href="index.html" title="Trang Chủ" class="blue index"></a>
+</div>
+<div>
+<div class="ar dropdown">
+<span>Tài liệu</span>
+</div>
+<div class="dropdownTab hide">
+<div class="ar">
+<a href="rawtext.html" title="Văn Bản Thô" class="blue rawText"></a>
+</div>
+</div>
+</div>
+<div>
+<div class="ar dropdown">
+<span>Công cụ</span>
+</div>
+<div class="dropdownTab hide">
+<div class="ar">
+<a href="json-formattor.html" title="Định dạng Json" class="blue json-formattor"></a>
+</div>
+<div class="ar">
+<a href="encode-decode.html" title="Mã Hóa & Giải Mã" class="blue encode-decode"></a>
+</div>
+<div class="ar">
+<a href="npc_dialogue-generator.html" title="Tạo Json Của Dialogue" class="blue npc_dialogue-generator"></a>
+</div>
+<div class="ar">
+<a href="uuid-generator.html" title="Tạo Uuid" class="blue uuid-generator"></a>
+</div>
+</div>
+</div>
+</contentBox>
+</div>
 </div>
 <div class="sidebarClose" onclick="sidebarClose()"></div>
 `;

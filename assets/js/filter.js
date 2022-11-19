@@ -1,23 +1,23 @@
 let filter = [
   "Trang Chủ",
   "Văn Bản Thô",
+  "Định Dạng Json",
   "Tạo npc_dialogue",
   "Mã Hóa & Giải Mã",
-  "Tạo Uuid",
-  "apple"
+  "Tạo Uuid"
 ];
-let minecraft = [
-  "apple"
+let urlLink = [
+  "index",
+  "rawtext",
+  "json-formattor",
+  "npc_dialogue-generator",
+  "encode-decode",
+  "uuid-generator"
 ];
 function searchFilter(searchValue) {
-  wo("Trang Chủ", "index");
-  wo("Văn Bản Thô", "rawtext");
-  wo("Tạo npc_dialogue", "dialogue-generator");
-  wo("Mã Hóa & Giải Mã", "encode-decode");
-  wo("Tạo Uuid", "uuid-generator");
-  function wo(value, link) {
-    if (searchValue === value) {
-      window.open("https://nga2710.github.io/" + link + ".html", "_self");
+  for (i = 0; i < filter.length; i++) {
+    if (searchValue === filter[i]) {
+      window.open("https://nga2710.github.io/" + urlLink[i] + ".html", "_self");
     }
   }
 }

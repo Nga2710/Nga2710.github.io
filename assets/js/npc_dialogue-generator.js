@@ -86,7 +86,7 @@ saveFile.addEventListener('click', e => {
       document.querySelector(".fileName").classList.remove("wood_b");
     }
     window.open("#top", "_self");
-    toastShow("Lỗi", "Đây là những ô bắt buộc phải điền!");
+    toastShow("Lỗi", "Đây là những ô bắt buộc phải điền!", "e");
     const timeout = setTimeout(reset, 3000);
     function reset() {
       document.querySelector(".fileName").classList.remove("wood_b_warning");
@@ -144,8 +144,8 @@ function toRawText(texts) {
         continue;
       }
       if (char == "\"")
-      rawText += "\\\""; else
-      rawText += char;
+        rawText += "\\\""; else
+        rawText += char;
     }
     if (noneText) {
       noneText = false;
@@ -171,14 +171,17 @@ function downloadFile(fileName, dialogue) {
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
+  toastShow("Đang xử lí..", "Đang thực hiện quá trình tải về!", "s");
 };
 function toggle_on1() {
+  soundClick.play();
   document.querySelector(".buttonoff1").classList.add("hide");
   document.querySelector(".buttonon1").classList.remove("hide");
   document.querySelector(".buttonGroup2").classList.remove("hide");
   toggle1 = true;
 }
 function toggle_off1() {
+  soundClick.play();
   document.querySelector(".buttonoff1").classList.remove("hide");
   document.querySelector(".buttonon1").classList.add("hide");
   document.querySelector(".buttonoff2").classList.remove("hide");
@@ -204,12 +207,14 @@ function toggle_off1() {
   toggle6 = false;
 }
 function toggle_on2() {
+  soundClick.play();
   document.querySelector(".buttonoff2").classList.add("hide");
   document.querySelector(".buttonon2").classList.remove("hide");
   document.querySelector(".buttonGroup3").classList.remove("hide");
   toggle2 = true;
 }
 function toggle_off2() {
+  soundClick.play();
   document.querySelector(".buttonoff2").classList.remove("hide");
   document.querySelector(".buttonon2").classList.add("hide");
   document.querySelector(".buttonoff3").classList.remove("hide");
@@ -231,12 +236,14 @@ function toggle_off2() {
   toggle6 = false;
 }
 function toggle_on3() {
+  soundClick.play();
   document.querySelector(".buttonoff3").classList.add("hide");
   document.querySelector(".buttonon3").classList.remove("hide");
   document.querySelector(".buttonGroup4").classList.remove("hide");
   toggle3 = true;
 }
 function toggle_off3() {
+  soundClick.play();
   document.querySelector(".buttonoff3").classList.remove("hide");
   document.querySelector(".buttonon3").classList.add("hide");
   document.querySelector(".buttonoff4").classList.remove("hide");
@@ -254,12 +261,14 @@ function toggle_off3() {
   toggle6 = false;
 }
 function toggle_on4() {
+  soundClick.play();
   document.querySelector(".buttonoff4").classList.add("hide");
   document.querySelector(".buttonon4").classList.remove("hide");
   document.querySelector(".buttonGroup5").classList.remove("hide");
   toggle4 = true;
 }
 function toggle_off4() {
+  soundClick.play();
   document.querySelector(".buttonoff4").classList.remove("hide");
   document.querySelector(".buttonon4").classList.add("hide");
   document.querySelector(".buttonoff5").classList.remove("hide");
@@ -273,6 +282,7 @@ function toggle_off4() {
   toggle6 = false;
 }
 function toggle_on5() {
+  soundClick.play();
   document.querySelector(".buttonoff5").classList.add("hide");
   document.querySelector(".buttonon5").classList.remove("hide");
   document.querySelector(".buttonoff6").classList.remove("hide");
@@ -281,6 +291,7 @@ function toggle_on5() {
   toggle5 = true;
 }
 function toggle_off5() {
+  soundClick.play();
   document.querySelector(".buttonoff5").classList.remove("hide");
   document.querySelector(".buttonon5").classList.add("hide");
   document.querySelector(".buttonGroup6").classList.add("hide");
@@ -288,11 +299,13 @@ function toggle_off5() {
   toggle6 = false;
 }
 function toggle_on6() {
+  soundClick.play();
   document.querySelector(".buttonoff6").classList.add("hide");
   document.querySelector(".buttonon6").classList.remove("hide");
   toggle6 = true;
 }
 function toggle_off6() {
+  soundClick.play();
   document.querySelector(".buttonoff6").classList.remove("hide");
   document.querySelector(".buttonon6").classList.add("hide");
   toggle6 = false;
