@@ -81,7 +81,7 @@ img {
   margin: 5px 5px 5px 5px;
   width: 65px
 }
-.icond:hover {
+.icond:active {
   outline: 2px solid #ffff00;
 }
 .tree_c {
@@ -126,6 +126,12 @@ img {
 }
 .icon_confirm {
   content: url(../media/confirm.png)
+}
+.icon_confirm:active {
+  content: url(../media/confirm_hover.png)
+}
+.icon_trash {
+  content: url(../media/icon_trash.png)
 }
 .icon_error {
   content: url(../media/icon_error.png)
@@ -184,6 +190,9 @@ green {
 }
 white {
   color: #ffffff;
+}
+black {
+  color: #000000;
 }
 cyan {
   color: #00ffff
@@ -330,18 +339,26 @@ footer {
   margin-right: 3px
 }
 /*----------Unknown----------*/
-	.toast {
+  .toastError {
     background: url(../media/sign_acacia.png) repeat center;
-    background-size: 100px;
+  }
+  .toastSuccess {
+    background: url(../media/sign_warped.png) repeat center;
+  }
+  .toastWarning {
+    background: url(../media/sign_birch.png) repeat center;
+  }
+	.toast {
+    background-size: 120px;
 		border: 4px solid var(--border);
-		border-radius: 10px;
+		border-radius: 5px;
 		width: 200px;
 		padding: 5px;
 		position: fixed;
 		bottom: 3%;
 		right: 1%;
 		transform: translateX(300px);
-		transition: 1s;
+		transition: 0.8s;
 	}
 	#toastCopy {
 		overflow-x: auto;
@@ -386,7 +403,6 @@ textarea {
   align-items: center;
   display: flex
 }
-.background {}
 .usn {
   user-select: none
 }
