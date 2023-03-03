@@ -23,11 +23,12 @@
 </head>
 <body>
   <div class="countdown">
-    <h1 id="title">Countdown to Launch..</h1>
+    <h1 id="title">Watercube Game</h1>
     <div id="countdown-timer"></div>
   </div>
+  <button onclick="load()">New Game</button>
   <script>
-    window.onload = () => {
+    load = () => {
       document.getElementById("countdown-timer").innerHTML = "3";
       document.getElementById("title").innerHTML = "Countdown to Launch.";
       setTimeout(launch3, 1000)
