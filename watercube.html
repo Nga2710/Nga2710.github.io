@@ -41,6 +41,8 @@
     function launch2() {
       document.getElementById("countdown-timer").innerHTML = "1";
       document.getElementById("title").innerHTML = "Countdown to Launch...";
+      var audio = new Audio("launch.mp3");
+      audio.play();
       setTimeout(launch, 1000)
       
     }
@@ -50,8 +52,8 @@
       var img = document.createElement("img");
       img.src = "launch.gif";
       document.body.appendChild(img);
-      var audio = new Audio("launch.mp3");
-      audio.play();
+
+
     }
   </script>
 </body>
