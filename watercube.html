@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Countdown Page</title>
+  <title>Watercube Game</title>
   <style>
     .countdown {
       text-align: center;
@@ -29,15 +29,11 @@
   <button onclick="load()">New Game</button>
   <script>
     load = () => {
-      document.getElementById("countdown-timer").innerHTML = "3";
-      document.getElementById("title").innerHTML = "Countdown to Launch.";
-      setTimeout(launch3, 1000)
-    }
-    function launch3() {
       document.getElementById("countdown-timer").innerHTML = "2";
-      document.getElementById("title").innerHTML = "Countdown to Launch..";
+      document.getElementById("title").innerHTML = "Countdown to Launch.";
       setTimeout(launch2, 1000)
     }
+    
     function launch2() {
       document.getElementById("countdown-timer").innerHTML = "1";
       document.getElementById("title").innerHTML = "Countdown to Launch...";
@@ -55,6 +51,7 @@
 
 
     }
+    
   </script>
 </body>
 </html>
