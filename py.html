@@ -12,7 +12,7 @@
   <meta name="twitter:description" content="Nơi lưu trữ code Python">
   <meta property="og:image" content="assets/media/icon_code.png">
   <meta name="twitter:image" content="assets/media/icon_code.png">
-  <meta property="og:url" content="https://nga2710.github.io/encode-decode.html">
+  <meta property="og:url" content="https://nga2710.github.io/py.html">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
   <meta property="og:site_name" content="BDev-Book">
@@ -21,49 +21,78 @@
   <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
   <script src="assets/js/defaults.js"></script>
 </head>
+
+<script src="skulpt.min.js" type="text/javascript"></script> 
+<script src="skulpt-stdlib.js" type="text/javascript"></script> 
+
 <body>
   <div id="script"></div>
   <header id="header"></header>
   <div id="sidebar"></div>
   <div class="page_display left_top">
-    <div class="left">
-      <div class="box">
-        <div class="yellow h">
-          Tính điểm TBM
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">v = [1,2,3]
+    <div class="left" id="co">
+
+
+
+
+<div class="box">
+          <div class="yellow h">
+            Run Code
+          </div>
+          <contentBox>
+            <div style="margin: 20px">
+              <textarea id="code" class="wood_b" placeholder=">>>" id="text" style="width: 80%; height: 16em"></textarea><br><br>
+            </div>
+    <button onclick="runCode()">Run</button>
+    <br><br>
+    <h2>Output:</h2>
+            <div style="margin: 20px">
+              <textarea id="output" class="wood_b" placeholder="Output" id="text" style="width: 80%; height: 16em"></textarea><br><br>
+            </div>
+      <script>
+      function runCode() {
+        try {
+            const code = document.getElementById("code").value;
+            // Override the built-in 'print' function with one that appends the output to the 'output' element
+            const print = function(text) {
+                const output = document.getElementById("output");
+                output.innerHTML += text + "\n";
+            };
+            Sk.configure({
+                output: print
+            });
+
+            // Run the Python code
+            Sk.importMainWithBody("<stdin>", false, code);
+        }
+        catch(err) {
+              toastShow("Lỗi", `${err}`, "e");
+        }
+        }
+</script>
+</contentBox>
+      </div>
+      <h2>Code lưu trữ:</h2>
+    </div>
+
+  </div>
+  <script>
+  s = document.getElementById("co").innerHTML
+function form(title, content) { s += `\n      <div class="box">\n        <div class="yellow h">\n          ${title}\n        </div>\n        <contentBox>\n          <div style="margin: 20px">\n            <textarea class="wood_b" placeholder=">>>" id="text" style="width: 80%; height: 16em">${content}</textarea>\n          </div>\n        </contentBox>
+      </div>\n`
+}
+form("Tính điểm TBM",`v = [1,2,3]
 s = 0
 def plus(p, t):
   global s
   s+=float(p)*t
 for k in range(len(v)):
   v[k] = list(map(lambda p: plus(p, v[k]), input(f"Nhập điểm hệ số {v[k]}: ").split()))
-print("Điểm TBM: ", s/(len(v[0])+len(v[1])*2+len(v[2])*3))</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Khoanh lụi trắc nghiệm
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">import random
-import math
+print("Điểm TBM: ", s/(len(v[0])+len(v[1])*2+len(v[2])*3))`)
+form("Khoanh lụi trắc nghiệm",`import random
 for o in range(1, int(input("Nhập số câu:"))+1):
-    print(o,  random.choice(["A", "B", "C", "D"]))</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Phương trình đường tròn đi qua ba điểm
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">x1, y1 = map(float, input("Nhập tọa độ điểm thứ nhất (x1, y1): ").split())
+    print(o,  random.choice(["A", "B", "C", "D"]))`)
+form("Viết phương trình đường tròn đi qua ba điểm",`x1, y1 = map(float, input("Nhập tọa độ điểm thứ nhất (x1, y1): ").split())
 x2, y2 = map(float, input("Nhập tọa độ điểm thứ hai (x2, y2): ").split())
 x3, y3 = map(float, input("Nhập tọa độ điểm thứ ba (x3, y3): ").split())
 a = x1 - x2
@@ -81,17 +110,8 @@ def nt(m):
         return m
     else:
         return "+"+str(m)
-print(f"Phương trình đường tròn:\n Dạng 1: (x{nt(x0)})² +(y{nt(y0)})² = {r**2}\n Dạng 2: x²+y²{nt(x0*2)}x{nt(y0*2)}y{nt((x0**2+y0**2-r**2)*(-1))} = 0")</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Giải phương trình bậc hai
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">a = float(input("Nhập hệ số a:"))
+print(f"Phương trình đường tròn:\\n Dạng 1: (x{nt(x0)})² +(y{nt(y0)})² = {r**2}\\n Dạng 2: x²+y²{nt(x0*2)}x{nt(y0*2)}y{nt((x0**2+y0**2-r**2)*(-1))} = 0")`)
+form("Giải phương trình bậc hai",`a = float(input("Nhập hệ số a:"))
 while a == 0:
   print("Hệ số a phải khác 0, nhập lại!")
   a = float(input("Nhập hệ số a:"))
@@ -103,34 +123,16 @@ if delta == 0:
 if delta < 0:
   print("Phương trình vô nghiệm")
 if delta > 0:
-  print("Phương trình có hai nghiệm phân biệt: x1 = ", (-b-delta**0.5)/(2*a), ";x2 = ", (-b+delta**0.5)/(2*a))</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Tính chu vi & diện tích tam giác
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">a = float(input("Nhập cạnh a:"))
+  print("Phương trình có hai nghiệm phân biệt: x1 = ", (-b-delta**0.5)/(2*a), ";x2 = ", (-b+delta**0.5)/(2*a))`)
+form("Tính diện tích, chu vi tam giác",`a = float(input("Nhập cạnh a:"))
 b = float(input("Nhập cạnh b:"))
 c = float(input("Nhập cạnh c:"))
 if a > 0 and b > 0 and c > 0 and a+b>c and a+c>b and b+c>a:
     p = (a+b+c)/2
     print("Chu vi tam giác:",p*2,"; Diện tích tam giác:", (p*(p-a)*(p-b)*(p-c))**0.5)
 else:
-    print("Không phải là ba cạnh của một tam giác")</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Tính tổng số dương, âm trong mảng
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">A = input("Nhập mảng:").split()
+    print("Không phải là ba cạnh của một tam giác")`)
+form("Tính tổng phần tử dương, âm trong mảng",`A = input("Nhập mảng:").split()
 s = m = 0
 for k in range(len(A)):
     x = float(A[k])
@@ -138,17 +140,8 @@ for k in range(len(A)):
         s += x
     else:
         m += x
-print("Tổng số dương là:", s,"\nTổng số âm là:", m)</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Bài toán 3x+1
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">import os
+print("Tổng số dương là:", s,"\\nTổng số âm là:", m)`)
+form("Bài toán 3x+1",`import os
 while True:
   try:
     x = int(input("x = "))
@@ -166,48 +159,21 @@ while True:
     break
   else:
     result.append(str(int(x)))
-print("\x20".join(result))</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Tính π
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">p = 1; n = 3
+print("\x20".join(result))`)
+form("Tính π",`p = 1; n = 3
 while True:
     p+=2/(-n*(n+2))
     n+=4
-    print(p*4)</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          Xử lí bảng số liệu
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">def cal(x):
+    print(p*4)`)
+form("Xử lí bảng số liệu",`def cal(x):
   c = (float(x)/s)*100
   return f"{round(c, 4)}%-{round(c*3.6, 4)}°"
 for i in range(int(input("Nhập số lần cần tính: "))):
   s = float(input(f"Nhập số liệu tổng {i+1}: "))
   ns = list(map(lambda x: cal(x), input("Nhập số liệu con: ").split()))
   for k in ns:
-    print(k, end = "\n")</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          In ra các số nguyên tố
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em">k = 1
+    print(k, end = "\\n")`)
+form("In ra các số nguyên tố",`k = 1
 def is_prime(n):
     if n < 2:
         return False
@@ -218,35 +184,9 @@ def is_prime(n):
 while True:
     if is_prime(k):
         print(k)
-    k+=1</textarea>
-          </div>
-        </contentBox>
-      </div>
-      <!--div class="box">
-        <div class="yellow h">
-          
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em"></textarea>
-          </div>
-        </contentBox>
-      </div>
-      <div class="box">
-        <div class="yellow h">
-          
-        </div>
-        <contentBox>
-          <div style="margin: 20px">
-            <textarea class="wood_b" placeholder="{ }" id="text" style="width: 80%; height: 16em"></textarea>
-          </div>
-        </contentBox>
-      </div-->
-      
-      
-    </div>
-
-  </div>
+    k+=1`)
+  document.getElementById("co").innerHTML = s;
+  </script>
   <div class="box">
     <marquee behavior="scroll" direction="left">
       <noscript><span style="font-size: 20px; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script</span><style>
@@ -260,9 +200,8 @@ while True:
       <div id="loading"></div>
     </marquee>
   </div>
-  <script src="assets/js/encode-decode.js"></script>
-  <script src="assets/js/toggle.js"></script>
-  <script src="assets/js/ctrl.js"></script>
+
+
   <footer id="footer"></footer>
 </body>
 </html>
