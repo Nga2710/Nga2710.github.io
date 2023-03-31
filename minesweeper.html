@@ -258,7 +258,7 @@
           const y = Math.floor(index / 10) + dir.y;
           if (x >= 0 && x < 10 && y >= 0 && y < 10) {
             const adjacentCell = grid.children[y * 10 + x];
-            if (adjacentCell.dataset.mine === "false") revealEmptyCells(adjacentCell);
+            if (adjacentCell.dataset.mine === "false" && adjacentCell.dataset.flagged === "false") revealEmptyCells(adjacentCell);
             else if (adjacentCell.dataset.flagged === "false") { endGame(adjacentCell); return}
           }
         })
