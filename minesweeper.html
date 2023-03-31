@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=0.7">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
   <title>Minesweeper</title>
   <style>
     body {
@@ -95,8 +95,18 @@
       <button id="place">Đặt cờ</button>
     </div>
     <div id="minesweeper-grid"></div>
+    <br>
+    <strong id="alert">
+      ...
+    </strong>
   </div>
   <script>
+    function print(text) {
+      document.getElementById("alert").innerHTML = text
+      setTimeout(()=>{
+        document.getElementById("alert").innerHTML = "..."
+      }, 3000)
+    }
     const grid = document.getElementById("minesweeper-grid");
     const restart = document.getElementById("restart");
     const place = document.getElementById("place");
@@ -145,7 +155,7 @@
       let minesPlaced = 0;
       const boomCount = Number(document.getElementById("boomCount").value);
       if (boomCount < 1 || boomCount > 99) {
-        alert("Số lượng bom được nhập không hợp lệ")
+        print("Số lượng bom được nhập không hợp lệ!")
         return
       }
       while (minesPlaced < boomCount) {
@@ -264,7 +274,7 @@
         revealAllMines();
         stopTimer();
         setTimeout(() => {
-          alert("Bạn đã thua!");
+          print("Bạn đã thua!")
           resetGame();
         }, 100);
       } else {
@@ -272,7 +282,7 @@
         if (checkWin()) {
           stopTimer();
           setTimeout(() => {
-            alert(`Chúc mừng bạn đã chiến thắng!\nThời gian: ${timer.textContent}`);
+            print(`Bạn đã chiến thắng! Thời gian: ${timer.textContent}`)
             resetGame();
           }, 100);
         }
