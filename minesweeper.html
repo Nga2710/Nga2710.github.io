@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.7">
+  <title>Minesweeper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #333333;
+    }
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0;
+    }
+    #timer {
+      font-size: 1.5rem;
+      color: #333333;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    .red {
+      background-color: red;
+    }
+    #minesweeper-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 30px);
+      grid-template-rows: repeat(10, 30px);
+      gap: 5px;
+      margin: 0 auto;
+    }
+    .cell {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #cccccc;
+      background-color: #eeeeee;
+      text-align: center;
+      line-height: 30px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #333333;
+      user-select: none;
+      cursor: pointer;
+    }
+    .cell[data-open="true"] {
+      background-color: #dddddd;
+      cursor: default;
+    }
+    .cell[data-mine="true"] {
+      color: #FF0000;
+    }
+    .cell[data-flagged="true"]:before {
+      content: "🚩";
+      position: absolute;
+      font-size: 1rem;
+    }
+    input {
+      width: 20%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dò Mìn</h1>
+    <div class="game-info">
+      <span id="timer">00:00</span>
+      <br><input type="number" id="boomCount" value="10" min="1" max="99" step="1">
+      <button id="restart">Chơi lại</button>
+      <button id="place">Đặt cờ</button>
+    </div>
+    <div id="minesweeper-grid"></div>
+  </div>
+  <script>
+    const grid = document.getElementById("minesweeper-grid");
+    const restart = document.getElementById("restart");
+    const place = document.getElementById("place");
+    const timer = document.getElementById("timer");
+    let timeInterval;
+    let seconds = 0;
+    let minutes = 0;
+    let started = false;
+    function startTimer() {
+      clearInterval(timeInterval);
+      timeInterval = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+          minutes++;
+          seconds = 0;
+        }
+        timer.textContent = (minutes < 10 ? "0": "") + minutes + ":" + (seconds < 10 ? "0": "") + seconds;
+      },
+        1000);
+    }
+    function stopTimer() {
+      clearInterval(timeInterval);
+      started = false;
+    }
+    function resetTimer() {
+      stopTimer();
+      seconds = 0;
+      minutes = 0;
+      timer.textContent = "00:00";
+    }
+    function createGrid() {
+      grid.innerHTML = "";
+      for (let i = 0; i < 100; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.open = "false";
+        cell.dataset.flagged = "false";
+        cell.dataset.mine = "false";
+        cell.dataset.adjacent = "0";
+        cell.addEventListener("click", handleClick);
+        cell.addEventListener("contextmenu", handleRightClick);
+        grid.appendChild(cell);
+      }
+    }
+    function placeMines() {
+      let minesPlaced = 0;
+      const boomCount = Number(document.getElementById("boomCount").value);
+      if (boomCount < 1 || boomCount > 99) {
+        alert("Số lượng bom được nhập không hợp lệ")
+        return
+      }
+      while (minesPlaced < boomCount) {
+        const index = Math.floor(Math.random() * 100);
+        const cell = grid.children[index];
+        if (cell.dataset.mine === "false") {
+          cell.dataset.mine = "true";
+          minesPlaced++;
+        }
+      }
+    }
+    const directions = [{
+      x: -1,
+      y: -1
+    }, {
+      x: 0,
+      y: -1
+    }, {
+      x: 1,
+      y: -1
+    },
+      {
+        x: -1,
+        y: 0
+      }, {
+        x: 1,
+        y: 0
+      },
+      {
+        x: -1,
+        y: 1
+      }, {
+        x: 0,
+        y: 1
+      }, {
+        x: 1,
+        y: 1
+      }];
+    function calculateAdjacentMines() {
+      for (let i = 0; i < 100; i++) {
+        const cell = grid.children[i];
+        if (cell.dataset.mine === "true") continue;
+        let count = 0;
+        directions.forEach(dir => {
+          const x = i % 10 + dir.x;
+          const y = Math.floor(i / 10) + dir.y;
+          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+            const adjacentCell = grid.children[y * 10 + x];
+            if (adjacentCell.dataset.mine === "true") {
+              count++;
+            }
+          }
+        });
+        cell.dataset.adjacent = count;
+      }
+    }
+    function revealEmptyCells(cell) {
+      const index = Array.prototype.indexOf.call(grid.children,
+        cell);
+      cell.dataset.open = "true";
+      cell.textContent = cell.dataset.adjacent > 0 ? cell.dataset.adjacent: "";
+      if (cell.dataset.adjacent === "0") {
+        directions.forEach(dir => {
+          const x = index % 10 + dir.x;
+          const y = Math.floor(index / 10) + dir.y;
+          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+            const adjacentCell = grid.children[y * 10 + x];
+            if (adjacentCell.dataset.open === "false" && adjacentCell.dataset.flagged === "false") {
+              revealEmptyCells(adjacentCell);
+            }
+          }
+        });
+      }
+    }
+    function revealAllMines() {
+      for (let i = 0; i < 100; i++) {
+        const cell = grid.children[i];
+        if (cell.dataset.mine === "true") {
+          cell.dataset.open = "true";
+          cell.textContent = "💣";
+        }
+      }
+    }
+    function checkWin() {
+      for (let i = 0; i < 100; i++) {
+        cell = grid.children[i];
+        if (cell.dataset.mine === "false" && cell.dataset.open === "false")
+          return false
+      }
+      return true;
+    }
+    function handleClick(e) {
+      const cell = e.target;
+      if (cell.dataset.flagged === "true") return;
+      if (cell.dataset.mine === "false" && cell.dataset.open === "true" && started) {
+        const index = Array.prototype.indexOf.call(grid.children,
+          cell);
+        directions.forEach(dir => {
+          const x = index % 10 + dir.x;
+          const y = Math.floor(index / 10) + dir.y;
+          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+            const adjacentCell = grid.children[y * 10 + x];
+            if (adjacentCell.dataset.mine === "false") revealEmptyCells(adjacentCell);
+            else if (adjacentCell.dataset.flagged === "false") { endGame(adjacentCell); return}
+          }
+        })
+      }
+      endGame(cell)
+      if (!started) {
+        started = true;
+        startTimer();
+      }
+    }
+    function endGame(cell) {
+      if (cell.dataset.mine === "true") {
+        revealAllMines();
+        stopTimer();
+        setTimeout(() => {
+          alert("Bạn đã thua!");
+          resetGame();
+        }, 100);
+      } else {
+        revealEmptyCells(cell);
+        if (checkWin()) {
+          stopTimer();
+          setTimeout(() => {
+            alert(`Chúc mừng bạn đã chiến thắng!\nThời gian: ${timer.textContent}`);
+            resetGame();
+          }, 100);
+        }
+      }
+    }
+    function handleRightClick(e) {
+      e.preventDefault();
+      const cell = e.target;
+      if (cell.dataset.open === "true") return;
+      cell.dataset.flagged = cell.dataset.flagged === "true" ? "false": "true";
+      cell.style.position = "relative";
+    }
+    function resetGame() {
+      createGrid();
+      resetTimer();
+      placeMines();
+      calculateAdjacentMines();
+    }
+    placemode = false
+    function changeplace() {
+      placemode = !placemode
+      if (placemode) {
+        for (let i = 0; i < 100; i++) {
+          cell = grid.children[i];
+          cell.addEventListener("click", handleRightClick);
+          cell.removeEventListener("click", handleClick);
+        }
+        document.getElementById("place").classList.add("red");
+      } else {
+        for (let i = 0; i < 100; i++) {
+          cell = grid.children[i];
+          cell.removeEventListener("click", handleRightClick);
+          cell.addEventListener("click", handleClick);
+        }
+        document.getElementById("place").classList.remove("red");
+      }
+    }
+
+    function doubleclick() {}
+    place.addEventListener("click", changeplace);
+    restart.addEventListener("click", resetGame);
+    resetGame();
+  </script>
+</body>
+</html>
