@@ -1,6 +1,6 @@
 var imgencode = document.getElementById("encode"),
 imgdecode = document.getElementById("decode"),
-str, resultStr, hex;/*
+str, resultStr, hex;
 imgencode.onclick = () => {
   str = document.querySelector("textarea").value;
   resultStr = '';
@@ -56,9 +56,8 @@ imgencode.onclick = () => {
     text.value = resultStr;
   }
 };
-Có thể viết gọn lại mã JavaScript trên như sau:
 
-```javascript*/
+/*
 imgencode.onclick = () => {
   const str = document.querySelector("textarea").value;
   let resultStr = '';
@@ -81,7 +80,7 @@ imgencode.onclick = () => {
     toastShow("Đã mã hóa thành công!", "", "s");
     text.value = resultStr;
   }
-};/*
+};*/
 
 
 
@@ -116,7 +115,7 @@ imgdecode.onclick = () => {
   }
 };
 
-*/
+/*
 imgdecode.onclick = () => {
   const str = document.querySelector("textarea").value;
   let resultStr = "";
@@ -132,4 +131,4 @@ imgdecode.onclick = () => {
     text.value = resultStr;
     toastShow("Đã giải mã thành công!", "", "s");
   }
-};
+};*/
