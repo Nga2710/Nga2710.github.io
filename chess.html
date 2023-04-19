@@ -1,0 +1,104 @@
+<html lang="vi'">
+<body style="background-color: #dddddd">
+  <strong style="font-size:50px;top:3%;left:3%; position: fixed">Chess</strong>
+  <border></border>
+  <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="board"></table>
+  <span class="reset-btn" onclick="reset()">
+    Reset
+  </span>
+  <!--span class="undo-btn" onclick="undo()">Undo</span-->
+  <script src="chess.js"></script>
+</body>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess</title>
+  <style>
+    * {
+      user-select: none;
+    }
+    td:active {
+      background-color: red;
+    }
+    td {
+      width: 51px;
+      height: 53px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 35px;
+    }
+    border {
+      border: 20px solid black;
+      position: fixed;
+      height: 424px;
+      width: 424px;
+      border-radius: 10px
+    }
+    .black {
+      background-color: #00aa00;
+    }
+    .white {
+      background-color: white;
+    }
+    .red {
+      background-color: red;
+    }
+    body {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background-color: #F4F4F4;
+    }
+    .undo-btn {
+      border-radius: 20px;
+      background-color: white;
+      width: 100px;
+      border: 10px solid black;
+      left: 2%;
+      top: 3%;
+      position: fixed;
+      text-align: center;
+      font-weight: bold;
+      font-size: 22px;
+    }
+    .reset-btn {
+      border-radius: 20px;
+      background-color: #00aa00;
+      height: 30px;
+      width: 100px;
+      border: 10px solid black;
+      right: 2%;
+      bottom: 3%;
+      position: fixed;
+      text-align: center;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .reset-btn:active {
+      background-color: lime;
+      border: 10px solid yellow;
+    }
+@media screen and (max-width: 586px) {
+      td {
+        width: 30px;
+        height: 32px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 22px;
+      }
+      border {
+        border: 10px solid black;
+        position: fixed;
+        height: 256px;
+        width: 256px;
+        border-radius: 10px
+      }
+    }
+
+  </style>
+</head>
+</html>
