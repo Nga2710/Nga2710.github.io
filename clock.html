@@ -68,11 +68,11 @@
         minute: '2-digit',
         second: '2-digit',
         hour12: false,
-        timeZone: 'UTC',
+        timeZone: 'Asia/Ho_Chi_Minh',
         fractionalSecondDigits: 3
       }
 
-      var time = now.toLocaleString('vi-VN', options);
+      var time = now.toLocaleString("vi-VN", options);
       document.getElementById('ctime').textContent = time;
     }
 
