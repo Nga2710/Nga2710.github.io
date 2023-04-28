@@ -1,4 +1,4 @@
-<html lang="vi'">
+<html lang="vi">
 <body style="background-color: #dddddd">
   <strong style="font-size:50px;top:3%;left:3%; position: fixed">Chess</strong>
   <border></border>
@@ -6,7 +6,6 @@
   <span class="reset-btn" onclick="reset()">
     Reset
   </span>
-  <!--span class="undo-btn" onclick="undo()">Undo</span-->
   <script src="chess.js"></script>
 </body>
 <head>
@@ -21,20 +20,7 @@
     td:active {
       background-color: red;
     }
-    td {
-      width: 51px;
-      height: 53px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 35px;
-    }
-    border {
-      border: 20px solid black;
-      position: fixed;
-      height: 424px;
-      width: 424px;
-      border-radius: 10px
-    }
+
     .black {
       background-color: #00aa00;
     }
@@ -82,23 +68,36 @@
       background-color: lime;
       border: 10px solid yellow;
     }
-@media screen and (max-width: 586px) {
+    td {
+      width: 30px;
+      height: 32px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 22px;
+    }
+    border {
+      border: 10px solid black;
+      position: fixed;
+      height: 256px;
+      width: 256px;
+      border-radius: 10px
+
+    }
+@media screen and ((min-height: 444px) and (min-width: 444px)) {
       td {
-        width: 30px;
-        height: 32px;
-        text-align: center;
-        vertical-align: middle;
-        font-size: 22px;
+        width: 51px;
+        height: 53px;
+
+        font-size: 35px;
       }
       border {
-        border: 10px solid black;
-        position: fixed;
-        height: 256px;
-        width: 256px;
-        border-radius: 10px
+        border: 20px solid black;
+        height: 424px;
+        width: 424px;
+      border-radius: 10px
       }
-    }
 
+    }
   </style>
 </head>
 </html>

@@ -1,57 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tic Tac Toe with AI</title>
   <style>
-    #gameboard {
-      width: 300px;
-      height: 300px;
-      border: 1px solid black;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
     }
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #gameboard {
+      width: 309px;
+      height: 309px;
+      border: 8px solid black;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      grid-gap: 4px;
+      margin: 0 auto;
+      background-color: #fff;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .square {
       width: 100px;
       height: 100px;
       border: 1px solid black;
-      font-size: 50px;
+      font-size: 80px;
       text-align: center;
-      line-height: 100px;
+      line-height: 100%;
       cursor: pointer;
+      background-color: transparent;
+      color: #333;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .square:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .square:active {
+      transform: scale(0.9);
     }
 
 
   </style>
 </head>
+
 <body>
   <h1>Tic Tac Toe with AI</h1>
   <div id="gameboard">
-    <div class="row">
+
       <div class="square" id="0"></div>
       <div class="square" id="1"></div>
       <div class="square" id="2"></div>
-    </div>
-    <div class="row">
+
       <div class="square" id="3"></div>
       <div class="square" id="4"></div>
       <div class="square" id="5"></div>
-    </div>
-    <div class="row">
+
       <div class="square" id="6"></div>
       <div class="square" id="7"></div>
       <div class="square" id="8"></div>
-    </div>
   </div>
   <script>
     let board = ['', '', '', '', '', '', '', '', ''];
@@ -66,42 +82,42 @@
       checkForWinner();
       currentPlayer = currentPlayer === human ? computer: human;
       if (currentPlayer === computer) {
-        //setTimeout(computerMove, 500);
-        computerMove()
+        setTimeout(computerMove, 300);
+        //computerMove()
       }
     }
 
     function handleClick(event) {
       updateBoard(event.target.id);
     }
-
+    const winningCombinations = [
+      [0,
+        1,
+        2],
+      [3,
+        4,
+        5],
+      [6,
+        7,
+        8],
+      [0,
+        3,
+        6],
+      [1,
+        4,
+        7],
+      [2,
+        5,
+        8],
+      [0,
+        4,
+        8],
+      [2,
+        4,
+        6],
+    ];
     function checkForWinner() {
-      const winningCombinations = [
-        [0,
-          1,
-          2],
-        [3,
-          4,
-          5],
-        [6,
-          7,
-          8],
-        [0,
-          3,
-          6],
-        [1,
-          4,
-          7],
-        [2,
-          5,
-          8],
-        [0,
-          4,
-          8],
-        [2,
-          4,
-          6],
-      ];
+
       for (let i = 0; i < winningCombinations.length; i++) {
         const [a,
           b,
@@ -197,32 +213,7 @@
     }
 
     function checkForMinimaxWinner() {
-      const winningCombinations = [
-        [0,
-          1,
-          2],
-        [3,
-          4,
-          5],
-        [6,
-          7,
-          8],
-        [0,
-          3,
-          6],
-        [1,
-          4,
-          7],
-        [2,
-          5,
-          8],
-        [0,
-          4,
-          8],
-        [2,
-          4,
-          6],
-      ];
+
       for (let i = 0; i < winningCombinations.length; i++) {
         const [a,
           b,
@@ -247,5 +238,3 @@
   </script>
 </body>
 </html>
-
-
