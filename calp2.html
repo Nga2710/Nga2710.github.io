@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <title>Bảng điểm</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: #fff;
+    }
+    td {
+      width: 50px;
+      height: 50px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0px;
+      text-align: center;
+      color: #333;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    th {
+      background-color: #f1f1f1;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    td[data-label]:before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+    }
+    td[data-label="Môn học"] {
+      background-color: #f1f1f1;
+      font-weight: bold;
+    }
+    td[data-label="Kiểm tra 15 phút"] {
+      background-color: #ffe6cc;
+    }
+    td[data-label="Kiểm tra 1 tiết"] {
+      background-color: #ccffcc;
+    }
+    td[data-label="Thi giữa kỳ"] {
+      background-color: #e6f2ff;
+    }
+    td[data-label="Thi cuối kỳ"] {
+      background-color: #ffcccc;
+    }
+    .caption {
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: right;
+    }
+    .caption em {
+      font-style: normal;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      border: none;
+      outline: none;
+      background-color: rgba(0,0,0,0);
+    }
+  </style>
+</head>
+<body>
+  <h1>Bảng điểm</h1>
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2">Môn học</th>
+        <th colspan="4">Ktra TX</th>
+        <th rowspan="2">Ktra GK</th>
+        <th rowspan="2">Ktra CK</th>
+        <th rowspan="2">Điểm TBM</th>
+        <!--th rowspan="2">Điểm TBM dự kiến</th>
+                                                                                                                                                                                        				<th rowspan="2">Số điểm cần đạt</th-->
+      </tr>
+      <tr>
+        <th>Điểm 1</th>
+        <th>Điểm 2</th>
+        <th>Điểm 3</th>
+        <th>Điểm 4</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <br>
+  <strong>Điểm TB các môn: <div id="diemtb"></div>
+  </strong>
+  <script>
+    // localStorage.clear()
+    s = ""
+    list = ["Toán Học", "Ngữ Văn", "Vật Lý", "Hóa học", "Tin Học", "Lịch Sử", "Địa Lí", "Ngoại Ngữ", "GDQP&AN"]
+    for (i = 0; i < 9; i++)
+      add(list[i], i)
+    function add(su, id) {
+      s += `<tr><td>${su}</td>
+      <td><input type="number" id="2${id}0" value=""></td>
+      <td><input type="number" id="2${id}1" value=""></td>
+      <td><input type="number" id="2${id}2" value=""></td>
+      <td><input type="number" id="2${id}3" value=""></td>
+      <td><input type="number" id="2${id}4" value=""></td>
+      <td><input type="number" id="2${id}5" value=""></td>
+      <td><input type="number" disabled id="${id}6"></td>
+      </tr>`
+    }
+    document.querySelector("tbody").innerHTML = s
+    var inputs = document.getElementsByTagName("input");
+    // Lấy giá trị từ localStorage khi trang được tải lại
+    window.onload = function() {
+      for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        var id = input.id;
+        var value = localStorage.getItem(id);
+        if (value) {
+          input.value = value;
+        }
+      }
+    }
+    localStorage.setItem("loaded", "true")
+    // Lưu giá trị vào localStorage khi người dùng nhập vào
+    for (var i = 0; i < inputs.length; i++) {
+      var input = inputs[i];
+      if (!localStorage.getItem("loaded"))
+        localStorage.setItem(input.id, input.value);
+      input.addEventListener("input", function() {
+        var id = this.id;
+        var value = this.value;
+        localStorage.setItem(id, value);
+        cal();
+      });
+    }
+    cal()
+    function cal() {
+      diemtb = 0
+      t = 0
+      for (i = 0; i < 9; i++) {
+        var tong = 0,
+        k = 0
+        for (j = 0; j < 4; j++) {
+          if (localStorage.getItem(`${i}${j}`) != "") {
+            k++;
+            tong += Number(localStorage.getItem(`${i}${j}`))
+          }
+        }
+        if (localStorage.getItem(`2${i}4`) != "") {
+          k += 2;
+          tong += Number(localStorage.getItem(`${i}4`))*2
+        }
+        if (localStorage.getItem(`2${i}5`) != "") {
+          k += 3;
+          tong += Number(localStorage.getItem(`${i}5`))*3
+        }
+        if (k == 0) {
+          tong = "";
+        } else {
+          tong /= k
+          document.getElementById(`2${i}6`).value = tong.toFixed(4)
+        }
+        if (tong != "") {
+          t++;
+          diemtb += tong
+        }
+      }
+      document.getElementById(`diemtb`).innerHTML = diemtb/t
+    }
+    function print(text) {
+      console.log(text)}
+  </script>
+</body>
+</html>
