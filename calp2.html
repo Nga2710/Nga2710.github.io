@@ -110,7 +110,7 @@
       <td><input type="number" id="2${id}3" value=""></td>
       <td><input type="number" id="2${id}4" value=""></td>
       <td><input type="number" id="2${id}5" value=""></td>
-      <td><input type="number" disabled id="${id}6"></td>
+      <td><input type="number" disabled id="2${id}6"></td>
       </tr>`
     }
     document.querySelector("tbody").innerHTML = s
@@ -147,18 +147,18 @@
         var tong = 0,
         k = 0
         for (j = 0; j < 4; j++) {
-          if (localStorage.getItem(`${i}${j}`) != "") {
+          if (localStorage.getItem(`2${i}${j}`) != "") {
             k++;
-            tong += Number(localStorage.getItem(`${i}${j}`))
+            tong += Number(localStorage.getItem(`2${i}${j}`))
           }
         }
         if (localStorage.getItem(`2${i}4`) != "") {
           k += 2;
-          tong += Number(localStorage.getItem(`${i}4`))*2
+          tong += Number(localStorage.getItem(`2${i}4`))*2
         }
         if (localStorage.getItem(`2${i}5`) != "") {
           k += 3;
-          tong += Number(localStorage.getItem(`${i}5`))*3
+          tong += Number(localStorage.getItem(`2${i}5`))*3
         }
         if (k == 0) {
           tong = "";
