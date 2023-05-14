@@ -131,8 +131,8 @@
     for (var i = 0; i < inputs.length; i++) {
       var input = inputs[i];
       if (!localStorage.getItem("loaded"))
-        localStorage.setItem(input.id, input.value);
-      input.addEventListener("input", function() {
+        localStorage.setItem(input.id, "");
+      input.addEventListener("keyup", function() {
         var id = this.id;
         var value = this.value;
         localStorage.setItem(id, value);
