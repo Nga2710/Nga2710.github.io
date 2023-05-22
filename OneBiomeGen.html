@@ -1,0 +1,174 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+  <title>OneBiomeGen</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      margin: 0 auto;
+      display: block;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    OneBiomeGen
+  </header>
+  <textarea id="json" placeholder='Chỉ nhập bên trong "components":{}'></textarea>
+  <button onclick="downloadFiles()">Tải về</button>	<script>
+    var json = document.getElementById("json")
+    function downloadFiles() {
+      var files = ["bamboo_jungle",
+        "ice_plains",
+        "swampland",
+        "roofed_forest_mutated",
+        "savanna_plateau_mutated",
+        "mesa_plateau",
+        "crimson_forest",
+        "jungle_hills",
+        "cold_taiga_mutated",
+        "hell",
+        "plains",
+        "legacy_frozen_ocean",
+        "mega_taiga_hills",
+        "redwood_taiga_mutated",
+        "mangrove_swamp",
+        "desert_hills",
+        "savanna_plateau",
+        "frozen_peaks",
+        "stone_beach",
+        "meadow",
+        "snowy_slopes",
+        "ice_mountains",
+        "forest",
+        "taiga_mutated",
+        "soulsand_valley",
+        "roofed_forest",
+        "mesa_plateau_mutated",
+        "dripstone_caves",
+        "mesa_bryce",
+        "grove",
+        "jungle",
+        "deep_warm_ocean",
+        "birch_forest_hills_mutated",
+        "savanna",
+        "mushroom_island_shore",
+        "extreme_hills_plus_trees",
+        "cold_taiga",
+        "deep_frozen_ocean",
+        "flower_forest",
+        "cherry_grove",
+        "savanna_mutated",
+        "extreme_hills_plus_trees_mutated",
+        "sunflower_plains",
+        "deep_cold_ocean",
+        "warped_forest",
+        "river",
+        "frozen_river",
+        "extreme_hills_edge",
+        "the_end",
+        "mesa",
+        "stony_peaks",
+        "deep_ocean",
+        "lush_caves",
+        "mega_taiga",
+        "cold_beach",
+        "mesa_plateau_stone_mutated",
+        "cold_taiga_hills",
+        "taiga_hills",
+        "mushroom_island",
+        "desert_mutated",
+        "frozen_ocean",
+        "deep_lukewarm_ocean",
+        "jungle_mutated",
+        "ocean",
+        "mesa_plateau_stone",
+        "jagged_peaks",
+        "taiga",
+        "forest_hills",
+        "cold_ocean",
+        "bamboo_jungle_hills",
+        "deep_dark",
+        "extreme_hills_mutated",
+        "birch_forest_hills",
+        "ice_plains_spikes",
+        "birch_forest_mutated",
+        "extreme_hills",
+        "jungle_edge",
+        "warm_ocean",
+        "basalt_deltas",
+        "redwood_taiga_hills_mutated",
+        "lukewarm_ocean",
+        "swampland_mutated",
+        "beach",
+        "jungle_edge_mutated",
+        "birch_forest",
+        "desert"]
+      var blobs = [];
+      for (var i = 0; i < files.length; i++) {
+        var content = `{"format_version": "1.13.0",
+        "minecraft:biome": {
+        "description": {
+        "identifier": "${files[i]}"
+        },
+        ${json.value}
+        }
+        }
+        }`;
+        blobs.push(new Blob([content], {
+          type: "text/plain"
+        }));
+      }
+      var zip = new JSZip();
+      for (var i = 0; i < blobs.length; i++) {
+        zip.file(`${files[i]}.biome.json`, blobs[i]);
+      }
+      zip.generateAsync({
+        type: "blob"
+      })
+      .then(function (blob) {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        var url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = "biomes.zip";
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      });
+    }
+  </script>
+</body>
+</html>
