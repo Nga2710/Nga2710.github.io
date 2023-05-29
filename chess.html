@@ -1,8 +1,14 @@
-<html lang="vi">
+<html lang="en">
 <body style="background-color: #dddddd">
-  <strong style="font-size:50px;top:3%;left:3%; position: fixed">Chess</strong>
+  <strong style="top:3%;left:3%; position: fixed"><div style="font-size:52px;">
+    Chain
+  </div>
+    <span style="color: #00aa00">AI by @Nga2710</span></strong>
   <border></border>
   <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="board"></table>
+  <border2 id="bpr"></border2>
+  <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="tpr">
+  </table>
   <span class="reset-btn" onclick="reset()">
     Reset
   </span>
@@ -20,7 +26,28 @@
     td:active {
       background-color: red;
     }
+    td {
+      width: 30px;
+      height: 32px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 22px;
+    }
+    border {
+      border: 10px solid black;
+      position: fixed;
+      height: 256px;
+      width: 256px;
+      border-radius: 10px
 
+    }
+    border2 {
+      border: 10px solid black;
+      position: fixed;
+      height: 53px;
+      width: 128px;
+      border-radius: 10px;
+    }
     .black {
       background-color: #00aa00;
     }
@@ -30,26 +57,17 @@
     .red {
       background-color: red;
     }
+    .hide {
+      display: none;
+    }
     body {
-
+      font-family: fantasy;
       display: flex;
       justify-content: center;
       align-items: center;
-
       background-color: #F4F4F4;
     }
-    .undo-btn {
-      border-radius: 20px;
-      background-color: white;
-      width: 100px;
-      border: 10px solid black;
-      left: 2%;
-      top: 3%;
-      position: fixed;
-      text-align: center;
-      font-weight: bold;
-      font-size: 22px;
-    }
+
     .reset-btn {
       border-radius: 20px;
       background-color: #00aa00;
@@ -66,22 +84,7 @@
 
     .reset-btn:active {
       background-color: lime;
-      border: 10px solid yellow;
-    }
-    td {
-      width: 30px;
-      height: 32px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 22px;
-    }
-    border {
-      border: 10px solid black;
-      position: fixed;
-      height: 256px;
-      width: 256px;
-      border-radius: 10px
-
+      border: 10px solid gray;
     }
 @media screen and ((min-height: 444px) and (min-width: 444px)) {
       td {
@@ -94,10 +97,18 @@
         border: 20px solid black;
         height: 424px;
         width: 424px;
-      border-radius: 10px
+        border-radius: 10px
       }
 
+      border2 {
+        border: 20px solid black;
+        position: fixed;
+        height: 53px;
+        width: 212px;
+        border-radius: 20px;
+      }
     }
+
   </style>
 </head>
 </html>
