@@ -2,9 +2,12 @@
 <body style="background-color: #dddddd">
   <strong style="top:3%;left:3%; position: fixed">
     <div style="font-size:52px;">
-      Chain<sub style="font-size: 20px">v1.1</sub>
+      Chain<sub style="font-size: 20px">v1.2</sub>
     </div>
     <span style="color: #00aa00">AI by @Nga2710</span></strong>
+    <input value="" id="depth" placeholder="Depth">
+<textarea id = "textarea" placeholder="debug">
+</textarea>
   <border></border>
   <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="board"></table>
   <border2 id="bpr"></border2>
@@ -13,7 +16,10 @@
   <span class="reset-btn" onclick="reset()">
     Reset
   </span>
-  <script src="chess.js"></script>
+
+  <script src="chess.js">
+
+  </script>
 </body>
 <head>
   <meta charset="utf-8">
@@ -71,7 +77,32 @@
       align-items: center;
       background-color: #F4F4F4;
     }
-
+    textarea {
+      border-radius: 20px;
+      background-color: #00aa00;
+      height: 50px;
+      width: 300px;
+      border: 10px solid black;
+      bottom: 2%;
+      left: 0%;
+      position: fixed;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+input {
+      border-radius: 20px;
+      background-color: #00aa00;
+      height: 50px;
+      width: 70px;
+      border: 10px solid black;
+      top: 2%;
+      right: 3%;
+      position: fixed;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
     .reset-btn {
       border-radius: 20px;
       background-color: #00aa00;
