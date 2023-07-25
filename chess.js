@@ -1,67 +1,30 @@
-async function minimax(cboard, depth, alpha, beta, maximizingPlayer) {
+async function minimax(cboard, depth, color) {
   // Kiểm tra điều kiện dừng đệ quy
+
   if (depth <= 0) {
     return await eboard(await sm(cboard));
   }
-
-  if (maximizingPlayer) {
-    const validMoves = await glmove(false, await sm(cboard));
-    let maxScore = -Infinity;
-    for (let i = 0; i < validMoves.length; i++) {
-      // Thực hiện một nước đi hợp lệ
-      const newBoard = await mboard(validMoves[i], await sm(cboard));
-
-      // Đệ quy tìm kiếm nước đi tốt nhất
-      const score = await minimax(newBoard, depth - 1, alpha, beta, false);
-      maxScore = Math.max(maxScore, score);
-
-      // Cập nhật alpha
-      alpha = Math.max(alpha, score);
-
-      // Kiểm tra điều kiện cắt tỉa
-      if (beta <= alpha) {
-        //      break;
-      }
-    }
-    return maxScore;
-  } else {
-    const validMoves = await glmove(true, await sm(cboard));
-    let minScore = Infinity;
-    for (let i = 0; i < validMoves.length; i++) {
-      // Thực hiện một nước đi hợp lệ
-      const newBoard = await mboard(validMoves[i], await sm(cboard));
-
-      // Đệ quy tìm kiếm nước đi tốt nhất
-      const score = await minimax(newBoard, depth - 1, alpha, beta, true);
-      minScore = Math.min(minScore, score);
-
-      // Cập nhật beta
-      beta = Math.min(beta, score);
-
-      // Kiểm tra điều kiện cắt tỉa
-      if (beta <= alpha) {
-        //  break;
-      }
-    }
-    return minScore;
+  const validMoves = await glmove(color, await sm(cboard));
+  if (validMoves[0] == undefined) {
+    if (await isUnderCheck(color, await sm(cboard))) {
+      return color ? Infinity: -Infinity
+    } else return 0
   }
+  let maxScore = color ? Infinity: -Infinity
+  for (let i = 0; i < validMoves.length; i++) {
+    const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, !color);
+    maxScore = !color ? Math.max(maxScore, score): Math.min(maxScore, score)
+  }
+  return maxScore;
 }
 async function findBestMove(cboard, depth, color = false) {
-  let moves = []
-  let list = []
-  
-
   const validMoves = await glmove(color, await sm(cboard))
-  for (let i = 0; i < validMoves.length; i++) {
-    // Thực hiện một nước đi hợp lệ
-    // Tìm kiếm nước đi tốt nhất
-    const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, -Infinity, Infinity, color);
+  let scores = await Promise.all(validMoves.map(async e=> await minimax(await mboard(e, await sm(cboard)), depth - 1, !color)))
+  /*
     list.push(` ${await readMove(validMoves[i])}:${score}`)
-    moves.push(score)
-  }
-  p(list)
+  }*/
   let u = []
-  for (let k = 0; k < moves.length; k++) if (moves[k] == (color ? Math.min(...moves): Math.max(...moves))) u.push(k)
+  for (let k = 0; k < scores.length; k++) if (scores[k] == (color ? Math.min(...scores): Math.max(...scores))) u.push(k)
   return validMoves[u[Math.floor(Math.random()*u.length)]]
   //return validMoves[u[0]]
 }
@@ -69,10 +32,9 @@ async function readMove(Move) {
   let ab = "abcdefgh"
   return `${ab[Number(Move[1])]}${Math.abs(Number(Move[0])-8)}${ab[Number(Move[3])]}${Math.abs(Number(Move[2])-8)}${Move[4] ? Move[4]: ""}`
 }
-
 async function eboard(cboard) {
-  let pp = cboard.pcq*5+cboard.pck*5,
-  ap = cboard.acq*5+cboard.ack*5,
+  let pp = cboard.pcq*2+cboard.pck*2+cboard.pic*8,
+  ap = cboard.acq*2+cboard.ack*2+cboard.aic*8,
   len = [10,
     50,
     30,
@@ -105,7 +67,6 @@ async function AImove(cboard, color) {
   //p(await readMove(amove))
   board(amove[Number(0)], amove[Number(1)]).classList.add("aqua")
   board(amove[Number(2)], amove[Number(3)]).classList.add("aqua")
-
   await updateBoard(await mboard(amove, await sm(cboard)))
 }
 let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
@@ -157,10 +118,8 @@ async function updateBoard(cboard) {
     alert("Stalemate!")
     return
   }
-//  p(await isUnderCheck(!turn, await sm(dboard)))
-  
+  //  p(await isUnderCheck(!turn, await sm(dboard)))
   turn = !turn
-
   if (!(await glmove(turn, await sm(dboard), "tM"))) {
     if (await isUnderCheck(turn, await sm(dboard))) {
       alert(`${!turn ? "You": "AI"} Win!`)
@@ -173,7 +132,7 @@ async function updateBoard(cboard) {
     if (!turn) {
       await AImove(await sm(dboard), false)
     } else {
-      await AImove(await sm(dboard), true)
+     // await AImove(await sm(dboard), true)
     }
   },
     0)
@@ -269,8 +228,7 @@ async function glmove(color, cboard, ft = "fc") {
     }
   } else {
     await cm(ft[0], ft[1])
-    
-   // p(lmove)
+    // p(lmove)
   }
   async function cm(i, j) {
     async function brqTest(brqMovePos, color) {
@@ -280,77 +238,66 @@ async function glmove(color, cboard, ft = "fc") {
         for (let k = 0; k < 8; k++) {
           pos0[0] += pos[0]
           pos0[1] += pos[1]
-         if (pos0[0]+i > 7 || pos0[0]+i < 0 || pos0[1]+j > 7 || pos0[1]+j < 0) break
+          if (pos0[0]+i > 7 || pos0[0]+i < 0 || pos0[1]+j > 7 || pos0[1]+j < 0) break
           let n = !color ? playerPiece: AIPiece
-
           let isCheck = (await isUnderCheck(color, await mboard(`${i}${j}${i+pos0[0]}${j+pos0[1]}`, await sm(cboard))))
-
           if (cboard.b[i+pos0[0]][j+pos0[1]] == " ") {
             if (!isCheck)
-            lmove.push(`${i}${j}${i+pos0[0]}${j+pos0[1]}`)
+              lmove.push(`${i}${j}${i+pos0[0]}${j+pos0[1]}`)
             continue
           }
           if (n.includes(cboard.b[i+pos0[0]][j+pos0[1]]) && !isCheck) {
             lmove.push(`${i}${j}${i+pos0[0]}${j+pos0[1]}`)
-            
           }
           break
-
         }
       }
     }
     if (color) {
       switch (cboard.b[i][j]) {
         case playerPiece[0]:
-          try {
-            if (cboard.b[i-1][j] == " " && !(await isUnderCheck(color, await mboard(`${i}${j}${i-1}${j}`, await sm(cboard))))) {
-              if (i-1 == 0) {
-                lmove.push(`${i}${j}${i-1}${j}R`)
-                lmove.push(`${i}${j}${i-1}${j}N`)
-                lmove.push(`${i}${j}${i-1}${j}B`)
-                lmove.push(`${i}${j}${i-1}${j}Q`)
-              } else lmove.push(`${i}${j}${i-1}${j}`)
-            }
+
+          if (cboard.b[i-1][j] == " " && !(await isUnderCheck(color, await mboard(`${i}${j}${i-1}${j}`, await sm(cboard))))) {
+            if (i-1 == 0) {
+              lmove.push(`${i}${j}${i-1}${j}R`)
+              lmove.push(`${i}${j}${i-1}${j}N`)
+              lmove.push(`${i}${j}${i-1}${j}B`)
+              lmove.push(`${i}${j}${i-1}${j}Q`)
+            } else lmove.push(`${i}${j}${i-1}${j}`)
           }
-          catch {}
-          try {
-            if (i == 6 && cboard.b[4][j] == " " && cboard.b[5][j] == " " && !(await isUnderCheck(color, await mboard(`${i}${j}4${j}`, await sm(cboard))))) lmove.push(`${i}${j}4${j}`)
-          }
-          catch {}
-          try {
+
+
+          if (i == 6 && cboard.b[4][j] == " " && cboard.b[5][j] == " " && !(await isUnderCheck(color, await mboard(`${i}${j}4${j}`, await sm(cboard))))) lmove.push(`${i}${j}4${j}`)
+          if (j-1 > -1)
             if ((AIPiece.includes(cboard.b[i-1][j-1]) || (i-1 == cboard.ep[0] && j-1 == cboard.ep[1])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i-1}${j-1}`, await sm(cboard))))) {
-              if (i-1 == 0) {
-                lmove.push(`${i}${j}${i-1}${j-1}R`)
-                lmove.push(`${i}${j}${i-1}${j-1}N`)
-                lmove.push(`${i}${j}${i-1}${j-1}B`)
-                lmove.push(`${i}${j}${i-1}${j-1}Q`)
-              } else lmove.push(`${i}${j}${i-1}${j-1}`)
-            }
+            if (i-1 == 0) {
+              lmove.push(`${i}${j}${i-1}${j-1}R`)
+              lmove.push(`${i}${j}${i-1}${j-1}N`)
+              lmove.push(`${i}${j}${i-1}${j-1}B`)
+              lmove.push(`${i}${j}${i-1}${j-1}Q`)
+            } else lmove.push(`${i}${j}${i-1}${j-1}`)
           }
-          catch {}
-          try {
+          if (j+1 < 8)
             if ((AIPiece.includes(cboard.b[i-1][j+1]) || (i-1 == cboard.ep[0] && j+1 == cboard.ep[1])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i-1}${j+1}`, await sm(cboard))))) {
-              if (i-1 == 0) {
-                lmove.push(`${i}${j}${i-1}${j+1}R`)
-                lmove.push(`${i}${j}${i-1}${j+1}N`)
-                lmove.push(`${i}${j}${i-1}${j+1}B`)
-                lmove.push(`${i}${j}${i-1}${j+1}Q`)
-              } else lmove.push(`${i}${j}${i-1}${j+1}`)
-            }
+            if (i-1 == 0) {
+              lmove.push(`${i}${j}${i-1}${j+1}R`)
+              lmove.push(`${i}${j}${i-1}${j+1}N`)
+              lmove.push(`${i}${j}${i-1}${j+1}B`)
+              lmove.push(`${i}${j}${i-1}${j+1}Q`)
+            } else lmove.push(`${i}${j}${i-1}${j+1}`)
           }
-          catch {}
+
           break
         case playerPiece[1]:
           await brqTest(rookMovePos, true)
           break
         case playerPiece[2]:
           for (let pos of knightMovePos) {
-            try {
-              if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || AIPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
-                lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
-              }
+            if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
+            if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || AIPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
+              lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
             }
-            catch {}
+
           }
           break
         case playerPiece[3]:
@@ -362,12 +309,11 @@ async function glmove(color, cboard, ft = "fc") {
           break
         case playerPiece[5]:
           for (let pos of kingMovePos) {
-            try {
-              if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || AIPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
-                lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
-              }
+            if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
+            if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || AIPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(color, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
+              lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
             }
-            catch {}
+
           }
           if (!(await isUnderCheck(color, cboard))) {
             if (!(await isUnderCheck(color, await mboard(`7472`, await sm(cboard)))) && cboard.pcq && cboard.b[7][1] == " " && cboard.b[7][2] == " " && cboard.b[7][3] == " ") {
@@ -383,55 +329,47 @@ async function glmove(color, cboard, ft = "fc") {
     if (!color) {
       switch (cboard.b[i][j]) {
         case AIPiece[0]:
-          try {
-            if (cboard.b[i+1][j] == " " && !(await isUnderCheck(false, await mboard(`${i}${j}${i+1}${j}`, await sm(cboard))))) {
-              if (i+1 == 7) {
-                lmove.push(`${i}${j}${i+1}${j}R`)
-                lmove.push(`${i}${j}${i+1}${j}N`)
-                lmove.push(`${i}${j}${i+1}${j}B`)
-                lmove.push(`${i}${j}${i+1}${j}Q`)
-              } else lmove.push(`${i}${j}${i+1}${j}`)
-            }
+
+          if (cboard.b[i+1][j] == " " && !(await isUnderCheck(false, await mboard(`${i}${j}${i+1}${j}`, await sm(cboard))))) {
+            if (i+1 == 7) {
+              lmove.push(`${i}${j}${i+1}${j}R`)
+              lmove.push(`${i}${j}${i+1}${j}N`)
+              lmove.push(`${i}${j}${i+1}${j}B`)
+              lmove.push(`${i}${j}${i+1}${j}Q`)
+            } else lmove.push(`${i}${j}${i+1}${j}`)
           }
-          catch {}
-          try {
-            if (i == 1 && cboard.b[3][j] == " " && cboard.b[2][j] == " " && !(await isUnderCheck(false, await mboard(`${i}${j}3${j}`, await sm(cboard))))) lmove.push(`${i}${j}3${j}`)
-          }
-          catch {}
-          try {
+
+          if (i == 1 && cboard.b[3][j] == " " && cboard.b[2][j] == " " && !(await isUnderCheck(false, await mboard(`${i}${j}3${j}`, await sm(cboard))))) lmove.push(`${i}${j}3${j}`)
+          if (j-1 < 8)
             if ((playerPiece.includes(cboard.b[i+1][j-1]) || (i+1 == cboard.ep[0] && j-1 == cboard.ep[1])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+1}${j-1}`, await sm(cboard))))) {
-              if (i+1 == 7) {
-                lmove.push(`${i}${j}${i+1}${j-1}R`)
-                lmove.push(`${i}${j}${i+1}${j-1}N`)
-                lmove.push(`${i}${j}${i+1}${j-1}B`)
-                lmove.push(`${i}${j}${i+1}${j-1}Q`)
-              } else lmove.push(`${i}${j}${i+1}${j-1}`)
-            }
+            if (i+1 == 7) {
+              lmove.push(`${i}${j}${i+1}${j-1}R`)
+              lmove.push(`${i}${j}${i+1}${j-1}N`)
+              lmove.push(`${i}${j}${i+1}${j-1}B`)
+              lmove.push(`${i}${j}${i+1}${j-1}Q`)
+            } else lmove.push(`${i}${j}${i+1}${j-1}`)
           }
-          catch {}
-          try {
+          if (j-1 > -1)
             if ((playerPiece.includes(cboard.b[i+1][j+1]) || (i+1 == cboard.ep[0] && j+1 == cboard.ep[1])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+1}${j+1}`, await sm(cboard))))) {
-              if (i+1 == 7) {
-                lmove.push(`${i}${j}${i+1}${j+1}R`)
-                lmove.push(`${i}${j}${i+1}${j+1}N`)
-                lmove.push(`${i}${j}${i+1}${j+1}B`)
-                lmove.push(`${i}${j}${i+1}${j+1}Q`)
-              } else lmove.push(`${i}${j}${i+1}${j+1}`)
-            }
+            if (i+1 == 7) {
+              lmove.push(`${i}${j}${i+1}${j+1}R`)
+              lmove.push(`${i}${j}${i+1}${j+1}N`)
+              lmove.push(`${i}${j}${i+1}${j+1}B`)
+              lmove.push(`${i}${j}${i+1}${j+1}Q`)
+            } else lmove.push(`${i}${j}${i+1}${j+1}`)
           }
-          catch {}
+
           break
         case AIPiece[1]:
           await brqTest(rookMovePos, false)
           break
         case AIPiece[2]:
           for (let pos of knightMovePos) {
-            try {
-              if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || playerPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
-                lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
-              }
+            if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
+            if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || playerPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
+              lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
             }
-            catch {}
+
           }
           break
         case AIPiece[3]:
@@ -443,12 +381,11 @@ async function glmove(color, cboard, ft = "fc") {
           break
         case AIPiece[5]:
           for (let pos of kingMovePos) {
-            try {
-              if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || playerPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
-                lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
-              }
+            if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
+            if (((cboard.b[i+pos[0]][j+pos[1]] == " ") || playerPiece.includes(cboard.b[i+pos[0]][j+pos[1]])) && !(await isUnderCheck(false, await mboard(`${i}${j}${i+pos[0]}${j+pos[1]}`, await sm(cboard))))) {
+              lmove.push(`${i}${j}${i+pos[0]}${j+pos[1]}`)
             }
-            catch {}
+
           }
           if (!(await isUnderCheck(false, cboard))) {
             if (!(await isUnderCheck(false, await mboard(`0402`, await sm(cboard)))) && cboard.acq && cboard.b[0][1] == " " && cboard.b[0][2] == " " && cboard.b[0][3] == " ") {
@@ -517,7 +454,6 @@ async function mboard(move, cboard) {
   } else {
     cboard.b[move[2]][move[3]] = cboard.b[move[0]][move[1]]
   }
-
   if (cboard.b[move[0]][move[1]] == playerPiece[1]) {
     if (move[0] == 7 && move[1] == 0) {
       cboard.pcq = false
@@ -530,10 +466,12 @@ async function mboard(move, cboard) {
     if (move[2] == 7 && move[3] == 2 && cboard.pcq) {
       cboard.b[7][0] = " "
       cboard.b[7][3] = playerPiece[1]
+      cboard.pic = true
     }
     if (move[2] == 7 && move[3] == 6 && cboard.pck) {
       cboard.b[7][7] = " "
       cboard.b[7][5] = playerPiece[1]
+      cboard.pic = true
     }
     cboard.pcq = false
     cboard.pck = false
@@ -550,10 +488,12 @@ async function mboard(move, cboard) {
     if (move[2] == 0 && move[3] == 2 && cboard.acq) {
       cboard.b[0][0] = " "
       cboard.b[0][3] = AIPiece[1]
+      cboard.aic = true
     }
     if (move[2] == 0 && move[3] == 6 && cboard.ack) {
       cboard.b[0][7] = " "
       cboard.b[0][5] = AIPiece[1]
+      cboard.aic = true
     }
     cboard.acq = false
     cboard.ack = false
@@ -575,9 +515,7 @@ async function mboard(move, cboard) {
       move[1]]
   }
   cboard.b[move[0]][move[1]] = " "
-
   return cboard
-
 }
 //thiết lập lại
 async function reset() {
@@ -657,9 +595,11 @@ async function reset() {
     acq: true,
     pck: true,
     pcq: true,
+    pic: false,
+    aic: false,
+    turn: cic,
     ep: [-1,
       -1],
-
     fm: 0
   }
   await updateBoard(await sm(dboard))
@@ -678,29 +618,22 @@ function isUnderCheck(color, cboard) {
     for (let j = 0; j < 8; j++) {
       if (cboard.b[i][j] != (color ? whitePiece[5]: blackPiece[5])) continue
       //hướng đi của pawn
-      try {
+      if (j+1 < 8)
         if (cboard.b[i+pd][j+1] == (!color ? whitePiece[0]: blackPiece[0])) return true
-      }
-      catch {}
-      try {
+      if (j-1 > -1)
         if (cboard.b[i+pd][j-1] == (!color ? whitePiece[0]: blackPiece[0])) return true
-
-      }
-      catch {}
 
       for (let pos of knightMovePos) {
         if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
         if (cboard.b[i+pos[0]][j+pos[1]] == (!color ? whitePiece[2]: blackPiece[2])) {
           return true
         }
-
       }
       for (let pos of kingMovePos) {
         if (pos[0]+i > 7 || pos[0]+i < 0 || pos[1]+j > 7 || pos[1]+j < 0) continue
         if (cboard.b[i+pos[0]][j+pos[1]] == (!color ? whitePiece[5]: blackPiece[5])) {
           return true
         }
-
       }
       brqMove = (brqMovePos, index) => {
         for (let pos of brqMovePos) {
@@ -710,22 +643,17 @@ function isUnderCheck(color, cboard) {
             pos0[0] += pos[0]
             pos0[1] += pos[1]
             if (pos0[0]+i > 7 || pos0[0]+i < 0 || pos0[1]+j > 7 || pos0[1]+j < 0) break
-
             if (cboard.b[i+pos0[0]][j+pos0[1]] == " ") continue
             if (cboard.b[i+pos0[0]][j+pos0[1]] == (!color ? whitePiece[index]: blackPiece[index]) || cboard.b[i+pos0[0]][j+pos0[1]] == (!color ? whitePiece[4]: blackPiece[4])) {
               return true
             }
             break
-
-
           }
         }
         return false
       }
       if (brqMove(rookMovePos, 1) || brqMove(bishopMovePos, 3)) return true
       return false
-
     }
   }
-
 }
