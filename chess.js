@@ -1,4 +1,4 @@
-async function minimax(cboard, depth, color) {
+async function minimax(cboard, depth, alpha, beta, color) {
   // Kiểm tra điều kiện dừng đệ quy
 
   if (depth <= 0) {
@@ -10,16 +10,22 @@ async function minimax(cboard, depth, color) {
       return color ? Infinity: -Infinity
     } else return 0
   }
-  let maxScore = color ? Infinity: -Infinity
+  let maxScore = color ? -Infinity: Infinity
   for (let i = 0; i < validMoves.length; i++) {
-    const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, !color);
-    maxScore = !color ? Math.max(maxScore, score): Math.min(maxScore, score)
+    const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, alpha, beta, !color);
+    maxScore = color ? Math.max(maxScore, score): Math.min(maxScore, score)
+    if (color) {
+      alpha = Math.max(alpha, maxScore)} else {
+      beta = Math.min(beta, maxScore)}
+    if (beta <= alpha) {
+      return maxScore;
+    }
   }
   return maxScore;
 }
 async function findBestMove(cboard, depth, color = false) {
   const validMoves = await glmove(color, await sm(cboard))
-  let scores = await Promise.all(validMoves.map(async e=> await minimax(await mboard(e, await sm(cboard)), depth - 1, !color)))
+  let scores = await Promise.all(validMoves.map(async e=> await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color)))
   /*
     list.push(` ${await readMove(validMoves[i])}:${score}`)
   }*/
@@ -41,16 +47,28 @@ async function eboard(cboard) {
     30,
     90,
     100]
+  let posW = [pawnEvalWhite,
+    rookEvalWhite,
+    knightEval,
+    bishopEvalWhite,
+    evalQueen,
+    kingEvalWhite]
+  let posB = [pawnEvalBlack,
+    rookEvalBlack,
+    knightEval,
+    bishopEvalBlack,
+    evalQueen,
+    kingEvalBlack]
   for (let i = 0; i < 8; i++)
     for (let j = 0; j < 8; j++) {
     if (cboard.b[i][j] == " ") continue
     for (let k = 0; k < 5; k++) {
       if (cboard.b[i][j] == playerPiece[k]) {
-        pp += len[playerPiece.indexOf(cboard.b[i][j])]
+        pp += len[playerPiece.indexOf(cboard.b[i][j])] + posW[playerPiece.indexOf(cboard.b[i][j])][i][j]
         break
       }
       if (cboard.b[i][j] == AIPiece[k]) {
-        ap += len[AIPiece.indexOf(cboard.b[i][j])]
+        ap += len[AIPiece.indexOf(cboard.b[i][j])] + posB[AIPiece.indexOf(cboard.b[i][j])][i][j]
         break
       }
     }
@@ -69,10 +87,89 @@ async function AImove(cboard, color) {
   board(amove[Number(2)], amove[Number(3)]).classList.add("aqua")
   await updateBoard(await mboard(amove, await sm(cboard)))
 }
+var reverseArray = function(array) {
+  return array.slice().reverse();
+};
 let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 let bishopMovePos = [[-1, 1], [1, -1], [1, 1], [-1, -1]]
 let knightMovePos = [[2, 1], [2, -1], [-2, 1], [-2, -1], [-1, 2], [1, 2], [-1, -2], [1, -2]]
 let kingMovePos = [[1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]]
+var pawnEvalWhite =
+[
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
+  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
+  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
+  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
+  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+];
+
+var pawnEvalBlack = reverseArray(pawnEvalWhite);
+
+var knightEval =
+[
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
+  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
+  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
+  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
+  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
+  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
+];
+
+var bishopEvalWhite = [
+  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
+  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
+  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
+  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
+  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
+  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
+];
+
+var bishopEvalBlack = reverseArray(bishopEvalWhite);
+
+var rookEvalWhite = [
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
+];
+
+var rookEvalBlack = reverseArray(rookEvalWhite);
+
+var evalQueen = [
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
+];
+
+var kingEvalWhite = [
+
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
+  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
+  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
+];
+
+var kingEvalBlack = reverseArray(kingEvalWhite);
 cic = 1
 turn = cic
 whitePiece = "♙♖♘♗♕♔"
@@ -132,7 +229,7 @@ async function updateBoard(cboard) {
     if (!turn) {
       await AImove(await sm(dboard), false)
     } else {
-     // await AImove(await sm(dboard), true)
+       await AImove(await sm(dboard), true)
     }
   },
     0)
