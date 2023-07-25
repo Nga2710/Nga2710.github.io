@@ -6,16 +6,16 @@ async function updateBoard(cboard) {
   dboard = await sm(cboard)
   // p(await eboard(dboard))
   if (dboard.fm == 100) {
-    alert("Stalemate!")
+    alert("Hòa luật 50 nước đi")
     return
   }
   //  p(await isUnderCheck(!turn, await sm(dboard)))
   turn = !turn
   if (!(await glmove(turn, await sm(dboard), "tM"))) {
     if (await isUnderCheck(turn, await sm(dboard))) {
-      alert(`${!turn ? "You": "AI"} Win!`)
+      alert(`${!turn ? "Bạn": "AI"} Thắng!`)
     } else {
-      alert("Stalemate!")
+      alert("Hòa do hết nước đi")
     }
     return
   }
@@ -23,23 +23,26 @@ async function updateBoard(cboard) {
     if (!turn) {
       await AImove(await sm(dboard), false)
     } else {
-       await AImove(await sm(dboard), true)
+      await AImove(await sm(dboard), true)
     }
   },
     0)
 }
 async function minimax(cboard, depth, alpha, beta, color) {
   // Kiểm tra điều kiện dừng đệ quy
+  if (cboard.fm == 100) return 0
 
+
+  if (!(await glmove(!color, await sm(cboard)), "tM")) {
+    if (await isUnderCheck(!color, await sm(cboard))) {
+      return !color ? Infinity: Infinity
+    }
+    return 0
+  }
   if (depth <= 0) {
     return await eboard(await sm(cboard));
   }
   const validMoves = await glmove(!color, await sm(cboard));
-  if (validMoves[0] == undefined) {
-    if (await isUnderCheck(!color, await sm(cboard))) {
-      return color ? -Infinity: Infinity
-    } else return 0
-  }
   let maxScore = color ? -Infinity: Infinity
   for (let i = 0; i < validMoves.length; i++) {
     const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, alpha, beta, !color);
@@ -71,8 +74,8 @@ async function readMove(Move) {
   return `${ab[Number(Move[1])]}${Math.abs(Number(Move[0])-8)}${ab[Number(Move[3])]}${Math.abs(Number(Move[2])-8)}${Move[4] ? Move[4]: ""}`
 }
 async function eboard(cboard) {
-  let pp = cboard.pcq*2+cboard.pck*2+cboard.pic*8,
-  ap = cboard.acq*2+cboard.ack*2+cboard.aic*8,
+  let pp = cboard.pcq*2+cboard.pck*2,
+  ap = cboard.acq*2+cboard.ack*2,
   len = [100,
     500,
     300,
@@ -119,9 +122,7 @@ async function AImove(cboard, color) {
   board(amove[Number(2)], amove[Number(3)]).classList.add("aqua")
   await updateBoard(await mboard(amove, await sm(cboard)))
 }
-var reverseArray = function(array) {
-  return array.slice().reverse();
-};
+var reverseArray = (array) => array.slice().reverse()
 let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 let bishopMovePos = [[-1, 1], [1, -1], [1, 1], [-1, -1]]
 let knightMovePos = [[2, 1], [2, -1], [-2, 1], [-2, -1], [-1, 2], [1, 2], [-1, -2], [1, -2]]
@@ -201,6 +202,17 @@ var kingEvalWhite = [
   [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
 ];
 
+var kingEvalWhite = [
+
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
 var kingEvalBlack = reverseArray(kingEvalWhite);
 cic = 1
 turn = cic
@@ -566,12 +578,12 @@ async function mboard(move, cboard) {
     if (move[2] == 7 && move[3] == 2 && cboard.pcq) {
       cboard.b[7][0] = " "
       cboard.b[7][3] = playerPiece[1]
-      cboard.pic = true
+
     }
     if (move[2] == 7 && move[3] == 6 && cboard.pck) {
       cboard.b[7][7] = " "
       cboard.b[7][5] = playerPiece[1]
-      cboard.pic = true
+
     }
     cboard.pcq = false
     cboard.pck = false
@@ -588,12 +600,12 @@ async function mboard(move, cboard) {
     if (move[2] == 0 && move[3] == 2 && cboard.acq) {
       cboard.b[0][0] = " "
       cboard.b[0][3] = AIPiece[1]
-      cboard.aic = true
+
     }
     if (move[2] == 0 && move[3] == 6 && cboard.ack) {
       cboard.b[0][7] = " "
       cboard.b[0][5] = AIPiece[1]
-      cboard.aic = true
+
     }
     cboard.acq = false
     cboard.ack = false
@@ -695,8 +707,6 @@ async function reset() {
     acq: true,
     pck: true,
     pcq: true,
-    pic: false,
-    aic: false,
     turn: cic,
     ep: [-1,
       -1],
@@ -718,9 +728,9 @@ function isUnderCheck(color, cboard) {
     for (let j = 0; j < 8; j++) {
       if (cboard.b[i][j] != (color ? whitePiece[5]: blackPiece[5])) continue
       //hướng đi của pawn
-      if (j+1 < 8)
+      if (j+1 < 8 && -1 < i+pd && i+pd < 8)
         if (cboard.b[i+pd][j+1] == (!color ? whitePiece[0]: blackPiece[0])) return true
-      if (j-1 > -1)
+      if (j-1 > -1 && -1 < i+pd && i+pd < 8)
         if (cboard.b[i+pd][j-1] == (!color ? whitePiece[0]: blackPiece[0])) return true
 
       for (let pos of knightMovePos) {
