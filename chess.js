@@ -1,37 +1,69 @@
+//hiển thị board
+async function updateBoard(cboard) {
+  for (let i = 0; i < 8; i++)
+    for (let j = 0; j < 8; j++)
+    board(i, j).innerHTML = cboard.b[i][j]
+  dboard = await sm(cboard)
+  // p(await eboard(dboard))
+  if (dboard.fm == 100) {
+    alert("Stalemate!")
+    return
+  }
+  //  p(await isUnderCheck(!turn, await sm(dboard)))
+  turn = !turn
+  if (!(await glmove(turn, await sm(dboard), "tM"))) {
+    if (await isUnderCheck(turn, await sm(dboard))) {
+      alert(`${!turn ? "You": "AI"} Win!`)
+    } else {
+      alert("Stalemate!")
+    }
+    return
+  }
+  setTimeout(async ()=> {
+    if (!turn) {
+      await AImove(await sm(dboard), false)
+    } else {
+       await AImove(await sm(dboard), true)
+    }
+  },
+    0)
+}
 async function minimax(cboard, depth, alpha, beta, color) {
   // Kiểm tra điều kiện dừng đệ quy
 
   if (depth <= 0) {
     return await eboard(await sm(cboard));
   }
-  const validMoves = await glmove(color, await sm(cboard));
+  const validMoves = await glmove(!color, await sm(cboard));
   if (validMoves[0] == undefined) {
-    if (await isUnderCheck(color, await sm(cboard))) {
-      return color ? Infinity: -Infinity
+    if (await isUnderCheck(!color, await sm(cboard))) {
+      return color ? -Infinity: Infinity
     } else return 0
   }
   let maxScore = color ? -Infinity: Infinity
   for (let i = 0; i < validMoves.length; i++) {
     const score = await minimax(await mboard(validMoves[i], await sm(cboard)), depth - 1, alpha, beta, !color);
-    maxScore = color ? Math.max(maxScore, score): Math.min(maxScore, score)
-    if (color) {
+    maxScore = !color ? Math.min(maxScore, score): Math.max(maxScore, score)
+    /*if (color) {
       alpha = Math.max(alpha, maxScore)} else {
       beta = Math.min(beta, maxScore)}
     if (beta <= alpha) {
       return maxScore;
-    }
+    }*/
   }
   return maxScore;
 }
 async function findBestMove(cboard, depth, color = false) {
   const validMoves = await glmove(color, await sm(cboard))
-  let scores = await Promise.all(validMoves.map(async e=> await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color)))
+  let scores = await Promise.all(validMoves.map(async e=> await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, color)))
   /*
     list.push(` ${await readMove(validMoves[i])}:${score}`)
   }*/
   let u = []
   for (let k = 0; k < scores.length; k++) if (scores[k] == (color ? Math.min(...scores): Math.max(...scores))) u.push(k)
-  return validMoves[u[Math.floor(Math.random()*u.length)]]
+  move = validMoves[u[Math.floor(Math.random()*u.length)]]
+  p(` ${await readMove(move)}:${scores[validMoves.indexOf(move)]}`)
+  return move
   //return validMoves[u[0]]
 }
 async function readMove(Move) {
@@ -41,12 +73,12 @@ async function readMove(Move) {
 async function eboard(cboard) {
   let pp = cboard.pcq*2+cboard.pck*2+cboard.pic*8,
   ap = cboard.acq*2+cboard.ack*2+cboard.aic*8,
-  len = [10,
-    50,
-    30,
-    30,
-    90,
-    100]
+  len = [100,
+    500,
+    300,
+    300,
+    900,
+    0]
   let posW = [pawnEvalWhite,
     rookEvalWhite,
     knightEval,
@@ -62,7 +94,7 @@ async function eboard(cboard) {
   for (let i = 0; i < 8; i++)
     for (let j = 0; j < 8; j++) {
     if (cboard.b[i][j] == " ") continue
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 7; k++) {
       if (cboard.b[i][j] == playerPiece[k]) {
         pp += len[playerPiece.indexOf(cboard.b[i][j])] + posW[playerPiece.indexOf(cboard.b[i][j])][i][j]
         break
@@ -204,36 +236,7 @@ for (let c = 0; c < 4; c++) {
   cell2.innerHTML = playerPiece[c+1]
   cell2.addEventListener("click", selectPiecePP)
 }
-//hiển thị board
-async function updateBoard(cboard) {
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++)
-    board(i, j).innerHTML = cboard.b[i][j]
-  dboard = await sm(cboard)
-  // p(await eboard(dboard))
-  if (dboard.fm == 100) {
-    alert("Stalemate!")
-    return
-  }
-  //  p(await isUnderCheck(!turn, await sm(dboard)))
-  turn = !turn
-  if (!(await glmove(turn, await sm(dboard), "tM"))) {
-    if (await isUnderCheck(turn, await sm(dboard))) {
-      alert(`${!turn ? "You": "AI"} Win!`)
-    } else {
-      alert("Stalemate!")
-    }
-    return
-  }
-  setTimeout(async ()=> {
-    if (!turn) {
-      await AImove(await sm(dboard), false)
-    } else {
-       await AImove(await sm(dboard), true)
-    }
-  },
-    0)
-}
+
 async function promotePiece() {
   tpr.classList.remove("hide")
   bpr.classList.remove("hide")
