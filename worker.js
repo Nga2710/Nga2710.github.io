@@ -1,3 +1,8 @@
+self.onmessage = async function(e) {
+  var [cic, playerPiece, AIPiece] = e.data[1]
+  //self.postMessage(0)
+let whitePiece = "♙♖♘♗♕♔", blackPiece = "♟♜♞♝♛♚"
+
 async function minimax(cboard, depth, alpha, beta, color) {
   // Kiểm tra điều kiện dừng đệ quy
 
@@ -104,291 +109,124 @@ w+=3
   if ((b == 0 && w == 0) || (b == 3 && w == 0) || (b == 0 && w == 3) (b == 3 && w == 3)) return 0
   return undefined
 }
-async function updateBoard(cboard) {
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++)
-    board(i, j).innerHTML = cboard.b[i][j]
-  dboard = await sm(cboard)
-  let co = await checkOver(await sm(dboard), !turn)
+var reverseArray = (array) => array.slice().reverse()
 
-  if (co != undefined) {
-    if (dboard.fm == 100) {
-      p("Hòa luật 50 nước đi")
-    } else p(co)
-    return
-  }
-  /*if (dboard.fm == 100) {
-    alert("Hòa luật 50 nước đi")
-    return
-  }
-  //  p(await isUnderCheck(!turn, await sm(dboard)))*/
-  turn = !turn
-  /*if (!(await glmove(turn, await sm(dboard), "tM"))) {
-    if (await isUnderCheck(turn, await sm(dboard))) {
-      alert(`${!turn ? "Bạn": "AI"} Thắng!`)
-    } else {
-      alert("Hòa do hết nước đi")
-    }
-    return
-  }*/
+var pawnEvalWhite =
+[
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
+  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
+  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
+  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
+  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+];
 
-  setTimeout(async ()=> {
-    if (!turn) {
-      AImove(await sm(dboard), false)
-    } else {
-      AImove(await sm(dboard), true)
-    }
-  },
-    0)
-}
+var pawnEvalBlack = reverseArray(pawnEvalWhite);
 
-async function findBestMove(cboard, depth, color = false) {
-  const validMoves = await glmove(color,
-    await sm(cboard))
+var knightEval =
+[
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
+  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
+  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
+  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
+  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
+  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
+];
 
-  let scores = await Promise.all(validMoves.map(async e=> new Promise(async (resolve, reject) => {
-        const worker = new Worker('worker.js');
-        let gameState = [[await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color], [cic, playerPiece, AIPiece]]
-        worker.postMessage(gameState);
-        worker.onmessage = function(e) {
-          resolve(e.data);
-        }
-        worker.onerror = function(e) {
-          reject(e);
-          console.error(e.message, e.lineno)
-       //   resolve(minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color))
-        }
-      }).then(r=>r))) //await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color)))
+var bishopEvalWhite = [
+  /*[-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
+  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
+  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
+  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
+  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
+  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]*/
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
 
-  let u = []
-  for (let k = 0; k < scores.length; k++) if (scores[k] == (color ? Math.min(...scores): Math.max(...scores))) u.push(k)
-  move = validMoves[u[Math.floor(Math.random()*u.length)]]
-  console.log(scores)
-  p(` ${await readMove(move)}:${scores[validMoves.indexOf(move)]}`, cboard.fm)
-  return move
-  //return validMoves[u[0]]
-}
-async function readMove(Move) {
-  let ab = "abcdefgh"
-  try {
-    return `${ab[Number(Move[1])]}${Math.abs(Number(Move[0])-8)}${ab[Number(Move[3])]}${Math.abs(Number(Move[2])-8)}${Move[4] ? Move[4]: ""}`
-  }
-  catch {
-    return 0
-  }
-}
+var bishopEvalBlack = reverseArray(bishopEvalWhite);
 
-async function AImove(cboard, color) {
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++)
-    board(i, j).classList.remove("aqua")
-  //let lm = (await glmove(false, await sm(cboard)))
-  // let amove = lm[Math.floor(Math.random()*lm.length)]
-  let amove = await findBestMove(await sm(cboard), Number(document.getElementById("depth").value), color)
-  //p(await readMove(amove))
-  board(amove[0], amove[1]).classList.add("aqua")
-  board(amove[2], amove[3]).classList.add("aqua")
-  await updateBoard(await mboard(amove, await sm(cboard)))
-}
+var rookEvalWhite = [
+  /*[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]*/
+      [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
 
-let cic = 1
-let turn = cic
-let whitePiece = "♙♖♘♗♕♔", blackPiece = "♟♜♞♝♛♚"
-//tạo bàn cờ
-for (let r = 0; r < 8; r++) {
-  let row = document.getElementById("board").insertRow(r)
-  for (let c = 0; c < 8; c++) {
-    const cell = row.insertCell(c)
-    cell.className = (c + r) % 2 == 0 ? "white": "black"
-    cell.addEventListener("click", selectPieceFC)
-  }
-}
-var board = (i, j) => {
-  return document.getElementById("board").querySelectorAll("tr")[i].querySelectorAll("td")[j]
-}
-var fromMovePos = () => {
-  return board(fromMove[0], fromMove[1])
-}
-var toMovePos = () => {
-  return board(toMove[0], toMove[1])
-}
-var playerPiece = cic ? whitePiece: blackPiece
-var AIPiece = !cic ? whitePiece: blackPiece
-let nboard = {
-  b: [[AIPiece[1],
-    AIPiece[2],
-    AIPiece[3],
-    AIPiece[cic ? 4: 5],
-    AIPiece[!cic ? 4: 5],
-    AIPiece[3],
-    AIPiece[2],
-    AIPiece[1]],
-    [AIPiece[0],
-      AIPiece[0],
-      AIPiece[0],
-      AIPiece[0],
-      AIPiece[0],
-      AIPiece[0],
-      AIPiece[0],
-      AIPiece[0]],
-    [" ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " "],
-    [" ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " "],
-    [" ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " "],
-    [" ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " ",
-      " "],
-    [playerPiece[0],
-      playerPiece[0],
-      playerPiece[0],
-      playerPiece[0],
-      playerPiece[0],
-      playerPiece[0],
-      playerPiece[0],
-      playerPiece[0]],
-    [playerPiece[1],
-      playerPiece[2],
-      playerPiece[3],
-      playerPiece[cic ? 4: 5],
-      playerPiece[!cic ? 4: 5],
-      playerPiece[3],
-      playerPiece[2],
-      playerPiece[1]]],
-  ack: true,
-  acq: true,
-  pck: true,
-  pcq: true,
-  turn: cic,
-  ep: [-1,
-    -1],
-  fm: 0
-}
-reset()
-async function reset() {
-  turn = !cic
-  var playerPiece = cic ? whitePiece: blackPiece
-  var AIPiece = !cic ? whitePiece: blackPiece
+var rookEvalBlack = reverseArray(rookEvalWhite);
 
-  await updateBoard(await sm(nboard))
-}
-const bpr = document.getElementById("bpr")
-const tpr = document.getElementById("tpr")
-tpr.classList.add("hide")
-bpr.classList.add("hide")
-const row = tpr.insertRow(0)
-for (let c = 0; c < 4; c++) {
-  const cell2 = row.insertCell(c)
-  cell2.className = c % 2 == 0 ? "white": "black"
-  cell2.innerHTML = playerPiece[c+1]
-  cell2.addEventListener("click", selectPiecePP)
-}
+var evalQueen = [/*
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]*/
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
 
-async function promotePiece() {
-  tpr.classList.remove("hide")
-  bpr.classList.remove("hide")
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++) {
-    board(i, j).removeEventListener("click", selectPieceFC)
-  }
-}
-async function selectPiecePP() {
-  switch (this.innerHTML) {
-    case playerPiece[1]:
-      pieceP = "R"
-      break
-    case playerPiece[2]:
-      pieceP = "N"
-      break
-    case playerPiece[3]:
-      pieceP = "B"
-      break
-    case playerPiece[4]:
-      pieceP = "Q"
-      break
-  }
-  if ((await glmove(true, await sm(dboard), [fromMove[0], fromMove[1]])).includes(`${fromMove[0]}${fromMove[1]}${toMove[0]}${toMove[1]}${pieceP}`)) {
-    await updateBoard(await mboard(`${fromMove[0]}${fromMove[1]}${toMove[0]}${toMove[1]}${pieceP}`, await sm(dboard)))
-  }
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++) {
-    board(i, j).addEventListener("click", selectPieceFC)
-  }
-  tpr.classList.add("hide")
-  bpr.classList.add("hide")
-}
-//chọn quân
-async function selectPieceFC() {
-  if (this.innerHTML != " " && !AIPiece.includes(this.innerHTML)) {
-    this.classList.add("red")
-    fromMove = [this.parentNode.rowIndex,
-      this.cellIndex]
-    for (let i = 0; i < 8; i++)
-      for (let j = 0; j < 8; j++) {
-      board(i, j).removeEventListener("click", selectPieceFC)
-      board(i, j).addEventListener("click", selectPieceTC)
-    }
-  }
-}
-//chọn nước đi đến
-async function selectPieceTC() {
-  toMove = [this.parentNode.rowIndex,
-    this.cellIndex]
-  fromMovePos().classList.remove("red")
-  if (playerPiece.includes(fromMovePos().innerHTML) && playerPiece.includes(toMovePos().innerHTML)) {
-    fromMove = toMove
-    toMovePos().classList.add("red")
-    return
-  }
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++) {
-    board(i, j).removeEventListener("click", selectPieceTC)
-    board(i, j).addEventListener("click", selectPieceFC)
-  }
-  if (turn) {
-    if (toMove[0] == 0 && board(fromMove[0], fromMove[1]).innerHTML == playerPiece[0]) {
-      await promotePiece()
-      return
-    }
-    if ((await glmove(true, await sm(dboard), [fromMove[0], fromMove[1]])).includes(`${fromMove[0]}${fromMove[1]}${toMove[0]}${toMove[1]}`)) {
-      await updateBoard(await mboard(`${fromMove[0]}${fromMove[1]}${toMove[0]}${toMove[1]}`, await sm(dboard)))
-    }
-  }
-}
+var kingEvalWhite = [
 
-//thiết lập lại
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
+  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
+  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
+];
 
-function n() {
-  console.log("note")
-}
-function p(...text) {
-  document.getElementById("textarea").value = text.join(" ")
-  console.log(text.join(" "))
-}
+var kingEvalWhite = [
+
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
+var kingEvalBlack = reverseArray(kingEvalWhite);
+
+
+
+
+
 
 //lấy những nước đi hợp lệ
 async function glmove(color, cboard, ft = "fc") {
@@ -586,7 +424,6 @@ async function glmove(color, cboard, ft = "fc") {
 //kiểm tra xem vua có đang bị check
 //tách bộ nhớ
 async function sm(cboard) {
-  //return Object.assign({}, cboard)
   return JSON.parse(JSON.stringify(cboard))
 }
 //trạng thái của board sau khi move
@@ -747,124 +584,9 @@ function isUnderCheck(color, cboard) {
   }
 }
 
-
-
-
-var reverseArray = (array) => array.slice().reverse()
-
-var pawnEvalWhite =
-[
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
-  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
-  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
-  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
-  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
-  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-];
-
-var pawnEvalBlack = reverseArray(pawnEvalWhite);
-
-var knightEval =
-[
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
-  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
-  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
-  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
-  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
-  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
-];
-
-var bishopEvalWhite = [
-  /*[-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
-  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
-  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
-  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
-  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
-  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]*/
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-
-var bishopEvalBlack = reverseArray(bishopEvalWhite);
-
-var rookEvalWhite = [
-  /*[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]*/
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-
-var rookEvalBlack = reverseArray(rookEvalWhite);
-
-var evalQueen = [/*
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]*/
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-
-var kingEvalWhite = [
-
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
-  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
-  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
-];
-
-var kingEvalWhite = [
-
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-var kingEvalBlack = reverseArray(kingEvalWhite);
-
 let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 let bishopMovePos = [[-1, 1], [1, -1], [1, 1], [-1, -1]]
 let knightMovePos = [[2, 1], [2, -1], [-2, 1], [-2, -1], [-1, 2], [1, 2], [-1, -2], [1, -2]]
 let kingMovePos = [[1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]]
+  self.postMessage(await minimax(...e.data[0]));
+}
