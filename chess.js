@@ -84,13 +84,13 @@ async function checkOver(cboard, color) {
   for (let i = 0; i < 8; i++)
     for (let j = 0; j < 8; j++) {
     if (cboard.b[i][j] == " ") continue
-    if ([playerPiece[0],playerPiece[1],playerPiece[4],AIPiece[0],AIPiece[1],AIPiece[4]].includes(cboard.b[i][j])) return undefined
+    if ([playerPiece[0], playerPiece[1], playerPiece[4], AIPiece[0], AIPiece[1], AIPiece[4]].includes(cboard.b[i][j])) return undefined
     switch (cboard.b[i][j]) {
       case playerPiece[2]:
         w += 3
         break;
       case playerPiece[3]:
-w+=3
+        w += 3
         break;
       case playerPiece[2]:
         b += 3
@@ -99,7 +99,7 @@ w+=3
         b += 3
         break;
     }
-    
+
   }
   if ((b == 0 && w == 0) || (b == 3 && w == 0) || (b == 0 && w == 3) (b == 3 && w == 3)) return 0
   return undefined
@@ -139,14 +139,14 @@ async function updateBoard(cboard) {
       AImove(await sm(dboard), true)
     }
   },
-    0)
+    100)
 }
 
 async function findBestMove(cboard, depth, color = false) {
   const validMoves = await glmove(color,
     await sm(cboard))
 
-  let scores = await Promise.all(validMoves.map(async e=> new Promise(async (resolve, reject) => {
+  let scores = await Promise.all(validMoves.map(async e=> /*new Promise(async (resolve, reject) => {
         const worker = new Worker('worker.js');
         let gameState = [[await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color], [cic, playerPiece, AIPiece]]
         worker.postMessage(gameState);
@@ -158,7 +158,7 @@ async function findBestMove(cboard, depth, color = false) {
           console.error(e.message, e.lineno)
        //   resolve(minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color))
         }
-      }).then(r=>r))) //await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color)))
+      }).then(r=>r))) /*/await minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color)))
 
   let u = []
   for (let k = 0; k < scores.length; k++) if (scores[k] == (color ? Math.min(...scores): Math.max(...scores))) u.push(k)
@@ -184,11 +184,26 @@ async function AImove(cboard, color) {
     board(i, j).classList.remove("aqua")
   //let lm = (await glmove(false, await sm(cboard)))
   // let amove = lm[Math.floor(Math.random()*lm.length)]
-  let amove = await findBestMove(await sm(cboard), Number(document.getElementById("depth").value), color)
+  let amove = new Promise(async (resolve, reject) => {
+    resolve(findBestMove(await sm(cboard), Number(document.getElementById("depth").value), color))}).then(async amove=> {
+    board(amove[0], amove[1]).classList.add("aqua")
+    board(amove[2], amove[3]).classList.add("aqua")
+    await updateBoard(await mboard(amove, await sm(cboard)))})
+  /* let amove = new Promise(async (resolve, reject) => {
+        const worker = new Worker('worker.js');
+        let gameState = [[await sm(cboard), Number(document.getElementById("depth").value), color], [cic, playerPiece, AIPiece]]
+        worker.postMessage(gameState);
+        worker.onmessage = function(e) {
+          resolve(e.data);
+        }
+        worker.onerror = function(e) {
+          reject(e);
+          console.error(e.message, e.lineno)
+       //   resolve(minimax(await mboard(e, await sm(cboard)), depth - 1, -Infinity, Infinity, !color))
+        }
+      }).then(async amove=>{})*/
   //p(await readMove(amove))
-  board(amove[0], amove[1]).classList.add("aqua")
-  board(amove[2], amove[3]).classList.add("aqua")
-  await updateBoard(await mboard(amove, await sm(cboard)))
+
 }
 
 let cic = 1
