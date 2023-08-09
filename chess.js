@@ -135,7 +135,7 @@ async function updateBoard(cboard) {
     alert("Hòa luật 50 nước đi")
     return
   }*/
-  console.log(await isUnderCheck(!turn, await s(dboard)))
+ // console.log(await isUnderCheck(cboard.turn, await s(dboard)))
   turn = !turn
   /*if (!(await glmove(turn, await s(dboard), "tM"))) {
     if (await isUnderCheck(turn, await s(dboard))) {
@@ -147,7 +147,7 @@ async function updateBoard(cboard) {
   }*/
 
   setTimeout(async ()=> {
-    if (!turn) {
+    if (turn) {
       AImove(await s(dboard), false)
     } else {
       AImove(await s(dboard), true)
@@ -158,7 +158,12 @@ async function updateBoard(cboard) {
 
 async function findBestMove(cboard, depth, color = false) {
   cal = 0
+      const boardString = JSON.stringify(cboard)
+  let validMoves = validMovesCache[boardString]
+  if (validMovesCache[boardString] == undefined) {
     validMoves = await glmove(color, await s(cboard))
+    validMovesCache[boardString] = validMoves // Lưu trữ nước đi hợp lệ vào cache
+  }
   let scores = await Promise.all(validMoves.map(async e=> /*new Promise(async (resolve, reject) => {
         const worker = new Worker('worker.js');
         let gameState = [[await mboard(e, await s(cboard)), depth - 1, -Infinity, Infinity, !color], [cic, playerPiece, AIPiece]]
@@ -726,6 +731,7 @@ async function mboard(move, cboard) {
       move[1]]
   }
   cboard.b[move[0]][move[1]] = " "
+  cboard.turn = AIPiece.includes(cboard.b[move[0]][move[1]])
   return cboard
 }
 function isUnderCheck(color, cboard) {
@@ -828,14 +834,14 @@ var bishopEvalWhite = [
 var bishopEvalBlack = reverseArray(bishopEvalWhite);
 
 var rookEvalWhite = [
-  /*[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
   [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
   [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
   [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
   [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
   [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
   [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]*/
+  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]/*
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
@@ -843,7 +849,7 @@ var rookEvalWhite = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0]*/
 ];
 
 var rookEvalBlack = reverseArray(rookEvalWhite);
