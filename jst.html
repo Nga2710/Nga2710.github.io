@@ -1,0 +1,162 @@
+<html id="html" lang="vi" style="margin-right: 0px; background-color: #262626">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#262626">
+
+
+  <script>
+    run = () => {
+
+      try {
+        eval(input.value)
+      }
+      catch(e) {
+        p(e)
+      }
+    }
+
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      background-color: transparent;
+      width: 10px
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #171717;
+      border: 3px solid #777777;
+      border-radius: 5px
+    }
+    textarea {
+      margin: 15px;
+      outline: none;
+      border: 4px solid #777777;
+      resize: none;
+      background-color: white
+    }
+    * {
+      font-size: 40px;
+      text-color: black;
+      font-weight: bold;
+      user-select: none
+    }
+    button:active {
+      outline: 4px solid yellow
+    }
+  </style>
+</head>
+<body style="background-color: #171717; border: 4px solid #777777; border-radius: 10px">
+
+  <noscript>
+    <marquee behavior="scroll" direction="left">
+      <span style="font-size: 20px; color: #ff0000">Trình duyệt của bạn hiện không hỗ trợ script</span>
+    </marquee>
+  </noscript>
+  <div style="display: flex">
+    <textarea placeholder="Input" id="input" style="width: 75%; height: 400px;font-size: 30px"></textarea>
+    <div style="margin-top: 80px">
+      <button style="margin-bottom: 10px" onclick="run()">Run</button><br>
+      <button onclick="cleari()">Clear</button>
+    </div>
+  </div>
+  <div style="display: flex">
+    <div style="margin-top: 90px">
+      <button style="margin-bottom: 10px" onclick="copy()">Copy</button><br>
+      <button onclick="clearo()">Clear</button>
+    </div>
+    <textarea placeholder="Output" id="output" style="font-size: 20px; width: 90%; height: 600px"></textarea>
+  </div>
+  <script>
+    function p(...v) {
+      document.getElementById("output").value += v.join(" ")+"\n"
+      return v.join(" ")
+    }
+    let cleari = () => {
+      input.value = ""
+      input.focus()
+    }
+    let clearo = () => output.value = ""
+    let copy = () => navigator.clipboard.writeText(output.value)
+
+    // Lưu giá trị của thẻ input
+    const inputElement = document.getElementById('input');
+    inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue', inputElement.value);
+    });
+
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });
+    // Lấy tham chiếu đến thẻ textarea
+    const outputTextarea = document.getElementById('output');
+
+    // Lưu trữ các phương thức console gốc
+    const consoleMethods = {
+      log: console.log,
+      error: console.error,
+      warn: console.warn,
+      trace: console.trace,
+      time: console.time,
+      timeEnd: console.timeEnd,
+      // Thêm các phương thức khác của console nếu cần thiết
+    };
+
+    // Ghi đè tất cả các phương thức console
+    console.log = function(...args) {
+      outputTextarea.value += formatLogMessage(args) + '\n';
+      consoleMethods.log.apply(console,
+        args);
+    };
+
+    console.error = function(...args) {
+      outputTextarea.value += 'Error: ' + formatLogMessage(args) + '\n';
+      consoleMethods.error.apply(console,
+        args);
+    };
+
+    console.warn = function(...args) {
+      outputTextarea.value += 'Warning: ' + formatLogMessage(args) + '\n';
+      consoleMethods.warn.apply(console,
+        args);
+    };
+
+    console.trace = function() {
+      const error = new Error();
+      outputTextarea.value += error.stack + '\n';
+      consoleMethods.trace.apply(console);
+    };
+
+    console.time = function(label) {
+      consoleMethods.time.apply(console,
+        label);
+    };
+
+    console.timeEnd = function(label) {
+      consoleMethods.timeEnd.apply(console,
+        label);
+      const entries = performance.getEntriesByName(label);
+      if (entries.length > 0) {
+        const duration = entries[0].duration.toFixed(2);
+        outputTextarea.value += `Time (${label}): ${duration}ms\n`;
+      }
+    };
+
+    // Hàm để định dạng thông điệp log
+    function formatLogMessage(args) {
+      return args.map(arg => {
+        if (typeof arg === 'object') {
+          return JSON.stringify(arg);
+        } else {
+          return arg;
+        }
+      }).join(' ');
+    }
+
+
+  </script>
+</body>
+</html>
