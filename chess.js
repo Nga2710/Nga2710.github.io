@@ -1,6 +1,9 @@
 async function s(cboard) {
-  //return Object.assign({}, cboard)
+  /*return Object.assign({}, cboard)
   //return cboard
+  let tboard = {}
+  Object.assign(tboard, cboard)
+  return tboard*/
   return JSON.parse(JSON.stringify(cboard))
 }
 var cal = 0
@@ -43,7 +46,7 @@ async function updateBoard(cboard) {
   for (let i = 0; i < 8; i++)
     for (let j = 0; j < 8; j++)
     board(i, j).innerHTML = cboard.b[i][j]
-  var dboard = await s(cboard)
+  dboard = await s(cboard)
   let co = await checkOver(dboard, !turn)
   if (co != undefined) {
     if (dboard.fm == 100) {
@@ -267,7 +270,7 @@ var nboard = {
   fm: 0
 }
 nboard.l = []
-var dboard = nboard
+
 let isOver = false
 reset()
 async function reset() {
