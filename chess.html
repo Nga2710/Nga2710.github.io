@@ -5,15 +5,15 @@
       Chain<sub style="font-size: 20px">v1.3</sub>
     </div>
     <span style="color: #00aa00">AI by @Nga2710</span></strong>
-    <input value="2" id="depth" type="number" placeholder="Depth">
-<textarea id = "textarea" placeholder="debug">
-</textarea>
+  <input value="3" id="depth" type="number" placeholder="Depth">
+  <textarea id="textarea" placeholder="debug">
+  </textarea>
   <border></border>
   <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="board"></table>
   <border2 id="bpr"></border2>
   <table style="border-collapse: collapse;position: fixed;margin: 0px;" id="tpr">
   </table>
-    <script src="chess.js">
+  <script src="chess.js">
   </script>
   <span class="reset-btn" onclick="reset()">
     Reset
@@ -30,10 +30,10 @@
     * {
       user-select: none;
     }
-    td:active {
+    .td:active {
       background-color: red;
     }
-    td {
+    .td {
       width: 30px;
       height: 32px;
       text-align: center;
@@ -65,8 +65,8 @@
       background-color: red;
     }
     .aqua {
-
-     background-color: aqua;
+      
+      background-color: aqua;
     }
     .hide {
       display: none;
@@ -91,7 +91,7 @@
       font-weight: bold;
       font-size: 18px;
     }
-input {
+    input {
       border-radius: 20px;
       background-color: #00aa00;
       height: 50px;
@@ -122,8 +122,9 @@ input {
       background-color: lime;
       border: 10px solid gray;
     }
-@media screen and (min-width: 444px) {
-      td {
+@media screen and (min-width: 444px) and (min-height: 444px) {
+
+      .td {
         width: 50px;
         height: 52px;
 
