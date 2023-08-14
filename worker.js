@@ -1,9 +1,8 @@
 self.onmessage = async function(e) {
   var [cic,
     playerPiece,
-    AIPiece] = e.data[1]
+    AIPiece, posW, posB] = e.data[1]
   var cal = 0
-  var mc = e.data[2]
   async function minimax(cboard, depth, alpha, beta, color) {
   // Kiểm tra điều kiện dừng đệ quy
     cal++
@@ -50,33 +49,20 @@ async function eboard(cboard, color) {
     300,
     900,
     0]
-  let posW = [pawnEvalWhite,
-    rookEvalWhite,
-    knightEval,
-    bishopEvalWhite,
-    evalQueen,
-    kingEvalWhite]
-  let posB = [pawnEvalBlack,
-    rookEvalBlack,
-    knightEval,
-    bishopEvalBlack,
-    evalQueen,
-    kingEvalBlack]
-  for (let i = 0; i < 8; i++)
-    for (let j = 0; j < 8; j++) {
-    if (cboard.b[i][j] == " ") continue
-    for (let k = 0; k < 7; k++) {
-      if (cboard.b[i][j] == playerPiece[k]) {
-        pp += len[playerPiece.indexOf(cboard.b[i][j])] + posW[playerPiece.indexOf(cboard.b[i][j])][i][j]
-        break
-      }
-      if (cboard.b[i][j] == AIPiece[k]) {
-        ap += len[AIPiece.indexOf(cboard.b[i][j])] + posB[AIPiece.indexOf(cboard.b[i][j])][i][j]
+  
+ 
+  cboard.b.map((w, i)=> w.map((e, j)=>{
+  	if (playerPiece.includes(e)) {
+        pp += len[playerPiece.indexOf(e)] + posW[playerPiece.indexOf(e)][i][j]
+        
+      } else
+      if (AIPiece.includes(e)) {
+        ap += len[AIPiece.indexOf(e)] + posB[AIPiece.indexOf(e)][i][j]
 
-        break
+       
       }
-    }
-  }
+  }))
+  
 
   return ap-pp
 }
@@ -94,7 +80,7 @@ async function checkOver(cboard, color) {
   for (let i = 0; i < 8; i++)
     for (let j = 0; j < 8; j++) {
     if (cboard.b[i][j] == " ") continue
-    if ([playerPiece[0], playerPiece[1], playerPiece[4], AIPiece[0], AIPiece[1], AIPiece[4]].includes(cboard.b[i][j])) return undefined
+    
     switch (cboard.b[i][j]) {
       case playerPiece[2]:
         w += 3
@@ -102,12 +88,20 @@ async function checkOver(cboard, color) {
       case playerPiece[3]:
         w += 3
         break;
-      case playerPiece[2]:
+      case AIPiece[2]:
         b += 3
         break;
-      case playerPiece[3]:
+      case AIPiece[3]:
         b += 3
         break;
+      case playerPiece[5]:
+        w += 0
+        break;
+      case AIPiece[5]:
+        b += 0
+        break;
+      default:
+        return undefined
     }
 
   }
@@ -428,7 +422,7 @@ async function glmove(color, cboard, ft = "fc") {
         move[1]]
     }
     cboard.b[move[0]][move[1]] = " "
-    cboard.turn = AIPiece.includes(cboard.b[move[0]][move[1]])
+   // cboard.turn = AIPiece.includes(cboard.b[move[0]][move[1]])
     cboard.l.push(cboard.b)
     return cboard
   }
@@ -527,119 +521,7 @@ async function glmove(color, cboard, ft = "fc") {
       0],
     [-1,
       -1]]
-  var reverseArray = (array) => array.slice().reverse()
 
-var pawnEvalWhite =
-[
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
-  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
-  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
-  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
-  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
-  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-];
-
-var pawnEvalBlack = reverseArray(pawnEvalWhite);
-
-var knightEval =
-[
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
-  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
-  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
-  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
-  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
-  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
-];
-
-var bishopEvalWhite = [
-  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
-  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
-  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
-  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
-  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
-  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]/*
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]*/
-];
-
-var bishopEvalBlack = reverseArray(bishopEvalWhite);
-
-var rookEvalWhite = [
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]/*
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]*/
-];
-
-var rookEvalBlack = reverseArray(rookEvalWhite);
-
-var evalQueen = [/*
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]*/
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-
-var kingEvalWhite = [
-
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
-  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
-  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
-];
-
-var kingEvalWhite = [
-
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
-var kingEvalBlack = reverseArray(kingEvalWhite);
   //self.postMessage(0)
   var whitePiece = "♙♖♘♗♕♔",
   blackPiece = "♟♜♞♝♛♚"

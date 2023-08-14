@@ -1,4 +1,4 @@
-async function s(cboard) {
+	async function s(cboard) {
   /*return Object.assign({}, cboard)
   //return cboard
   let tboard = {}
@@ -9,7 +9,6 @@ async function s(cboard) {
 var cal = 0
 var mc = {} 
 async function checkOver(cboard, color) {
-  
   if (cboard.fm >= 100 || cboard.l.filter(e=> cboard.b == e).length >= 3) return 0
   if (!(await glmove(color, await s(cboard), "tM"))) {
     if (await isUnderCheck(color, await s(cboard))) {
@@ -73,7 +72,7 @@ async function updateBoard(cboard) {
     if (!turn) {
       AImove(await s(dboard), false)
     } else {
-    //  AImove(await s(dboard), true)
+      AImove(await s(dboard), true)
     }
   },
     1)
@@ -81,22 +80,7 @@ async function updateBoard(cboard) {
 async function findBestMove(cboard, depth, color = false) {
   cal = 0
   console.time("A")
-
-    
-   let validMoves = await glmove(color,await s(cboard))
-  /*let scores = await Promise.all(validMoves.map(async e=>/* new Promise(async (resolve, reject) => {
-        const worker = new Worker('worker.js');
-        let gameState = [[await mboard(e, await s(cboard)), depth - 1, -Infinity, Infinity, !color], [cic, playerPiece, AIPiece]]
-        worker.postMessage(gameState);
-        worker.onmessage = function(e) {
-          resolve(e.data);
-        }
-        worker.onerror = function(e) {
-          reject(e);
-          console.error(e, e.message, e.lineno)
-       //   resolve(minimax(await mboard(e, await s(cboard)), depth - 1, -Infinity, Infinity, !color))
-        }
-      }).then(r=>r))) /*await activeWorker(await mboard(e, await s(cboard)), depth - 1, -Infinity, Infinity, !color)))*/
+  let validMoves = await glmove(color,await s(cboard))
   let workers = []
   // Tạo một worker cho mỗi phần tử trong mảng
   for (let i = 0; i < validMoves.length; i++) {
@@ -110,12 +94,11 @@ async function findBestMove(cboard, depth, color = false) {
       !color],
       [cic,
         playerPiece,
-        AIPiece]]
+        AIPiece, posW, posB]]
     worker.postMessage(gameState);
     worker.onerror = function(e) {
       reject(e);
       console.error(e.message, e.lineno)
-      //   resolve(minimax(await mboard(e, await s(cboard)), depth - 1, -Infinity, Infinity, !color))
     }
   }
   // Xử lý kết quả trả về từ các worker
@@ -715,3 +698,128 @@ let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 let bishopMovePos = [[-1, 1], [1, -1], [1, 1], [-1, -1]]
 let knightMovePos = [[2, 1], [2, -1], [-2, 1], [-2, -1], [-1, 2], [1, 2], [-1, -2], [1, -2]]
 let kingMovePos = [[1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]]
+  var reverseArray = (array) => array.slice().reverse()
+
+var pawnEvalWhite =
+[
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
+  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
+  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
+  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
+  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+];
+
+var pawnEvalBlack = reverseArray(pawnEvalWhite);
+
+var knightEval =
+[
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
+  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
+  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
+  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
+  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
+  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
+];
+
+var bishopEvalWhite = [
+  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
+  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
+  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
+  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
+  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
+  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]/*
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]*/
+];
+
+var bishopEvalBlack = reverseArray(bishopEvalWhite);
+
+var rookEvalWhite = [
+  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
+  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]/*
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]*/
+];
+
+var rookEvalBlack = reverseArray(rookEvalWhite);
+
+var evalQueen = [/*
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
+  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
+  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
+  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
+  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]*/
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
+
+var kingEvalWhite = [
+
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
+  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
+  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
+];
+
+var kingEvalWhite = [
+
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
+];
+var kingEvalBlack = reverseArray(kingEvalWhite);
+var posW = [pawnEvalWhite,
+    rookEvalWhite,
+    knightEval,
+    bishopEvalWhite,
+    evalQueen,
+    kingEvalWhite]
+  var posB = [pawnEvalBlack,
+    rookEvalBlack,
+    knightEval,
+    bishopEvalBlack,
+    evalQueen,
+    kingEvalBlack]
