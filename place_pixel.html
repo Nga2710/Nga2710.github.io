@@ -133,7 +133,7 @@
         const pixel = document.createElement("div");
         pixel.className = "pixel"
         pixel.classList.add(`pixel${i}`)
-        pixel.addEventListener("mousedown", function changeColor() {
+        pixel.addEventListener("mouseover", function changeColor() {
           this.style.backgroundColor = colors[pick_color];
           database.ref(`users/pixelplace/edit`).set([i, pick_color])
           database.ref(`users/pixelplace/${String(i)}`).set(pick_color)
