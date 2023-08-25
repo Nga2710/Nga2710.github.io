@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pixel Place</title>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <style>
+    body {
+      background-color: #ddd;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(128, 10px);
+      grid-template-rows: repeat(128, 10px);
+
+      background-color: #f1f1f1;
+
+    }
+
+    .pixel {
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+
+    }
+    .dpixel:active {
+      border: 5px solid gray;
+    }
+    .pick_colors {
+      display: grid;
+      grid-template-columns: repeat(50, 25px);
+      grid-template-rows: repeat(1, 25px);
+      z-index: 32;
+      position: sticky;
+      top: 0;
+
+    }
+    .dpixel {
+      height: 25px;
+      width: 25px;
+      display: block;
+      border: 2px solid gray;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="pick_colors"></div>
+  <script>
+    datagrid = []
+    const colors = [
+      "red",
+      "lime",
+      "blue",
+      "yellow",
+      "pink",
+      "cyan",
+      "black",
+      "white",
+      "gray",
+      "darkgray",
+      "lightgray",
+      "brown",
+      "orange",
+      "purple",
+      "green",
+      "teal",
+      "navy",
+      "silver",
+      "maroon",
+      "olive",
+      "darkblue",
+      "lightyellow",
+      "darkorange",
+      "darkpurple",
+      "lightgreen",
+      "lightcyan",
+      "aquamarine",
+      "coral",
+      "gold",
+      "indigo",
+      "ivory",
+      "khaki",
+      "lavender",
+      "magenta",
+      "orchid",
+      "peru",
+      "plum",
+      "rosybrown",
+      "sienna",
+      "skyblue",
+      "tan",
+      "thistle",
+      "tomato",
+      "violet",
+      "wheat"
+    ];
+    var firebaseConfig = {
+
+      apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+      authDomain: "pixelbase-512.firebaseapp.com",
+      projectId: "pixelbase-512",
+      storageBucket: "pixelbase-512.appspot.com",
+      messagingSenderId: "608526843244",
+      appId: "1:608526843244:web:7382b46751ddd1a6bac749",
+      measurementId: "G-XDRY19MKXW",
+
+      databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app"
+
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Tham chiếu đến cơ sở dữ liệu Firebase
+    var database = firebase.database();
+
+    var pick_color = 0
+    for (let i = 0; i < colors.length; i++) {
+      const pixel = document.createElement("div")
+      pixel.className = "dpixel"
+   //   pixel.classList.add(`pixel${i}`)
+      pixel.style.backgroundColor = colors[i]
+      pixel.addEventListener("mouseover", () => {
+        pick_color = i
+      })
+      document.querySelector(".pick_colors").appendChild(pixel);
+    }
+    const grid = document.querySelector(".grid");
+
+    // Tạo lưới
+    function createGrid() {
+      for (let i = 0; i < 128 * 128; i++) {
+        const pixel = document.createElement("div");
+        pixel.className = "pixel"
+        pixel.classList.add(`pixel${i}`)
+        pixel.addEventListener("mouseover", function changeColor() {
+          this.style.backgroundColor = colors[pick_color];
+          database.ref(`users/pixelplace/${String(i)}`).set(pick_color)
+          .then(function() {
+            console.log("Data successfully written!");
+          })
+          .catch(function(error) {
+            console.error("Error writing data: ", error);
+          });
+        });
+        grid.appendChild(pixel);
+      }
+    }
+
+    // Thay đổi màu của pixel khi người dùng di chuột qua
+    function changeColor() {
+      const color = colors[pick_color];
+      this.style.backgroundColor = color;
+    }
+
+    // Hàm trả về một màu ngẫu nhiên
+
+    createGrid();
+
+
+    // Khởi tạo Firebase
+
+    // Ghi dữ liệu lên Firebase
+//grid.querySelector(`.pixel${0}`).style.backgroundColor = colors[0]
+    setInterval(getData, 3000)
+    // Đọc dữ liệu từ Firebase
+    function getData() {
+      database.ref("users/pixelplace").once("value")
+      .then(function(snapshot) {
+        var data = snapshot.val();
+        console.log("Data retrieved: ", data);
+/*        data.forEach((key)=> {
+        //  pixels[Number(key)].style.backgroundColor = colors[Number(data[key])]
+          console.log(key, data[key])
+        })*/
+        
+        for (let i in data) {
+         // console.log(i, data[i])
+         document.querySelector(`.pixel${i}`).style.backgroundColor = colors[data[i]]
+        //  document.querySelector(`pixel${i}`).style.backgroundColor = colors[data[String(i)]]
+        }
+      })
+      .catch(function(error) {
+        console.error("Error reading data: ", error);
+      });
+    }
+  </script>
+</body>
+</html>
