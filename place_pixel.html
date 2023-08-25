@@ -118,7 +118,7 @@
     for (let i = 0; i < colors.length; i++) {
       const pixel = document.createElement("div")
       pixel.className = "dpixel"
-   //   pixel.classList.add(`pixel${i}`)
+      //   pixel.classList.add(`pixel${i}`)
       pixel.style.backgroundColor = colors[i]
       pixel.addEventListener("mouseover", () => {
         pick_color = i
@@ -129,29 +129,35 @@
 
     // Tạo lưới
     function createGrid() {
-      for (let i = 0; i < 128 * 128; i++) {
+      for (let i = 0; i < 128*128; i++) {
         const pixel = document.createElement("div");
         pixel.className = "pixel"
         pixel.classList.add(`pixel${i}`)
-        pixel.addEventListener("mouseover", function changeColor() {
+        pixel.addEventListener("mousedown", function changeColor() {
           this.style.backgroundColor = colors[pick_color];
+          database.ref(`users/pixelplace/edit`).set([i, pick_color])
           database.ref(`users/pixelplace/${String(i)}`).set(pick_color)
           .then(function() {
-            console.log("Data successfully written!");
+            //       console.log("Data successfully written!");
           })
           .catch(function(error) {
             console.error("Error writing data: ", error);
           });
         });
+        // Lắng nghe sự kiện thay đổi dữ liệu trong Real-time Database
+        
+
         grid.appendChild(pixel);
       }
     }
-
+firebase.database().ref(`users/pixelplace/edit`).on('value', (snapshot) => {
+          const data = snapshot.val();
+          console.log(data[1])
+         document.querySelector(`.pixel${data[0]}`).style.backgroundColor = colors[data[1]];
+          
+        });
     // Thay đổi màu của pixel khi người dùng di chuột qua
-    function changeColor() {
-      const color = colors[pick_color];
-      this.style.backgroundColor = color;
-    }
+    
 
     // Hàm trả về một màu ngẫu nhiên
 
@@ -161,23 +167,24 @@
     // Khởi tạo Firebase
 
     // Ghi dữ liệu lên Firebase
-//grid.querySelector(`.pixel${0}`).style.backgroundColor = colors[0]
-    setInterval(getData, 3000)
+    //grid.querySelector(`.pixel${0}`).style.backgroundColor = colors[0]
+    getData()
+    //  setInterval(getData, 3000)
     // Đọc dữ liệu từ Firebase
     function getData() {
       database.ref("users/pixelplace").once("value")
       .then(function(snapshot) {
         var data = snapshot.val();
-        console.log("Data retrieved: ", data);
-/*        data.forEach((key)=> {
+        //    console.log("Data retrieved: ", data);
+        /*        data.forEach((key)=> {
         //  pixels[Number(key)].style.backgroundColor = colors[Number(data[key])]
           console.log(key, data[key])
         })*/
-        
+
         for (let i in data) {
-         // console.log(i, data[i])
-         document.querySelector(`.pixel${i}`).style.backgroundColor = colors[data[i]]
-        //  document.querySelector(`pixel${i}`).style.backgroundColor = colors[data[String(i)]]
+          // console.log(i, data[i])
+          document.querySelector(`.pixel${i}`).style.backgroundColor = colors[data[i]]
+          //  document.querySelector(`pixel${i}`).style.backgroundColor = colors[data[String(i)]]
         }
       })
       .catch(function(error) {
