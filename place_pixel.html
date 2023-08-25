@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="html">
 <head>
   <title>Pixel Place</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
@@ -127,7 +127,7 @@
     }
     const grid = document.querySelector(".grid");
 
-    // Tạo lưới
+ //   document.getElementById("html").ondblclick = (e) =>e.preventDefault()
     function createGrid() {
       for (let i = 0; i < 128*128; i++) {
         const pixel = document.createElement("div");
