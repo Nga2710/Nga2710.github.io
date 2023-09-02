@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game 2048</title>
+  <style>
+    body {
+      background-color: #faf8ef;
+      font-family: "Arial", sans-serif;
+    }
+
+    .container {
+      margin: 10px auto;
+      width: 400px;
+      padding: 20px;
+      background-color: #bbada0;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 40px;
+      color: #776e65;
+    }
+
+    .score {
+      font-size: 24px;
+      color: #776e65;
+      margin-top: 10px;
+    }
+
+    .board {
+      margin-top: 20px;
+      position: relative;
+    }
+    .pop {
+      animation: merge .2s;
+    }
+@keyframes merge {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .tile {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #776e65;
+      background-color: #eee4da;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .tile-2 {
+      background-color: #eee4da;
+      color: #776e65;
+    }
+
+    .tile-4 {
+      background-color: #ede0c8;
+      color: #776e65;
+    }
+
+    .tile-8 {
+      background-color: #f2b179;
+      color: #f9f6f2;
+    }
+
+    .tile-16 {
+      background-color: #f59563;
+      color: #f9f6f2;
+    }
+
+    .tile-32 {
+      background-color: #f67c5f;
+      color: #f9f6f2;
+    }
+
+    .tile-64 {
+      background-color: #f65e3b;
+      color: #f9f6f2;
+    }
+
+    .tile-128 {
+      background-color: #edcf72;
+      color: #f9f6f2;
+    }
+
+    .tile-256 {
+      background-color: #edcc61;
+      color: #f9f6f2;
+    }
+
+    .tile-512 {
+      background-color: #edc850;
+      color: #f9f6f2;
+    }
+
+    .tile-1024 {
+      background-color: #edc53f;
+      color: #f9f6f2;
+    }
+
+    .tile-2048 {
+      background-color: #edc22e;
+      color: #f9f6f2;
+    }
+
+    .tile-4096 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-8192 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-16384 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-32768 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-65536 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-131072 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-262144 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .tile-524288 {
+      background-color: #3c3a32;
+      color: #f9f6f2;
+    }
+
+    .game-over {
+      font-size: 30px;
+      color: #776e65;
+      margin-top: 20px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #8f7a66;
+      color: #f9f6f2;
+      border: none;
+      border-radius: 5px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">2048</h1>
+    <div class="score">
+      Score: <span id="score">0</span>
+    </div>
+
+    <div class="game-over"></div>
+    <button class="btn" onclick="restart()">Restart</button>
+    <div class="board"></div>
+  </div>
+
+
+  <script>
+    // Tạo ma trận 4x4
+    let board = [[0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]];
+    let currentArr = new Array(16).fill(0)
+
+    let score = 0
+    // Đặt số ngẫu nhiên vào ô trống
+    function generateRandomTile() {
+      let row = Math.floor(Math.random() * 4);
+      let col = Math.floor(Math.random() * 4);
+
+      while (board[row][col] !== 0) {
+        row = Math.floor(Math.random() * 4);
+        col = Math.floor(Math.random() * 4);
+      }
+
+      board[row][col] = Math.random() < 0.9 ? 2: 4;
+      
+    }
+
+    // Khởi tạo trò chơi
+    function startGame() {
+      board = [[0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]];
+      currentArr = new Array(16).fill(0)
+      generateRandomTile();
+      generateRandomTile();
+      score = 0
+      updateBoard();
+
+    }
+
+    // Cập nhật giao diện
+    function updateBoard() {
+      document.getElementById("score").innerHTML = score
+
+      let boardContainer = document.querySelector('.board');
+      boardContainer.innerHTML = '';
+      let newArr = []
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          let tileValue = board[row][col];
+          
+          let tile = document.createElement('div');
+          tile.classList.add('tile');
+          
+          tile.classList.add('tile-' + tileValue);
+          tile.textContent = tileValue !== 0 ? tileValue: '';
+          
+          boardContainer.appendChild(tile);
+          tile.style.top = (row * 100) + 'px';
+          tile.style.left = (col * 100) + 'px';
+          newArr.push(tileValue)
+          if (tileValue > currentArr[newArr.length-1]) tile.classList.add('pop');
+        }
+      }
+      currentArr = newArr
+    }
+
+    // Di chuyển lên
+    function moveUp() {
+      let moved = false;
+      for (let col = 0; col < 4; col++) {
+        for (let row = 1; row < 4; row++) {
+          if (board[row][col] !== 0) {
+            let currentRow = row;
+            while (currentRow > 0 && board[currentRow - 1][col] === 0) {
+              board[currentRow - 1][col] = board[currentRow][col];
+              board[currentRow][col] = 0;
+              currentRow--;
+              moved = true;
+            }
+            if (currentRow > 0 && board[currentRow - 1][col] === board[currentRow][col]) {
+              board[currentRow - 1][col] *= 2;
+              score += board[currentRow - 1][col]
+             
+              board[currentRow][col] = 0;
+              moved = true;
+            }
+          }
+        }
+      }
+
+      if (moved) {
+        generateRandomTile();
+        updateBoard();
+        checkGameOver();
+      }
+    }
+
+    // Di chuyển xuống
+    function moveDown() {
+      let moved = false;
+
+      for (let col = 0; col < 4; col++) {
+        for (let row = 2; row >= 0; row--) {
+          if (board[row][col] !== 0) {
+            let currentRow = row;
+            while (currentRow < 3 && board[currentRow + 1][col] === 0) {
+              board[currentRow + 1][col] = board[currentRow][col];
+              board[currentRow][col] = 0;
+              currentRow++;
+              moved = true;
+            }
+            if (currentRow < 3 && board[currentRow + 1][col] === board[currentRow][col]) {
+              board[currentRow + 1][col] *= 2;
+              score += board[currentRow + 1][col]
+              board[currentRow][col] = 0;
+              moved = true;
+            }
+          }
+        }
+      }
+
+      if (moved) {
+        generateRandomTile();
+        updateBoard();
+        checkGameOver();
+      }
+    }
+
+    // Di chuyển sang trái
+    function moveLeft() {
+      let moved = false;
+
+      for (let row = 0; row < 4; row++) {
+        for (let col = 1; col < 4; col++) {
+          if (board[row][col] !== 0) {
+            let currentCol = col;
+            while (currentCol > 0 && board[row][currentCol - 1] === 0) {
+              board[row][currentCol - 1] = board[row][currentCol];
+              board[row][currentCol] = 0;
+              currentCol--;
+              moved = true;
+            }
+            if (currentCol > 0 && board[row][currentCol - 1] === board[row][currentCol]) {
+              board[row][currentCol - 1] *= 2;
+              score += board[row][currentCol - 1]
+              board[row][currentCol] = 0;
+              moved = true;
+            }
+          }
+        }
+      }
+
+      if (moved) {
+        generateRandomTile();
+        updateBoard();
+        checkGameOver();
+      }
+    }
+
+    // Di chuyển sang phải
+    function moveRight() {
+      let moved = false;
+
+      for (let row = 0; row < 4; row++) {
+        for (let col = 2; col >= 0; col--) {
+          if (board[row][col] !== 0) {
+            let currentCol = col;
+            while (currentCol < 3 && board[row][currentCol + 1] === 0) {
+              board[row][currentCol + 1] = board[row][currentCol];
+              board[row][currentCol] = 0;
+              currentCol++;
+              moved = true;
+            }
+            if (currentCol < 3 && board[row][currentCol + 1] === board[row][currentCol]) {
+              board[row][currentCol + 1] *= 2;
+              score += board[row][currentCol + 1]
+
+              board[row][currentCol] = 0;
+              moved = true;
+            }
+          }
+        }
+      }
+
+      if (moved) {
+        generateRandomTile();
+        updateBoard();
+        checkGameOver();
+      }
+    }
+
+
+
+
+    // Kiểm tra trạng thái game over
+    function checkGameOver() {
+      let gameOver = true;
+
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          if (board[row][col] === 0) {
+            gameOver = false;
+            break;
+          }
+          if (col < 3 && board[row][col] === board[row][col + 1]) {
+            gameOver = false;
+            break;
+          }
+          if (row < 3 && board[row][col] === board[row + 1][col]) {
+            gameOver = false;
+            break;
+          }
+        }
+      }
+
+      if (gameOver) {
+        let gameOverText = document.querySelector('.game-over');
+        gameOverText.textContent = 'Game Over!';
+      }
+    }
+
+    // Khởi động lại trò chơi
+    function restart() {
+      let gameOverText = document.querySelector('.game-over');
+      gameOverText.textContent = '';
+
+      startGame();
+    }
+
+    var dragging = false;
+    var startX, startY;
+    var threshold = 5; // Ngưỡng di chuyển để xác định hướng
+
+    var myElement = document.querySelector('.board');
+
+    myElement.addEventListener('mousedown', function(event) {
+      dragging = true;
+      startX = event.clientX;
+      startY = event.clientY;
+    });
+
+    myElement.addEventListener('touchstart', function(event) {
+      dragging = true;
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    });
+
+    myElement.addEventListener('mousemove', function(event) {
+      if (dragging) {
+        var deltaX = event.clientX - startX;
+        var deltaY = event.clientY - startY;
+
+        // Xác định hướng di chuyển
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+          if (deltaX > 0) {
+            moveright();
+          } else {
+            moveleft();
+          }
+        } else if (Math.abs(deltaY) > threshold) {
+          if (deltaY > 0) {
+            movedown();
+          } else {
+            moveup();
+          }
+        }
+      }
+    });
+
+    myElement.addEventListener('touchmove', function(event) {
+      if (dragging) {
+        var deltaX = event.touches[0].clientX - startX;
+        var deltaY = event.touches[0].clientY - startY;
+
+        // Xác định hướng di chuyển
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+          if (deltaX > 0) {
+            moveRight();
+          } else {
+            moveLeft();
+          }
+        } else if (Math.abs(deltaY) > threshold) {
+          if (deltaY > 0) {
+            moveDown();
+          } else {
+            moveUp();
+          }
+        }
+      }
+    });
+
+    myElement.addEventListener('mouseup', function(event) {
+      dragging = false;
+    });
+
+    myElement.addEventListener('touchend', function(event) {
+      dragging = false;
+    });
+
+
+    // Bắt sự kiện khi nhấn phím
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowUp') {
+        moveUp();
+      } else if (event.key === 'ArrowDown') {
+        moveDown();
+      } else if (event.key === 'ArrowLeft') {
+        moveLeft();
+      } else if (event.key === 'ArrowRight') {
+        moveRight();
+      }
+    });
+
+    // Bắt đầu trò chơi
+    startGame();
+  </script>
+</body>
+</html>
