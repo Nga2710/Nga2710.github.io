@@ -38,14 +38,11 @@
       animation: merge .2s;
     }
 @keyframes merge {
-      0% {
+      0%, 100% {
         transform: scale(1);
       }
-      50% {
+      30% {
         transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
       }
     }
     .tile {
@@ -182,7 +179,7 @@
     <div class="score">
       Score: <span id="score">0</span>
     </div>
-
+    <input id="size" value="4" type=Number></input>
     <div class="game-over"></div>
     <button class="btn" onclick="restart()">Restart</button>
     <div class="board"></div>
@@ -190,22 +187,24 @@
 
 
   <script>
-    // Tạo ma trận 4x4
-    let board = [[0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0]];
-    let currentArr = new Array(16).fill(0)
+    // Tạo ma trận
+    let size = 4
+    let board = new Array(size)
+    for (let i = 0; i < size; i++) {
+      board[i] = new Array(size).fill(0)
+    }
+    
+    let currentArr = new Array(size**2).fill(0)
 
     let score = 0
     // Đặt số ngẫu nhiên vào ô trống
     function generateRandomTile() {
-      let row = Math.floor(Math.random() * 4);
-      let col = Math.floor(Math.random() * 4);
+      let row = Math.floor(Math.random() * size);
+      let col = Math.floor(Math.random() * size);
 
       while (board[row][col] !== 0) {
-        row = Math.floor(Math.random() * 4);
-        col = Math.floor(Math.random() * 4);
+        row = Math.floor(Math.random() * size);
+        col = Math.floor(Math.random() * size);
       }
 
       board[row][col] = Math.random() < 0.9 ? 2: 4;
@@ -214,13 +213,15 @@
 
     // Khởi tạo trò chơi
     function startGame() {
-      board = [[0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0]];
-      currentArr = new Array(16).fill(0)
-      generateRandomTile();
-      generateRandomTile();
+      size = Number(document.getElementById("size").value)
+      size = size > 1 ? size: 2
+board = new Array(size)
+    for (let i = 0; i < size; i++) {
+      board[i] = new Array(size).fill(0)
+    }
+      currentArr = new Array(size**2).fill(0)
+      for (let k = 0; k<2; k++) generateRandomTile();
+      
       score = 0
       updateBoard();
 
@@ -233,8 +234,8 @@
       let boardContainer = document.querySelector('.board');
       boardContainer.innerHTML = '';
       let newArr = []
-      for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 4; col++) {
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
           let tileValue = board[row][col];
           
           let tile = document.createElement('div');
@@ -247,7 +248,7 @@
           tile.style.top = (row * 100) + 'px';
           tile.style.left = (col * 100) + 'px';
           newArr.push(tileValue)
-          if (tileValue > currentArr[newArr.length-1]) tile.classList.add('pop');
+          if (tileValue != 0 && tileValue != currentArr[newArr.length-1]) tile.classList.add('pop');
         }
       }
       currentArr = newArr
@@ -256,8 +257,8 @@
     // Di chuyển lên
     function moveUp() {
       let moved = false;
-      for (let col = 0; col < 4; col++) {
-        for (let row = 1; row < 4; row++) {
+      for (let col = 0; col < size; col++) {
+        for (let row = 1; row < size; row++) {
           if (board[row][col] !== 0) {
             let currentRow = row;
             while (currentRow > 0 && board[currentRow - 1][col] === 0) {
@@ -288,17 +289,17 @@
     function moveDown() {
       let moved = false;
 
-      for (let col = 0; col < 4; col++) {
-        for (let row = 2; row >= 0; row--) {
+      for (let col = 0; col < size; col++) {
+        for (let row = size-2; row >= 0; row--) {
           if (board[row][col] !== 0) {
             let currentRow = row;
-            while (currentRow < 3 && board[currentRow + 1][col] === 0) {
+            while (currentRow < size-1 && board[currentRow + 1][col] === 0) {
               board[currentRow + 1][col] = board[currentRow][col];
               board[currentRow][col] = 0;
               currentRow++;
               moved = true;
             }
-            if (currentRow < 3 && board[currentRow + 1][col] === board[currentRow][col]) {
+            if (currentRow < size-1 && board[currentRow + 1][col] === board[currentRow][col]) {
               board[currentRow + 1][col] *= 2;
               score += board[currentRow + 1][col]
               board[currentRow][col] = 0;
@@ -319,8 +320,8 @@
     function moveLeft() {
       let moved = false;
 
-      for (let row = 0; row < 4; row++) {
-        for (let col = 1; col < 4; col++) {
+      for (let row = 0; row < size; row++) {
+        for (let col = 1; col < size; col++) {
           if (board[row][col] !== 0) {
             let currentCol = col;
             while (currentCol > 0 && board[row][currentCol - 1] === 0) {
@@ -350,17 +351,17 @@
     function moveRight() {
       let moved = false;
 
-      for (let row = 0; row < 4; row++) {
-        for (let col = 2; col >= 0; col--) {
+      for (let row = 0; row < size; row++) {
+        for (let col = size-2; col >= 0; col--) {
           if (board[row][col] !== 0) {
             let currentCol = col;
-            while (currentCol < 3 && board[row][currentCol + 1] === 0) {
+            while (currentCol < size-1 && board[row][currentCol + 1] === 0) {
               board[row][currentCol + 1] = board[row][currentCol];
               board[row][currentCol] = 0;
               currentCol++;
               moved = true;
             }
-            if (currentCol < 3 && board[row][currentCol + 1] === board[row][currentCol]) {
+            if (currentCol < size-1 && board[row][currentCol + 1] === board[row][currentCol]) {
               board[row][currentCol + 1] *= 2;
               score += board[row][currentCol + 1]
 
@@ -385,17 +386,17 @@
     function checkGameOver() {
       let gameOver = true;
 
-      for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 4; col++) {
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
           if (board[row][col] === 0) {
             gameOver = false;
             break;
           }
-          if (col < 3 && board[row][col] === board[row][col + 1]) {
+          if (col < size-1 && board[row][col] === board[row][col + 1]) {
             gameOver = false;
             break;
           }
-          if (row < 3 && board[row][col] === board[row + 1][col]) {
+          if (row < size-1 && board[row][col] === board[row + 1][col]) {
             gameOver = false;
             break;
           }
@@ -418,7 +419,7 @@
 
     var dragging = false;
     var startX, startY;
-    var threshold = 5; // Ngưỡng di chuyển để xác định hướng
+    var threshold = 3; // Ngưỡng di chuyển để xác định hướng
 
     var myElement = document.querySelector('.board');
 
@@ -442,15 +443,15 @@
         // Xác định hướng di chuyển
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
           if (deltaX > 0) {
-            moveright();
+            moveRight();
           } else {
-            moveleft();
+            moveLeft();
           }
         } else if (Math.abs(deltaY) > threshold) {
           if (deltaY > 0) {
-            movedown();
+            moveDown();
           } else {
-            moveup();
+            moveUp();
           }
         }
       }
@@ -502,6 +503,12 @@
 
     // Bắt đầu trò chơi
     startGame();
+  /*  setInterval(async () => {
+      await moveUp()
+      await moveDown()
+      await moveRight()
+      await moveLeft()
+    },1)*/
   </script>
 </body>
 </html>
