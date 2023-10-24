@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      margin: 10px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .answer {
+      margin-bottom: 10px;
+    }
+    .answer {
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="color: green">QPAN-11</h2>
+  <div class="container" id="container">
+    Đang xử lí câu hỏi..
+
+  </div>
+  <div class="container">
+    <div id="timer">
+      Thời gian làm bài: <span id="time">00:00:00</span>
+    </div>
+    <div id="result"></div>
+    <button onclick="calculateScore()">Nộp bài</button>
+    <button onclick="reload()">Làm lại</button>
+  </div>
+  <script>
+        const inputString = `
+Câu 1: Theo quy định trong Luật Biển Việt Nam năm 2012: vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm
+A. vùng nội thủy và tiếp giáp lãnh hải. 
+B. lãnh hải và vùng tiếp giáp lãnh hải.
+C. thềm lục địa và lòng đất dưới đáy biển.
+/D. đáy biển và lòng đất dưới đáy biển.
+Câu 2: Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ
+A. vùng nội thủy ra phía biển.
+/B. đường cơ sở ra phía biển.
+C. ranh giới ngoài của lãnh hải.
+D. ranh giới ngoài thềm lục địa.
+Câu 3: Vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở, được gọi là
+A. nội thủy.
+/B. vùng tiếp giáp lãnh hải. 
+C. vùng đặc quyền kinh tế.
+D. thềm lục địa.
+`;
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    function convertStringToHTML(questionStrings) {
+      const questions = [];
+
+      for (let i = 1; i < questionStrings.length; i++) {
+        const questionString = questionStrings[i].trim();
+        const lineBreakIndex = questionString.indexOf('\n');
+        const question = questionString.slice(0, lineBreakIndex).trim();
+        const answers = questionString.slice(lineBreakIndex).trim();
+        const answerStrings = answers.split('\n');
+        const questionAnswers = [];
+        for (let j = 0; j < answerStrings.length; j++) {
+          let answerString = answerStrings[j].trim();
+          const isCorrect = answerString.includes("\/");
+          if (isCorrect) {
+            answerString = answerString.slice(1)
+          }
+          const answerLetter = answerString.charAt(0);
+          const answerText = answerString.slice(2).trim();
+          const answerHTML = `
+          <div class="answer">
+          <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${answerLetter}. ${answerText}</label>
+          </div>
+          `;
+          questionAnswers.push(answerHTML);
+        }
+        const questionHTML = `
+        <div class="question">
+        <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu</span> ${question}</p>
+        ${questionAnswers.join('\n')}
+        </div>
+        `;
+        questions.push(questionHTML);
+      }
+      return questions.join('\n');
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#eeee00": "black"
+    }
+    let questionStrings = inputString.split('\nCâu ');
+    var amount = questionStrings.length-1
+
+// Hàm so sánh ngẫu nhiên
+
+//questionStrings.sort(function() { return Math.random() -0.5 });
+
+//console.log(questionStrings)
+
+    const htmlString = convertStringToHTML(questionStrings);
+    // test
+    console.log(htmlString);
+    document.getElementById("container").innerHTML = htmlString
+    var inputs = document.querySelectorAll('input[type="radio"]');
+    var result = document.getElementById('result');
+    var timer = document.getElementById('time');
+    var startTime = Date.now();
+    function updateTime() {
+      var currentTime = Date.now();
+      var timeDiff = currentTime - startTime;
+      var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+      var milliseconds = Math.floor((timeDiff % 1000) / 10);
+      minutes = (minutes < 10) ? "0" + minutes: minutes;
+      seconds = (seconds < 10) ? "0" + seconds: seconds;
+      milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+      timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+    }
+    function calculateScore() {
+      var score = 0;
+      inputs.forEach(function(input) {
+        input.disabled = true
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10  (${score}/${amount})`;
+      if (score > 8) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+    }
+    var timerInterval = setInterval(updateTime, 10);
+  </script>
+</body>
+</html>
