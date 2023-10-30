@@ -188,12 +188,12 @@
   <script>
     var inputElement = document.getElementById('text');
     inputElement.addEventListener('input', function() {
-      localStorage.setItem('inputValue', inputElement.value);
+      localStorage.setItem('inputValue_testpage3', inputElement.value);
     });
 
     // Tải lại giá trị đã lưu khi trang được tải lại
     window.addEventListener('load', function() {
-      const savedValue = localStorage.getItem('inputValue');
+      const savedValue = localStorage.getItem('inputValue_testpage3');
       if (savedValue) {
         inputElement.value = savedValue;
       }
