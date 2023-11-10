@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+            font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+    @keyframes warning {
+      0%, 100% {}
+      70% {
+        color: red;
+      }
+    }
+    timer {
+      animation: warning 2s infinite;
+    }
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <textarea id="text" placeholder="..."></textarea>
+    <div class="centered">
+              Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+<br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+      </div>
+      <br>
+      <button onclick="run()">Bắt đầu</button>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <h2 style="color: green">Good Luck!</h2>
+    <div class="container" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer"><span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1: Đâu là chức năng của hệ điều hành các máy tính nói chung?
+Tổ chức thực hiện các chương trình, điều phối tài nguyên cho các tiến trình xử lý trên máy tính
+Cung cấp môi trường giao tiếp với người sử dụng
+Cung cấp một số tiện ích giúp nâng cao hiệu quả sử dụng máy tính
+/Cả ba đáp án trên đều đúng
+Câu 2: Hệ điều hành quản lý thiết bị nào?
+CPU
+Bộ nhớ hay thiết bị ngoại vi
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 3: Hệ điều hành quản lý việc lưu trữ dữ liệu nào?
+CPU
+Bộ nhớ hay thiết bị ngoại vi
+/Quản lý tệp và quản lý thư mục
+Đáp án khác
+Câu 4: Hệ điều hành cung cấp tiện ích nào để nâng cao hiệu quả sử dụng máy tính?
+Định dạng đĩa
+Nén tệp
+Kiểm tra lỗi đĩa
+/Cả ba đáp án trên đều đúng
+Câu 5: Hệ điều hành là?
+Phần mềm để chạy các ứng dụng
+Thiết bị trung gian để chạy các ứng dụng
+/Môi trường để chạy các ứng dụng
+Đáp án khác
+Câu 6: Theo em, nhóm chức năng nào thể hiện rõ nhất đặc thù của hệ điều hành máy tính cá nhân?
+Cung cấp môi trường giao tiếp với người sử dụng
+Cung cấp một số tiện ích giúp nâng cao hiệu quả sử dụng máy tính
+/Tổ chức thực hiện các chương trình điều phối tải nguyên cho các tiến trình xử lí trên máy tính. Nói cách khác, hệ điều hảnh là môi trường đề chạy các ứng dụng
+Quản lý thiết bị
+Câu 7: Máy tính cá nhân có điểm gì khác với các siêu máy tính, các máy chủ?
+Sự thân thiện
+Dễ sử dụng
+/Cả hai đáp án trên đều đúng
+Đáp án khác
+Câu 8: Sự thân thiện và dễ sử dụng của máy tính cá nhân được thể hiện ở?
+Giao diện đồ họa
+Cơ chế plug & play để tự động nhận biết thiết bị ngoại vi khi khởi động máy tính
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 9: Cơ chế lug & play có thể hiểu là?
+Cắn và chạy
+Cắm vào là chạy
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 10: Bước phát triển quan trọng của hệ điều hành máy tính cá nhân là?
+/Cơ chế plug & play
+Giao diện dễ sử dụng
+Có hệ điều hành
+Đáp án khác
+Câu 11: Thời kì đầu thiết bị ngoại vi gây phiền phức cho người sử dụng vì?
+Mỗi thiết bị ngoại vi của một hãng đòi hỏi phải có một phần mềm điều khiển riêng
+Việc cài đặt khó khăn với người ít hiểu biết về tính năng và hoạt động của thiết bị ngoại vi
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 12: Cơ chế plug & play có tác dụng?
+Giúp hệ điều hành nhận biết các thiết bị ngoại vi ngay khi khởi động máy
+Hỗ trợ cài đặt các chương trình điều khiển một cách tự động
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 13: Giao diện ban đầu của hệ điều hành máy tính cá nhân là
+/Giao diện dòng lệnh
+Giao diện dòng chữ
+Giao diện đồ họa
+Giao diện dòng lệnh đơn
+Câu 14: Giao diện đồ họa thể hiện các đối tượng bằng?
+Số
+Chữ
+/Hình ảnh
+Đáp án khác
+Câu 15: Đâu là thành phần cơ bản của giao diện đồ họa?
+Cửa sổ
+Biểu tượng
+Chuột
+/Cả ba đáp án trên đều đúng
+Câu 16: Cửa sổ là gì?
+Cho phép quan sát đối tượng dưới dạng đồ họa
+Phương tiện chỉ định điểm làm việc trên màn hình
+/Một vùng hình chữ nhật trên màn hình dành cho một ứng dụng
+Đáp án khác
+Câu 17: Ta có thể làm gì với cửa sổ?
+Phóng to
+Thu nhỏ
+Ẩn đi hoặc đóng lại
+/Cả ba đáp án trên đều đúng
+Câu 18: Biểu tượng dễ gợi nhớ cho phép?
+/Quan sát đối tượng dưới dạng đồ họa
+Phóng to, thu nhỏ
+Thể hiện bởi một con trỏ màn hình
+Tất cả đều đúng
+Câu 19: Chuột là gì?
+Phương tiện chỉ định điểm làm việc trên màn hình
+Thể hiện bởi một con trỏ màn hình
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 20: Dòng máy tính PC sử dụng hệ điều hành nào?
+Hệ điều hành đồ họa macOS
+Hệ điều hành DOS
+/Hệ điều hành đồ họa Windows
+Cả ba đáp án trên đều sai
+Câu 21: Chức năng kéo thả tiện lợi của hệ điều hành Windows có từ phiên bản nào?
+/Phiên bản 3.1
+Phiên bản 1
+Phiên bản 2
+Phiên bản 3.2
+Câu 22: Đâu là công cụ bắt đầu có và vẫn được sử dụng cho đến ngày nay từ phiên bản WIndows 95?
+Bảng chọn Start
+Thanh trạng thái ( Status bar)
+Thanh công việc ( Taskbar)
+/Cả ba đáp án trên đều đúng
+Câu 23: Đâu là một trong những hệ điều hành thành công nhất của Microsoft
+Windows 3.1
+Windows 95
+/Windows XP
+Đáp án khác
+Câu 24: LINUX có nguồn gốc từ hệ điều hành nào?
+Windows
+mac OS
+DOS
+/UNIX
+Câu 25: Các thiết bị di động thường được trang bị?
+Màn hình cảm ứng
+Bàn phím ảo
+Nhiều cảm biến
+/Cả ba đáp án trên đều đúng
+Câu 1: Trên màn hình có các biểu tượng nào?
+Tệp
+Thư mục
+Nút lệnh
+/Cả ba đáp án trên đều đúng
+Câu 2: Em có thể truy cập nhanh các phần mềm ứng dụng nhờ?
+Thanh công việc
+Nút Start
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 3: Em có thể sử dụng tiện ích của File Explorer của Window để?
+Truy cập nhanh các phần mềm ứng dụng
+/Quản lý tệp và thư mục
+Quan sát trạng thái hiển thị
+Đáp án khác
+Câu 4: Em có thể thực hiện thao tác nào khi quản lý tệp trên UBuntu?
+Đổi tên tệp
+Chạy ứng dụng với tệp chương trình
+Xóa, di chuyển tệp
+/Cả ba đáp án trên đều đúng
+Câu 5: Để làm xuất hiện bảng chọn các lệnh có thể thực hiện với tệp thì ta phải?
+Nháy nút trái chuột
+Nháy đúp chuột
+/Nháy nút phải chuột
+Đáp án khác
+Câu 6: Tiện ích là?
+Một phần mềm đa năng
+Một tệp chứ nhiều tệp con
+/Những công cụ hỗ trợ nhiều công việc khác nhau
+Đáp án khác
+Câu 7: Tiện ích có thể hỗ trợ công việc nào dưới đây?
+Ứng dụng tính toán
+Chụp ảnh màn hình
+Gõ tiếng Việt
+/Cả ba đáp án trên đều đúng
+Câu 8: Đĩa cứng là?
+Là đĩa kim loại chứa phần mềm
+/Loại đĩa kim loại phủ vật liệu từ tính
+Là đĩa kim loại chứa các tiện ích
+Đáp án khác
+Câu 9: Dữ liệu được đọc, được ghi bởi?
+Các đầu từ theo các đường thẳng
+/Các đầu từ theo các đường tròn đồng tâm
+Các đầu từ theo các đoạn thẳng nét cong
+Đáp án khác
+Câu 10: Mỗi cung ghi bao nhiêu dữ liệu?
+/512 byte
+512 mega byte
+512 gigabyte
+Đáp án khác
+Câu 12: Có thể xảy ra lỗi đĩa nào?
+Một liên cung mất liên kết
+Tình trạng chồng chéo cung
+Một số cung bị hỏng về vật lý
+/Cả ba đáp án trên đều đúng
+Câu 14: Chức năng hợp mảnh có tác dụng với đĩa nào?
+CD
+DVD
+/Đĩa từ
+Đáp án khác
+Câu 15: Thiết bị di đông cung cấp người dùng tiện ích nào dưới đây?
+Quản lý danh bạ
+Nhắn tin
+Hẹn giờ
+/Cả ba đáp án trên đều đúng
+Câu 16: Em có thể thực hiện quản lý ứng dụng bằng cách?
+Xem các ứng dụng được tải và cài trên máy
+Xóa ứng dụng không cần thiết
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 17: Thời kì mới có máy tính chưa có hệ điều hành thì người sử dụng phải?
+/Nạp thủ công chương trình vào bộ nhớ
+Tải các chương trình có sẵn trên Internet
+Truyền các chương trình từ thẻ nhớ vào bộ nhớ
+Câu 18: Ngày nay có nhiều thiết bị được điều khiển bởi các bộ vi xử lý, các chương trình được?
+/Cài sẵn trong bộ nhớ ROM
+Cài sẵn trong bộ nhớ RAM
+Cài sẵn trong thẻ nhớ
+Tất cả đều đúng
+Câu 19: Phần cứng là?
+/Thiết bị xử lý thông tin
+Môi trường trung gian giúp phần mềm ứng dụng khai thác phần cứng
+Nơi cung cấp các dịch vụ điều khiển máy tính
+Đáp án khác
+Câu 20: Hệ điều hành là?
+Thiết bị xử lý thông tin
+/Môi trường trung gian giúp phần mềm ứng dụng khai thác phần cứng
+Nơi cung cấp các dịch vụ điều khiển máy tính
+Đáp án khác
+Câu 1: Với ngôn ngữ lập trình bậc cao thì chương trình được viết dưới dạng?
+Văn bản khác với ngôn ngữ tự nhiên
+Kí tự gần giống với văn bản
+/Văn bản gần với ngôn ngữ tự nhiên
+Cả ba đáp án trên đều đúng
+Câu 2: Văn bản gần với ngôn ngữ tự nhiên trong ngôn ngữ lập trình bậc cao được gọi là?
+Lệnh
+Mã code
+/Mã nguồn
+Cả ba đáp án trên đều sai
+Câu 3: Để máy tính có thể chạy trực tiếp thì?
+Chương trình được dịch thành ngôn ngữ lập trình
+Chương trình được dịch thành mã nguồn
+/Chương trình được dịch thành dãy lệnh máy
+Đáp án khác
+Câu 4: Việc dịch chương trình sang mã máy giúp?
+Bảo vệ chống đánh cắp ý tưởng
+Sửa đổi phần mềm
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 5: Vì sao việc dịch sang mã máy giúp chống sửa đối phần mềm và chống đánh cắp ý tưởng?
+Mã máy dễ đọc
+Mã máy có tính bảo mật cao
+/Mã máy rất khó đọc
+Đáp án khác
+Câu 6: Nguyên nhân dẫn đến sự ra đời của phần mềm nguồn mở là?
+Không chia sẻ mã nguồn
+Cùng nhau tạo ra mã nguồn
+/Chia sẻ mã nguồn để cùng phát triển
+Đáp án khác
+Câu 7: Cách thước chuyển giao phần mềm cho người sử dụng theo chiều hướng?
+Ngăn dần
+Đóng dần
+Bí mật dần
+/Mở dần
+Câu 8: Phần mềm thương mại là?
+Phần mềm để bán
+Loại nguồn đóng
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 9: Đáp án nào dưới đây là phần mềm thương mại?
+Inkscape
+GIMP
+/Microsoft Word
+Môi trường lập trình cho ngôn ngữ Python
+Câu 10: Phần mềm tự do có đặc điểm?
+Là phần mềm miễn phí
+Được tự do sử dụng mà không cần xin phép
+Có thể ở dạng mã máy hoặc mã nguồn
+/Cả ba đáp án trên đều đúng
+Câu 11: Phần mềm nguồn mở là?
+Phần mềm được cung cấp cả mã nguồn để người dùng có thể tự sửa đổi, cải tiến, phát triển, phân phối lại theo một quy định
+Phần mềm nguồn mở là tự do
+Phần mềm nguồn mở không được bảo hành
+/Cả ba đáp án trên đều đúng
+Câu 12: Đâu là phần mềm nguồn mở?
+Inkscape
+GIMP
+Môi trường lập trình cho ngôn ngữ Python
+/Cả ba đáp án trên đều đúng
+Câu 13: Phần mềm thương mại thường được dùng để?
+/Bán
+Trao đổi
+Tạo ra các chương trình mới lạ
+Đáp án khác
+Câu 14: Hầu hết, phần mềm thương mại được bán ở dạng?
+Mã nguồn
+/Mã máy
+Mã code
+Đáp án khác
+Câu 15: Giấy phép công cộng GNU GPL là?
+/Giấy phép điển hình với phần nguồn mở
+Giấy phép điển hình với phần nguồn đóng
+Giấy phép điển hình với phần nguồn mở và đóng
+Đáp án khác
+Câu 16: Giấy phép công cộng GNU GPL bảo đảm?
+Quyền tiếp cận của người sử dụng đối với mã nguồn để dùng, thay đổi hoặc phân phối lại
+Quyền miễn trừ của tác giả về hậu quả sử dụng phần mềm
+Quyền đứng tên của các tác giả tham gia phát triển
+/Cả ba đáp án trên đều đúng
+Câu 17: Giấy phép công cộng GNU GPL bảo đảm sự phát triển của các phần mềm nguồn mở bằng cách?
+Công bố rõ ràng các thay đổi của các phiên bản
+Buộc phần phát triển dựa trên phần mềm nguồn mở theo giấy phép GPL cũng phải mở theo GPL
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 18: Ý ý nghĩa của yêu cầu “người sửa đổi, nâng cấp phần mềm nguồn mở phải công bố rõ ràng phần nào đã sửa, sửa thế nào so với bản gốc" là?
+Đảm bảo tính minh bạch, trung thực và đáng tin cậy của phần mềm nguồn mở
+Công bố các thay đổi giúp người dùng hiểu rõ về những thay đổi trong phần mềm, giúp họ quyết định xem có nên cập nhật hay không và giúp họ biết được nguồn gốc và lịch sử của phần mềm
+Giúp đảm bảo tính tương thích của phần mềm giữa các phiên bản.
+/Cả ba đáp án trên đều đúng
+Câu 19: Ưu điểm của phần mềm nguồn mở là?
+Miễn phí
+Mã nguồn mở
+Hỗ trợ nhiều hệ điều hành và định dạng tệp khác nhau
+/Cả ba đáp án trên đều đúng
+Câu 20: Do mã nguồn của phần mềm nguồn mở có thể được tùy chỉnh nên?
+Nhiều phiên bản phần mềm khác nhau có thể được phát triển và sử dụng theo nhu cầu của người dùng
+Đem lại sự đa dạng và lựa chọn cho người dùng khi lựa chọn phần mềm
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 21: Phần mềm nào dưới đây thuộc phần mềm thương mại?
+Phần mềm đặt hàng
+Phần mềm đóng gói
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 22: Phần mềm thương mại bị phụ thuộc vào?
+Nhà sáng tạo ra phần mềm
+/Nhà cung cấp về giải pháp kĩ thuật
+Nhà kiểm soát phần mềm
+Đáp án khác
+Câu 23: Phần mềm nào có thể thay thế hệ Windows?
+Android
+Writer
+/LINUX
+My SQL
+Câu 24: Hệ quản trị dữ cơ sở dữ liệu mở nào có thể thay thế so Oracle, SQL server?
+Android
+Writer, Calc và Impress
+LINUX
+/My SQL, postGreSQL
+Câu 25: Phần mềm đặt hàng được thiết kế?
+Dựa trên những yêu cầu chung của nhiều người
+/Theo yêu cầu của từng khách hàng
+Dựa trên phần mềm nguồn mở
+Đáp án khác
+Câu 1: Bộ cấu trúc chung của máy tính gồm?
+Bộ xử lý trung tâm
+Bộ nhớ trong, ngoài
+Các thiết bị vào ra
+/Cả ba đáp án trên đều đúng
+Câu 2: Đâu là các thiết bị bên ngoài máy tính?
+Màn hính
+Bàn phím
+Chuột
+/Cả ba đáp án trên đều đúng
+Câu 3: Bộ xử lý trung tâm là
+Thành phần quan trọng nhất của máy tính
+Thực hiện các chương trình máy tính
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 4: CPU được cấu tạo từ?
+Bộ số học và lôgic
+Bộ điều khiển
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 5: Bộ phận nào thực hiện tất cả các phép tính số học và logic trong máy tính?
+Bộ điều khiển
+Bộ nhớ trong
+/Bộ số học và logic
+Bộ nhớ ROM
+Câu 6: Bộ phận nào phối hợp đồng bộ các thiết bị của máy tính, đảm bảo máy tính thực hiện đúng chương trình?
+Bộ điều khiển
+Bộ số học và logic
+/Bộ điều khiển
+Bộ nhớ ROM
+Câu 7: Đồng hồ xung được dùng để?
+Phối hợp đồng bộ các thiết bị của máy tính, đảm bảo máy tính thực hiện đúng chương trình
+Thực hiện tất cả các phép tính số học và logic trong máy tính
+/Tạo ra các xung điện áp gửi đến mọi thành phần của máy để đồng bộ các hoạt động
+Đáp án khác
+Câu 8: Tần số đồng hồ xung là?
+Hz
+kHz
+/GHz
+Đáp án khác
+Câu 9: Tần số đồng hồ xung được dùng để?
+Tạo ra các xung điện áp
+/Đánh giá tốc độ của CPU
+Phối hợp đồng bộ các thiết bị của máy tính, đảm bảo máy tính thực hiện đúng chương trình
+Thực hiện tất cả các phép tính số học và logic trong máy tính
+Câu 10: Thanh ghi là?
+/Vùng nhớ đặc biệt dùng để lưu trữ tạm thời các lệnh và dữ liệu đang được xử lý
+Vùng nhớ đặc biệt dùng để lưu trữ các lệnh và dữ liệu đang được xử lý
+Vùng xử lý dữ liệu
+Đáp án khác
+Câu 11: RAM là?
+Bộ nhớ có thể ghi được
+Dùng để ghi dữ liệu tạm thời trong khi chạy các chương trình
+Không dữ được lâu dài các dữ liệt tạm thời
+/Cả ba đáp án trên đều đúng
+Câu 12: ROM là?
+Bộ nhớ được ghi bằng phương tiện chuyên dùng
+Các chương trình ứng dụng chỉ có thể đọc mà không thể ghi hay xóa
+Không cần nguồn nuôi
+/Cả ba đáp án trên đều đúng
+Câu 13: Bộ nhớ ngoài có thể đặt ở đâu?
+Bên ngoài thân máy
+Bên trong thân máy
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 14: Đâu là bộ nhớ ngoài?
+Đĩa từ
+Đĩa thể rắn
+Đĩa quang
+/Cả ba đáp án trên đều đúng
+Câu 15: Bộ nhớ ngoài dùng để?
+Lưu trữ dữ liệu lâu dài
+Không cần nguồn nuôi
+Có dung lượng lớn
+/Cả ba đáp án trên đều đúng
+Câu 16: Bộ nhớ ngoài thường được tính theo?
+MB, GB
+/GB, TB
+Hz
+Đáp án khác
+Câu 17: Thiết bị quan trọng nhất bên trong thân máy là?
+/CPU
+Bộ nhớ ngoài
+Bộ nhớ trong
+Đáp án khác
+Câu 18: Cách thức xử lí dữ liệu của CPU được dựa trên cơ sở hoạt động của?
+/Các mạch logic
+Dữ liệu trong bộ nhớ ngoài
+Dữ liệu trong bộ nhớ trong
+Tất cả đều đúng
+Câu 19: Hệ nhị phân dùng chữ số nào dưới đây?
+/0 và 1
+0 và 1,2
+1,2,3
+0 và 3,4
+Câu 20: Mọi cổng logic đều có thể tổng hợp được từ cổng?
+AND
+OR
+NOT
+/Cả ba đáp án trên đều đúng
+Câu 1: Các thiết bị vào ra là?
+Nhóm thiết bị chứa dữ liệu tạm thời
+Nhóm thiết bị chứa các dữ liệu lâu dài
+/Nhóm các thiết bị ngoại vi đa dạng và phong phú nhất của máy tính
+Cả ba đáp án trên đều đúng
+Câu 2: Các thiết bị vào cho phép?
+Chuyển thông tin từ máy tính ra ngoài
+/Nhập dữ liệu vào máy tính
+Trao đổi thông tin hai chiều
+Cả ba đáp án trên đều sai
+Câu 3: Các thiết bị ra là?
+/Chuyển thông tin từ máy tính ra ngoài
+Nhập dữ liệu vào máy tính
+Trao đổi thông tin hai chiều
+Cả ba đáp án trên đều sai
+Câu 4: Đáp án nào dưới đây là thiết bị vào?
+Bàn phím
+Chuột
+Máy đọc mã vạch
+/Cả ba đáp án trên đều đúng
+Câu 5: Đâu là thiết bị ra?
+Màn hình
+Máy in
+Máy chiếu
+/Cả ba đáp án trên đều đúng
+Câu 6: Đâu vừa là thiết bị vào vừa là thiết bị ra?
+Máy in
+Máu quét ảnh
+/USB
+Máy chiếu
+Câu 7: Bàn phím là?
+Thiết bị ra phổ biến
+/Thiết bị thông dụng nhất để nhập dữ liệu
+Thiết bị chỉ định đối tượng làm việc trên màn hình
+Đáp án khác
+Câu 8: Chuột là?
+Thiết bị thông dụng nhất để nhập dữ liệu
+Thiết bị ra phổ biến
+/Thiết bị chỉ định đối tượng làm việc trên màn hình
+Đáp án khác
+Câu 9: Thông số quan trọng nhất của chuột là?
+Phương thức kết nối
+Độ phân giải
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 10: Tốc độ của chuột được thể hiện bằng?
+/Tỉ lệ khoảng cách con trỏ màn hình di chuyển được so với khoảng cách di chuyển của chuột trên mặt bàn
+Khoảng cách di chuyển được của chuột trên màn hình
+Tốc độ di chuyển trên giây của chuột trên mặt bàn
+Đáp án khác
+Câu 11: Thiết bị ra phổ biến nhất là?
+Máy in
+Loa
+/Màn hình
+Máy chiếu
+Câu 12: Loại màn hình nào sử dụng công nghệ đèn chân không?
+LCD
+LED
+/CRT
+plasma
+Câu 13: Độ phân giải màn hình thể hiện bằng?
+/Số điểm ảnh theo chiều ngang và chiều dọc của màn hình
+Độ dài đường chéo trên màn hình
+Hình ảnh trên màn hình được tạo liên tục
+Khoảng thời gian cần thiết để có thể đổi màu một điểm ảnh
+Câu 14: Tần số quét là?
+Số điểm ảnh theo chiều ngang và chiều dọc của màn hình
+Độ dài đường chéo trên màn hình
+/Hình ảnh trên màn hình được tạo liên tục
+Khoảng thời gian cần thiết để có thể đổi màu một điểm ảnh
+Câu 15: Thời gian phản hồi là?
+Số điểm ảnh theo chiều ngang và chiều dọc của màn hình
+Độ dài đường chéo trên màn hình
+Hình ảnh trên màn hình được tạo liên tục
+/Khoảng thời gian cần thiết để có thể đổi màu một điểm ảnh
+Câu 16: Kích thước của màn hình được đo bằng?
+Số điểm ảnh theo chiều ngang và chiều dọc của màn hình
+/Độ dài đường chéo trên màn hình
+Hình ảnh trên màn hình được tạo liên tục
+Khoảng thời gian cần thiết để có thể đổi màu một điểm ảnh
+Câu 17: Máy in kim dùng?
+/Một hàng kim gõ vào băng mực để lại vết trên giấy
+Dùng tia laser để tạo ra sự thay đổi điện áp trên bề mặt của một trống tĩnh điện tương tự với hình cần in
+Phun các hạt mực màu nước siêu nhỏ để tạo ảnh
+In trên giấy cảm ứng nhiệt, vùng giấy bị nóng chuyển sang màu đen
+Câu 18: Máy in laser dùng?
+Một hàng kim gõ vào băng mực để lại vết trên giấy
+/Dùng tia laser để tạo ra sự thay đổi điện áp trên bề mặt của một trống tĩnh điện tương tự với hình cần in
+Phun các hạt mực màu nước siêu nhỏ để tạo ảnh
+In trên giấy cảm ứng nhiệt, vùng giấy bị nóng chuyển sang màu đen
+Câu 19: Máy in phun dùng?
+Một hàng kim gõ vào băng mực để lại vết trên giấy
+Dùng tia laser để tạo ra sự thay đổi điện áp trên bề mặt của một trống tĩnh điện tương tự với hình cần in
+/Phun các hạt mực màu nước siêu nhỏ để tạo ảnh
+In trên giấy cảm ứng nhiệt, vùng giấy bị nóng chuyển sang màu đen
+Câu 20: Máy tin nhiệt in như thế nào?
+Một hàng kim gõ vào băng mực để lại vết trên giấy
+Dùng tia laser để tạo ra sự thay đổi điện áp trên bề mặt của một trống tĩnh điện tương tự với hình cần in
+Phun các hạt mực màu nước siêu nhỏ để tạo ảnh
+/In trên giấy cảm ứng nhiệt, vùng giấy bị nóng chuyển sang màu đen
+Câu 21: Có thể kết nối với máy tin bằng?
+Cáp
+Mạng có dây
+Mạng không dây
+/Cả ba đáp án trên đều đúng
+Câu 22: Cổng kết nối nào dùng để truyền hình ảnh?
+HDMI
+/VGA
+USB
+Mạng
+Câu 23: Cổng kết nối nào có thể truyền đồng thời cả âm thanh và hình ảnh?
+VGA
+USB
+Mạng
+/HDMI
+Câu 24: Trước khi kết nối thì máy tính hay điện thoại thông minh cần phải
+Mở cổng kết nối
+Đóng cổng kết nối
+/Ghép đôi với thiết bị đó
+Đáp án khác
+Câu 25: Ghép đôi với thiết bị trước khi kết nối để?
+Có môi trường trung gian kết nối
+Dễ dàng kết nối
+/Trao đổi tham số kết nối
+Đáp án khác
+Câu 1: Internet đã khắc phục những rào cản nào của các tài nguyên máy tính?
+Dung lượng đĩa cứng
+Dung lượng thiết bị nhớ ngoài
+Dữ liệu bị hạn chế
+/Cả ba đáp án trên đều đúng
+Câu 2: Các nhà cung cấp dịch vụ lưu trữ thông tin, dữ liệu ngày nay là?
+Google
+Microsoft
+Apple
+/Cả ba đáp án trên đều đúng
+Câu 3: Khi đăng kí sử dụng dịch vụ lưu trữ thông tin, dữ liêu trực tuyến thì người dùng sẽ được?
+Cung cấp các dịch vụ xử lý dữ liệu
+Cung cấp phần mềm chỉnh sửa dữ liệu trực tuyến
+/Cung cấp một không gian nhớ trực tuyến
+Đáp án khác
+Câu 4: Khi sử dụng các dịch vụ lưu trữ và chia sẻ tệp tin trên Internet người dùng có thể?
+Tải tệp hay thư mục của mình lên ổ đĩa trực tuyế
+Tạo mới và quản lý thư mục, tệp trên ổ đĩa trực tuyến
+Chia sẻ thư mục và tệp
+/Cả ba đáp án trên đều đúng
+Câu 5: Khi chia sẻ thông tin trên Internet, chủ sở hữu của thư mục, tệp có thể quyết định chế độ chia sẻ nào dưới đây?
+Quyền chỉ xem
+Quyền được nhận xét
+Quyền chỉnh sửa
+/Cả ba đáp án trên đều đúng
+Câu 6: Quyền chỉnh sửa là quyền cho phép?
+Xem thư mục và tệp
+Nhận xét thư mục và tệp
+Thực hiện mọi thao tác với thư mục và tệp
+/Cả ba đáp án trên đều đúng
+Câu 7: Vì sao nên lưu trữ thông tin trên internet?
+Dung lượng bộ nhớ lớn
+Tính bảo mật cao, có thể tùy chỉnh
+Dễ dàng tìm kiếm
+/Cả ba đáp án trên đều đúng
+Câu 8: Đâu là dịch vụ lưu trữ và chia sẻ thông tin trực tuyến của Google?
+One Drive
+iCloud
+Dropbox
+/Google Drive
+Câu 9: Sau khi chia sẻ thư mục, tệp người dùng có thể?
+Xóa bỏ tệp đã chia sẽ
+/Hủy bỏ hoặc thay đổi chế độ chia sẻ
+Làm mới tệp chia sẻ
+Đáp án khaccs
+Câu 10:  Internet giúp khắc phục giới hạn lưu trữ bằng ?
+/Các dịch vụ chia sẻ tệp tin trực tuyến
+Phân phối bán lẻ bộ nhớ
+Cho người dùng thuê bộ nhớ
+Bắt người dùng mua phần mềm thứ 3
+Câu 11: Người dùng đăng ký sử dụng dịch vụ và được cấp một không gian lưu trữ trực tuyến gọi là?
+Cầu kết nối
+/Nhà lưu trữ
+Đĩa trực tuyến
+Đáp án khác
+Câu 12: Để có không gian lưu trữ trên internet người dùng cần phải có?
+Tài khoản nơi lưu trữ đó
+Bộ xuất tài liệu ra ổ cứng
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 13: Tải tệp lên ổ đĩa trực tuyến cho người dùng….?
+Xóa các tệp và file trong máy tính mình đi
+Tải các tệp hay thư mục từ máy tính của mình lên ổ đĩa trực tuyến để lưu trữ và sử dụng
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 14: Các không gian lưu trữ trên internet có giới hạn dung lượng hay không?
+Không, nó là vô hạn
+Không kết luận được
+Không, vì không gian thì không có dung lượng
+/Có
+Câu 15: Ưu điểm của việc lưu trữ thông tin trực tuyến là?
+/Cho phép chia sẻ thư mục, tệp cho người dùng khác
+Không cho phép chia sẻ thư mục, tệp cho người dùng khác
+Bán được thông tin cho nhau để kiếm tiền
+Thích vào thư mục của ai cũng được
+Câu 16: Người dùng có thể xem và nhận xét là quyền?
+Chỉ xem
+Chỉnh sửa
+/Được nhận xét
+Đáp án khác
+Câu 17: Người dùng có thể xem là quyền?
+/Chỉ xem
+Chỉnh sửa
+Được nhận xét
+Đáp án khác
+Câu 18: Người dùng có thể xem, nhận xét và thực hiện mọi thao tác với thư mục và tệp là quyền?
+Chỉ xem
+/Chỉnh sửa
+Được nhận xét
+Đáp án khác
+Câu 19: Trong quyền được chỉnh sửa thì người dùng có thể?
+Chỉnh sửa thư mục
+Xóa thư mục
+Tạo mới thư mục
+/Cả ba đáp án trên đều đúng
+Câu 20: Khi nào thì người dùng được cung cấp một ổ đĩa trực tuyến?
+Cài đặt hệ điều hành mới
+Mua các phần mềm nguồn mở
+/Sử dụng dịch vụ lưu trữ thư mục và tệp trực tuyến
+Cả ba đáp án trên đều sai
+Câu 1: Để khởi động công cụ tìm kiếm thì em cần?
+Mở trình duyệt internet trên máy tính của em
+Gõ địa chỉ URL máy tìm kiếm
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 2: Đâu là địa chỉ URL tìm kiếm?
+tech12h.com
+newocr.com
+/Google.com
+Cả ba đáp án trên đều sai
+Câu 3: Nếu kết quả tìm kiếm chưa được như ý muốn của em thì?
+Em sử dụng máy tìm kiếm khác
+Em sử dụng trình duyệt khác
+/Em quay lại nhập từ khóa khác
+Đáp án khác
+Câu 4: Để thực hiện tìm kiếm bằng tiếng nói thì em phải tìm kiếm?
+Bằng từ khóa nhập từ bàn phím
+Trình duyệt bằng tiếng nói
+/Bằng từ khóa nhập bằng tiếng nói
+Cả ba đáp án trên đều đúng
+Câu 5: Sau khi đọc từ khóa tìm kiếm thì em nên?
+Kiểm tra từ khóa sau khi nhập từ bàn phím đã khớp hay chưa
+Kiểm tra kết quả tìm kiếm
+/Kiểm tra từ khóa được tự động điện sau khi đọc đã khớp hay chưa
+Đáp án khác
+Câu 6: Để thực hiện tìm kiếm bằng tiếng nói thì cần có?
+Bàn phím
+Con chuột
+/Micro
+Loa
+Câu 7: Khi tìm kiếm em có thể nhận được kết quả dưới dạng nào dưới đây?
+Tin tức
+Hình ảnh
+Video
+/Cả ba đáp án trên đều đúng
+Câu 8: Để giúp nâng cao hiệu quả tìm kiếm thông tin em có thể?
+Tìm kiếm thông tin dưới dạng hình ảnh
+Tìm kiếm thông tin dưới dạng tin tức
+Tìm kiếm thông tin dưới dạng video
+/Cả ba đáp án trên đều đúng
+Câu 9: Để tìm kiếm thông tin dưới các dạng khác nhau thì em cần?
+Sử dụng hình ảnh để tìm kiếm
+/Chọn dạng phân loại kết quả tìm kiếm
+Sử dụng video để tìm kiếm
+Đáp án khác
+Câu 10: Khi tìm kiếm thông tin tuyển sinh của một trường đại học thì em nên yêu cầu tìm dưới dạng nào dưới đây?
+/Tệp .pdf
+Hình ảnh
+Bài báo
+Tin tức
+Câu 11: Khi muốn tìm kiếm ảnh về hoa hồng thì en nên chọn tìm kiếm thông tin dạng?
+Bài viết
+Tin tức
+/Hình ảnh
+Đáp án khác
+Câu 12: Để tìm kiếm thông tin dưới dạng tệp tin pdf thì em cần?
+Nhập từ khóa tìm kiếm và bổ sung cụm từ filetype.docx
+Nhập từ khóa tìm kiếm và bổ sung cụm từ filetype.jpg
+/Nhập từ khóa tìm kiếm và bổ sung cụm từ filetype.pdf
+Đáp án khác
+Câu 13: Để thu hẹp phạm vi tìm kiếm thì?
+/Đặt từ khóa cần tìm trong dấu nháy kép
+Đặt từ khóa trong dấu ngoặc đơn
+Đặt từ khóa trong dấu ngoặc vuống
+Rút gọn từ khóa
+Câu 14: Đặt từ khóa cần tìm trong dấu nháy kép có tác dụng?
+Thu hẹp phạm vi tìm kiếm
+Cho kết quả tìm kiếm chính xác hơn
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 15: Xây dựng từ khóa tìm kiếm làm?
+Tăng độ chính xác của kết quả
+Tăng hiệu quả tìm kiến
+Tiết kiệm thời gian tìm kiếm
+/Cả ba đáp án trên đều đúng
+Câu 16: Chọn đáp án sai?
+Người không biết cách tìm kiếm tài liệu đúng sẽ không tìm kiếm được tài liệu nhanh và chính xác
+Người biết cách tìm kiếm sẽ tìm được rất nhanh và chính xác
+/Người không biết xây dựng từ khóa tìm kiếm sẽ tìm kiếm nhanh hơn
+Ngày nay, tất cả mọi thông tin đều có thể tìm thấy trên Internet
+Câu 17: Nguyên nhân dẫn đến tìm kiếm thông tin chậm, thiếu chính xác là?
+Từ khóa tìm kiếm chưa đầy đủ
+Cách tìm kiếm tài liệu không đúng
+Chưa biết cách xây dựng từ khóa
+/Cả ba đáp án trên đều đúng
+Câu 18: Đâu là cách tìm kiếm thông tin hiệu quả?
+Đặt từ khóa trong dấu ngoặc đơn
+Xây dựng từ khóa phù hợp
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 19: Khi em muốn tìm kiếm thông tin về tình hình dịch bệnh thì em nên tìm kiếm thông tin dưới dạng?
+/Tin tức
+Hình ảnh
+File pfd
+Đáp án khác
+Câu 20: Khi muốn tìm hiểu thông tin về lập trình viên thì em có thể tìm kiếm thông tin bằng các từ khóa nào dưới đây?
+Lập trình viên là gì
+Đặc điểm của lập trình viên
+Nhiệm vụ của lập trình viên
+/Cả ba đáp án trên đều đúng
+Câu 1: Việc sử dụng và tìm kiếm thư điện từ sẽ thuận tiện hơn nhờ?
+Việc đánh dấu, phân loại thư điện tử
+Sắp xếp thư điện từ một cách hơp lý
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 2: Gmail hỗ trợ việc?
+Phân loại thư quan trọng
+Tự động đánh dấu thư
+/Tự động xác định và đánh dấu thư thuộc loại quan trọng
+Cả ba đáp án trên đều sai
+Câu 3: Gmail tự động xác định và đánh dấu thư thuộc loại quan trọng bằng?
+Phần mềm đánh dấu
+Chức năng lọc thư
+/Dấu quan trọng màu vàng
+Đáp án khác
+Câu 4: Dựa vào đâu để Gmail tự động xác định và đánh dấu thư thuộc loại quan trọng?
+Người gửi và tần suất gửi cho một người
+Thư điện tử được mở và trả lời
+Từ khóa có trong thư điện tử thường xuyên độc
+/Cả ba đáp án trên đều đúng
+Câu 5: Để biết được lí do thư đó được đánh dấu là quan trọng ta vào?
+Vào hộp thư nháp, di chuyển con trỏ chuột vào dấu quan trọng màu vàng
+/Vào hộp thư đến, di chuyển con trỏ chuột vào dấu quan trọng màu vàng
+Vào hộp thư rác, di chuyển con trỏ chuột vào dấu quan trọng màu vàng
+Đáp án khác
+Câu 6: Thực hiện tìm kiếm từ khóa nào để hiển thị danh sách tất cả thư điện tử quan trọng?
+is: early
+is: delete
+/is: important
+Đáp án khác
+Câu 7: Để sắp xếp phân loại thư trong hộp thư đến thì em sử dụng?
+Dấu quan trọng
+Dấu sao
+/Nhãn (Label)
+Đáp án khác
+Câu 8: Việc tìm kiếm is: important để ?
+Sắp xếp, phân loại thư trong hộp thư đến
+/Hiển thị danh sách tất cả thư điện tử quan trọng
+Xóa các thư đến
+Đáp án khác
+Câu 9: Sử dụng nhãn (label) giúp?
+Tiết kiệm thời gian khi tìm kiếm lại các thư
+Tránh thất lạc thông tin ở các thư cũ
+Quản lý việc nhận thư từ các địa chỉ
+/Cả ba đáp án trên đều đúng
+Câu 10: Khi em xóa một thư thì?
+Thư đó sẽ bị xóa khỏi mọi nhãn đính kèm
+/Thư đó sẽ bị xóa khỏi mọi nhãn đính kèm cũng như trong hộp thư đến
+Thư đó sẽ bị xóa khỏi hộp thư đến
+Đáp án khác
+Câu 11: Để tạo nhãn thì em cần?
+Truy cập Gmail
+Nháy chuột vào Danh sách mở rộng ở bên trái cửa sổ
+Nháy chuột vào Tạo nhãn mới
+/Cả ba đáp án trên đều đúng
+Câu 12: Để gán nhãn cho các thư trong hộp thư đến thì?
+Em chọn thư cần gán nhãn
+Nháy chuột mở danh sách nhãn
+Chọn nhãn muốn gán
+/Cả ba đáp án trên đều đúng
+Câu 13: Fanpage là trang web trên?
+Google
+Coccoc
+/Facebook
+Cả ba đáp án trên đều sai
+Câu 15: Fanpage có tác dụng?
+Giúp các tổ chức, doanh nghiệp quảng bá thương hiệu
+Giúp các tổ chức, doanh nghiệp quảng bá hình ảnh
+Giúp các tổ chức, doanh nghiệp quảng bá sản phẩm
+/Cả ba đáp án trên đều đúng
+Câu 16: Em có thể thiết lập ai xem các bài viết của em trong tương lai?
+Bạn bè
+Chỉ mình tôi
+Công khai
+/Cả  ba đáp án trên đều đúng
+Câu 17: Để cài đặt quyền riêng tư trên Facebook thì em vào?
+Bảng tin
+Video
+/Cài đặt
+Trang cá nhân
+Câu 18: Cách giúp em tìm đọc lại được những thư em đã nhận trước đây là?
+Kéo xuống tìm kiếm theo thời gian hiển thị của thư trong mục hộp thư đến
+Chọn tìm kiếm và phân loại theo mốc thời gian
+Chọn tìm kiếm và phân loại theo tên người gửi và kéo xuống tìm kiếm theo thời gian
+/Cả ba đáp án trên đều đúng
+Câu 19: Vì sao em nên dùng Đánh dấu và phân loại email bằng cách sử dụng màu sắc của biểu tượng đánh dấu hình ngôi sao?
+Màu sắc của biểu tượng đánh dấu hình ngôi sao giúp cho bạn rèn luyện trí nhớ tốt hơn
+Cách sắp xếp công việc thuận tiện, nhanh hơn
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 20: Phát biểu nào sau đây là đúng khi nói về thư điện tử?
+Nhìn vào hộp thư điện tử, người gửi có thể biết được bức thư mình đã gửi đi người nhận đã đọc hay chưa
+Chỉ có người nhận thư mới mở được tệp đính lèm theo thư, còn người gửi sẽ không mở được tệp đính kèm khi đã gửi thư
+Trong hộp thư đến chỉ chứa thư của những người quen biết
+/Nhìn vào hộp thư điện tử có thể biết thư đã đọc hay chưa
+Câu 21: Theo quy định của google, trẻ vị thành niên muốn đăng kí tài khoản thư điện tử thì:
+Không được phép sử dụng gmail
+Chỉ được sử dụng tài khoản của người thân
+/Cần có sự đồng ý, trợ giúp và quản lí của bố mẹ
+Cần phải cung cấp đầy đủ các thông tin về gia đình, trường học
+Câu 22: Em và bạn em đã trao đổi thư điện tử với nhau thì cách nào sau đây là tốt nhất để biết địa chỉ thư điện tử cua bạn em
+Thử một địa chỉ thư điện tử bất kì nào đó
+/Tìm trong danh bạ địa chỉ của hệ thống thư điện tử
+Sử dụng máy tìm kiếm google để tìm trên internet
+Gọi điện thoại cho bạn để hỏi
+Câu 23: Thư điện tử có lợi ích gì trong việc giải quyết các công việc của em?
+Sửa tài liệu
+Trao đổi thông tin qua lại với bạn bè
+Tiết kiệm thời gian và tiền bạc
+/Cả ba đáp án trên đều đúng
+Câu 24: Khi em nhận được thư điện tử có tệp đính kèm nghi ngờ là virus từ người quen, em nên xử lí như thế nào?
+Mở tệp đính kèm và lưu tệp đó vào máy tính của mình
+/Trước khi mở tệp đính kèm, em tìm cách nhắn tin hoặc gửi một thư điện tử khác cho người đã gửi thư để kiểm tra có đúng người đó gửi tệp đó cho em hay không
+Mở tệp đính kèm và xóa tệp đó ngay nếu nhận thấy tệp bị nhiễm virus
+Trước khi mở tệp đính kèm, em chuyển sang máy tính khác để ở lại thư điện tử đó.
+Câu 25: Phát biểu nào sau đây là sai:
+Cần đăng xuất ra khỏi hộp thư điện tử sau khi sử dụng xong.
+Thời gian gửi thư điện tử rất ngắn gần như ngay lập tức
+/Cần mở tất cả các tệp đính kèm được gửi cho bạn
+Chỉ mở tệp đình kèm từ những người bạn biết và tin tưởng.
+Câu 1: Đâu là hạn chế của mạng Internet?
+Ảnh hưởng xấu tới sức khỏe
+Ảnh hướng xấu đến tinh thần
+Nhiều rủi rõ
+/Cả ba đáp án trên đều đúng
+Câu 2: Rủi ro có thể gặp phải khi sử dụng Internet là?
+Mất thông tin cá nhân
+Bị lừa đảo, quấy rối
+Đối mặt với các thông tin sai lệch
+/Cả ba đáp án trên đều đúng
+Câu 3: Khi tham gia mạng xã hội thì mọi người cần trang bị?
+Kĩ năng giao tiếp
+Kĩ năng đối phó với dư luận và vượt qua khủng hoẳng
+Kĩ năng nhận biết và phòng tránh lừa đảo
+/Cả ba đáp án trên đều đúng
+Câu 4:Đâu là tình huống lừa đảo thường gặp trên mạng xã hội?
+Nhận được tin nhắn yêu cầu chuyển tiền ngay vào tài khoản **** nếu không muốn gặp những rắc rối liên quan tới bản thân
+Nhận được tin nhắn trúng thưởng phần quà có giá trị
+Nhận được thư điện từ từ địa chỉ lạ yêu cầu mở một tài liệu hoặc một đường link đính kèm và thực hiện theo hướng dẫn
+/Cả ba đáp án trên đều đúng
+Câu 5: Những kẻ lừa đảo thường hướng tới việc?
+Hưởng lợi tài chính
+Gây ảnh hưởng tinh thần
+Gây ảnh hưởng thể xác người bị hại
+/Cả ba đáp án trên đều đúng
+Câu 6: Chúng ta có thể nhận biết và phòng tránh lừa đảo trên nguyên tắc nào sau đây?
+Hãy chậm lại
+Kiểm tra ngay
+Dừng lại, không gửi
+/Cả ba đáp án trên đều đúng
+Câu 7: Nguyên tắc Hãy chậm lại là?
+Thực hiện việc tra cứu số điện thoại, địa chỉ cơ quan hoặc tổ chức mà người gửi thông tin mang danh để liên hệ xác minh trực tiếp
+Mọi yêu cầu thành toán hoặc gửi tiền ngay lập tức đều cần phải đặt dấu hỏi. Vì vậy nếu cảm thấy giao dịch này không đáng tin hãy dừng lại vì nó có thể là lừa đảo
+/Những kẻ lừa đảo thường tạo ra cảm giác cấp bách để chúng có thể vượt qua khả năng nhận định một cách sáng suốt của nạn nhân
+Đáp án khác
+Câu 8: Nguyên tắc Dừng lại, không gửi là?
+Thực hiện việc tra cứu số điện thoại, địa chỉ cơ quan hoặc tổ chức mà người gửi thông tin mang danh để liên hệ xác minh trực tiếp
+/Mọi yêu cầu thành toán hoặc gửi tiền ngay lập tức đều cần phải đặt dấu hỏi. Vì vậy nếu cảm thấy giao dịch này không đáng tin hãy dừng lại vì nó có thể là lừa đảo
+Những kẻ lừa đảo thường tạo ra cảm giác cấp bách để chúng có thể vượt qua khả năng nhận định một cách sáng suốt của nạn nhân
+Đáp án khác
+Câu 9: Nguyên tắc Kiểm tra ngay là?
+/Thực hiện việc tra cứu số điện thoại, địa chỉ cơ quan hoặc tổ chức mà người gửi thông tin mang danh để liên hệ xác minh trực tiếp
+Mọi yêu cầu thành toán hoặc gửi tiền ngay lập tức đều cần phải đặt dấu hỏi. Vì vậy nếu cảm thấy giao dịch này không đáng tin hãy dừng lại vì nó có thể là lừa đảo
+Những kẻ lừa đảo thường tạo ra cảm giác cấp bách để chúng có thể vượt qua khả năng nhận định một cách sáng suốt của nạn nhân
+Đáp án khác
+Câu 10: Khi có kẻ lừa đảo hỗ trợ kĩ thuật cố gắng thuyết phục rằng thiết bị của bạn đang gặp sự cố và yêu cầu thanh toán ngay lập tức cho các dịch vụ để khắc phục các sự cố đó mà trên thực tế nó không hề tồn tại. Em có thể thực hiện nguyên tắc hãy chậm lại bằng cách?
+Tự đặt ra câu hỏi khi thông báo hiện lên có vẻ rất khẩn cấp
+Cập nhật phần mềm bảo mật và quét virus
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 11: Khi có kẻ lừa đảo hỗ trợ kĩ thuật cố gắng thuyết phục rằng thiết bị của bạn đang gặp sự cố và yêu cầu thanh toán ngay lập tức cho các dịch vụ để khắc phục các sự cố đó mà trên thực tế nó không hề tồn tại. Em có thể thực hiện nguyên tắc kiểm tra ngay bằng cách?
+Tự đặt ra câu hỏi khi thông báo hiện lên có vẻ rất khẩn cấp
+Cập nhật phần mềm bảo mật và quét virus
+/Thử tìm kiếm tên công ty hoặc số điện thoại kèm theo những từ khóa như " lừa đảo" hoặc " khiếu nai". Tìm đến một đơn vị có uy tín và tin cậy để nhờ hỗ trợ
+Các đơn vị hỗ trợ công nghệ hợp pháp sẽ không yêu cầu thanh toán ngay dưới dạng thẻ điện thoại, chuyển khoản....... khi mà dịch vụ chưa được thực hiện
+Câu 12: Khi có kẻ lừa đảo hỗ trợ kĩ thuật cố gắng thuyết phục rằng thiết bị của bạn đang gặp sự cố và yêu cầu thanh toán ngay lập tức cho các dịch vụ để khắc phục các sự cố đó mà trên thực tế nó không hề tồn tại. Em có thể thực hiện nguyên tắc Dừng lại, không gửi bằng cách?
+Tự đặt ra câu hỏi khi thông báo hiện lên có vẻ rất khẩn cấp
+Cập nhật phần mềm bảo mật và quét virus
+Thử tìm kiếm tên công ty hoặc số điện thoại kèm theo những từ khóa như " lừa đảo" hoặc " khiếu nai". Tìm đến một đơn vị có uy tín và tin cậy để nhờ hỗ trợ
+/Các đơn vị hỗ trợ công nghệ hợp pháp sẽ không yêu cầu thanh toán ngay dưới dạng thẻ điện thoại, chuyển khoản....... khi mà dịch vụ chưa được thực hiện
+Câu 13: Khi có kẻ lừa đảo em trúng thưởng hay nhận phiếu mua hàng giá trị cao nhưng phải thanh toán trướ Em có thể thực hiện nguyên tắc Hãy chậm lại bằng cách?
+/Tìm kiếm lời khuyên từ người hiểu biết( thành viên trong gia đình, hoặc bạn bè) nếu không chắc đây có phải là thông tin đáng tin cậy
+Tìm hiểu thêm thông tin về giải thưởng hoặc chương trình khuyến mại liên quan trên Internet, nếu không có thì khả năng cao là lừa đảo
+Không bao giờ trả phí trước để nhận thưởng sau cho dù mức phí đó rất nhỏ so với phần thưởng sắp nhận được
+Đáp án khác
+Câu 14: Khi có kẻ lừa đảo em trúng thưởng hay nhận phiếu mua hàng giá trị cao nhưng phải thanh toán trướ Em có thể thực hiện nguyên tắc Kiểm tra ngay bằng cách?
+Tìm kiếm lời khuyên từ người hiểu biết( thành viên trong gia đình, hoặc bạn bè) nếu không chắc đây có phải là thông tin đáng tin cậy
+/Tìm hiểu thêm thông tin về giải thưởng hoặc chương trình khuyến mại liên quan trên Internet, nếu không có thì khả năng cao là lừa đảo
+Không bao giờ trả phí trước để nhận thưởng sau cho dù mức phí đó rất nhỏ so với phần thưởng sắp nhận được
+Đáp án khác
+Câu 15: Khi có kẻ lừa đảo em trúng thưởng hay nhận phiếu mua hàng giá trị cao nhưng phải thanh toán trướ Em có thể thực hiện nguyên tắc Dừng lại, không gửi bằng cách?
+Tìm kiếm lời khuyên từ người hiểu biết( thành viên trong gia đình, hoặc bạn bè) nếu không chắc đây có phải là thông tin đáng tin cậy
+Tìm hiểu thêm thông tin về giải thưởng hoặc chương trình khuyến mại liên quan trên Internet, nếu không có thì khả năng cao là lừa đảo
+/Không bao giờ trả phí trước để nhận thưởng sau cho dù mức phí đó rất nhỏ so với phần thưởng sắp nhận được
+Đáp án khác
+Câu 16: Những cách nào sau đây là ứng xử cần thiết để phòng tránh những rủi ro?
+Hãy dành thời gian và đặt câu hỏi đề tránh bị dồn vào tình huống xấu
+Trao đổi với thầy cô giáo, người thân, bạn bè,... để được nghe ý kiến tư vấn
+Tìm cách liên hệ trực tiếp với người gửi để làm rõ
+/Cả ba đáp án trên đều đúng
+Câu 17: Khi bắt đầu sử dụng Internet là em bắt đầu trở thành?
+/Một công dân số
+Một người trưởng thành
+Một người có trách nhiệm
+Đáp án khác
+Câu 18: Khi bắt đầu sử dụng Internet, em được?
+/Tiếp cận với những lợi ích và rủi ro trên mạng
+Tiếp cận với các lợi ích to lớn
+Tiếp cận với các rủi ro
+Đáp án khác
+Câu 19: Môi trường văn hóa của mạng xã hội và không gian số phụ thuộc nhiều vào?
+/Hành vi của mỗi người sử dụng
+Thói quen của mỗi người
+Ý thức của mỗi người
+Đáp án khác
+Câu 20: Việc xây dựng chuẩn mực đạo đức về hành vi, ứng xử trên mạng xã hội sẽ?
+Tạo thói quen tích cực trong các hành vi ứng xử của người dùng
+Góp phần xây dựng môi trường lành mạnh
+/Cả hai đáp án trên đều đúng
+Cả hai đáp án trên đều sai
+Câu 21: Quy tắc nào dưới đây cần thực hiện khi tham gia môi trường số
+Tôn trọng, tuân thủ pháp luật
+An toàn, bảo mật thông tin
+Lành mạnh, trách nhiệm
+/Cả ba đáp án trên đều đúng
+Câu 22: Quy tắc tôn trọng, tuân thủ pháp luật là?
+Đòi hỏi mọi hành vi ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hóa truyền thống tốt đẹp của dân tộc Việt Nam
+Yêu cầu phải tuân thủ các quy định và hướng dẫn về bảo vệ an toàn và bảo mật thông tin cá nhân và tổ chức
+Hướng tới việc cần chịu trách nhiệm về các hành vi, ứng xử trên mạng xã hội, khi có yêu cầu phải chủ động phối hợp, hợp tác với các cơ quan chức năng để xử ý hành vi, nội dung thông tin vi phạm pháp luật
+/Yêu cầu phải tuân thủ luật pháp Việt Nam, tôn trọng quyền và lợi ích hợp pháp của tổ chức, cá nhân
+Câu 23: Quy tắclành mạnh là là?
+Yêu cầu phải tuân thủ luật pháp Việt Nam, tôn trọng quyền và lợi ích hợp pháp của tổ chức, cá nhân
+/Đòi hỏi mọi hành vi ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hóa truyền thống tốt đẹp của dân tộc Việt Nam
+Yêu cầu phải tuân thủ các quy định và hướng dẫn về bảo vệ an toàn và bảo mật thông tin cá nhân và tổ chức
+Hướng tới việc cần chịu trách nhiệm về các hành vi, ứng xử trên mạng xã hội, khi có yêu cầu phải chủ động phối hợp, hợp tác với các cơ quan chức năng để xử ý hành vi, nội dung thông tin vi phạm pháp luật
+Câu 24: Quy tắc an toàn, bảo mật thông tin là?
+Yêu cầu phải tuân thủ luật pháp Việt Nam, tôn trọng quyền và lợi ích hợp pháp của tổ chức, cá nhân
+Đòi hỏi mọi hành vi ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hóa truyền thống tốt đẹp của dân tộc Việt Nam
+/Yêu cầu phải tuân thủ các quy định và hướng dẫn về bảo vệ an toàn và bảo mật thông tin cá nhân và tổ chức
+Hướng tới việc cần chịu trách nhiệm về các hành vi, ứng xử trên mạng xã hội, khi có yêu cầu phải chủ động phối hợp, hợp tác với các cơ quan chức năng để xử ý hành vi, nội dung thông tin vi phạm pháp luật
+Câu 25: Quy tắc trách nhiệm là?
+Yêu cầu phải tuân thủ luật pháp Việt Nam, tôn trọng quyền và lợi ích hợp pháp của tổ chức, cá nhân
+Đòi hỏi mọi hành vi ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hóa truyền thống tốt đẹp của dân tộc Việt Nam
+Yêu cầu phải tuân thủ các quy định và hướng dẫn về bảo vệ an toàn và bảo mật thông tin cá nhân và tổ chức
+/Hướng tới việc cần chịu trách nhiệm về các hành vi, ứng xử trên mạng xã hội, khi có yêu cầu phải chủ động phối hợp, hợp tác với các cơ quan chức năng để xử ý hành vi, nội dung thông tin vi phạm pháp luật
+`
+    inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_testpage1', inputElement.value);
+    });
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_testpage1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          ${questionAnswers.join('\n')}
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      let questionStrings = inputString.split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+       timerInterval = setInterval(updateTime,
+        10);
+    }
+          function change(element) {
+        element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+        element.style.color = element.innerHTML == "✦" ? "#eedd00": "black"
+      }
+          function reload() {
+        window.scrollTo(0, 0)
+        window.location.reload()
+      }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      element.parentNode.classList.add("highlight-animation");
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+  </script>
+</body>
+</html>
