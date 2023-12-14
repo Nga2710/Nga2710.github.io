@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      70% {
+        color: red;
+      }
+    }
+    timer {
+      animation: warning 2s infinite;
+    }
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <textarea id="text" placeholder="..."></textarea>
+
+    <div class="centered">
+      <button onclick="pasteFromClipboard()">Dán</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+      </div>
+      <br>
+      <button onclick="run()">Bắt đầu</button>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <h2 style="color: green">Good Luck!</h2>
+    <div class="container" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1. Hệ điều hành của các loại máy tính nói chung có mấy nhóm chức năng?
+A. 2 nhóm B. 3 nhóm
+C. 4 nhóm
+/D. 5 nhóm
+Câu 2. Phát biểu nào sau đây là đúng?
+A. Hệ điều hành Windows có giao diện dòng lệnh
+B. Hệ điều hành MS-DOS có giao diện đồ hoạ
+/C. Hệ điều hành Windows có giao diện đồ hoạ
+D. Hệ điều hành MS-DOS có giao diện dòng lệnh và giao diện đồ hoạ
+Câu 3. Chọn câu trả lời đúng nhất. Một số thành phần cơ bản của giao diện đồ hoạ bao gồm:
+A. Cửa sổ, biểu tượng, bàn phím
+B. Biểu tượng, chuột, bàn phím
+C. Chuột, cửa sổ, bàn phím
+/D. Cửa sổ, biểu tượng, chuột
+Câu 4. Phát biểu nào sau đây là đúng về lịch sử phát triển của hệ điều hành Windows?
+A. Các phiên bản Windows 7 (2008), Windows 8 (2012), Windows 10 (2015), Windows 11 (2021)
+/B. Các phiên bản Windows 7 (2009), Windows 8 (2012), Windows 10 (2015), Windows 11 (2021)
+C. Các phiên bản Windows 7 (2009), Windows 8 (2013), Windows 10 (2015), Windows 11 (2021)
+D. Các phiên bản Windows 7 (2009), Windows 8 (2012), Windows 10 (2015), Windows 11 (2022)
+Câu 5. Chọn phát biểu đúng trong các phát biểu sau:
+A. Hệ điều hành Windows và hệ điều hành Linux đều là hệ điều hành nguồn mở.
+B. Hệ điều hành Windows là hệ điều hành nguồn mở, hệ điều hành Linux là hệ điều hành thương mại.
+C. Hệ điều hành Windows là hệ điều hành nguồn mở.
+/D. Hệ điều hành Windows là hệ điều hành thương mại, hệ điều hành Linux là hệ điều hành nguồn mở.
+Câu 6. Hai hệ điều hành phổ biến cho thiết bị di động là:
+/A. iOS và Android
+B. Windows và iOS
+C. Linux và Android
+D. Windows và Linux
+Câu 7. Một số khác biệt của hệ điều hành cho thiết bị di động so với hệ điều hành cho máy tính cá nhân là:
+A. Giao diện đặc biệt thân thiện nhờ nhận dạng hành vi của người dùng thông qua các cảm biến, khó kết nối mạng di động, nhiều tiện ích hỗ trợ cá nhân.
+B. Giao diện đặc biệt thân thiện nhờ nhận dạng hành vi của người dùng thông qua các cảm biến, dễ dàng kết nối mạng di động, không có tiện ích hỗ trợ cá nhân.
+/C. Giao diện đặc biệt thân thiện nhờ nhận dạng hành vi của người dùng thông qua các cảm biến, dễ dàng kết nối mạng di động, nhiều tiện ích hỗ trợ cá nhân.
+D. Giao diện không thân thiện với người dùng, khó kết nối mạng di động, không có tiện ích hỗ trợ cá nhân.
+Câu 8. Phát biểu nào sau đây là đúng?
+A. Phần mềm là thiết bị xử lí thông tin, hệ điều hành là môi trường trung gian giúp phần mềm ứng dụng khai thác phần cứng.
+B. Phần cứng là thiết bị xử lí thông tin, hệ điều hành là môi trường trung gian giúp phần cứng khai thác phần mềm ứng dụng.
+C. Phần mềm là thiết bị xử lí thông tin, hệ điều hành là môi trường trung gian giúp phần cứng cung cấp phần mềm ứng dụng.
+/D. Phần cứng là thiết bị xử lí thông tin, hệ điều hành là môi trường trung gian giúp phần mềm ứng dụng khai thác phần cứng.
+Câu 9. Cho ví dụ một thiết bị không sử dụng hệ điều hành.
+/A. Lò vi sóng.
+B. Laptop.
+C. Máy tính bảng.
+D. Điện thoại thông minh.
+Câu 10. Mối quan hệ giữa phần cứng, phần mềm ứng dụng và hệ điều hành nào sau đây là đúng?
+A. Phần mềm ứng dụng <=> Người dùng <=> Hệ điều hành <=> Phần cứng (CPU, bộ nhớ, thiết bị vào/ra).
+/B. Người dùng <=> Phần mềm ứng dụng <=> Hệ điều hành <=> Phần cứng (CPU, bộ nhớ, thiết bị vào/ra).
+C. Người dùng <=> Hệ điều hành <=> Phần mềm ứng dụng <=> Phần cứng (CPU, bộ nhớ, thiết bị vào/ra).
+D. Người dùng <=> Hệ điều hành <=> Phần cứng (CPU, bộ nhớ, thiết bị vào/ra) <=> Phần mềm ứng dụng.
+Câu 1. Phân loại phần mềm theo cách chuyển giao sử dụng, gồm có bao nhiêu loại phần mềm?
+A. 2 loại
+/B. 3 loại
+C. 4 loại
+D. 5 loại
+Câu 2. Phần mềm nguồn mở là
+A. phần mềm được cung cấp cả mã nguồn để người dùng có thể tự sửa đổi, cải tiến, phát triển, phân phối lại theo một quy định gọi là giấy phép.
+B. phần mềm để bán.
+/C. phần mềm không chỉ miễn phí mà còn được tự do sử dụng mà không phải xin phép.
+D. phần mềm dùng để mở các phần mềm khác.
+Câu 3. Có nhiều loại giấy phép phần mềm nguồn mở, trong đó giấy phép công cộng GNU GPL (GNU General Public License) được áp dụng rộng rãi nhất. Vậy giấy phép GNU GPL 3.0 được phát hành vào năm nào?
+A. Năm 2006
+/B. Năm 2007
+C. Năm 2008
+D. Năm 2009
+Câu 4. Phần mềm thương mại và phần mềm nguồn mở nào sau đây có cùng chức năng?
+/A. Word và Writer.
+B. Word và Calc.
+C. Excel và Writer.
+D. Word và Excel.
+Câu 5. Phần mềm thương mại có bao nhiêu loại?
+/A. 2 loại
+B. 3 loại
+C. 4 loại
+D. 5 loại
+Câu 6. Chọn câu trả lời đúng nhất. Phần mềm thương mại gồm các phần mềm nào sau đây?
+/A. Word, Excel và Powerpoint.
+B. Writer, Calc và Impress.
+C. Word, Excel và Writer.
+D. Writer, Calc và Word.
+Câu 7. Phân loại phần mềm theo cách chuyển giao sử dụng, gồm có các loại phần mềm nào sau đây?
+A. Phần mềm thương mại, phần mềm tự do, phần mềm Microsoft Word.
+B. Phần mềm Inskcape, phần mềm tự do, phần mềm nguồn mở.
+C. Phần mềm Inskcape, phần mềm photoshop, phần mềm corel.
+/D. Phần mềm thương mại, phần mềm tự do, phần mềm nguồn mở.
+Câu 9. Phần mềm chạy trên Internet là phần mềm
+/A. cho phép sử dụng qua Internet mà không cần phải cài đặt vào máy.
+B. cài đặt vào máy tính trước khi sử dụng.
+C. Microsoft Word.
+D. Writer.
+Câu 10. Phần mềm nào sau đây là phần mềm chạy trên Internet?
+A. Mirosoft Word.
+/B. Google Docs.
+C. Writer.
+D. Inkscape.
+Câu 1. Hãy quan sát và cho biết sơ đồ bên dưới là sơ đồ gì? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjcovDS_WbjOFqil_6ikd_Z1c_tsr-4hsEz_5Td5zYrl5w9lN1T4ntv-y84SblFb06LXkDMAtxpDI_KetP3kucIjDKGItQ8TN7eaqGO_uzelW4o3ahQ0v1wuVa4aKjnWQjizFj8-lEiFvrSfjli7jgKol4FgBQgzlJiWub6pVvt651eiJPnj2HVBzoDOA/s1600/Screenshot_4.png
+
+/A. Sơ đồ cấu tạo chức năng của máy tính điện tử.
+B. Sơ đồ máy tính điện tử.
+C. Sơ đồ các thiết bị của máy tính điện tử.
+D. Sơ đồ điều khiển của máy tính điện tử.
+
+Câu 2. Em hãy cho biết thiết bị sau đây là thiết bị gì? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiy1ab8X_giWfqm3EmaZNLLD0661UvTI5ghkR7hG0_1VyZ82y2AB89vGe44pQ_kOf1Fbw76GiHHDp65XW39TlEvy7XWsjtatY3KI4uhO9URh47oo-6lBANDn-LXbSLF1Q6rfd6yNMdyh_oElv0Js9WnVy2gnUiFjTbNUkIFNbWFAcWkn2cqbvtHe2jbwg/s1600/Screenshot_5.png
+
+/A. Bộ xử lí trung tâm CPU.
+B. Bộ nhớ trong ROM.
+C. Bộ nhớ trong RAM.
+D. Bộ nhớ ngoài.
+
+Câu 3. Bộ xử lí trung tâm (Central Processing Unit - CPU) được cấu tạo từ mấy bộ phận chính?
+A. 1
+/B. 2
+C. 3
+D. 4
+Câu 4. Tuỳ theo cách sử dụng, bộ nhớ trong (memory) chia thành hai loại là:
+/A. ROM và RAM.
+B. ROM và thẻ nhớ.
+C. RAM và thẻ nhớ.
+D. Thẻ nhớ và CPU.
+Câu 5. Thiết bị nào sau đây là bộ nhớ ngoài?
+A. ROM.
+/B. Thẻ nhớ.
+C. RAM.
+D. CPU.
+Câu 6. Quan sát hình 4.4 bên dưới và hãy cho biết khi nào thì bóng đèn sáng? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEilJX3K8MjH3riWiyLrru6ZlCwXHRdzvUJzizhcET7BwgqiLpoqsY7ra1jvTxIo4v76giVXPYjTihjC54ywNfVDeS0bBNaDDHXvdLE24EQ3o9wZTWlNU3YISb8h2CN_LAn2I-66gWEwEeeMIhrZPyEZanarSMhCdK7I49xaOcMoDFgLX4bdabwuLGuJBw/s1600/Screenshot_6.png
+A. Khi K1 và K2 cùng mở.
+B. Khi K1 đóng, K2 mở.
+/C. Khi K1 và K2 cùng đóng.
+D. Khi K1 mở, K2 đóng.
+Câu 7. Bộ xử lí trung tâm (Central Processing Unit - CPU) được cấu tạo từ các bộ phận chính nào sau đây?
+A. Bộ số học và lôgic; Thanh ghi.
+B. Bộ điều khiển; Thanh ghi.
+C. Thanh ghi; Bộ nhớ đệm.
+/D. Bộ số học và lôgic; Bộ điều khiển.
+
+Câu 8. Quan sát hình 4.5 bên dưới và hãy cho biết khi nào thì bóng đèn tắt (tối)? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo7pyBOKLfx0jNztTJAKHQcUmNitiR9mS--HQoMAIlqjW9D7OgOzBHGNo25FAoaejQV2ViI2f5nkV7fNvJLz402GYKM56G6JKPbwjiZgE-qXXv4W-Dyoiexmw-sjUdQiJogQqnASVk0mVvgxrC2m89NAfDSqOTSX2e7nX5tboOvFn8hBEXWtiwwtFWIg/s1600/Screenshot_7.png
+/A. Khi K1 và K2 cùng mở.
+B. Khi K1 và K2 cùng đóng.
+C. Khi K1 mở, K2 đóng.
+D. Khi K1 đóng, K2 mở.
+Câu 9. Hệ nhị phân dùng bao nhiêu chữ số, đó là chữ số nào?
+A. Hệ nhị phân dùng một chữ số, đó là chữ số 2.
+/B. Hệ nhị phân dùng hai chữ số, đó là chữ số 0, 1.
+C. Hệ nhị phân dùng hai chữ số, đó là chữ số 0, 2.
+D. Hệ nhị phân dùng hai chữ số, đó là chữ số 1, 2.
+Câu 10. Phép toán 110 + 111 cho kết quả nào sau đây?
+/A. 1101
+B. 1111
+C. 1110
+D. 1011
+Câu 1. Chọn câu trả lời đúng nhất. Các thiết bị nào sau đây là thiết bị vào?
+A. Bàn phím, chuột, màn hình.
+/B. Bàn phím, chuột, máy quét.
+C. Bàn phím, chuột, máy in.
+D. Màn hình, máy in, máy chiếu.
+Câu 2. Phát biểu nào sau đây sai?
+A. Bàn phím là thiết bị thông dụng nhất để nhập dữ liệu.
+B. Chuột là thiết bị vào rất phổ biến vì dễ điều khiển chính xác.
+C. Màn hình là thiết bị ra phổ biến nhất.
+/D. Máy in là thiết bị vào thông dụng nhất.
+Câu 3. Kích thước của màn hình được đo như thế nào và tính theo đơn vị nào là đúng?
+/A. Kích thước màn hình được đo bằng độ dài đường chéo màn hình, tính theo inch.
+B. Kích thước màn hình được đo bằng độ dài chiều ngang của màn hình, tính theo inch.
+C. Kích thước màn hình được đo bằng độ dài chiều dọc của màn hình, tính theo inch.
+D. Kích thước màn hình được đo bằng độ dài đường chéo màn hình, tính theo cm.
+Câu 5. Chọn câu trả lời đúng nhất. Các thiết bị nào sau đây là thiết bị ra?
+/A. Màn hình, máy in, máy chiếu.
+B. Màn hình, máy in, bàn phím.
+C. Màn hình, máy in, chuột.
+D. Bàn phím, chuột, máy quét.
+
+Câu 6. Quan sát hình bên dưới và cho biết tên của các cổng kết nối? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj0dSHtEkbDOiUKi0GNW5jXyQgUqhc1GaUQwRPf9bo2ahqCTs352koLni5T4e2l0aNV0p8BIsGbd7RoqvUx4IwSkS5l_VSNWQM3kAW3oJHdyGlzLQ3pRNjwzBVBKb9wQz2FFAPm2sYsu8S6iW3wExG7AExGbdomMiLf0gYSAe_RPFUYhIkyEEOadmE2zg/s1600/Screenshot_3.png
+A. A là cổng VGA, B là cổng USB, C là cổng HDMI.
+B. A là cổng HDMI, B là cổng VGA, C là cổng USB.
+C. A là cổng USB, B là cổng HDMI, C là cổng VGA.
+/D. A là cổng VGA, B là cổng HDMI, C là cổng USB.
+Câu 7. Chọn phát biểu đúng trong các phát biểu sau?
+/A. Bàn phím là thiết bị thông dụng nhất để nhập dữ liệu.
+B. Máy in là thiết bị vào thông dụng nhất.
+C. Chuột là thiết bị ra rất phổ biến vì dễ điều khiển chính xác.
+D. Màn hình là thiết bị vào phổ biến nhất.
+Câu 8. Quan sát hình bên dưới và cho biết đây là cổng gì? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTMgusIiGI06ULODoUdmLBES4MoMkl3uLkDDuFUaXyQzHHnDloyDw8OLUaUypeSWU3BvCHjtDVFjlMKS_7plFWQzXjeYhA3EgcWqzliE4ftAEApSvowR_REg9NwYetKvyifuf_PAU-eCHZ7UQflD9-QqeUOIuHteT2DvI874lltUx7Eck66wbSH49TGg/s1600/Screenshot_4.png
+/A. Cổng mạng.
+B. Cổng USB.
+C. Cổng HDMI.
+D. Cổng VGA.
+Câu 9. Dùng phương thức kết nối chung nào để kết nối máy tính với thiết bị số?
+A. Dùng cổng USB để kết nối máy tính với các thiết bị số.
+B. Dùng cổng HDMI để kết nối máy tính với các thiết bị số.
+/C. Không có một phương thức kết nối chung nào cho các thiết bị số với máy tính.
+D. Dùng cổng VGA để kết nối máy tính với các thiết bị số.
+Câu 10. Chọn phát biểu đúng trong các phát biểu sau:
+/A. Máy ảnh số có thể hỗ trợ một số cách kết nối khác nhau với máy tính qua cáp USB, wifi hoặc bluetooth.
+B. Máy ảnh số không thể kết nối với máy tính.
+C. Máy ảnh số chỉ có thể kết nối với máy tính qua cáp USB.
+D. Máy ảnh số chỉ có thể kết nối với máy tính qua bluetooth.
+Câu 1. Lưu trữ trên Internet còn được gọi là:
+/A. lưu trữ đám mây.
+B. lưu trữ cục bộ.
+C. lưu trữ trên các thiết bị nhớ.
+D. lưu trữ trên máy tính.
+Câu 2. Khi người dùng được cấp một không gian nhớ trực tuyến dùng để lưu trữ các tệp cũng như thư mục của mình. Không gian nhớ trực tuyến đó còn có tên gọi khác là:
+A. thẻ nhớ.
+/B. ổ đĩa trực tuyến.
+C. ổ đĩa cục bộ.
+D. bộ nhớ ngoài.
+Câu 4. Khi chia sẻ trực tuyến các tệp và thư mục, người chia sẻ được chọn một trong mấy chế độ để chia sẻ?
+A. Được chọn một trong 2 chế độ.
+/B. Được chọn một trong 3 chế độ.
+C. Được chọn một trong 4 chế độ.
+D. Được chọn một trong 5 chế độ.
+Câu 6. Sử dụng dịch vụ lưu trữ thư mục và tệp trực tuyến, người dùng sẽ được cung cấp:
+A. một thẻ nhớ.
+B. một bộ nhớ ngoài.
+/C. một ổ đĩa trực tuyến.
+D. một USB.
+Câu 7. Lưu trữ trực tuyến trên One Drive là của nhà cung cấp dịch vụ nào sau đây?
+/A. Microsoft.
+B. Google.
+C. Apple.
+D. Dropbox.
+Câu 8. Chọn phát biểu đúng trong các phát biểu dưới đây:
+/A. Khi chia sẻ trực tuyến các tệp và thư mục, người chia sẻ được chọn một trong ba chế độ chia sẻ là: Quyền chỉ xem; Quyền nhận xét tức là được xem và nhận xét ), Quyền chỉnh sửa.
+B. Khi chia sẻ trực tuyến các tệp và thư mục, người chia sẻ được chọn đồng thời ba chế độ chia sẻ là: Quyền chỉ xem; Quyền nhận xét, tức là được xem và nhận xét và Quyền chỉnh sửa.
+C. Khi chia sẻ trực tuyến các tệp và thư mục, người chia sẻ được chọn đồng thời hai chế độ chia sẻ là: Quyền chỉ xem và Quyền nhận xét, tức là được xem và nhận xét.
+D. Khi chia sẻ trực tuyến các tệp và thư mục, người chia sẻ được chọn đồng thời hai chế độ chia sẻ là: Quyền chỉ xem và Quyền chỉnh sửa.
+Câu 1. Có bao nhiêu nguyên tắc để nhận biết và phòng tránh lừa đảo trên không gian số?
+A. 2 nguyên tắc.
+/B. 3 nguyên tắc.
+C. 4 nguyên tắc.
+D. 5 nguyên tắc.
+Câu 2. Có 4 quy tắc ứng xử trong môi trường số, quy tắc đầu tiên là:
+A. Quy tắc lành mạnh.
+B. Quy tắc an toàn, bảo mật thông tin.
+/C. Quy tắc tôn trọng, tuân thủ pháp luật.
+D. Quy tắc trách nhiệm.
+Câu 3. Kẻ lừa đảo cố gắng thuyết phục thiết bị của nạn nhân đang gặp sự cố và yêu cầu thanh toán ngay lặp tức cho các dịch vụ để khắc phục sự cố đó, mà trên thực tế, nó không hề tồn tại. Đây là tình huống lừa đảo nào?
+/A. Lừa đảo hỗ trợ kĩ thuật.
+B. Lừa đảo dưới dạng thông báo tin tốt.
+C. Lừa đảo dưới dạng thông báo tin xấu.
+D. Lừa đảo qua website giả mạo các trang thương mại điện tử phổ biến.
+Câu 4. Kẻ lừa đảo có thể bất ngờ thông báo nạn nhân có cơ hội trúng thưởng hay nhận phiếu mua hàng trị giá cao, nhưng phải thanh toán một khoản phí để được nhận thưởng. Đây là tình huống lừa đảo nào?
+A. Lừa đảo hỗ trợ kĩ thuật.
+B. Lừa đảo dưới dạng thông báo tin xấu.
+/C. Lừa đảo dưới dạng thông báo tin tốt.
+D. Lừa đảo qua website giả mạo các trang thương mại điện tử phổ biến.
+Câu 5. Trong nhiều vụ lừa đảo, bạn sẽ nhận được cuộc gọi hoặc thư điện tử tự xưng là nhân viên làm việc trong cơ quan chức năng, cơ quan nhà nước và yêu cầu thanh toán ngay một khoản tiền nào đó. Đây là tình huống lừa đảo nào?
+A. Lừa đảo dưới dạng thông báo tin tốt.
+/B. Lừa đảo dưới dạng thông báo tin xấu.
+C. Lừa đảo hỗ trợ kĩ thuật.
+D. Lừa đảo qua website giả mạo các trang thương mại điện tử phổ biến.
+Câu 6. Có ba nguyên tắc để nhận biết và phòng tránh lừa đảo trên không gian số đó là:
+A. Hãy chậm lại! Kiểm tra ngay! Gửi đi!
+B. Nhanh lên! Kiểm tra ngay! Dừng lại, không gửi!
+C. Nhanh lên! Không cần kiểm tra! Gửi đi!
+/D. Hãy chậm lại! Kiểm tra ngay! Dừng lại, không gửi!
+Câu 7. Lợi dụng nhu cầu mua sắm Online tăng cao, một số đối tượng đã tạo các trang web giả mạo và gửi đường link truy cập các trang web lừa đảo này qua tin nhắn SMS, thư điện tử,… hoặc gọi điện thoại hướng dẫn khách hàng thực hiện giao dịch mua những món hàng “giá rẻ bất ngờ”, thậm chí “miễn phí”, so với các hàng hoá cùng chủng loại từ các siêu thị uy tín nhằm chiếm đoạt tiền của khách hàng trong thẻ cũng như tài khoản. Đây là tình huống lừa đảo nào?
+A. Lừa đảo dưới dạng thông báo tin xấu.
+B. Lừa đảo dưới dạng thông báo tin tốt.
+C. Lừa đảo hỗ trợ kĩ thuật.
+/D. Lừa đảo qua website giả mạo các trang thương mại điện tử phổ biến.
+Câu 8. Quy tắc ứng xử trong môi trường số có bao nhiêu quy tắc?
+A. 2 quy tắc.
+B. 3 quy tắc.
+/C. 4 quy tắc.
+D. 5 quy tắc.
+Câu 9. Có 5 điều nên làm khi tham gia mạng xã hội, điều đầu tiên là:
+A. Tuyên truyền và tham gia hướng dẫn sử dụng mạng xã hội an toàn, có văn hoá.
+B. Chia sẻ thông tin chính thống, thông tin tích cực.
+/C. Tìm hiểu và tuân thủ các điều khoản quy định khi tham gia mạng xã hội.
+D. Quản lí, bảo mật thông tin cá nhân, thông báo kịp thời cho cơ quan chức năng và người thân khi bị mất quyền kiểm soát.
+Câu 10. Có 5 điều không nên làm khi tham gia mạng xã hội, điều thứ 5 là:
+A. Đăng tải nội dung vi phạm pháp luật.
+/B. Quảng cáo, kinh doanh dịch vụ trái phép.
+C. Sử dụng từ ngữ gây thù hận, kích động bạo lực.
+D. Sử dụng ngôn ngữ phản cảm, vô văn hoá.
+Câu 1. Việc ghi điểm vào sổ điểm được thực hiện thường xuyên, mỗi khi có ĐĐG thường xuyên, giữa kì hay cuối kì. Việc ghi chép này gọi là:
+A. lưu điểm.
+B. lưu vào sổ điểm.
+/C. lưu trữ dữ liệu điểm.
+D. ghi chép dữ liệu điểm.
+Câu 2. Chọn phát biểu đúng trong các phát biểu sau:
+A. Bài toán quản lí là bài toán ít phổ biến trong thực tế. Cần phải tổ chức lưu trữ dữ liệu để phục vụ các yêu cầu quản lí đa dạng.
+B. Bài toán quản lí là bài toán phổ biến trong thực tế. Không cần phải tổ chức lưu trữ dữ liệu để phục vụ các yêu cầu quản lí đa dạng.
+C. Bài toán quản lí là bài toán ít phổ biến trong thực tế. Không cần phải tổ chức lưu trữ dữ liệu để phục vụ các yêu cầu quản lí đa dạng.
+/D. Bài toán quản lí là bài toán phổ biến trong thực tế. Cần phải tổ chức lưu trữ dữ liệu để phục vụ các yêu cầu quản lí đa dạng.
+Câu 3. Chọn phát biểu đúng nhất trong các phát biểu sau:
+/A. Dữ liệu lưu trữ có thể được cập nhật thường xuyên, được truy xuất theo nhiều tiêu chí khác nhau để thu được các thông tin hữu ích.
+B. Dữ liệu lưu trữ có thể được cập nhật thường xuyên, được truy xuất theo tiêu chí để thu được các thông tin hữu ích.
+C. Dữ liệu lưu trữ có thể được cập nhật không thường xuyên, được truy xuất theo nhiều tiêu chí khác nhau để thu được các thông tin hữu ích.
+D. Dữ liệu lưu trữ có thể được cập nhật không thường xuyên, được truy xuất theo tiêu chí khác nhau để thu được các thông tin hữu ích.
+Câu 4. Việc thêm, xoá và chỉnh sửa dữ liệu là những công việc thường được thực hiện với dữ liệu của tất cả các bài toán quản lí và chúng được gọi chung là:
+A. tạo lập dữ liệu.
+B. khai thác dữ liệu.
+C. thêm và xoá dữ liệu.
+/D. cập nhật dữ liệu.
+Câu 5. Công việc lập bảng phân loại kết quả học tập như Bảng 10.3, đòi hỏi phải phân tích, thống kê, tính toán từ dữ liệu đã có để được thông tin cần thiết. Những công việc kiểu như vậy được gọi là: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYOfafxlbiVPU5Sk-3c9OsyQK14QiLXrTdasSHCALRmyQYOnpxo2EE3CMD5X7aiosEfr9Md2DphZhRzKMWiW_hetCBP-Mdh2n8tuwKZ9ip1GZgNesxnS_ma_xAEgw-caa6zfcZ02T0AzGHv9RygNP7eiK2bGVB9i1Ohi1DMcTGSozN_n8ckxBqGk813A/s1600/Screenshot_12.png
+A. cập nhật thông tin từ dữ liệu đã có.
+/B. khai thác thông tin từ dữ liệu đã có.
+C. tìm kiếm thông tin từ dữ liệu đã có.
+D. tổng hợp thông tin từ dữ liệu đã có.
+Câu 6. Cách làm nào sau đây gọi là thu thập dữ liệu tự động?
+A. Nhập dữ liệu vào máy tính từ bàn phím.
+B. Viết vào một quyển sổ.
+/C. Quét mã vạch.
+D. Ghi dữ liệu ra giấy rồi nhập vào máy tính.
+Câu 7. Việc tìm kiếm, sắp xếp hay lọc ra các dữ liệu theo những tiêu chí nào đó từ dữ liệu đã có thường được gọi là:
+A. cập nhật dữ liệu.
+B. lưu dữ liệu.
+/C. truy xuất dữ liệu.
+D. sắp xếp dữ liệu.
+Câu 8. Chọn phát biểu đúng nhất trong các phát biểu sau:
+A. Quản lí là hoạt động ít phổ biến. Mục đích chính của quản lí là xử lí thông tin để đưa ra các quyết định. Vì vậy việc thu thập, lưu trữ dữ liệu có ý nghĩa quan trọng hàng đầu.
+B. Quản lí là hoạt động rất phổ biến. Mục đích chính của quản lí là xử lí dữ liệu để đưa ra các quyết định. Vì vậy việc thu thập, lưu trữ dữ liệu có ý nghĩa quan trọng hàng đầu.
+C. Quản lí là hoạt động ít phổ biến. Mục đích chính của quản lí là xử lí dữ liệu để đưa ra các quyết định. Vì vậy việc thu thập, lưu trữ dữ liệu có ý nghĩa quan trọng hàng đầu.
+/D. Quản lí là hoạt động rất phổ biến. Mục đích chính của quản lí là xử lí thông tin để đưa ra các quyết định. Vì vậy việc thu thập, lưu trữ dữ liệu có ý nghĩa quan trọng hàng đầu.
+Câu 9. Chọn phát biểu đúng nhất trong các phát biểu sau:
+A. Việc thu thập dữ liệu tự động không mang lại lợi ích, không chỉ giảm bớt công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của việc ra các quyết định cần thiết.
+/B. Việc thu thập dữ liệu tự động mang lại nhiều lợi ích, không chỉ giảm bớt công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của việc ra các quyết định cần thiết.
+C. Việc thu thập dữ liệu tự động mang lại nhiều lợi ích, không chỉ tăng công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của việc ra các quyết định cần thiết.
+D. Việc thu thập dữ liệu tự động không mang lại lợi ích, không chỉ tăng công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của việc ra các quyết định cần thiết.
+Câu 10. Ở các siêu thị lớn, nhân viên tính tiền muốn thực hiện nhanh công việc của mình thì cần dùng phương pháp nào sau đây?
+A. Dùng giấy bút để tính tiền.
+B. Nhập vào phần mềm excel trong máy tính để tính tiền.
+/C. Quét mã vạch để tính tiền tự động.
+D. Dùng máy tính cầm tay để tính tiền.
+Câu 1. Chọn phát biểu đúng trong các phát biểu sau:
+A. Khi dữ liệu được lưu trữ trên máy tính, việc lập bảng điểm lớp học từ dữ liệu cơ sở (các bảng điểm môn học) không thể thực hiện được.
+B. Khi dữ liệu được lưu trữ trên giấy (phiếu điểm), việc lập bảng điểm lớp học từ dữ liệu cơ sở (các bảng điểm môn học) có thể được thực hiện một cách dễ dàng.
+/C. Khi dữ liệu được lưu trữ trên máy tính, việc lập bảng điểm lớp học từ dữ liệu cơ sở (các bảng điểm môn học) có thể được thực hiện một cách dễ dàng.
+D. Khi dữ liệu được lưu trữ trên máy tính, việc lập bảng điểm lớp học từ dữ liệu cơ sở (các bảng điểm môn học) khó có thể thực hiện được.
+Câu 2. Chọn phát biểu đúng trong các phát biểu sau:
+A. Khi lưu trữ dữ liệu trên máy tính, cần phải lưu trữ bảng điểm lớp học do bảng này chỉ là một khung nhìn tổng hợp từ dữ liệu cơ sở bằng cách ghép các bảng điểm môn học.
+/B. Khi lưu trữ dữ liệu trên máy tính, không cần lưu trữ bảng điểm lớp học do bảng này chỉ là một khung nhìn tổng hợp từ dữ liệu cơ sở bằng cách ghép các bảng điểm môn học.
+C. Khi lưu trữ dữ liệu trên máy tính, cần phải lưu trữ bảng điểm lớp học do bảng này cần thiết cho giáo viên chủ nhiệm và học sinh của lớp.
+D. Khi lưu trữ dữ liệu trên giấy (phiếu điểm), không cần lưu trữ bảng điểm lớp học do bảng này chỉ là một khung nhìn tổng hợp từ dữ liệu cơ sở bằng cách ghép các bảng điểm môn học.
+Câu 3. Khi lưu trữ dữ liệu trên máy tính, cần phải tổ chức việc lưu trữ sao cho có thể hạn chế:
+/A. trùng lặp làm dư thừa dữ liệu, khắc phục những lỗi không nhất quán về dữ liệu.
+B. trùng lặp làm thiếu dữ liệu, khắc phục những lỗi không nhất quán về dữ liệu.
+C. trùng lặp làm dư thừa dữ liệu, khắc phục những lỗi không nhất quán về thông tin.
+D. trùng lặp làm dư thừa thông tin, khắc phục những lỗi không nhất quán về dữ liệu.
+Câu 5. Việc lưu trữ dữ liệu điểm các môn học trên máy tính đòi hỏi cần có những phần mềm hỗ trợ ….… từ những dữ liệu ấy. Hãy điền vào dấu 3 chấm những từ còn thiếu.
+/A. cập nhật dữ liệu điểm và khai thác thông tin
+B. cập nhật điểm số và khai thác thông tin
+C. cập nhật thông tin điểm và khai thác dữ liệu
+D. khai thác dữ liệu điểm và cập nhật thông tin
+Câu 7. Khái niệm về cơ sở dữ liệu nào sau đây là đúng?
+A. Cơ sở dữ liệu là một tập hợp các thông tin có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính.
+B. Cơ sở dữ liệu là một tập hợp các dữ liệu không liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính.
+/C. Cơ sở dữ liệu là một tập hợp các dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính.
+D. Cơ sở dữ liệu là một tập hợp các dữ liệu có liên quan với nhau, được lưu trữ trên một hệ thống máy tính có tổ chức.
+Câu 8. Một số thuộc tính cơ bản của CSDL bao gồm:
+A. tính cấu trúc; tính dư thừa; tính độc lập; tính toàn vẹn; tính nhất quán; tính bảo mật và an toàn.
+B. tính không dư thừa; tính độc lập; tính toàn vẹn; tính nhất quán; tính bảo mật và an toàn.
+/C. tính cấu trúc; tính không dư thừa; tính độc lập; tính toàn vẹn; tính nhất quán; tính bảo mật và an toàn.
+D. tính cấu trúc; tính không dư thừa; tính độc lập; tính toàn phần; tính nhất quán; tính bảo mật và an toàn.
+Câu 9. Phát biểu sau đây nằm trong thuộc tính cơ bản nào của CSDL? “CSDL cần được tổ chức sao cho không phải ai cũng có quyền truy cập hay cập nhật dữ liệu”.
+A. Tính toàn vẹn.
+B. Tính nhất quán.
+C. Tính không dư thừa.
+/D. Tính bảo mật và an toàn.
+Câu 10. Trong giao dịch chuyển tiền, số tiền đã bị trừ bớt trong tài khoản chuyển đi nhưng lại chưa xuất hiện trong tài khoản nhận về. Trường hợp này vi phạm thuộc tính cơ bản nào của CSDL?
+/A. Tính nhất quán.
+B. Tính độc lập.
+C. Tính toàn vẹn.
+D. Tính an toàn và bảo mật thông tin.
+Câu 1. Hệ quản trị cơ sở dữ liệu có bao nhiêu nhóm chức năng?
+A. 2 nhóm chức năng.
+/B. 3 nhóm chức năng.
+C. 4 nhóm chức năng.
+D. 5 nhóm chức năng.
+Câu 2. Chọn câu trả lời đúng nhất. Hãy cho biết những hệ QTCSDL được dùng phổ biến hiện nay?
+A. Oracle, MySQL, SQL Server, Python.
+B. Pascal, MySQL, SQL Server, DB2.
+/C. Oracle, MySQL, SQL Server, DB2.
+D. Oracle, Corel, SQL Server, DB2.
+Câu 3. Chọn phát biểu sai trong các phát biểu sau:
+/A. Hệ QTCSDL là phần mềm cung cấp phương thức để lưu trữ, cập nhật và truy xuất dữ liệu của CSDL, bảo mật và an toàn thông tin.
+B. Hệ QTCSDL cung cấp các phương tiện thực hiện sao lưu dự phòng (backup) để đề phòng các sự cố gây mất dữ liệu và khôi phục dữ liệu khi cần thiết.
+C. Hệ QTCSDL là phần mềm cung cấp phương thức để lưu trữ, cập nhật và truy xuất dữ liệu của CSDL, bảo mật và an toàn dữ liệu.
+D. Hệ QTCSDl cũng cung cấp giao diện lập trình ứng dụng cho các nhà phát triển và người dùng.
+Câu 4. Phần mềm ứng dụng CSDL là phần mềm được xây dựng tương tác với … nhằm mục đích hỗ trợ người dùng khai thác thông tin từ CSDL một cách thuận tiện theo các yêu cầu xác định. Hãy điền từ còn thiếu vào dấu 3 chấm.
+A. hệ CSDL
+B. CSDL
+/C. hệ QTCSDL
+D. dữ liệu
+Câu 5. Một hệ thống gồm ba thành phần: CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL được gọi là:
+/A. một hệ CSDL.
+B. một hệ QTCSDL.
+C. một CSDL.
+D. một nhóm các phần mềm.
+Câu 6. Hệ quản trị cơ sở dữ liệu có 3 nhóm chức năng nào sau đây?
+A. Nhóm chức năng khai báo dữ liệu; Nhóm chức năng cập nhật và truy xuất dữ liệu; Nhóm chức năng bảo mật, an toàn CSDL.
+B. Nhóm chức năng định nghĩa dữ liệu; Nhóm chức năng chỉnh sửa và truy xuất dữ liệu; Nhóm chức năng bảo mật, an toàn CSDL.
+C. Nhóm chức năng định nghĩa dữ liệu; Nhóm chức năng cập nhật và truy xuất dữ liệu; Nhóm chức năng bảo trì, an toàn CSDL.
+/D. Nhóm chức năng định nghĩa dữ liệu; Nhóm chức năng cập nhật và truy xuất dữ liệu; Nhóm chức năng bảo mật, an toàn CSDL.
+    `
+    function replaceLinksToImages(text) {
+      // Regex pattern to match image URLs
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // Replace URLs with <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_testpage1', inputElement.value);
+    });
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_testpage1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          ${questionAnswers.join('\n')}
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#eedd00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      element.parentNode.classList.add("highlight-animation");
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+  </script>
+</body>
+</html>
