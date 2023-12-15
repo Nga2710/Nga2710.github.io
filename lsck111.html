@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      70% {
+        color: red;
+      }
+    }
+    timer {
+      animation: warning 2s infinite;
+    }
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <textarea disabled id="text" placeholder="..."></textarea>
+
+    <div class="centered">
+      <!--button onclick="pasteFromClipboard()">Dán</button-->
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+      </div>
+      <br>
+      <button onclick="run()">Bắt đầu</button>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <h2 style="color: green">Good Luck!</h2>
+    <div class="container" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+
+Câu 1. Một trong những nhiệm vụ của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX) là
+/A. xóa bỏ chế độ phong kiến chuyên chế.		B. đưa giai cấp công nhân lên nắm quyền.
+C. xóa bỏ triệt để mâu thuẫn trong xã hội.		D. xác lập sự thống trị của chủ nghĩa thực dân.
+Câu 2. Một trong những mục tiêu của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX) là
+/A. mở đường cho tư bản chủ nghĩa phát triển.	B. đưa giai cấp công nhân lên nắm chính quyền.
+C. xóa bỏ triệt để những mâu thuẫn trong xã hội.	D. xác lập sự thống trị của chủ nghĩa thực dân.
+Câu 3. Lãnh đạo của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX là 
+A. địa chủ.	B. nông dân.	C. công nhân.		/D. tư sản.
+Câu 4. Lãnh đạo của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX là 
+A. địa chủ.	B. nông dân.	C. công nhân.		/D. quý tộc mới.
+Câu 5. Trong các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX, động lực quyết định thắng lợi của cách mạng là
+A. mục tiêu của cách mạng.				B. phương pháp đấu tranh.
+C. kết quả cuối cùng.					/D. giai cấp lãnh đạo.
+Câu 6. Nội dung nào sau đây là tiền đề về kinh tế dẫn đến sự bùng nổ và thắng lợi của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX?
+A. Quan hệ sản xuất tư bản chủ nghĩa thay thế hoàn toàn quan hệ phong kiến.
+B. Triết học Ánh sáng ra đời, thức tĩnh, dọn đường cho quần chúng đấu tranh.
+C. Giai cấp tư sản và đồng minh có thế lực rất lớn cả về kinh tế và chính trị.
+/D. Kinh tế tư bản chủ nghĩa ra đời và phát triển trong lòng chế độ phong kiến.
+Câu 7. Nội dung nào sau đây là tiền đề về chính trị dẫn đến sự bùng nổ và thắng lợi của các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX?
+A. Quan hệ sản xuất tư bản chủ nghĩa thay thế hoàn toàn quan hệ phong kiến.
+B. Giai cấp tư sản và đồng minh có thế lực rất lớn cả về kinh tế và chính trị.
+C. Triết học Ánh sáng ra đời, thức tĩnh, dọn đường cho quần chúng đấu tranh.
+/D. Chế độ cai trị của nhà nước phong kiến, gây ra sự bất mãn trong xã hội.
+Câu 8. Các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX thắng lợi có ý nghĩa quan trọng nào sau đây?
+/A. Lật đổ nền quân chủ chuyên chế tồn tại lâu đời.	B. Giải quyết triệt để mọi yêu cầu của nông dân.
+C. Xóa bỏ được tình trạng áp bức trong xã hội.	D. Đưa giai cấp công nhân lên nắm chính quyền.
+Câu 9. Các cuộc cách mạng tư sản từ giữa thế kỉ XVI đến đầu thế kỉ XX thắng lợi có ý nghĩa quan trọng nào sau đây?
+A. Giải quyết triệt để mọi yêu cầu của nông dân.	/B. Mở đường cho chủ nghĩa tư bản phát triển.
+C. Xóa bỏ được tình trạng áp bức trong xã hội.	D. Đưa giai cấp công nhân lên nắm chính quyền.
+Câu 10. Cuộc cách mạng tư sản Pháp (cuối thế kỷ XVIII) và cách mạng tư sản Anh (thế kỷ XVII) có điểm khác biệt nào sau đây? 
+/A. Tính chất triệt để của cuộc cách mạng tư sản.		   B. Tạo điều kiện cho kinh tế tư bản phát triển.
+C. Do giai cấp tư sản và quý tộc mới lãnh đạo.      		   D. Xóa bỏ phong kiến, thiết lập quân chủ lập hiến.
+Câu 11. Cuộc Chiến tranh giành độc lập của 13 thuộc địa Anh ở Bắc Mĩ (cuối thế kỷ XVIII) và cuộc cách mạng tư sản Anh (thế kỷ XVII) có điểm giống nhau nào sau đây?
+A. Chống thực dân Anh, giành độc lập dân tộc.    /B. Mở đường cho chủ nghĩa tư bản phát triển.	
+C. Có sự lãnh đạo của tầng lớp quý tộc mới. 	  		D. Diễn ra dưới hình thức một cuộc nội chiến.
+Câu 1. Quốc gia nào sau đây khởi đầu cuộc Cách mạng công nghiệp ở thế kỉ XVIII? 
+A. Pháp.	B. Đức.	C. I-ta-li-a	/D. Anh.
+Câu 2. Từ đầu thế kỉ XIX, để đáp ứng nhu cầu ngày càng cao về nguyên liệu và nhân công các nước tư bản phương Tây đã tăng cường
+A. hợp tác và mở rộng đầu tư.				B. thu hút vốn đầu tư bên ngoài.
+/C. xâm lược và mở rộng thuộc địa.				D. đổi mới hình thức kinh doanh.
+Câu 3. Cuối thế kỉ XIX – đầu thế kỉ XX, các nước tư bản chủ nghĩa đã chuyển sang giai đoạn
+A. tự do cạnh tranh.						B. cải cách đất nước.
+/C. đế quốc chủ nghĩa.						D. chủ nghĩa phát xít.
+Câu 4. Chủ nghĩa đế quốc ra đời từ cuối thế kỉ XIX đầu thế kỉ XX là hệ quả trực tiếp của quá trình
+/A. xâm lược thuộc địa.	B. giao lưu buôn bán.		C. mở rộng thị trường.	D. hợp tác kinh tế. 
+Câu 5. Cho đến cuối thế kỉ XIX, các nước đế quốc chủ nghĩa đã thiết lập hệ thống thuộc địa rộng khắp ở
+A. châu Âu, châu Mỹ và khu vực Tây Âu.			B. châu Âu, châu Úc và khu vực Bắc Mỹ.
+/C. châu Á, châu Phi và khu vực Mỹ La-tinh.			D. châu Mỹ, Tây Âu và khu vực Đông Âu.
+Câu 6. Sự kiện nào sau đây đánh dấu sự mở rộng của chủ nghĩa tư bản ở ngoài châu Âu?
+/A. Chiến tranh giành độc lập của 13 thuộc địa Anh ở Bắc Mỹ.
+B. Phong trào đấu tranh giành độc lập ở khu vực Mỹ La-tinh.
+C. Cuộc vận động thống nhất nước Đức và I-ta-li-a.
+D. Cải cách nông nô ở Nga và cuộc nội chiến ở Mỹ.
+Câu 7. Thuật ngữ: “chủ nghĩa tư bản hiện đại” dùng để chỉ sự phát triển của chủ nghĩa tư bản trong giai đoạn 
+A. trước Chiến tranh thế giới thứ hai.				/B. sau Chiến tranh thế giới thứ hai đến nay.
+C. sau Chiến tranh thế giới thứ nhất đến nay.			D. trước Chiến tranh thế giới thứ nhất.
+Câu 8. Lĩnh vực nào sau đây là tiềm năng phát triển của chủ nghĩa tư bản hiện đại?
+A. Quân sự, văn hóa.	B. Văn hóa – giáo dục.	C. Chính trị, ngoại giao.	/D. Khoa học – công nghệ.
+Câu 9. Nội dung nào sau đây là tiềm năng phát triển của chủ nghĩa tư bản hiện đại?
+/A. Kinh nghiệm quản lí.  B. Liên minh quân sự.	C. Liên kết khu vực.	D. Hợp tác quốc tế.
+Câu 10. Nội dung nào sau đây là thách thức mà chủ nghĩa tư bản hiện đại phải đối mặt?
+A. Sự phát triển mạnh mẽ của khoa học – công nghệ.	B. Sự sáp nhập của các công ty độc quyền lũng đoạn.
+C. Sự vươn lên mạnh mẽ của các nước đang phát triển.	/D. Khủng hoảng kinh tế, tài chính mang tính toàn cầu.
+Câu 11. Nội dung nào sau đây là thách thức mà chủ nghĩa tư bản hiện đại phải đối mặt?
+A. Nguồn nhân công ngày càng cạn kiệt.			B. Giao lưu kinh tế quốc tế ngày càng tăng.
+/C. Mâu thuẫn xã hội ngày càng gia tăng.			D. Sự ra đời các tổ chức liên kết khu vực.
+Câu 12. Nội dung nào sau đây tạo cơ sở cho bước chuyển biến của chủ nghĩa tư bản từ tự do cạnh tranh sang giai đoạn độc quyền?
+A. Quá trình hợp tác ở các nước tư bản.			/B. Sự phát triển của các tổ chức độc quyền.
+C. Nhiều trung tâm kinh tế - tài chính ra đời.			D. Sự ra đời nhiều tổ chức liên kết khu vực.
+Câu 13. Nội dung nào sau đây phản ánh đúng ý nghĩa của Cách mạng Tân Hợi (1911) ở Trung Quốc?
+A. Lật đổ ách thống trị của các nước đế quốc.		B. Xóa bỏ hoàn toàn tàn dư phong kiến lỗi thời.
+/C. Mở đường cho chủ nghĩa tư bản phát triển.		D. Giải quyết triệt để vấn đề ruộng đất cho nông dân.
+Câu 14. Nội dung nào sau đây phản ánh đúng ý nghĩa của Cách mạng Tân Hợi (1911) ở Trung Quốc?
+A. Lật đổ ách thống trị của các nước đế quốc.		B. Xóa bỏ hoàn toàn tàn dư phong kiến lỗi thời.
+/C. Lật đổ chế độ phong kiến tồn tại lâu đời ở Trung Quốc.D. Giải quyết triệt để vấn đề ruộng đất cho nông dân.
+Câu 15. Cuộc Duy Tân Minh Trị (1868) ở Nhật Bản và cuộc cách mạng Tân Hợi (1911) ở Trung Quốc có điểm tương đồng nào sau đây?
+A. Là cuộc cách mạng dân chủ tư sản triệt để.		/B. Là cuộc cách mạng tư sản nhưng không triệt để.
+C. Là những cuộc chiến tranh giải phóng dân tộc.		D. Giải quyết được vấn đề ruộng đất cho nông dân.
+Câu 16. Cuộc Duy Tân Minh Trị (1868) ở Nhật Bản và cuộc cách mạng Tân Hợi (1911) ở Trung Quốc có điểm tương đồng nào sau đây?
+A. Là cuộc cách mạng dân chủ tư sản triệt để.		/B. Mở đường cho chủ nghĩa tư bản phát triển.
+C. Là những cuộc chiến tranh giải phóng dân tộc.		D. Giải quyết được vấn đề ruộng đất cho nông dân.
+Câu 1. Thắng lợi nào sau đây dẫn đến sự ra đời của Nhà nước xã hội chủ nghĩa đầu tiên trên thế giới?
+A. Cách mạng tháng Hai (1917) ở Nga.			/B. Cách mạng tháng Mười Nga (1917).	
+C. Cách mạng Nga năm 1905 - 1907.				D. Công xã Pa-ri năm 1871 ở Pháp.
+Câu 2. Sau Cách mạng tháng Mười Nga, nhiệm vụ hàng đầu của chính quyền Xô viết là
+/A. đập tan bộ máy nhà nước cũ, xây dựng bộ máy nhà nước mới.
+B. hàn gắn vết thương chiến tranh, khôi phục và phát triển kinh tế.
+C. khôi phục và phát triển kinh tế, chống lại thù trong giặc ngoài.
+D. tiến hành công nghiệp hóa, hiện đại hóa tiến lên chủ nghĩa xã hội.
+Câu 3. Sau Cách mạng tháng Mười Nga năm 1917, người đứng đầu Chính quyền Xô viết là
+/A. Lê-nin.	B. Xta-lin.	C. Pu-tin.	D. Goóc-ba-chốp.
+Câu 4. Đại hội Xô viết toàn Nga lần thứ hai, khai mạc đêm 25-10-1917 đã ra tuyên bố
+/A. thành lập chính quyền Xô viết.				B. thông qua sắc lệnh “Hòa bình”.
+C. thông qua sắc lệnh “Ruộng đất”.				D. Thông qua chính sách “Kinh tế mới”.
+Câu 5. Khi mới thành lập, Liên bang Cộng hòa xã hội chủ nghĩa Xô viết gồm 4 nước Cộng hòa là
+/A. Nga, U-crai-na, Bê-lô-rút-xi-a và Ngoại Cáp-ca-dơ.
+B. Nga, Hung-ga-ri, Bê-lô-rút-xi-a và Ngoại Cáp-ca-dơ.
+C. Nga, Hung-ga-ri, Bung-ra-ri và Ngoại Cáp-ca-dơ.
+D. Liên Xô, Hung-ga-ri, Bung-ra-ri và Ngoại Cáp-ca-dơ.
+Câu 6. Theo Hiến pháp (1924) của Liên Xô, ghi nhận việc hợp tác của các nước Cộng hòa Xô viết thành một nhà nước dựa trên cơ sở
+A. thỏa thuận.		/B. tự nguyện.		C. bắt buộc.			D. thương lượng.
+Câu 7. Một trong những tư tưởng chỉ đạo của Lê-nin trong việc thành lập Liên bang Cộng hòa xã hội chủ nghĩa Xô viết năm 1922 là
+/A. sự bình đẳng về mọi mặt.	B. phân biệt về tôn giáo.   C. thống nhất về văn hóa.    D. phân biệt về chủng tộc.
+Câu 8. Một trong những tư tưởng chỉ đạo của Lê-nin trong việc thành lập Liên bang Cộng hòa xã hội chủ nghĩa Xô viết năm 1922 là
+/A. quyền dân tộc tự quyết.	B. phân biệt về tôn giáo.C. thống nhất về văn hóa.	D. phân biệt về chủng tộc
+Câu 9. Nguyên nhân quan trọng dẫn đến thắng lợi của các nước Cộng hòa xã hội chủ nghĩa trên đất nước Xô viết trong cuộc chiến chống thù trong, giặc ngoài là 
+A. sự đoàn kết, giúp đỡ nhau.	B. sự ủng hộ từ bên ngoài.   C. có sức mạnh về ngoại giao. D. có sự ủng hộ của Mỹ.
+Câu 1. Thắng lợi của Hồng quân Liên Xô đã tạo điều kiện cho sự ra đời của nhà nước dân chủ nhân dân ở các nước
+/A. Đông Âu.		B. Tây Âu.		C. Nam Âu.		D. Bắc Âu.
+Câu 2. Năm 1949, quốc gia nào sau đây đã lựa chọn con đường đi lên chủ nghĩa xã hội?
+/A. Trung Quốc	B. Việt Nam.		C. Triều Tiên.		D. Cu-ba.
+Câu 3. Tháng 12-1978, gắn với sự kiện trọng đại nào ở Trung Quốc?
+A. Xây dựng chủ nghĩa xã hội.					B. Xây dựng chủ nghĩa tư bản.
+C. Xây dựng dân giàu, nước mạnh.					/D. Thực hiện cải cách mở cửa.
+Câu 4. Từ năm 1945 đến giữa những năm 70 của thế kỉ XX, quốc gia nào sau đây thực hiện chính sách giúp đỡ các nước xã hội chủ nghĩa?
+A. Anh. 	B. Bru-nây. 	/C. Liên Xô. 							D. Mĩ.
+Câu 5. Năm 2010, quốc gia nào sau đây có nền kinh tế đứng thứ hai thế giới?
+A. Liên Xô. 		B. Nhật Bản.		C. Việt Nam. 		/D. Trung Quốc.
+Câu 6. Trước Chiến tranh thế giới thứ hai, quốc gia nào sau đây đi theo con đường xã hội chủ nghĩa?
+A. Việt Nam.		/B. Liên Xô.		C. Trung Quốc.	D. Cu-ba.
+Câu 7. Miền Bắc Việt Nam tiến lên xây dựng chủ nghĩa xã hội sau thắng lợi của
+/A. cuộc kháng chiến chống thực dân Pháp năm 1954.	B. Hiệp định Pari về Việt Nam được kí kết năm 1973.
+C. cuộc kháng chiến chống Mĩ và tay sai năm 1975.	        D. quá trình thống nhất hai miền Nam – Bắc năm 1976.
+Câu 8. Nguyên nhân cơ bản dẫn tới sự khủng hoảng và sụp đổ của chủ nghĩa xã hội ở Liên Xô và các nước Đông Âu là do
+A. tiến hành cải tổ muộn, gặp khó khăn khi tiến hành cải tổ.
+B. không tiến hành cách mạng khoa học – kĩ thuật hiện đại.
+/C. đường lối lãnh đạo mang tính chủ quan, duy ý chí.
+D. sự chống phá của các thế lực thù địch ở trong nước.
+Câu 9. Nguyên nhân khách quan dẫn đến sự khủng hoảng và sụp đổ của chế độ xã hội chủ nghĩa ở Liên Xô và Đông Âu là 
+/A. sự chống phá của các thế lực thù địch.			B. chưa bắt kịp sự phát triển khoa học – kĩ thuật.
+C. thiếu dân chủ và công bằng xã hội.			D. phạm phải nhiều sai lầm khi cải tổ.
+Câu 10. Trọng tâm của công cuộc cải cách – mở cửa ở Trung Quốc (từ tháng 12 - 1978) là 
+/A. lấy phát triển kinh tế làm trọng tâm.			B. lấy cải tổ chính trị làm trọng tâm.
+C. chú trọng phát triển văn hóa, giáo dục.			D. tập trung cải cách triệt để về kinh tế.
+Câu 11. Một trong những biểu hiện chứng tỏ Liên Xô là thành trì của cách mạng thế giới từ năm 1950 đến nửa đầu những năm 70 của thế kỷ XX là gì?
+/A. Tích cực giúp đỡ các nước xã hội chủ nghĩa.		B. Trực tiếp đối đầu với các cường quốc phương Tây.
+C. Làm phá sản hoàn toàn chiến lược toàn cầu của Mỹ.	D. Thúc đẩy sự hình thành xu thế hợp tác toàn cầu.
+Câu 12. Nội dung nào sau đây phản ánh không đúng đường lối mới trong công cuộc cải cách mở cửa ở Trung Quốc từ năm 1978?
+A. Lấy phát triển kinh tế làm trung tâm.			B. Tiến hành cải cách và mở cửa.
+C. Xây dựng kinh tế thị trường xã hội chủ nghĩa.		/D. Thực hiện đường lối “Ba ngọn cờ hồng”.
+Câu 13. Nội dung nào sau đây phản ánh đúng chính sách đối ngoại của Liên Xô từ năm 1950 đến nửa đầu những năm 70?
+/A. Tích cực, tiến bộ.	B. Hòa bình, trung lập.    C. Hòa hoãn, tích cực.	D. Trung lập, tích cực.
+Câu 14. Điểm giống nhau cơ bản giữa cuộc cải cách mở cửa ở Trung Quốc (1978) và công cuộc đổi mới ở Việt Nam (1986) là gì?
+A. Lấy cải tổ chính trị làm trọng tâm.				/B. Lấy phát triển kinh tế làm trọng tâm.
+C. Chỉ chú trọng phát triển văn hóa, giáo dục.		D. Tập trung cải cách triệt để về kinh tế.
+Câu 1. Từ đầu thế kỉ XVI, các nước phương Tây xâm nhập vào các nước Đông Nam Á thông qua hoạt động
+/A. truyền giáo. 		B. thể thao. 		C. du lịch. 			D. nhân đạo. 
+Câu 2. Từ đầu thế kỉ XVI các nước phương Tây xâm nhập vào các nước Đông Nam Á thông qua hoạt động
+/A. buôn bán. 			B. thể thao. 		C. du lịch.			D. nhân đạo.
+Câu 3. Thực dân phương Tây xâm nhập vào các nước Đông Nam Á thông qua hoạt động
+/A. chiến tranh xâm lược. 	B. hoạt động thể thao.C. quãng bá du lịch.		D. hổ trợ nhân đạo.
+Câu 4. Quá trình xâm lược của thực dân phương Tây vào khu vực Đông Nam Á diễn ra trong bối cảnh chế độ phong kiến ở Đông Nam Á 
+/A. khủng hoảng, suy thoái. 	B. đang được hình thành.	C. ổn định, phát triển.	D. sụp đổ hoàn toàn.
+Câu 5. Quá trình xâm lược của thực dân phương Tây vào khu vực Đông Nam Á diễn ra trong bối cảnh chế độ phong kiến ở Đông Nam Á 
+/A. suy thoái khủng hoảng về chính trị, kinh tế, xã hội.
+B. đang trong giai đoạn bắt đấu mới hình thành.
+C. trong giai đoạn phát triển mạnh về kinh tế, văn hóa.
+D. đạt nhiều thành tựu rực rỡ về khoa học - kĩ thuật.
+Câu 6. Sau cuộc chiến tranh Mỹ - Tây Ban Nha (1898), Phi-lip-pin trở thành thuộc địa của 
+/A. Mỹ.			B. Tây Ban Nha.	C. Bồ Đào Nha.	D. Pháp.
+Câu 7. Về mặt chính trị, sau khi hoàn thành xâm lược Đông Nam Á các nước thực dân phương Tây đã thi hành chính sách
+/A. "chia để trị".	B. "ngu dân".		C. "đồng hóa".		D. "phản phong".
+Câu 8. Quốc gia nào sau đây đã mở đầu cho quá trình xâm lược của thực dân phương Tây vào khu vực Đông Nam Á 
+/A. Bồ Đào Nha.	B. Tây Ban Nha.	C. Anh.		D. Pháp.
+Câu 9. Đến đầu thế kỉ XX, quốc gia nào sau đây ở khu vực Đông Nam Á không trở thành thuộc địa của thực dân phương Tây?
+A. In-đô-nê-xi-a.	/B. Xiêm.		C. Ma-lai-xi-a.	D. Bru-nây.
+Câu 10. Về chính trị, sau khi thiết lập nền thống trị ở Đông Nam Á, thực dân phương Tây đã
+/A. duy trì thế lực phong kiến ở địa phương.			B. sử dụng giai cấp tư sản làm tay sai.
+C. sử dụng chế độ quân chủ lập hiến.				D. đưa giai cấp vô sản lên nắm quyền.
+Câu 11. Các nước Đông Nam Á hải đảo là đối tượng đầu tiên thu hút sự chú ý của thực dân phương Tây vì lí do nào sau đây?
+/A. Giàu tài nguyên, có nguồn nguyên liệu và hàng hóa phong phú. 
+B. Là khu vực có dân số đông nhất và đa dạng về văn hóa, ngôn ngữ.
+C. Là khu vực có tình trạng chính trị không ổn định do bị chia cắt. 
+D. Là khu vực có nhiều thương cảng sầm uất nhưng thiếu sự quản lí.
+Câu 12. Các nước Đông Nam Á hải đảo là đối tượng đầu tiên thu hút sự chú ý của thực dân phương Tây vì lí do nào sau đây?
+/A. Là khu vực nằm trên tuyến đường biển huyết mạch Đông - Tây.
+B. Là khu vực có dân số đông nhất và đa dạng về văn hóa, ngôn ngữ.
+C. Là khu vực có tình trạnh chính trị không ổn định do bị chia cắt. 
+D. Là khu vực có nhiều thương cảng sầm uất nhưng thiếu sự quản lí.
+Câu 13. Nội dung nào sau đây là mục đích của thực dân phương Tây khi thực hiện chính sách “chia để trị” ở Đông Nam Á?
+/A. Làm suy yếu sức mạnh dân tộc của các nước.
+B. Để các nước dể dàng trong việc buôn bán.
+C. Để phát huy sức mạnh của từng quốc gia.
+D. Để đầu tư cho từng nước không bị phân tán.
+Câu 14. Để giữ gìn chủ quyền của đất nước, vua Ra-ma V đặc biệt quan tâm đến chính sách
+A. thể thao.          B. văn hóa.             C. tôn giáo.                       /D. ngoại giao.
+Câu 15. Nội dung nào sau đây không phải là kết quả cuộc cải cách của vua Ra-ma V ở Xiêm?
+/A. Trở thành thuộc địa của thực dân phương Tây.		B. Phát triển theo con đường tư bản chủ nghĩa.
+C. Băng Cốc trở thành trung tâm buôn bán sầm uất.		D. Đất nước giữ được nền độc lập tương đối.
+Câu 16. Xiêm là nước duy nhất ở Đông Nam Á giữ được độc lập tương đối về chính trị vì lí do nào sau đây?
+/A. Do thực hiện đường lối ngoại giao mềm dẻo.                     B. Do Xiêm là nước có tiềm lực mạnh về kinh tế.                   
+C. Xiêm liên minh quân sự chặt chẽ với nước Mỹ.                 D. Xiêm đã tiến hành cuộc cách mạng tư sản sớm.                          
+Câu 17. Nội dung nào sau đây không phải là nguyên nhân dẫn đến thực dân phương Tây tiến hành xâm lược các nước Đông Nam Á ở nửa sau thế kỉ XIX?
+A. Lãnh thổ khá rộng, đông dân.				B. Có nhiều tài nguyên thiên nhiên.
+C. Chế độ phong kiến khủng hoảng.				/D. Đa dạng về dân tộc và tôn giáo. 
+Câu 1. Năm 1920, quốc gia nào sau đây ở khu vực Đông Nam Á thành lập Đảng Cộng sản? 
+/A. In-đô-nê-xi-a.		B. Việt Nam.		C. Ma-lay-xi-a.		D. Thái Lan.
+Câu 2. Năm 1945, quốc gia nào sau đây ở khu vực Đông Nam Á tuyên bố độc lập sớm nhất?
+A. Việt Nam.			/B. In-đô-nê-xi-a.	C. Lào.			D. Thái Lan.
+Câu 3. Năm 1945, quốc gia nào sau đây ở khu vực Đông Nam Á tuyên bố độc lập muộn nhất?
+A. Việt Nam.			B. In-đô-nê-xi-a.	/C. Lào.			D. Thái Lan.
+Câu 4. Từ năm 1954 đến năm 1975, các nước Đông Nam Á đã lần lượt hoàn thành cuộc đấu tranh giành độc lập dân tộc, ngoại trừ
+/A. Bru-nây.			B. Xin-ga-po.		C. Mi-an-ma.			D. Lào.
+Câu 5. Phong trào chống thực dân xâm lược ở các nước Đông Nam Á hải đảo bùng nổ từ rất sớm, tiêu biểu là ở
+A. In-đô-nê-xi-a và Ma-lai-xi-a.				/B. In-đô-nê-xi-a và Phi-líp-pin.
+C. Ma-lai-xi-a và Bru-nây.					D. Xin-ga-po và Việt Nam.
+Câu 6. Quốc gia nào sau đây ở khu vực Đông Nam Á được coi là một trong bốn “con rồng kinh tế” của châu Á?
+A. Việt Nam.			B. Thái Lan.		/C. Xin-ga-po.			D. In-đô-nê-xi-a.
+Câu 7. Từ thế kỉ XVI đến thế kỉ XIX, nhân dân In-đô-nê-xi-a nổi dậy đấu tranh chống lại ách cai trị của thực dân nào sau đây?
+A. Anh.	B. Pháp.	C. Tây Ban Nha.	/D. Hà Lan.
+Câu 8. Trong những năm cuối thế kỉ XIX - đầu thế kỉ XX, nhân dân Lào nổi dậy đấu tranh chống lại ách cai trị của thực dân 
+A. Anh.	/B. Pháp.	C. Ban Nha.		D. Hà Lan.
+Câu 9. Quốc gia nào sau đây ở khu vực Đông Nam Á tận dụng thời cơ Nhật Bản đầu hàng Đồng minh không điều kiện (tháng 8-1945) để tiến hành giành độc lập?
+A. Mi-an-ma, Lào, Thái Lan.					B. In-đô-nê-xi-a, Phi-líp-pin, Lào.
+C. Thái Lan, Việt Nam, Cam-pu-chia				/D. In-đô-nê-xi-a, Việt Nam, Lào.
+Câu 10. Cuối thế kỉ XIX - đầu thế kỉ XX, phong trào giải phóng dân tộc theo xu hướng tư sản ở khu vực Đông Nam Á diễn ra sớm nhất ở
+A. Việt Nam, Campuchia, Lào.				B. Thái Lan, Việt Nam, Lào.
+/C. In-đô-nê-xi-a, Mi-an-ma, Phi-lip-pin.			D. Phi-lip-pin, Thái Lan, Việt Nam.
+Câu 11. Trong những năm cuối thế kỉ XIX - đầu thế kỉ XX, nhân dân Việt Nam nổi dậy đấu tranh chống lại ách cai trị của thực dân
+A. Anh.		/B. Pháp.			C. Tây Ban Nha.		D. Hà Lan.
+Câu 12. Sự hình thành khuynh hướng vô sản trong phong trào đấu tranh giành độc lập dân tộc ở Đông Nam Á gắn liền với sự ra đời và phát triển của giai cấp 
+A. nông dân.		/B. công nhân.			C. tư sản.			D. địa chủ.
+Câu 13. Nội dung nào sau đây phản ánh đúng quá trình chuyển biến của cách mạng ở khu vực Đông Nam Á từ cuối thế kỉ XIX đến năm 1920?
+A. đấu tranh chính trị sang đấu tranh vũ trang giành chính quyền.
+B. đấu tranh vũ trang sang đấu tranh chính trị giành độc lập dân tộc.
+/C. đấu tranh chống xâm lược sang đấu tranh giành độc lập dân tộc
+D. đấu tranh giành độc lập dân tộc sang đấu tranh giành chính quyền.
+Câu 14. Lực lượng lãnh đạo nòng cốt trong phong trào đấu tranh chống thực dân Anh ở Mi-an-ma vào đầu thế kỉ XX là
+/A. các vị cao tăng và trí thức.					B. công nhân và tư sản dân tộc.
+C. nông dân và địa chủ phong kiến.				D. các lực lượng phong kiến địa phương.
+Câu 1. Nguyên nhân quyết định làm cho thực dân Pháp không thực hiện được âm mưu đánh nhanh thắng nhanh trong quá trình xâm lược Việt Nam (1858 - 1884)?
+A. Quân Pháp từ xa đến, không quen khí hậu, địa hình Việt Nam.
+B. Quan quân triền Nguyễn có chiến thuật đánh Pháp độc đáo.
+C. Triều đình nhà Nguyễn kiên định lãnh đạo nhân dân kháng chiến.
+/D. Pháp vấp phải sự kháng cự quyết liệt của nhân dân Việt Nam.
+Câu 2. Trong cuộc kháng chiến chống Tống (1075-1077), quân và dân nhà Lý đã giành được thắng lợi nào sau đây?
+A. Chiến thắng Rạch Gầm-Xoài Mút.			B. Chiến thắng Ngọc Hồi-Đống Đa.
+/C. Chiến thắng trên sông Như Nguyệt.			D. Chiến thắng Tây Kết, Hàm Tử.
+Câu 3. Trong cuộc kháng chiến chống quân Xiêm (1785), nghĩa quân Tây Sơn đã giành được thắng lợi nào sau đây?
+/A. Chiến thắng Rạch Gầm-Xoài Mút.			B. Chiến thắng Ngọc Hồi-Đống Đa.
+C. Chiến thắng trên sông Như Nguyệt.			D. Chiến thắng Tây Kết, Hàm Tử.
+Câu 4. Trong cuộc kháng chiến chống quân Thanh (1789), nghĩa quân Tây Sơn đã giành được thắng lợi nào sau đây?
+A. Chiến thắng Rạch Gầm-Xoài Mút.			/B. Chiến thắng Ngọc Hồi-Đống Đa.
+C. Chiến thắng trên sông Như Nguyệt.			D. Chiến thắng Tây Kết, Hàm Tử.
+Câu 5. Trong cuộc kháng chiến chống quân Mông - Nguyên (1258-1288), quân và dân nhà Trần đã giành được thắng lợi nào sau đây?
+A. Chiến thắng Rạch Gầm-Xoài Mút.			B. Chiến thắng Ngọc Hồi-Đống Đa.
+C. Chiến thắng trên sông Như Nguyệt.			/D. Chiến thắng Tây Kết, Hàm Tử.
+Câu 6. Sau cuộc tập kích trên đất nhà Tống, Lý Thường Kiệt nhanh chóng rút quân về nước để
+A. chuẩn bị lực lượng tiến công tiếp.				B. kêu gọi Chăm-pa cùng đánh Tống.
+/C. chuẩn bị phòng tuyến chặn giặc.				D. kêu gọi nhân dân rút lui, sơ tán.
+Câu 7. Thắng lợi của ba lần kháng chiến chống quân xâm lược Mông- Nguyên ở thế kỉ XIII gắn liền với sự lãnh đạo của vương triều nào?
+A. Nhà Tiền Lê.	B. Nhà Lý.	/C. Nhà Trần.	D. Nhà Hồ.
+Câu 8. Trong suốt quá trình lịch sử, dân tộc Việt Nam luôn phải đối phó với nhiều thế lực ngoại xâm và tiến hành nhiều cuộc chiến tranh bảo vệ Tổ quốc vì một trong những lí do nào sau đây?
+/A. Là quốc gia có vị trí địa chiến lược quan trọng.	B. Được xem là cái nôi của văn minh nhân loại.
+C. Là trung tâm văn hóa bật nhất phương Đông.	D. Là một quốc gia chưa có độc lập, chủ quyền.
+Câu 9. Trong suốt quá trình lịch sử, dân tộc Việt Nam luôn phải đối phó với nhiều thế lực ngoại xâm và tiến hành nhiều cuộc chiến tranh bảo vệ Tổ quốc vì một trong những lí do nào sau đây?
+/A. Có tài nguyên phong phú, dân cư đông đúc.	B. Được xem là cái nôi của văn minh nhân loại.
+C. Là trung tâm văn hóa bật nhất phương Đông.	D. Là một quốc gia chưa có độc lập, chủ quyền.
+Câu 10. Trong suốt tiến trình lịch sử, chiến tranh bảo vệ Tổ quốc của nhân dân Việt Nam có vai trò nào sau đây?
+A. Góp phần định hình bản sắc văn hóa dân tộc Việt.	B. Củng cố vị thế cường quốc kinh tế của Việt Nam.
+C. Khẳng định Việt Nam là cường quốc về quân sự.		/D. Góp phần bảo vệ vững chắc nền độc lập dân tộc.
+Câu 11. Trong lịch sử Việt Nam, chiến tranh bảo vệ Tổ quốc có vai trò quyết định đối với
+/A. sự sinh tồn và phát triển của dân tộc Việt Nam.		B. chính sách đối nội, đối ngoại của đất nước.
+C. chiều hướng phát triển kinh tế của đất nước.		D. tình hình văn hóa - xã hội của quóc gia.
+Câu 12. Trong suốt tiến trình lịch sử, chiến tranh bảo vệ Tổ quốc của nhân dân Việt Nam có ý nghĩa 
+A. góp phần định hình bản sắc văn hóa truyền thống dân tộc.
+B. tạo điều kiện cho Việt Nam hội nhập với quốc tế sâu rộng.
+C. khẳng định Việt Nam là cường quốc về quân sự, kinh tế.
+/D. hình thành và nâng cao lòng tự hào, ý thức tự cường dân tộc.
+Câu 13. Trong suốt tiến trình lịch sử, chiến tranh bảo vệ Tổ quốc của nhân dân Việt Nam có ý nghĩa 
+A. góp phần định hình bản sắc văn hóa truyền thống dân tộc.
+B. tạo điều kiện cho Việt Nam hội nhập với quốc tế sâu rộng.
+C. khẳng định Việt Nam là cường quốc về quân sự, kinh tế.
+/D. tô đậm những truyền thống tốt đẹp của dân tộc Việt Nam.
+Câu 14. Cuộc kháng chiến chống Pháp của nhân dân Việt Nam (1858-1884) thất bại vì lí do chủ yếu nào sau đây? 
+A. Nhân dân Việt Nam không có tinh thần yêu nước.
+/B. Hạn chế về giai cấp lãnh đạo và đường lối đấu tranh.
+C. Quân Pháp luôn huy động lực lượng áp đảo, vũ khí mạnh.
+D. Phong trào đấu tranh của nhân dân diễn ra chưa sôi nổi.
+Câu 15. Cuộc kháng chiến chống Pháp của nhân dân Việt Nam (1858-1884) thất bại vì lí do chủ yếu nào sau đây? 
+A. Nhân dân Việt Nam không có tinh thần yêu nước.
+/B. Triều đình nhà Nguyễn không quyết tâm chống giặc.
+C. Quân Pháp luôn huy động lực lượng áp đảo, vũ khí mạnh.
+D. Phong trào đấu tranh của nhân dân diễn ra chưa sôi nổi.
+Câu 16. Kế sách nào của Ngô Quyền đã được quân dân nhà Tiền Lê kế thừa, vận dụng để đánh đuổi quân Tống xâm lược (981)?
+A. Tiên phát chế nhân.    B. Đánh thành diệt viện.  C. Vườn không nhà trống. /D. Đóng cọc trên sông Bạch Đằng.
+Câu 17. Vào thế kỷ XI, Lý Thường Kiệt chọn khúc sông Như Nguyệt làm phòng tuyến chặn quân Tống xâm lược vì dòng sông này
+A. nằm ở ven biển có thể chặn giặc từ biển vào.		B. là biên giới tự nhiên ngăn cách Đại Việt và Tống.
+/C. chặn ngang con đường bộ để tiến vào Thăng Long.	D. là con đường thủy duy nhất để tiến vào Đại Việt.
+ 
+
+
+
+
+    `
+    function replaceLinksToImages(text) {
+      // Regex pattern to match image URLs
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // Replace URLs with <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_lsck111', inputElement.value);
+    });
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_lsck111');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          ${questionAnswers.join('\n')}
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#eedd00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      element.parentNode.classList.add("highlight-animation");
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+  </script>
+</body>
+</html>
