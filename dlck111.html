@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      70% {
+        color: red;
+      }
+    }
+    timer {
+      animation: warning 2s infinite;
+    }
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <textarea disabled id="text" placeholder="..."></textarea>
+
+    <div class="centered">
+      <!--button onclick="pasteFromClipboard()">Dán</button-->
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+      </div>
+      <br>
+      <button onclick="run()">Bắt đầu</button>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <h2 style="color: green">Good Luck!</h2>
+    <div class="container" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+
+Câu 1. Khu vực Mỹ Latinh gồm
+A. Mê-hi-cô, Trung và Bắc Mỹ, các quần đảo trong vịnh Ca-ri-bê.
+/B. Mê-hi-cô, Trung và Nam Mỹ, các quần đảo trong vịnh Ca-ri-bê.
+C. Mê-hi-cô, Trung và Nam Mỹ, quần đảo Ăng-ti, kênh đào Xuy-ê.
+D. Mê-hi-cô, Trung và Bắc Mỹ, kênh đào Xuy-ê và kênh Pa-na-ma.
+Câu 2. Nhận định nào sau đây thể hiện đặc điểm dân số của Khu vực Mỹ Latinh?
+A. Dân số ít, cơ cấu dân số rất già.                B. Gia tăng dân số rất cao, dân trẻ.
+/C. Dân số đông, cơ cấu dân số trẻ.                D. Gia tăng dân số rất nhỏ, dân già.
+Câu 3. Do đô thị hóa tự phát nên dân đô thị ở khu vực Mỹ Latinh
+A. ổn định việc làm, không gian cư trú rộng, thu nhập rất thấp.
+/B. thất nghiệp đông, thu nhập thấp, môi trường sống không tốt.
+C. chủ yếu là làm thuê, mức sống thấp, điều kiện sống khá tốt.
+D. thiếu việc làm, dân trí thấp, thu nhập khá tốt và rất ổn định.
+Câu 4. Phát biểu nào sau đây không đúng về kinh tế khu vực Mỹ Latinh?
+A. Tổng GDP của toàn khu vực ở mức thấp.   B. Chênh lệch GDP giữa các nước rất nhiều.
+C. Nhiều nước mang nợ nước ngoài rất cao.    /D. Tốc độ tăng trưởng GDP ở mức độ nhanh.
+Câu 5. Tốc độ phát triển GDP của Mỹ Latinh không đều qua các năm chủ yếu do
+/A. tình hình chính trị thường xuyên bất ổn định.   B. thị trường thế giới thường xuyên biến động.
+C. nguồn tài nguyên đang ngày càng cạn kiệt.       D. nguồn lao động kĩ thuật cao không bổ sung.
+Câu 6. Hình thức tổ chức sản xuất nông nghiệp ở khu vực Mỹ Latinh là
+A. hộ gia đình. 	B. hợp tác xã.                 /C. trang trại.      D. vùng nông nghiệp.
+Câu 7. Khu vực Mỹ Latinh có phía tây giáp với
+/A. Thái Bình Dương. 	                                     B. Ấn Độ Dương.
+C. Đại Tây Dương. 		D. Nam Đại Dương.
+Câu 8. Mỹ Latinh có nền văn hóa độc đáo chủ yếu do
+/A. có nhiều thành phần dân tộc. 	B. có người bản địa và da đen.
+C. nhiều quốc gia nhập cư đến. 	D. nhiều lứa tuổi cùng hòa hợp.
+Câu 9. Các ngành kinh tế chủ đạo ở Mỹ Latinh là
+A. khai khoáng, chế tạo máy và du lịch.            B. trồng trọt, chăn nuôi và khai khoáng.
+C. đánh cá, du lịch, nuôi trồng thủy sản.           /D. khai khoáng, nông nghiệp và du lịch.
+Câu 10. Cho bảng số liệu: CƠ CẤU KINH TẾ BRA-XIN NĂM 2000 VÀ NĂM 2019 (Đơn vị: %) <table><tr><th>Năm</th><th>Nông nghiệp</th><th>Công nghiệp</th><th>Dịch vụ</th><th>Thuế sản phẩm</th></tr><tr><td>2000</td><td>4.8</td><td>23.0</td><td>58.3</td><td>13.9</td></tr><tr><td>2019</td><td>5.9</td><td>17.7</td><td>62.9</td><td>13.5</td></tr></table>(Nguồn: WB, 2022) Theo bảng số liệu, loại biểu đồ nào sau đây thích hợp nhất thể hiện cơ cấu kinh tế của Bra-xin năm 2000 và năm 2019?
+A. Cột. 	B. Đường. 	/C. Tròn. 	D. Miền.
+
+
+Câu 1. Hội đồng Châu Âu chính thức đổi tên thành Liên Minh Châu Âu vào năm
+A. 1999                        B. 1992                   /C. 1993                   D. 1995
+Câu 2. Cho bảng số liệu: GIÁ TRỊ XUẤT, NHẬP KHẨU HÀNG HÓA VÀ DỊCH VỤ CỦA EU, GIAI ĐOẠN 2005-2021 Đơn vị: tỉ USD <table><tr><th>Năm</th><th>2005</th><th>2010</th><th>2015</th><th>2021</th></tr><tr><td>Xuất khẩu</td><td>4458</td><td>5865</td><td>6382</td><td>8670.6</td></tr><tr><td>Nhập khẩu</td><td>4271</td><td>5633</td><td>5789</td><td>8016.6</td></tr></table> (Nguồn Ngân hàng thế giới, 2022)Theo bảng số liệu, để thể hiện tốc độ tăng trưởng giá trị xuất, nhập khẩu hàng hóa và dịch vụ của EU giai đoạn 2005 – 2021, dạng biểu đồ nào sau đây là thích hợp nhất?
+A. Tròn. 	/B. Đường. 	C. Miền.	D. Cột.
+Câu 3. Nhận xét nào sau đây không đúng với ý nghĩa của liên kết vùng?
+A. Người dân được lựa chọn quốc gia trong vùng để làm việc.
+B. Người dân được nhận thông tin báo chí bằng ngôn ngữ của mỗi nước.
+C. Sinh viên các nước trong vùng có thể theo học những khóa đào tạo chung.
+/D. Các con đường xuyên biên giới không được xây dựng.
+Câu 4. Mục đích của EU là
+/A. cùng nhau thúc đẩy phát triển sự thống nhất châu Âu.
+B. ngăn chặn nguy cơ xung đột giữa các dân tộc, tôn giáo.
+C. cùng nhau hạn chế các dòng nhập cư trái phép xảy ra.
+D. bảo vệ an ninh, phòng chống nguy cơ biến đổi khí hậu.
+Câu 5. Việc sử dụng đồng tiền chung (ơ-rô) trong EU có vai trò
+/A. nâng cao sức cạnh tranh của thị trường chung châu Âu.
+B. làm tăng rủi ro khi chuyển đổi tiền tệ.
+C. làm cho việc chuyển giao vốn trong EU trở nên khó khăn hơn.
+D. công tác kế toán của các doanh nghiệp đa quốc gia trở nên phức tạp.
+Câu 6. Một chiếc máy bay do Pháp sản xuất khi xuất khẩu sang Hà Lan mà không cần nộp thuế giá trị gia tăng là biểu hiện của
+A. tự do di chuyển.	B. tự do lưu thông tiền vốn.
+C. tự do lưu thông dịch vụ.	/D. tự do lưu thông hàng hóa.
+Câu 7. Nguyên nhân nào sau đây là đúng nhất trong việc phát triển các liên kết vùng?
+A. Thực hiện chung các dự án về giáo dục.
+B. Thực hiện chung các dự án về văn hóa.
+/C. Tận dụng những lợi thế riêng của mỗi nước.
+D. Tăng cường tình đoàn kết hữu nghị giữa các nước.
+Câu 8. Tổng số các nước thành viên của EU hiện nay (2020) là
+A. 25.             B. 26.                   /C. 27.                             D. 28.
+Câu 9. Trụ sở hiện nay của liên minh châu Âu được đặt ở
+/A. Brucxen (Bỉ).	B. Béc- lin (Đức).        C. Pari (Pháp).      D. Matxcova (Nga).
+Câu 10. Mục tiêu của EU là
+A. tạo ra môi trường cho sự tự do lưu thông con người, dịch vụ, hàng hóa, tiền tệ.
+/B. xây dựng, phát triển một khu vực có sự hòa hợp về kinh tế, chính trị và xã hội.
+C. cùng liên kết về kinh tế, luật pháp, an ninh và đối ngoại, môi trường, giáo dục.
+D. góp phần vào việc duy trì hòa bình và an ninh thế giới, chống biến đổi khí hậu.
+Câu 11. Thương mại của EU được tăng cường chủ yếu do
+/A. hình thành một liên kết kinh tế và tiền tệ.      B. hợp tác và đầu tư phát triển bền vững.
+C. sử dụng đồng tiền chung Ơ-rô.                       D. hợp tác trong chính sách đối ngoại.
+Câu 12. Cơ quan có quyền quyết định cao nhất ở EU là
+A. Hội đồng bộ trường châu Âu.                       B. Ủy ban châu Âu.
+C. Nghị viện châu Âu.                                       /D. Hội đồng châu Âu.
+Câu 13. Cơ quan đặt ra các định hướng chung ở EU là
+A. Hội đồng bộ trưởng châu Âu.                       B. Ủy ban châu Âu.
+C. Nghị viện châu Âu.                                       /D. Hội đồng châu Âu.
+Câu 14. Cơ quan đưa ra các định hướng trong từng lĩnh vực cụ thể ở EU là
+/A. Hội đồng bộ trưởng châu Âu.                   B. Ủy ban châu Âu.
+C. Nghị viện châu Âu.                                   D. Hội đồng châu Âu.
+Câu 15. Cơ quan nào sau đây tham vấn các quyết định của Hội đồng Bộ trưởng EU?
+A. Cơ quan kiểm toán.                     B. Ủy ban liên minh châu Âu.
+/C. Nghị viện châu Âu.                     D. Tòa án châu Âu.
+Câu 16. Phát biểu nào sau đây không đúng với mục đích của EU?
+A. Xây dựng, phát triển một khu vực tự do lưu thông hàng hóa, dịch vụ.
+B. Xây dựng, phát triển một khu vực tự do lưu thông con người, tiền vốn.
+C. Xây dựng, phát triển một khu vực liên kết kinh tế, luật pháp.
+/D. Xây dựng, phát triển một khu vực có sức mạnh kinh tế, quân sự.
+Câu 17. Ở Liên minh châu Âu (EU), một luật sư người Italia có thể làm việc ở Béc - lin như một luật sư Đức là biểu hiện của
+/A. tự do di chuyển.	B. tự do lưu thông tiền vốn.
+C. tự do lưu thông dịch vụ.	D. tự do lưu thông hàng hóa.
+Câu 18. Tự do lưu thông tiền vốn trong EU không phải là việc
+A. bãi bỏ các rào cản đối với giao dịch thanh toán.
+B. các nhà đầu tư có thể chọn nơi đầu tư có lợi nhất.
+C. nhà đầu tư mở tài khoản tại các nước EU khác.
+/D. bỏ thuế giá trị gia tăng hàng hóa của mỗi nước.
+Câu 19. Phát biểu nào sau đây không đúng với thị trường chung châu Âu?
+A. Quyền tự do đi lại, cư trú, chọn nghề của mọi công dân được đảm bảo.
+/B. Các hạn chế đối với giao dịch thanh toán ngày càng được tăng cường.
+C. Các nước có chính sách thương mại chung buôn bán với ngoài khối.
+D. Sản phẩm mỗi nước được tự do buôn bán trong toàn thị trường chung.
+Câu 20. Tự do di chuyển bao gồm tự do
+A. cư trú và dịch vụ kiểm toán.                    B. đi lại, cư trú, dịch vụ vận tải.
+/C. cư trú, lựa chọn nơi làm việc.                  D. đi lại, dịch vụ thông tin liên lạc.
+Câu 21. Tự do lưu thông hàng hóa là
+A. tự do đi lại, cư trú, lựa chọn nơi làm việc.
+B. tự do đối với các dịch vụ vận tải, du lịch.
+C. Bãi bỏ các hạn chế đối với giao dịch thanh toán.
+/D. Hàng hóa các nước không thuế giá trị gia tăng.
+Câu 22. Tự do lưu thông dịch vụ trong EU không bao gồm tự do đối với các dịch vụ
+A. giao thông vận tải.                     B. thông tin liên lạc.
+/C. chọn nơi làm việc.                     D. ngân hàng, du lịch.
+Câu 23. Tự do lưu thông tiền vốn trong EU không phải là việc
+A. bãi bỏ các rào cản đối với giao dịch thanh toán.
+B. các nhà đầu tư có thể chọn nơi đầu tư lợi nhất.
+C. nhà đầu tư mở tài khoản tại các nước EU khác.
+/D. bỏ thuế giá trị gia tăng hàng hóa của mỗi nước.
+Câu 24. Ý nghĩa của thị trường chung EU không phải là
+A. kích thích cạnh tranh và thương mại.            B. nâng cao chất lượng và hạ giá thành.
+C. góp phần thúc đẩy tăng trưởng kinh tế.        /D. tạo mức sống của người dân đồng đều.
+Câu 25. Ý nghĩa to lớn của việc hình thành thị trường chung châu Âu không phải là
+A. thuận lợi cho lưu thông hàng hóa.            B. giảm chi phí về cước phí vận tải.
+/C. tạo thống nhất về thể chế chính trị.           D. dễ dàng tìm việc làm ở nước khác.
+Câu 26. Phát biểu nào sau đây không đúng về đồng tiền chung (đồng ơ-rô) của EU?
+A. Có vị trí cao trong giao dịch quốc tế.          B. Đồng tiền dự trữ chính thức quốc tế.
+C. Tác động đến tiền tệ các nước khác.           /D. Tất cả thành viên EU đã dùng chung.
+Câu 27. Đồng tiền chung của châu Âu (đồng ơ-rô) được chính thức đưa vào giao dịch thanh toán từ năm nào?
+A. 1997.             B. 1998.                       /C. 1999.                      D. 2000.
+Câu 28. Phát biểu nào sau đây không đúng về EU?
+/A. Có diện tích và quy mô dân số chiếm hơn 2/3 châu Âu.
+B. Là tổ chức liên kết khu vực có thể chế hoạt động riêng.
+C. Đã có thị trường chung với sự di chuyển tự do hàng hóa.
+D. Đã có nhiều nước trong khu vực dùng đồng tiền chung.
+Câu 29. Phát biểu nào sau đây đúng với EU?
+A. Tổng thu nhập quốc gia (GDP) nhỏ hơn Hoa Kỳ.
+B. Dân số đông đứng vào loại hàng đầu của thế giới.
+C. Có số nước thành viên ở vào loại thứ hai thế giới.
+/D. Là tổ chức khu vực kinh tế dùng đồng tiền chung.
+Câu 30. EU đứng đầu thế giới về tỉ trọng trong
+A. viện trợ phát triển thế giới.                        B. sản xuât ô tô thế giới,
+/C. xuất khẩu của thế giới.                               D. tiêu thụ năng lượng thế giới.
+Câu 31. Liên minh châu Âu (EU)
+/A. xuất khẩu, nhập khẩu hàng hóa và dịch vụ lớn nhất thế giới.
+B. nhập khẩu chủ yếu máy bay, điện tử, dược phẩm, nông sản.
+C. xuất khẩu chủ yếu mặt hàng dầu, khí đốt tự nhiên, uranium.
+D. hầu hết buôn bán với các nước Đông Nam Á và ở châu Phi.
+Câu 32. Đối với thị trường nội địa, các nước thuộc EU đã
+A. kí kết các hiệp định thương mại tự do.         B. tăng thuế quan và kiểm soát biên giới.
+C. áp dụng cùng một mức thuế hàng hóa.        /D. dỡ bỏ các rào cản đối với thương mại.
+Câu 33. Phát biểu nào sau đây không đúng với thương mại của EU?
+A. Kinh tế các nước phụ thuộc nhiều vào xuất, nhập khẩu.
+B. EU là bạn hàng lớn nhất của các nước đang phát triển.
+/C. Không cổ động cho hoạt động tự do buôn bán thế giới.
+D. Các nước đã bỏ hàng rào thuế quan buôn bán với nhau.
+Câu 34. Hoạt động nào sau đây không thể hiện sự hợp tác trong sản xuất và dịch vụ của EU?
+A. Cùng hợp tác sản xuất máy bay E-bớt.    B. Đường hầm giao thông dưới biển Măng-sơ.
+C. Dùng đồng tiền chung của EU.               /D. Tự do đi lại, cư trú, lựa chọn nơi làm việc.
+Câu 35. Phát triển liên kết vùng ở châu Âu không thực hiện các hoạt động về
+A. kinh tế.                  /B. chính trị.                     C. xã hội.                      D. văn hóa.
+Câu 36. Hoạt động nào sau đây không thực hiện trong liên kết vùng?
+A. Đi sang nước láng giềng làm việc trong ngày. B. Xuất bản phẩm với nhiều thứ tiếng khác nhau.
+C. Nhiều trường học tổ chức khoá đào tạo chung. /D. Tổ chức các hoạt động chính trị ở trong vùng.
+Câu 37. Phát biểu nào sau đây không đúng với EU?
+A. Là liên kết khu vực có nhiều quốc gia nhất thế giới.
+B. Là một trung tâm kinh tế lớn trên thế giới.
+/C. Là lãnh thổ có sự phát triển đồng đều giữa các vùng.
+D. Là tổ chức thương mại hàng đầu thế giới.
+Câu 1. Khu vực Đông Nam Á nằm ở
+/A. phía đông nam châu Á. 				B. giáp với Đại Tây Dương.
+C. giáp lục địa Ô-xtrây-li-a. 				D. phía bắc nước Nhật Bản.
+Câu 2. Về tự nhiên, có thể xem Đông Nam Á gồm hai bộ phận.
+/A. lục địa và biển đảo. 					B. đảo và quần đảo.
+C. lục địa và biển. 					D. biển và các đảo.
+Câu 3. Phát biểu nào sau đây không đúng về Đông Nam Á?
+A. Là nơi giao thoa giữa các nền văn hóa lớn.   B. Là nơi các cường quốc muốn gây ảnh hưởng.
+C. Vị trí cầu nối lục địa Á - Âu và Ô-xtrây-li-a. /D. Nằm ở trên vành đai lửa Thái Bình Dương.
+Câu 4. Đặc điểm tự nhiên của Đông Nam Á lục địa là có
+/A. nhiều dãy núi hướng tây bắc - đông nam. 		B. nhiều đồi, núi và núi lửa; ít đồng bằng.
+C. đồng bằng với đất từ dung nham núi lửa. 		D. khí hậu nhiệt đới gió mùa và xích đạo.
+Câu 5. Tự nhiên Đông Nam Á biển đảo không có
+/A. nhiều dãy núi hướng tây bắc - đông nam. 		B. nhiều đồi, núi và núi lửa; ít đồng bằng.
+C. đồng bằng với đất từ dung nham núi lửa. 		D. khí hậu nhiệt đới gió mùa và xích đạo.
+Câu 6. Đặc điểm tự nhiên của Đông Nam Á biển đảo là có
+A. địa hình bị chia cắt mạnh bởi các dãy núi.     B. hướng các dãy núi chủ yếu tây bắc - đông nam.
+C. các đồng bằng phù sa do sông lớn bồi đắp nên.  /D. nhiều quần đảo và hàng vạn đảo lớn, nhỏ.
+Câu 7. Tự nhiên của Đông Nam Á lục địa không có
+A. địa hình bị chia cắt mạnh bởi các dãy núi.    B. hướng các dãy núi chủ yếu tây bắc - đông nam.
+C. các đồng bằng phù sa do sông lớn bồi đắp nên.  /D. nhiều quần đảo và hàng vạn đảo lớn, nhỏ.
+Câu 8. Điểm giống nhau về tự nhiên của Đông Nam Á lục địa và Đông Nam Á biển đảo là đều có
+/A. khí hậu nhiệt đới gió mùa. 				B. nhiều đồng bằng phù sa lớn.
+C. các sông lớn hướng bắc nam. 			D. các dãy núi và thung lũng rộng.
+Câu 9. Tự nhiên Đông Nam Á biển đảo khác với Đông Nam Á lục địa ở đặc điểm có
+/A. khí hậu xích đạo. 					B. các dãy núi.
+C. các đồng bằng. 					D. đảo, quần đảo.
+Câu 10. Tự nhiên Đông Nam Á lục địa khác với Đông Nam Á biển đảo ở đặc điểm có
+/A. mùa đông lạnh. 	B. mùa hạ mưa. 	C. các đồng bằng. 	D. đảo, quần đảo.
+Câu 11. Phát biểu nào sau đây không đúng với tự nhiên Đông Nam Á lục địa?
+A. Địa hình bị chia cắt mạnh bởi các dãy núi. 	B. Có nhiều địa điểm núi ăn lan ra sát biển.
+C. Có các đồng bằng do sông lớn bồi đắp. 		/D. Có đảo và quần đảo nhiều nhất thế giới.
+Câu 12. Phát biểu nào sau đây đúng với tự nhiên Đông Nam Á biển đảo?
+A. Địa hình bị chia cắt mạnh bởi các dãy núi. 	B. Có nhiều địa điểm núi ăn lan ra sát biển.
+C. Có các đồng bằng do sông lớn bồi đắp. 		/D. Có đảo và quần đảo nhiều nhất thế giới.
+Câu 13. Đông Nam Á lục địa chủ yếu có khí hậu
+/A. nhiệt đới gió mùa, cận xích đạo. 			B. cận xích đạo, xích đạo.
+C. xích đạo, nhiệt đới gió mùa. 				D. nhiệt đới gió mùa, ôn đới.
+Câu 14. Đông Nam Á biển đảo chủ yếu có khí hậu
+A. nhiệt đới gió mùa, cận xích đạo. 			B. cận xích đạo, xích đạo.
+/C. xích đạo, nhiệt đới gió mùa. 				D. nhiệt đới gió mùa, ôn đới.
+Câu 15. Điều kiện thuận lợi để phát triển nông nghiệp ở Đông Nam Á không phải chủ yếu là
+A. khí hậu nóng ẩm. 					B. đất trồng đa dạng,
+C. sông ngòi dày đặc. 					/D. địa hình nhiều núi.
+Câu 16. Khu vực Đông Nam Á là cầu nối giữa lục địa Á – Âu và
+/A. Ô-xtrây-li-a.	B. Bắc Mĩ.	C. Nam Mĩ.	D. Bắc Phi.
+Câu 17. Phần lớn Đông Nam Á lục địa có kiểu khí hậu
+/A. nhiệt đới gió mùa.           B. cận xích đạo.        C. xích đạo.         D. cận nhiệt đới.
+Câu 18. Lợi thế chủ yếu để Đông Nam Á phát triển công nghiệp chế biến thực phẩm là
+/A. nguồn nguyên liệu và lao động.	   B. cơ sở hạ tầng và nguồn lao động.
+C. khoáng sản và nguồn lao động.	  D. lao động kĩ thuật và nguyên liệu.
+Câu 19. Thành tựu có ý nghĩa lớn về chính trị – xã hội mà ASEAN đạt được là
+A. chất lượng, thể lực lao động ngày càng tăng.	    B. kinh tế phát triển năng động, với tốc độ cao.
+/C. tạo dựng được môi trường hòa bình, ổn định.	    D. cơ sở hạ tầng phát triển, lối sống tích cực.
+Câu 20. Cơ cấu kinh tế ở các nước Đông Nam Á có sự chuyển dịch
+/A. Nông nghiệp sang công nghiệp và dịch vụ.
+B. Nông nghiệp sang công nghiệp, công nghiệp sang dịch vụ
+C. Nông nghiệp giảm, tăng công nghiệp và xây dựng.
+D. Nông nghiệp, công nghiệp giảm tăng dịch vụ.
+Câu 21. Đất chủ yếu của vùng đồi núi ở Đông Nam Á là
+/A. đất feralit.	B. đất phù sa.	C. đất phèn.	D. đất cát biển.
+Câu 22. Việc giao lưu kinh tế của các nước Đông Nam Á gặp khó khăn chủ yếu là do
+/A. địa hình bị chia cắt mạnh.	B. chế độ chính trị khác biệt.
+C. văn hóa có nhiều khác biệt.	D. lãnh thổ vô cùng rộng lớn.
+Câu 23. Hoạt động khai thác thủy sản phát triển ở khu vực Đông Nam Á chủ yếu do
+/A. nhiều quốc gia tiếp giáp với biển.	B. vị trí trong vùng nội chí tuyến.
+C. nhiều quốc gia có dân số rất đông.	D. mạng lưới sông ngòi dày đặc.
+Câu 24. Đặc điểm nào sau đây không đúng khi nói về đặc điểm tự nhiên của Đông Nam Á lục địa?
+A. Địa hình bị chia cắt mạnh bởi các dãy núi.
+B. Ven biển có các đồng bằng phù sa màu mỡ, rộng lớn.
+C. Có nhiều sông lớn như sông Mê Công..
+/D. Ít đồng bằng, nhiều đồi, núi và núi lửa.
+Câu 25. Quốc gia duy nhất nằm trong khu vực Đông Nam Á chưa gia nhập ASEAN
+A. Campuchia                     /B. Đông Timor	              C.Myanmar                D. Lào.
+Câu 26. Toàn bộ lãnh thổ của khu vực Đông Nam Á nằm hoàn toàn trong
+A. khu vực xích đạo. 					/B. vùng nội chí tuyến.
+C. khu vực gió mùa. 					D. phạm vi bán cầu Bắc.
+Câu 27. Cho bảng số liệu:GIÁ TRỊ XUẤT KHẨU VÀ NHẬP KHẨU DỊCH VỤ MỘT SỐ NƯỚC ĐÔNG NAM Á NĂM 2021 (Đơn vị: Tỷ đô la Mỹ) <table><tr><th>Quốc gia</th><th>Phi-lip-pin</th><th>Ma-lai-xi-a</th><th>Việt Nam</th><th>In-đô-nê-xi-a</th></tr><tr><td>Xuất khẩu</td><td>33.6</td><td>20.9</td><td>22.3</td><td>14.0</td></tr><tr><td>Nhập khẩu</td><td>19.7</td><td>35.6</td><td>20.7</td><td>28.8</td></tr></table> (Nguồn: Niên giám thống kê, 2022) Theo bảng số liệu, nhận xét nào sau đây đúng về cán cân thương mại của một số quốc gia Đông Nam Á năm 2021?
+A. Phi-lip-pin và Ma-lai-xi-a nhập siêu.	     /B. Ma-lai-xi-a và In-đô-nê-xi-a nhập siêu.
+C. Việt Nam và Ma-lai-xi-a xuất siêu.          D. In-đô-nê-xi-a và Phi-lip-pin nhập siêu.
+Câu 28. Cơ cấu kinh tế ở các nước Đông Nam Á hiện nay có sự chuyển dịch rõ rệt theo hướng
+/A. công nghiệp - xây dựng tăng; nông, lâm, ngư nghiệp giảm; dịch vụ biến động.
+B. công nghiệp - xây dựng tăng; nông, lâm, ngư nghiệp giảm, dịch vụ giảm.
+C. nông, lâm, ngư nghiệp tăng; công nghiệp - xây dựng giảm, dịch vụ tăng.
+D. nông, lâm, ngư nghiệp tăng; công nghiệp - xây dựng tăng; dịch vụ biến động.
+Câu 29. Nền nông nghiệp Đông Nam Á có tính chất
+A. ôn đới. 		B. cận nhiệt đới. 		/C. nhiệt đới. 		D. xích đạo.
+Câu 30. Ngành chiếm tỉ trọng lớn về giá trị sản xuất trong cơ cấu nông nghiệp ở nhiều các nước Đông Nam Á là
+/A. trồng trọt. 	B. chăn nuôi. 		C. dịch vụ. 		D. thủy sản.
+Câu 31. Cây công nghiệp lâu năm nhiệt đới được phát triển mạnh ở nhiều nước Đông Nam Á là do
+/A. đất feralit rộng, nhiều loại màu mỡ; khí hậu nhiệt đới và cận xích đạo.
+B. đất phù sa diện tích rộng, màu mỡ; khí hậu nhiệt đới và cận xích đạo.
+C. đất đai đa dạng, nhiều loại tốt; khí hậu xích đạo và nhiệt đới gió mùa.
+D. đất đai có nhiều loại, diện tích rộng; khí hậu nhiệt đới và cận xích đạo.
+Câu 32. Phát biểu nào sau đây không đúng về cây lúa nước ở Đông Nam Á?
+A. Là cây lương thực truyền thống và quan trọng của khu vực.
+B. Sản lượng lúa của các nước ở khu vực không ngừng tăng.
+/C. Các nước đã cơ bản giải quyết được nhu cầu lương thực.
+D. Thái Lan và Việt Nam đứng đầu thế giới về xuất khẩu gạo.
+Câu 33. Các nước ở Đông Nam Á xuất khẩu gạo đứng vào hàng đầu thế giới là
+A. Việt Nam, In-đô-nê-xi-a. 				B. In-đô-nê-xi-a, Thái Lan.
+/C. Thái Lan, Việt Nam. 					D. Việt Nam, Cam-pu-chia.
+Câu 34. Điều kiện thuận lợi ở Đông Nam Á để trồng cây công nghiệp lâu năm là
+/A. đất feralit rộng, có đất đỏ badan màu mỡ; khí hậu nhiệt đới, xích đạo.
+B. đất feralit rộng, có đất nâu đỏ đá vôi màu mỡ; có khí hậu cận nhiệt đới.
+C. đất phù sa màu mỡ, diện tích rộng; khí hậu nhiệt đới, cận xích đạo.
+D. đất phù sa màu mỡ, diện tích rộng; trong năm có một mùa đông lạnh.
+Câu 35. Nhiều nước ở Đông Nam Á phát triển mạnh đánh bắt hải sản, chủ yếu do có
+A. nhu cầu thực phẩm lớn. 				B. vùng biển xung quanh.
+/C. nhiều ngư trường lớn. 				D. dân nhiều kinh nghiệm.
+Câu 36. Điều kiện thuận lợi để phát triển nuôi trồng thủy sản nước mặn ở nhiều nước Đông Nam Á là có nhiều
+A. sông, hồ, bãi triều. 					/B. bãi triều, vũng, vịnh.
+C. vũng, vịnh, sông, hồ. 					D. bãi triều, đầm phá.
+Câu 37. Đứng đầu về sản lượng cá khai thác ở Đông Nam Á là
+/A. In-đô-nê-xi-a. 		B. Thái Lan.                C. Phi-lip-pin. 		D. Việt Nam.
+Câu 38. Nhiều nước ở Đông Nam Á hiện nay phát triển mạnh đánh bắt xa bờ, chủ yếu nhằm
+/A. tăng sản lượng và bảo vệ nguồn lợi thủy sản ven bờ.
+B. tăng sản lượng và bảo vệ tài nguyên ở thềm lục địa.
+C. tăng sản lượng cá, tôm và mở rộng thêm vùng biển.
+D. tăng sản lượng cá và bảo vệ sinh vật biển ở các đảo.
+Câu 39. Hướng phát triển của công nghiệp Đông Nam Á không phải là
+A. tăng cường liên doanh, liên kết với nước ngoài. B. hiện đại hóa thiết bị, chuyển giao công nghệ.
+C. tăng cường đào tạo kĩ thuật cho người lao động. /D. tập trung sản xuất phục vụ nhu cầu trong nước.
+Câu 40. Điều kiện thuận lợi để các nước Đông Nam Á phát triển mạnh công nghiệp năng lượng là
+/A. than đá, dầu khí, năng lượng mặt trời. 		B. dầu khí, bôxit, năng lượng mặt trời.
+C. bôxít, quặng sắt, năng lượng mặt trời. 		D. năng lượng mặt trời, than đá, bôxit.
+Câu 41. Phát biểu nào sau đây không đúng với ngành dịch vụ ở Đông Nam Á hiện nay?
+A. Hệ thống giao thông mở rộng và tăng thêm. B. Thông tin liên lạc được cải thiện và nâng cấp.
+C. Hệ thống ngân hàng, tín dụng được hiện đại. /D. Hệ thống viễn thông còn rất chậm phát triển.
+Câu 42. Hầu hết các nước Đông Nam Á đều quan tâm phát triển giao thông vận tải đường biển, do
+/A. có vị trí giáp biển. 					B. phát triên nội thưomg.
+C. vận tải đường bộ yếu. 				D. có nhiều vũng, vịnh.
+Câu 43. Cơ sở để cây lúa gạo trở thành cây trồng truyền thống và quan trọng của các nước Đông Nam Á là
+/A. khí hậu nóng ẩm, đất phù sa màu mỡ.	B. khí hậu nhiệt đới ẩm gió mùa, mưa nhiều.
+C. sông ngòi dày đặc, diện tích rộng lớn.	D. nguồn lao động dồi dào, nhiều kinh nghiệm.
+Câu 44. Tôn giáo phổ biến ở Đông Nam Á lục địa là
+/A. Phật giáo.	B. Hồi giáo.	C. Hin-du giáo.	D. Ki-tô giáo.
+Câu 45. Đông Nam Á đa dạng về thành phần dân tộc tạo thuận lợi là
+/A. đa dạng về văn hóa, kinh nghiệm sản xuất phong phú.
+B. nguồn lao động trình độ cao, nhiều tiềm năng du lịch.
+C. lao động rất dồi dào, kinh nghiệm sản xuất phong phú.
+D. chất lượng lao động tăng, có nguồn lao động dồi dào.
+Câu 46. Đông Nam Á có
+/A. số dân đông, mật độ dân số cao. 			B. mật độ dân số cao, nhập cư đông.
+C. nhập cư ít, lao động chủ yếu già. 			D. xuất cư nhiều, tuổi thọ rất thấp.
+Câu 47. Phát biểu nào sau đây đúng với dân cư Đông Nam Á hiện nay?
+/A. Tỉ suất sinh giảm, tỉ suất tử giảm. 			B. Tỉ suất sinh tăng, tỉ suất tử tăng.
+C. Tỉ suất sinh giảm, tỉ suất tử tăng. 			D. Tỉ suất sinh tăng, tỉ suất tử giảm.
+Câu 48. Dân số Đông Nam Á hiện nay có đặc điểm là
+/A. quy mô lớn, gia tăng có xu hướng giảm. 		B. tỉ suất gia tăng tự nhiên ngày càng tăng.
+C. dân số đông, người già trong dân số nhiều. 	D. tỉ lệ người di cư đến hàng năm rất lớn.
+Câu 49. Thuận lợi của dân số đông của Đông Nam Á là
+/A. nguồn lao động dồi dào, thị trường tiêu thụ rộng.
+B. thị trường tiêu thụ rộng, dễ xuất khẩu lao động.
+C. dễ xuất khẩu lao động, phát triển việc đào tạo.
+D. phát triển đào tạo, tạo ra được nhiều việc làm.
+Câu 50. Phát biểu nào sau đây không đúng với xã hội của Đông Nam Á?
+A. Các quốc gia đều có nhiều dân tộc. 			B. Một số dân tộc ít người phân bố rộng.
+C. Có nhiều tôn giáo lớn cùng hoạt động. 		/D. Văn hóa các nước rất khác biệt nhau.
+Câu 52. Đông Nam Á là nơi giao thoa của nhiều nền văn hóa lớn trên thế giới như
+/A. Trung Hoa, Ấn Độ, Nhật Bản, Âu, Mĩ. 		B. Trung Hoa, Ấn Độ, Nhật Bản, Âu, Phi.
+C. Trung Hoa, Ấn Độ, Nhật Bản, Phi, Mĩ. 		D. Trung Hoa, Ấn Độ, Hàn Quốc, Âu, Mĩ.
+
+
+    `
+    function replaceLinksToImages(text) {
+      // Regex pattern to match image URLs
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // Replace URLs with <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_dlck111', inputElement.value);
+    });
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_dlck111');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          ${questionAnswers.join('\n')}
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#eedd00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      element.parentNode.classList.add("highlight-animation");
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+  </script>
+</body>
+</html>
