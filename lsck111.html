@@ -587,7 +587,7 @@ A. nằm ở ven biển có thể chặn giặc từ biển vào.		B. là biên 
         return questions.join('\n');
       }
 
-      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
       questionStrings.shift()
       if (shuffleQ) questionStrings = shuffleArray(questionStrings)
       amount = questionStrings.length
