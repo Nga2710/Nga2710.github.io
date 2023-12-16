@@ -578,7 +578,7 @@ A. nằm ở ven biển có thể chặn giặc từ biển vào.		B. là biên 
           }
           const questionHTML = `
           <div class="question">
-          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
           ${questionAnswers.join('\n')}
           </div>
           `;
@@ -587,7 +587,7 @@ A. nằm ở ven biển có thể chặn giặc từ biển vào.		B. là biên 
         return questions.join('\n');
       }
 
-      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
       questionStrings.shift()
       if (shuffleQ) questionStrings = shuffleArray(questionStrings)
       amount = questionStrings.length
