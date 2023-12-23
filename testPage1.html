@@ -25,7 +25,6 @@
       font-weight: bold;
     }
     .container {
-      max-width: 500px;
       /*margin: 10px auto;*/
       background-color: #fff;
       padding: 20px;
@@ -33,7 +32,12 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     .question {
-      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
     }
     .question-text {
       font-weight: bold;
@@ -148,7 +152,7 @@
     }
     textarea {
       width: 80%;
-      height: 200px;
+      height: 260px;
       font-size: 18px;
       margin: 0 auto;
       display: block;
@@ -164,6 +168,61 @@
       align-items: center;
       flex-direction: column;
     }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
   </style>
 </head>
 <body>
@@ -171,23 +230,28 @@
     <header>
       Nạp Trắc Nghiệm
     </header>
-    <textarea id="text" placeholder="..."></textarea>
-
-    <div class="centered">
-      <button onclick="pasteFromClipboard()">Dán</button>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+      <button style="margin-top: 80px; height: 200px" onclick="pasteFromClipboard()">Dán<br>văn<br>bản</button>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
       <br> Cài đặt:<br>
       <div>
         <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
         <br>
         <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
       </div>
-      <br>
-      <button onclick="run()">Bắt đầu</button>
     </div>
   </div>
   <div id="main" class="hide">
-    <h2 style="color: green">Good Luck!</h2>
-    <div class="container" id="container">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
       Đang xử lí câu hỏi..
     </div>
     <br>
@@ -205,7 +269,6 @@
     </div>
   </div>
   <script>
-
     function pasteFromClipboard() {
       navigator.clipboard.readText()
       .then(function(text) {
@@ -217,27 +280,30 @@
       });
     }
     var inputElement = document.getElementById('text');
-    inputElement.value = `
+    inputElement.value = `Câu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4
     `
     function replaceLinksToImages(text) {
-      // Regex pattern to match image URLs
       var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
-      // Replace URLs with <img> tags
+      // thay thế URLs bằng <img> tags
       var replacedText = text.replace(urlPattern, function (url) {
         return '<img src="' + url + '" />';
       });
       return replacedText;
     }
     inputElement.addEventListener('input', function() {
-      localStorage.setItem('inputValue_testpage1', inputElement.value);
+      localStorage.setItem('inputValue_page1', inputElement.value);
     });
     // Tải lại giá trị đã lưu khi trang được tải lại
     window.addEventListener('load', function() {
-      const savedValue = localStorage.getItem('inputValue_testpage1');
+      const savedValue = localStorage.getItem('inputValue_page1');
       if (savedValue) {
         inputElement.value = savedValue;
       }
     });
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
     function run() {
       const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
       const inputString = "\n"+document.getElementById("text").value
@@ -258,7 +324,6 @@
         return array;
       }
       function convertStringToHTML(questionStrings) {
-
         const questions = [];
         for (let i = 0; i < questionStrings.length; i++) {
           const questionString = questionStrings[i].trim();
@@ -276,14 +341,14 @@
             }
             const answerHTML = `
             <div class="answer">
-            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
             </div>
             `;
             questionAnswers.push(answerHTML);
           }
           const questionHTML = `
-          <div class="question">
-          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px">Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
           ${questionAnswers.join('\n')}
           </div>
           `;
@@ -291,8 +356,7 @@
         }
         return questions.join('\n');
       }
-
-      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
       questionStrings.shift()
       if (shuffleQ) questionStrings = shuffleArray(questionStrings)
       amount = questionStrings.length
@@ -319,6 +383,24 @@
       // Gọi hàm để kích hoạt hiệu ứng highlight
       timerInterval = setInterval(updateTime,
         10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
     }
     function change(element) {
       element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
@@ -395,12 +477,13 @@
         input.disabled = true
       })
     }
-    function scroll(element) {
+    function scroll(element, h = true) {
       element.scrollIntoView({
         behavior: "smooth",
         block: "center",
         inline: "center"
       });
+      if (!h) return
       element.parentNode.classList.add("highlight-animation");
       setTimeout(function() {
         element.parentNode.classList.remove("highlight-animation");
