@@ -146,7 +146,7 @@
       });
     }
     setTimeout(cal, 1000)
-    function cal() {
+    async function cal() {
       diemtba = 0
             diemtbr = 0
       t = 0
@@ -176,17 +176,25 @@
         } else {
           tong /= k
           document.getElementById(`${i}7`).value = tong
-          document.getElementById(`${i}6`).value = tong.toFixed(1)
-          
+          document.getElementById(`${i}6`).value = await round(tong)
         }
         if (tong != "") {
           t++;
-          diemtbr += tong.toFixed(1)
+          diemtbr += await round(tong)
           diemtba += tong
         }
       }
-      document.getElementById(`diemtbr`).innerHTML = diemtbr/t
-      document.getElementById(`diemtba`).innerHTML = diemtba/t
+            document.getElementById(`diemtba`).innerHTML = (diemtba/t).toFixed(5)
+      document.getElementById(`diemtbr`).innerHTML = round(diemtbr/t)
+
+    }
+  //  console.log(round(9.4555))
+    function round(a) {
+      let n = `${a}`
+      //9.91
+
+      if (n.length >= 3) return Number(n[3]) >= 5 ? Number(`${n[0]}.${Number(n[2])+1}`) : Number(`${n[0]}.${Number(n[2])}`)
+      return n
     }
     function print(text) {
       console.log(text)}
