@@ -176,11 +176,11 @@
         } else {
           tong /= k
           document.getElementById(`${i}7`).value = tong
-          document.getElementById(`${i}6`).value = await round(tong)
+          document.getElementById(`${i}6`).value = round(tong)
         }
         if (tong != "") {
           t++;
-          diemtbr += await round(tong)
+          diemtbr += round(tong)
           diemtba += tong
         }
       }
@@ -188,12 +188,12 @@
       document.getElementById(`diemtbr`).innerHTML = round(diemtbr/t)
 
     }
-  //  console.log(round(9.4555))
+  //  console.log(round(9.9555))
     function round(a) {
       let n = `${a}`
       //9.91
 
-      if (n.length >= 3) return Number(n[3]) >= 5 ? Number(`${n[0]}.${Number(n[2])+1}`) : Number(`${n[0]}.${Number(n[2])}`)
+      if (n.length >= 4) return Number(n[3]) < 5 ? Number(`${n[0]}.${Number(n[2])}`) : (Number(n[2]) != 9) ? Number(`${n[0]}.${Number(n[2])+1}`) : Number(`${Number(n[0])+1}`)
       return n
     }
     function print(text) {
