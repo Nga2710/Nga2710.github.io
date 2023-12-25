@@ -185,7 +185,8 @@
         }
       }
             document.getElementById(`diemtba`).innerHTML = (diemtba/t).toFixed(5)
-      document.getElementById(`diemtbr`).innerHTML = round(diemtbr/t)
+      document.getElementById(`diemtbr`).innerHTML = await round(diemtbr/t)
+     // console.log(diemtbr)
 
     }
   //  console.log(round(9.9555))
@@ -194,7 +195,7 @@
       //9.91
 
       if (n.length >= 4) return Number(n[3]) < 5 ? Number(`${n[0]}.${Number(n[2])}`) : (Number(n[2]) != 9) ? Number(`${n[0]}.${Number(n[2])+1}`) : Number(`${Number(n[0])+1}`)
-      return n
+      return Number(n)
     }
     function print(text) {
       console.log(text)}
