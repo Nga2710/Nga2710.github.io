@@ -24,8 +24,9 @@
       font-weight: normal;
     }
     th {
-      background-color: #88ff88;
+      background-color: #00dd00;
       font-weight: bold;
+      color: white;
     }
     tr:nth-child(even) {
       background-color: #f2fff2;
@@ -75,6 +76,8 @@
     <strong>Điểm TB các môn (thật): <span id="diemtbr"></span>
   <br>
     <strong>Điểm TB các môn (tuyệt đối): <span id="diemtba"></span>
+      <br>
+    <strong>Danh hiệu: <span id="dh"></span>
   </strong>
   <table>
     <thead>
@@ -148,8 +151,11 @@
     setTimeout(cal, 1000)
     async function cal() {
       diemtba = 0
-            diemtbr = 0
+      diemtbr = 0
       t = 0
+      u65 = 0
+      u8 = 0
+      u9 = 0
       for (i = 0; i < 9; i++) {
         var tong = 0,
         k = 0
@@ -180,12 +186,31 @@
         }
         if (tong != "") {
           t++;
-          diemtbr += round(tong)
+          let c = round(tong)
+          diemtbr += c
           diemtba += tong
+          if (c < 6.5) {
+            u65++
+          }
+          if (c >= 8) {
+            u8++
+          }
+          if (c >= 9) {
+            u9++
+          }
         }
       }
-            document.getElementById(`diemtba`).innerHTML = (diemtba/t).toFixed(5)
+      document.getElementById(`diemtba`).innerHTML = (diemtba/t).toFixed(5)
       document.getElementById(`diemtbr`).innerHTML = await round(diemtbr/t)
+      document.getElementById(`dh`).innerHTML = "Không"
+      if (u65 == 0 && u8 >= 6) {
+         document.getElementById(`dh`).innerHTML = "Học sinh giỏi"
+      }
+      if (u65 == 0 && u9 >= 6) {
+         document.getElementById(`dh`).innerHTML = "Học sinh xuất sắc"
+      }
+      
+     
      // console.log(diemtbr)
 
     }
