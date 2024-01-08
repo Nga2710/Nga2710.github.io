@@ -351,7 +351,7 @@
           }
           const questionHTML = `
           <div class="question" id="qt${i}">
-          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: flex">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
           ${questionAnswers.join('\n')}</div>
           </div>
           `;
