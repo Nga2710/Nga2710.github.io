@@ -43,6 +43,9 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+    .flex {
+      display: flex;
+    }
     .answer {
       margin-bottom: 10px;
       display: flex;
@@ -348,8 +351,8 @@
           }
           const questionHTML = `
           <div class="question" id="qt${i}">
-          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p>
-          ${questionAnswers.join('\n')}
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: flex">
+          ${questionAnswers.join('\n')}</div>
           </div>
           `;
           questions.push(questionHTML);
@@ -361,7 +364,7 @@
       if (shuffleQ) questionStrings = shuffleArray(questionStrings)
       amount = questionStrings.length
       const htmlString = convertStringToHTML(questionStrings);
-      console.log(htmlString)
+     // console.log(htmlString)
       // test
       //  console.log(htmlString);
       document.getElementById("container").innerHTML = htmlString
@@ -478,18 +481,20 @@
       })
     }
     function scroll(element, h = true) {
-      element.scrollIntoView({
+      (h ? element.parentNode : element).scrollIntoView({
         behavior: "smooth",
         block: "center",
         inline: "center"
       });
-      if (!h) return
+if (!h) return
       element.parentNode.classList.add("highlight-animation");
+
       setTimeout(function() {
         element.parentNode.classList.remove("highlight-animation");
       },
         1000);
     }
+
   </script>
 </body>
 </html>
