@@ -340,12 +340,12 @@
       localStorage.setItem('inputMath', inputElement.value);
     });
     // Tải lại giá trị đã lưu khi trang được tải lại
-    window.addEventListener('load', function() {
+  /*  window.addEventListener('load', function() {
       const savedValue = localStorage.getItem('inputValue_page1');
       if (savedValue) {
         inputElement.value = savedValue;
       }
-    });
+    });*/
     function help() {
       let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
       alert(prompt)
