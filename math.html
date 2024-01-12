@@ -244,20 +244,16 @@
     <header>
       Nạp Trắc Nghiệm
     </header>
-    <div class="help" onclick="help()">
-      ?
-    </div>
+
     <div style="display: flex">
-      <textarea style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
-      <button style="margin-top: 80px; height: 200px" onclick="pasteFromClipboard()">Dán<br>văn<br>bản</button>
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
     </div>
     <div class="centered" style="">
       <button onclick="run()">Bắt đầu kiểm tra</button>
       <br> Cài đặt:<br>
       <div>
-        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
-        <br>
-        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+
         <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
         <br>
       </div>
@@ -297,7 +293,7 @@
     inputElement.value = `Câu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4
     `
     let str = ""
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       let a = Math.floor(Math.random()*99)
       let b = Math.floor(Math.random()*99)
       let result = a*b
@@ -341,7 +337,7 @@
       return replacedText;
     }
     inputElement.addEventListener('input', function() {
-      localStorage.setItem('inputValue_page1', inputElement.value);
+      localStorage.setItem('inputMath', inputElement.value);
     });
     // Tải lại giá trị đã lưu khi trang được tải lại
     window.addEventListener('load', function() {
@@ -355,7 +351,7 @@
       alert(prompt)
     }
     function run() {
-      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const shuffleQ = false; shuffleA = true
       const inputString = "\n"+document.getElementById("text").value
       if (!inputString) return
       document.getElementById("inputStr").classList.add("hide")
