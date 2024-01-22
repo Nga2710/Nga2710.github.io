@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+            <span style="color: green">Nội dung ở sgk trang 36-37</span>
+    <header>
+      Quốc Phòng An Ninh 11
+    </header>
+
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+
+    </div>
+
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Nội dung ở sgk trang 36-37</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+   // var inputElement = document.getElementById('text');
+   var cot = `Câu : Súng tiểu liên AK cải tiến có mấy loại?
+A. 1 loại duy nhất.
+/B. 2 loại
+C. 3 loại
+D. Trên 10 loại
+Câu : Khi bắn phát một, tốc độ bắn của súng tiểu liên AK là:
+/A. 40 phát/ phút.
+B. 60 phát/ phút.
+C. 80 phát/ phút.
+D. 100 phát/ phút.
+Câu : Tầm bắn hiệu quả của súng tiểu liên AK là?
+A. 350m
+B. 800m
+/C. 400m
+D. 500m
+Câu : Khi lắp đủ 30 viên đạn, khối lượng của súng tiểu liên AK là.
+/A. 4,3 kg.
+B. 5,3 kg.
+C. 6,3 kg.
+D. 7,3 kg.
+Câu : Tầm bắn thẳng đối với mục tiêu người nằm của súng tiểu liên AK là:
+A. 400 m.
+/B. 350 m.
+C. 800 m.
+D. 500 m.
+Câu : Súng trang bị cho cá nhân và phân đội bộ binh được gọi là:
+/A. súng bộ binh.
+B. súng thần công.
+C. súng thần cơ.
+D. súng hỏa mai.
+Câu : Hộp tiếp đạn của súng tiểu liên AK có thể chứa được bao nhiêu viên đạn?
+/A. 30 viên đạn.       B. 40 viên đạn.    C. 50 viên đạn.         D. 60 viên đạn.
+Câu : Khối lượng súng là 3.8kg, khi lắp đủ 30 viên đạn thì có khối lượng 4.3kg. Hỏi mỗi viên đạn nặng bao nhiêu gam :D
+/A. 16,7 g.       B. 20,3 g.    C. 30,2 g.         D. 13,4 g.
+Câu : Khối lượng của súng tiểu liên AK là.
+A. 4,3 kg.
+B. 5,3 kg.
+/C. 3,8 kg.
+D. 7,3 kg.
+Câu : Tốc độ đầu đạn của súng tiểu liên AK là.
+A. 803 m/s
+B. 650 m/s
+/C. 710 m/s
+D. 520 m/s
+
+
+`
+
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+  //  inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+
+
+    function run() {
+      const shuffleQ = true, shuffleA = true
+      const inputString = "\n"+cot
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px"></sub>Câu </span>${i+1} ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (true) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("container").classList.add("hide")
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 10) {
+        result.className = 'correct';
+       // alert("")
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+     // document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, h = true) {
+      (h ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!h) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
