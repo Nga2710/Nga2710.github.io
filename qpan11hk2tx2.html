@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      QPAN 11 HKII TX2
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Trong việc thực hiện nhiệm vụ phòng không nhân dân, lực lượng nào giữ vai trò nòng cốt?
+/A. Bộ đội địa phương và dân quân tự vệ.		B. Bộ đội chủ lực và Bộ đội địa phương.
+C. Dân quân tự vệ và bộ đội chủ lực.		D. Quân đội nhân dân và công an nhân dân.
+Câu 2. Hoạt động phòng không nhân dân không bao gồm lực lượng chuyên môn nào sau đây?
+A. Lực lượng khắc phục hậu quả.		B. Lực lượng phục vụ chiến đấu.
+C. Lực lượng đánh địch.			/D. Lực lượng công an.
+Câu 3. Nội dung nào sau đây không phản ánh đúng mục tiêu đánh phá của kẻ địch khi tiến công đường không vào lãnh thổ Việt Nam?
+A. Trụ sở các cơ quan lãnh đạo của Đảng, Nhà nước và Chính phủ.
+B. Đài phát thanh, truyền hình, trung tâm thông tin viễn thông.
+/C. Những địa phương vùng sâu, vùng xa, thưa thớt dân cư.
+D. Bộ chỉ huy tác chiến chiến lược, chiến dịch.
+Câu 4. Nội dung nào sau đây không phản ánh đúng các thủ đoạn của kẻ địch khi tiến công đường không vào lãnh thổ Việt Nam?
+/A. Tiến hành đánh phá đồng loạt, liên tục, ác liệt và chỉ diễn ra trong đêm tối.
+B. Phối hợp với chiến tranh thông tin, chiến tranh tâm lí và các hoạt động khác.
+C. Tăng cường hoạt động tình báo, trinh sát, nắm chắc các mục tiêu định tiến công.
+D. Tiến công từ nhiều hướng, từ xa; giành và giữ quyền làm chủ trên không, trên biển.
+Câu 5. Trong thời bình, Ban Chỉ đạo phòng không nhân dân được tổ chức thành lập ở mấy cấp?
+A. 2 cấp (trung ương và quân khu).		B. 3 cấp (trung ương, quân khu và tỉnh).
+/C. 4 cấp (trung ương, quân khu, tỉnh và huyện).	D. 5 cấp (trung ương, quân khu, tỉnh, huyện và xã).
+Câu 6. Thuật ngữ nào được đề cập đến trong đoạn trích sau đây: “……. là tổng thể các hoạt động và biện pháp phòng không để bảo vệ an toàn tính mạng, tài sản của nhân dân, giảm bớt thiệt hại cho nền kinh tế quốc dân, góp phần bảo tồn tiềm lực chiến tranh”.
+/A. Phòng không nhân dân.			B. Địa bàn phòng không nhân dân.
+C. Thế trận phòng không nhân dân.	D. Lực lượng phòng không nhân dân.
+Câu 7. Điền cụm từ thích hợp vào chỗ trống (…..) trong khái niệm sau đây: “……… là tổng thể các yếu tố, các lợi thế về địa hình, lực lượng. bố trí trang thiết bị phòng không để tiến hành các hoạt động tác chiến phòng không, phù hợp với kế hoạch tác chiến của khu vực phòng thủ”?
+A. Địa bàn phòng không nhân dân.		/B. Thế trận phòng không nhân dân.
+C. Lực lượng phòng không nhân dân.		D. Hoạt động phòng không nhân dân.
+Câu 8. “……… là các huyện, quận, thành phố, thị xã thuộc tỉnh hoặc những vị trí trọng yếu nằm trong hệ thống phòng thủ của cấp tỉnh và quân khu” – đó là nội dung của khái niệm nào sau đây?
+/A. Địa bàn phòng không nhân dân.		B. Thế trận phòng không nhân dân.
+C. Lực lượng phòng không nhân dân.		D. Hoạt động phòng không nhân dân.
+Câu 9. Nội dung nào sau đây không phản ánh đúng chức năng của hoạt động phòng không nhân dân?
+A. Khắc phục hậu quả các hành động xâm nhập, tiến công đường không của địch.
+/B. Là một bộ phận của thế trận quốc phòng toàn dân trên mặt trận đối không.
+C. Góp phần bảo vệ độc lập, chủ quyền và toàn vẹn lãnh thổ của Tổ quốc.
+D. Bảo vệ tài sản của Nhà nước, tính mạng và tài sản của nhân dân.
+Câu 10. Nội dung nào sau đây không phản ánh đúng về nguyên tắc tổ chức, hoạt động phòng không nhân dân?
+/A. Lực lượng nòng cốt là bộ đội chủ lực và bộ đội địa phương.
+B. Do hệ thống chính trị, toàn dân và lực lượng vũ trang thực hiện.
+C. Tổ chức và điều hành tập trung thống nhất từ trung ương đến địa phương.
+D. Chuẩn bị từ thời bình và triển khai khi có biểu hiện, hành động xâm nhập của địch.
+Câu 11. Hoạt động phòng không nhân dân trong thời bình, không bao gồm hoạt động nào sau đây?
+A. Xây dựng công trình phòng không nhân dân.
+/B. Tổ chức trinh sát, quan sát và thông báo, báo động.
+C. Tổ chức huấn luyện, diễn tập phòng không nhân dân.
+D. Tổ chức tuyên truyền, giáo dục về phòng không nhân dân.
+Câu 12. Hoạt động phòng không nhân dân thời chiến không bao gồm hoạt động nào sau đây?
+A. Tổ chức sơ tán, phân tán phòng, tránh tiến công đường không của địch.
+B. Tổ chức trinh sát, quan sát và thông báo, báo động phòng không nhân dân.
+/C. Xây dựng các kế hoạch, đề án, dự án phục vụ công tác phòng không nhân dân.
+D. Tổ chức khắc phục hậu quả và những thiệt hại do địch tiến công đường không.
+Câu 13. Trong hoạt động phòng không nhân dân thời chiến, việc sơ tán, phân tán đến khi tình hình ổn định được áp dụng đối với
+A. lực lượng bám trụ ở những địa bàn trọng điểm về phòng không nhân dân.
+/B. trẻ em, người già yếu, phụ nữ mang thai ở vùng trọng điểm phòng không.
+C. học sinh, sinh viên ở những vùng có nguy cơ địch tập trung bắn phá.
+D. các khu vực có nguy cơ kẻ địch tập trung lực lượng đánh phá.
+Câu 14. Trong hoạt động phòng không nhân dân thời chiến, việc sơ tán, phân tán tại chỗ được áp dụng đối với
+A. các khu vực có nguy cơ kẻ địch tập trung lực lượng đánh phá.
+B. học sinh, sinh viên ở những vùng có nguy cơ địch tập trung bắn phá.
+/C. lực lượng bám trụ ở những địa bàn trọng điểm về phòng không nhân dân.
+D. trẻ em, người già yếu, phụ nữ mang thai ở vùng trọng điểm phòng không.
+Câu 15. Nội dung nào sau đây không phản ánh đúng trách nhiệm của công dân trong việc thực hiện phòng không nhân dân?
+A. Thực hiện nghiêm các văn bản pháp luật về phòng không nhân dân ở địa phương.
+B. Tham gia huấn luyện, diễn tập và thực hiện các nhiệm vụ phòng không nhân dân.
+C. Tuyên truyền, giáo dục, nâng cao nhận thức, hiểu biết về phòng không nhân dân.
+/D. Từ chối thực hiện lệnh sơ tán, kiên quyết bám trụ tại địa phương để đánh địch.
+Câu 1. Khi bắn phát một, tốc độ bắn của súng tiểu liên AK là
+/A. 40 phát/ phút.	B. 60 phát/ phút.	C. 80 phát/ phút.	D. 100 phát/ phút.
+Câu 2. Tầm bắn thẳng đối với mục tiêu người nằm của súng tiểu liên AK là
+A. 400 m.	/B. 350 m.	C. 800 m.	D. 500 m.
+Câu 3. Súng tiểu liên AK bao gồm bao nhiêu bộ phận chính?
+/A. 11 bộ phận chính.	B. 12 bộ phận chính.
+C. 13 bộ phận chính.	D. 14 bộ phận chính.
+Câu 4. Nội dung nào sau đây không phản ánh đúng quy tắc tháo, lắp súng tiểu liên AK?
+A. Dùng đúng phụ tùng, làm đúng thứ tự động tác.
+B. Người tháo, lắp phải nắm vững cấu tạo súng.
+C. Chọn nơi khô ráo, sạch sẽ để tháo, lắp súng.
+/D. Không cần khám súng trước khi tháo, lắp.
+Câu 5. Động tác lắp súng tiểu liên AK bao gồm bao nhiêu bước?
+/A. 7 bước.	B. 8 bước.	 C. 9 bước.	D. 10 bước.
+Câu 6. Nội dung nào sau đây không phản ánh đúng về tính năng của thuốc nổ C4?
+/A. Có dạng tinh thể rắn; màu vàng nhạt, vị đắng.
+B. Sử dụng trong điều kiện nhiệt độ từ -30 °C đến 50 °C.
+C. Màu trắng đục, mùi hắc, dẻo, nhào nặn dễ dàng, vị hơi ngọt.
+D. Gồm 80% thuốc nổ mạnh Hexogen bột trộn với 20% chất kết dính.
+Câu 7. Điền cụm từ thích hợp vào chỗ trống (….) trong khái niệm sau đây: “…… là những vật thể, phương tiện do con người làm ra hoặc cải tạo để làm chậm hoặc ngăn cản cơ động, gây khó khăn cho các hoạt động khác và gây thiệt hại cho đối phương”?
+/A. Vật cản.	B. Thuốc nổ.		C. Súng bộ binh.	D. Vũ khí tự tạo.
+Câu 8. Các đối tượng như: rừng, núi, sông, hồ,… là
+A. vật cản nhân tạo.		/B. vật cản tự nhiên.		C. vật cản nổ.		D. vật cản không nổ.
+Câu 9. Đối tượng nào dưới đây là vật cản nổ?
+A. Hàng rào điện.	/B. Mìn chống tăng.	C. Hàng rào thép gai.	D. Vách đứng, vách hụt.
+Câu 10. Các loại vũ khí như: dao, mã tấu, giáo, mác, gậy tầm vông, tổ ong… được xếp vào nhóm
+/A. vũ khí tự tạo.	B. vũ khí thể thao.	C. vũ khí quân dụng.	D. công cụ hỗ trợ.
+Câu 11. Khi tháo súng tiểu liên AK, các bộ phận tháo ra phải đặt theo thứ tự
+A. từ trên xuống dưới.	B. từ dưới lên trên.	C. từ trái qua phải.	/D. từ phải qua trái.
+Câu 12. Khi lắp đủ 30 viện đạn, khối lượng của súng tiểu liên AK là
+/A. 4.3 kg.	B. 5.3 kg.	C. 6.3 kg.	D. 7.3 kg.
+Câu 13. Điền cụm từ thích hợp vào chỗ trống (…..) trong khái niệm sau đây: “…… là chế phẩm của chất nổ mà khi chịu tác động của những xung kích thích từ bên ngoài đủ mạnh thì thường nổ (mà ít cháy)”?
+A. Vật cản.		/B. Thuốc nổ.		C. Súng bộ binh.		D. Vũ khí tự tạo.
+Câu 14. Thuốc nổ TNT và thuốc nổ C4 có điểm gì giống nhau?
+/A. Gây nổ bằng kíp số 6 trở lên.
+B. Có dạng tinh thể rắn, màu vàng nhạt, vị đắng.
+C. Nóng chảy ở 81 °C, chảy ở 310 °C, nổ ở 350 °C.
+D. Dẻo, nhào nặn dễ dàng; màu trắc đục, vị hơi ngọt.
+Câu 15. So với thuốc nổ C4, thuốc nổ TNT có điểm gì khác biệt?
+A. Gây nổ bằng kíp số 6 trở lên.		B. Có tính dẻo, nhào nặn dễ dàng.
+C. Dạng tinh thể rắn, màu vàng nhạt.	/D. Màu trắng đục, mùi hắc, vị hơi ngọt.
+Câu 16. Súng trang bị cho cá nhân và phân đội bộ binh được gọi là
+/A. súng bộ binh.	B. súng thần công.	C. súng thần cơ.	D. súng hỏa mai.
+Câu 17. Súng trường CKC và súng tiểu liên AK có điểm gì giống nhau?
+A. Chỉ bắn được phát một.			/B. Dùng hỏa lực tiêu diệt địch.
+C. Bắn được liên thanh và phát một.	D. Là loại súng tự động và bán tự động.
+Câu 18. So với súng trường CKC, súng tiểu liên AK có điểm gì khác biệt?
+/A. Súng bắn được liên thanh và phát một.
+B. Có thể dùng lê và báng súng để đánh gần.
+C. Loại súng bán tự động, chỉ bắn được phát một.
+D. Là súng bộ binh, được trang bị cho từng người.
+Câu 19. Nội dung nào sau đây không phản ánh đúng đặc điểm của súng trường CKC?
+A. Dùng hỏa lực để tiêu diệt sinh lực địch.	B. Có thể dùng lê, báng súng để đánh gần.
+/C. Súng bắn được liên thanh và phát một.	D. Súng bán tự động, chỉ bắn được phát một.
+Câu 20. Hộp tiếp đạn của súng tiểu liên AK có thể chứa được bao nhiêu viên đạn?
+/A. 30 viên đạn.	B. 40 viên đạn.	C. 50 viên đạn.	D. 60 viên đạn.
+Câu 1. Điền cụm từ thích hợp vào chỗ trống (….) trong khái niệm sau đây: “……… là phương tiện, động vật nghiệp vụ được sử dụng để thi hành công vụ, thực hiện nhiệm vụ bảo vệ nhằm hạn chế, ngăn chặn người có hành vi vi phạm pháp luật chống trả, trốn chạy; bảo vệ người thi hành công vụ, người thực hiện nhiệm vụ bảo vệ hoặc báo hiệu khẩn cấp”?
+A. Vũ khí.	B. Vật liệu nổ.	/C. Công cụ hỗ trợ.	D. Vũ khí quân dụng.
+Câu 2. Phương tiện/ động vật nghiệp vụ nào sau đây được xếp vào nhóm công cụ hỗ trợ?
+A. Dao găm.	B. Chó Pitbull.	C. Mã tấu.	/D. Khóa số 8.
+Câu 3. Nội dung nào sau đây không phản ánh đúng về nguyên tắc quản lí, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ?
+A. Tuân thủ Hiến pháp và pháp luật của nước Cộng hoà xã hội chủ nghĩa Việt Nam.
+B. Người quản lí, sử dụng… phải bảo đảm đầy đủ điều kiện theo quy định pháp luật.
+C. Việc nghiên cứu, chế tạo, sản xuất,… phải được cơ quan có thẩm quyền cấp phép.
+/D. Khi không còn nhu cầu sử dụng, có thể cấp phát cho người dân nếu họ có nhu cầu.
+Câu 4. Bộ Quốc phòng trang bị vũ khí quân dụng cho lực lượng nào sau đây?
+A. Hải quan cửa khẩu.	/B. Quân đội nhân dân.
+C. Kiểm lâm, kiểm ngư.	D. Công an nhân dân.
+Câu 5. Lực lượng nào dưới đây (thuộc Bộ Công an) được trang bị vũ khí quân dụng?
+A. Quân đội nhân dân.	/B. Công an nhân dân.	
+C. Dân quân tự vệ.		D. Cảnh sát biển.
+Câu 6. Điền cụm từ thích hợp vào chỗ trống (…..) trong khái niệm sau đây: “…..là thiết bị, phương tiện hoặc tổ hợp những phương tiện được chế tạo, sản xuất có khả năng gây sát thương, nguy hại cho tính mạng, sức khoẻ của con người, phá huỷ kết cấu vật chất…”.
+/A. Vũ khí.	B. Công cụ hỗ trợ.	C. Vật liệu nổ.	D. Bom, mìn.
+Câu 7. Loại vũ khí nào được đề cập đến trong khái niệm sau đây: “….. là súng được chế tạo, sản xuất thủ công hoặc công nghiệp, được sử dụng để săn bắn”?
+/A. Súng săn.		B. Súng tiểu liên AK.	C. Súng trường CKC.	D. Súng ngắn K54.
+Câu 8. Các loại vũ khí như: dao găm, kiếm, giáo, mác, thương, lưỡi lê, đao, mã tấu, côn, quả đấm, quả chuỳ, cung, nỏ, phi tiêu… được xếp vào nhóm nào?
+A. Vũ khí hạng nặng.	/B. Vũ khí thô sơ.	C. Vũ khí thể thao.	D. Vũ khí quân dụng.
+Câu 9. Các loại vũ khí như: súng bắn đĩa bay, súng ngắn hơi, kiếm 3 cạnh diện, cung 3 dây… được xếp vào nhóm nào sau đây?
+A. Vũ khí hạng nhẹ.		B. Vũ khí thô sơ.	/C. Vũ khí thể thao.	D. Vũ khí quân dụng.
+Câu 10. “Sản phẩm dưới tác động của xung kích thích ban đầu gây ra phản ứng hoá học nhanh, mạnh, toả nhiệt, sinh khí, phát sáng, tạo ra tiếng nổ, bao gồm thuốc nổ và phụ kiện nổ” – đó là nội dung của khái niệm nào sau đây?
+A. Vũ khí.		/B. Vật liệu nổ.	C. Công cụ hỗ trợ.		D. Vũ khí quân dụng.
+Câu 11. Hành vi nào sau đây không vi phạm pháp luật về quản lí, sử dụng vũ khí, vật liệu nổ, công cụ hỗ trợ?
+/A. Sở hữu vũ khí thô sơ là đồ gia bảo, hiện vật để trưng bày, triển lãm.
+B. Nghiên cứu, chế tạo trái phép vũ khí, vật liệu nổ và công cụ hỗ trợ.
+C. Đào bới và thu gom trái phép vũ khí, vật liệu nổ, công cụ hỗ trợ.
+D. Mua bán, tàng trữ, vận chuyển vũ khí, vật liệu nổ, công cụ hỗ trợ.
+Câu 12. Hành vi nào dưới đây vi phạm pháp luật về quản lí, sử dụng vũ khí, vật liệu nổ, công cụ hỗ trợ?
+A. Anh M tố cáo việc ông K chế tạo súng hoa cải để bán.
+B. Ông V tự giác giao nộp súng săn cho cơ quan công an.
+/C. Anh T sử dụng các loại mìn, thuốc nổ để đánh bắt cá.
+D. Cô K khuyên mọi người không rà phá bom, mìn,…
+Câu 13. Hành vi: chế tạo, tàng trữ, vận chuyển, sử dụng, mua, bán trái phép hoặc chiếm đoạt vũ khí quân dụng… sẽ bị xử phạt theo hình thức nào sau đây?
+/A. Xử lí hình sự.			B. Cảnh cáo và phạt tiền.
+C. Thu hồi giấy phép sử dụng.	D. Xử phạt vi phạm hành chính.
+Câu 14. Hành vi: chế tạo, tàng trữ, vận chuyển, sử dụng, mua, bán trái phép hoặc chiếm đoạt vật liệu nổ…. sẽ bị xử phạt theo hình thức nào sau đây?
+A. Xử phạt vi phạm hành chính.		B. Thu hồi giấy phép sử dụng.
+C. Cảnh cáo và phạt tiền.			/D. Xử lí hình sự.
+Câu 15. Nội dung nào sau đây không phản ánh đúng trách nhiệm của học sinh trong thực hiện pháp luật về quản lí, sử dụng vũ khí, vật liệu nổ, công cụ hỗ trợ?
+A. Thực hiện đúng quy định của pháp luật về quản lí, sử dụng vũ khí,…
+B. Tích cực, chủ động nghiên cứu và thực hiện quy định của pháp luật.
+C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp luật.
+/D. Che dấu hành vi vi phạm pháp luật của người thân, bạn bè.
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+      // Filter radio inputs without value "correct"
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, h = true) {
+      (h ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!h) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
