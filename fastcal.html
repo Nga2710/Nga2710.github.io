@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pop Up Numbers</title>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      position: absolute;
+    }
+
+    #popupContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    * {
+      font-weight: bold;
+    }
+    #popupBox {
+
+
+      font-size: 200px;
+
+    }
+    #button {
+      background-color: #4CAF50;
+      color: white;
+
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 30px;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+
+    .popup {
+      animation: popupAnimation 0.5s;
+    }
+@keyframes popupAnimation {
+      0% {
+        transform: scale(0.3);
+      }
+
+      20% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    box {
+
+      margin: auto;
+
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="popupContainer">
+      <div id="popupBox"></div>
+
+    </div>
+
+  </div>
+  <box id="box">
+
+    <div id="button" onclick="startPopUp()">
+0
+    </div>
+  </box>
+  <script>
+        document.getElementById("box").classList.add("popup")
+    var numbers = [];
+    var currentIndex = 0;
+    
+    function startPopUp() {
+      currentIndex = 0;
+      numbers = [];
+      document.getElementById("popupBox").classList.remove("popup")
+              document.getElementById("box").classList.remove("popup")
+      document.getElementById("box").style.opacity = 0;
+      generateNumbers();
+      showNextNumber();
+      document.getElementById("popupContainer").style.display = "flex"
+      console.log(numbers)
+
+
+    }
+
+    function generateNumbers() {
+
+      for (var i = 0; i < 10; i++) {
+        var number = Math.floor(Math.random() * 19) - 9;
+        numbers.push(number);
+      }
+    }
+
+    function showNextNumber() {
+      if (currentIndex < numbers.length) {
+        document.getElementById("popupBox").innerHTML = numbers[currentIndex];
+        currentIndex++;
+        document.getElementById("popupContainer").style.opacity = 1;
+        document.getElementById("popupBox").classList.add("popup")
+        setTimeout(hideNumber, 2000);
+      } else {
+        setTimeout(() =>{
+        document.getElementById("button").innerHTML = numbers.reduce((tong, current) => tong + current, 0);
+                document.getElementById("box").style.opacity = 1;
+      document.getElementById("box").classList.add("popup")
+
+
+                document.getElementById("popupContainer").style.display = "none"
+}, 1000)
+      }
+    }
+
+    function hideNumber() {
+      document.getElementById("popupContainer").style.opacity = 0;
+      document.getElementById("popupBox").classList.remove("popup")
+      setTimeout(showNextNumber, 500);
+    }
+
+
+  </script>
+</body>
+</html>
