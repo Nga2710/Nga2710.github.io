@@ -497,6 +497,7 @@ C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp
       let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
       alert(prompt)
     }
+    var minutes, seconds, milliseconds
     function run() {
       const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
       const inputString = "\n"+document.getElementById("text").value
@@ -541,7 +542,7 @@ C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp
           }
           const questionHTML = `
           <div class="question" id="qt${i}">
-          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
           ${questionAnswers.join('\n')}</div>
           </div>
           `;
@@ -549,6 +550,7 @@ C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp
         }
         return questions.join('\n');
       }
+      
       let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
       questionStrings.shift()
       if (shuffleQ) questionStrings = shuffleArray(questionStrings)
@@ -565,9 +567,9 @@ C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp
       function updateTime() {
         var currentTime = Date.now();
         var timeDiff = currentTime - startTime;
-        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
         minutes = (minutes < 10) ? "0" + minutes: minutes;
         seconds = (seconds < 10) ? "0" + seconds: seconds;
         milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
@@ -625,7 +627,7 @@ C. Tố giác và kiên quyết đấu tranh với các hành vi vi phạm pháp
       });
       clearInterval(timerInterval);
       result.style.display = 'block';
-      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
       if ((score/amount)*10 >= 9) {
         result.className = 'correct';
       } else {
