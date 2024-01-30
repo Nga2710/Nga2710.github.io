@@ -6,6 +6,7 @@
   <title>Pop Up Numbers</title>
   <style>
     body {
+      user-select: none;
       background-color: #f5f5f5;
       font-family: Arial, sans-serif;
       display: flex;
@@ -31,7 +32,7 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 999;
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s;
     }
     * {
       font-weight: bold;
@@ -84,11 +85,11 @@
 
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    
+
   </style>
 </head>
 <body>
-  <div class="container"  id="stop">
+  <div class="container" id="stop">
     <div id="popupContainer">
       <div id="popupBox"></div>
 
@@ -98,22 +99,22 @@
   <box id="box">
 
     <div id="button" onclick="startPopUp()">
-0
+      0
     </div>
   </box>
   <script>
-  document.getElementById("stop").addEventListener("click",  ()=>{
-    currentIndex = numbers.length
-  })
-        document.getElementById("box").classList.add("popup")
+    document.getElementById("stop").addEventListener("click", ()=> {
+      currentIndex = numbers.length
+    })
+    document.getElementById("box").classList.add("popup")
     var numbers = [];
     var currentIndex = 0;
-    
+
     function startPopUp() {
       currentIndex = 0;
       numbers = [];
       document.getElementById("popupBox").classList.remove("popup")
-              document.getElementById("box").classList.remove("popup")
+      document.getElementById("box").classList.remove("popup")
       document.getElementById("box").style.opacity = 0;
       generateNumbers();
       showNextNumber();
@@ -139,14 +140,15 @@
         document.getElementById("popupBox").classList.add("popup")
         setTimeout(hideNumber, 500);
       } else {
-        setTimeout(() =>{
-        document.getElementById("button").innerHTML = numbers.reduce((tong, current) => tong + current, 0);
-                document.getElementById("box").style.opacity = 1;
-      document.getElementById("box").classList.add("popup")
+        setTimeout(() => {
+          document.getElementById("button").innerHTML = numbers.reduce((tong, current) => tong + current, 0);
+          document.getElementById("box").style.opacity = 1;
+          document.getElementById("box").classList.add("popup")
 
 
-                document.getElementById("popupContainer").style.display = "none"
-}, 1000)
+          document.getElementById("popupContainer").style.display = "none"
+        }, 1000)
+        setTimeout(startPopUp, 4000)
       }
     }
 
