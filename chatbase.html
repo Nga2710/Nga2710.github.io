@@ -150,8 +150,8 @@ document.getElementById("main").innerHTML = reload(mainbase)
 
   /* database.ref(`users/message`).set(mainbase)*/
   function trimArray(arr) {
-    if (arr.length > 32) {
-        return arr.slice(arr.length - 32);
+    if (arr.length > 64) {
+        return arr.slice(arr.length - 64);
     } else {
         return arr;
     }
@@ -163,6 +163,7 @@ document.getElementById("main").innerHTML = reload(mainbase)
     firebase.database().ref(`users/message`).on('value', (snapshot) => {
       const data = snapshot.val();
       document.getElementById("main").innerHTML = reload(data)
+      mainbase = data
 console.log(data)
 chatMessages.scrollTop = chatMessages.scrollHeight; 
     });
