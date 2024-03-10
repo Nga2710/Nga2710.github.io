@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat UI</title>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 8px;
+
+      background-color: #f2f2f2;
+    }
+
+    .chat-container {
+      max-width: auto;
+
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #00aaff;
+      color: #ffffff;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .chat-messages {
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      word-wrap: break-word;
+      display: block;
+    }
+
+    .message .sender {
+
+      font-weight: bold;
+      color: #00aaff;
+    }
+
+    .message .text {
+      background-color: #f2f2f2;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .message.sent .text {
+      /*    background-color: #00aaff;
+            color: #ffffff;*/
+
+    }
+
+    .chat-input {
+
+
+      bottom: 0;
+      background-color: #ffffff;
+      padding: 10px;
+
+      display: flex;
+    }
+
+    .chat-input textarea[type="text"] {
+      height: 35px;
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    .chat-input button {
+      padding: 8px 20px;
+      border-radius: 20px;
+      background-color: #00aaff;
+      color: #ffffff;
+      border: none;
+
+      cursor: pointer;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      Chat App
+    </div>
+    <div class="chat-messages" id="main">
+
+    </div>
+    <div class="chat-input">
+      <textarea type="text" id="messageInput" placeholder="Type your message..."></textarea>
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+
+  <script>
+      const chatMessages = document.querySelector(".chat-messages");
+        var firebaseConfig = {
+
+      apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+      authDomain: "pixelbase-512.firebaseapp.com",
+      projectId: "pixelbase-512",
+      storageBucket: "pixelbase-512.appspot.com",
+      messagingSenderId: "608526843244",
+      appId: "1:608526843244:web:7382b46751ddd1a6bac749",
+      measurementId: "G-XDRY19MKXW",
+
+      databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app"
+
+    };
+    firebase.initializeApp(firebaseConfig);
+    // Tham chiếu đến cơ sở dữ liệu Firebase
+    var database = firebase.database();
+    var mainbase = []
+
+   getData()
+    //  setInterval(getData, 3000)
+    // Đọc dữ liệu từ Firebase
+    function getData() {
+      database.ref("users/message").once("value")
+      .then(function(snapshot) {
+        var data = snapshot.val();
+        mainbase = data
+document.getElementById("main").innerHTML = reload(mainbase)
+      })
+      .catch(function(error) {
+        console.error("Error reading data: ", error);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight; 
+    }
+    // Tham chiếu đến cơ sở dữ liệu Firebase
+
+    
+    var dec = () => Math.floor(Math.random()*10)
+    var user = `${dec()}${dec()}${dec()}`
+
+  /* database.ref(`users/message`).set(mainbase)*/
+  function trimArray(arr) {
+    if (arr.length > 32) {
+        return arr.slice(arr.length - 32);
+    } else {
+        return arr;
+    }
+}
+
+// Sử dụng hàm
+
+
+    firebase.database().ref(`users/message`).on('value', (snapshot) => {
+      const data = snapshot.val();
+      document.getElementById("main").innerHTML = reload(data)
+console.log(data)
+chatMessages.scrollTop = chatMessages.scrollHeight; 
+    });
+       
+    console.log(mainbase)
+    function reload(base) {
+      var result = ""
+     for (let i = 0; i < base.length; i++) {
+        if (base[i])
+          result += `<div class="message">
+
+        <div class="text">${base[i]}
+        </div>
+        </div>`
+      }
+      return result
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const sendButton = document.getElementById("sendButton");
+      const messageInput = document.getElementById("messageInput");
+
+
+      sendButton.addEventListener("click", function () {
+        const messageText = messageInput.value.trim();
+        if (messageText !== "") {
+          sendMessage(messageText);
+          messageInput.value = "";
+        }
+      });
+
+      function sendMessage(message) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        messageDiv.innerHTML = `
+
+        <div class="text">                    <span class="sender">${user}:</span>${message}</div>
+        `;
+        
+      mainbase.push(`                    <span class="sender">${user}:</span>${message}`)
+      
+        database.ref(`users/message`).set(trimArray(mainbase))
+
+
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+      }
+    });
+
+  </script>
+</body>
+</html>
