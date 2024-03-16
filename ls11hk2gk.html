@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      LS 11 HKII GK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Các cuộc khởi nghĩa trong thời Bắc thuộc của nhân dân Việt Nam diễn ra trong bối cảnh nào sau đây?
+A. Đất nước có độc lập, chủ quyền.				/B. Đất nước mất độc lập, tự chủ.
+B. Trung Quốc bị Mông Cổ đô hộ.				D. Nhân dân Việt Nam đã bị đồng hóa.
+Câu 2. Cuộc khởi nghĩa nào sau đây mở đầu thời kì đấu tranh chống Bắc thuộc của nhân dân Việt Nam?
+/A. Hai Bà Trưng.		B. Bà Triệu.		C. Lý Bí.		D. Phùng Hưng.
+Câu 3. Trong thời kì đấu tranh chống Bắc thuộc, cuộc khởi nghĩa nào sau đây của nhân dân Việt Nam đã giành được thắng lợi và lập ra nhà nước Vạn Xuân?
+A. Hai Bà Trưng.		B. Bà Triệu.		/C. Lý Bí.		D. Phùng Hưng.
+Câu 4. Cuộc đấu tranh chống ngoại xâm nào sau đây của nhân dân Việt Nam diễn ra trong thời kỳ Bắc thuộc?
+A. Khởi nghĩa Nguyễn Trung Trực.				/B. Khởi nghĩa Phùng Hưng.
+C. Phong trào Tây Sơn. 					D. Khởi nghĩa Trương Định.
+Câu 5. Sự kiện nào sau đây đã kết thúc hoàn toàn hơn 1000 đô hộ của phong kiến phương Bắc, mở ra thời kì độc lập, tự chủ lâu dài cho dân tộc Việt Nam?
+A. Khởi nghĩa Phùng Hưng lật đổ ách đô hộ của nhà Đường, giành quyền tự chủ.
+B. Khởi nghĩa Lý Bí chống nhà Lương thắng lợi, lập ra nhà nước Vạn Xuân.
+/C. Trận chiến trên sông Bạch Đằng (938) do Ngô Quyền lãnh đạo thắng lợi.		
+D. Cuộc khởi nghĩa Lam Sơn do Lê Lợi lãnh đạo kết thúc thắng lợi hoàn toàn.
+Câu 6. Cuộc khởi nghĩa nào sau đây của nhân dân Việt Nam có nhiệm vụ lật đổ ách thống trị của nhà Minh?
+/A. Khởi nghĩa Lam Sơn.	B. Khởi nghĩa Tây Sơn.  C. Khởi nghĩa Lý Bí.   D. Khởi nghĩa Phùng Hưng.
+Câu 7. Cuộc khởi nghĩa Lam Sơn của nhân dân Đại Việt chống lại quân xâm lược nào?
+A. Nhà Hán.		B. Nhà Tống.		C. Nhà Nguyên.		/D. Nhà Minh.
+Câu 8. Khởi nghĩa Lam Sơn (1418-1427) diễn ra trong bối cảnh nào sau đây?
+A. Đại Việt bị nhà Nguyên cai trị.				/B. Đại Việt bị nhà Minh đô hộ.
+C. Đại Việt bị chia cắt làm hai Đàng.				D. Đại Việt có độc lập, chủ quyền.
+Câu 9. Nội dung nào sau đây không phải là bối cảnh dẫn đến bùng nổ phong trào Tây Sơn?
+/A. Đại Việt mất đi độc lập, tự chủ.				B. Đất nước đang bị chia cắt kéo dài.
+C. Nguy cơ bị các thế lực ngoại xâm dòm ngó.		D. Đất nước bị khủng hoảng về kinh tế, chính trị.
+Câu 10. Phong trào Tây Sơn (1771-1802) bùng nổ nhằm thực hiện một trong những nhiệm vụ nào sau đây?
+/A. Giải quyết mâu thuẫn giai cấp.				B. Giải phóng dân tộc thoát khỏi ách đô hộ.
+C. Hoàn thành thống nhất đất nước.				D. Bảo vệ quyền lợi dân chủ của nhân dân.
+Câu 1. Các cuộc khởi nghĩa của nhân dân Việt Nam trong thời kì Bắc thuộc có một trong những đặc điểm nào sau đây?
+/A. Diễn ra sôi nổi, liên tục và mạnh mẽ.			B. Diễn ra trên phạm vi cả nước.
+C. Diễn ra khi đất nước có độc lập.				D. Các cuộc khởi nghĩa đều thắng lợi.
+Câu 2. Khác với các cuộc kháng chiến chống xâm lược thời Lý - Trần, khởi nghĩa Lam Sơn diễn ra trong bối cảnh
+/A. nước Đại Ngu đã bị nhà Minh đô hộ.			B. Đại Việt là quốc gia độc lập, có chủ quyền.
+C. nhà Minh lâm vào khủng hoảng, suy yếu.			D. nhà Nguyên lâm vào khủng hoảng, suy yếu.
+Câu 3. Vào mùa hè năm 1423, Lê Lợi đã đề nghị tạm hoà với quân Minh vì
+A. thiếu tướng tài, tinh thần chiến đấu của quân sĩ sa sút.
+B. nghĩa quân ánh mãi không thắng nên chấp nhận cầu hoà.
+C. quân sĩ khiếp sợ trước sức mạnh của giặc, tinh thần sa sút.
+/D. muốn tranh thủ thời gian hòa hoãn để xây dựng lực lượng.
+
+Câu 4. Tại trận Chúc Động - Tốt Động, nghĩa quân Lam Sơn đã tổ chức đánh quân Minh như thế nào?
+/A. Bố trí mai phục, phục kích khi địch rơi vào trận địa.
+B. Tấn công trực tiếp vào căn cứ của quân Minh.
+C. Cố thủ và chờ viện binh để tấn công quân Minh.
+D. Xây dựng hệ thống phòng tuyến quân sự kiên cố.
+Câu 5. Thắng lợi của cuộc khởi nghĩa Lam Sơn đã
+A. buộc nhà Minh phải thần phục, cống nạp sản vật cho Đại Việt.
+/B. kết thúc 20 năm đô hộ của nhà Minh, khôi phục độc lập dân tộc.
+C. đưa nước Đại Việt trở thành cường quốc hùng mạnh nhất châu Á.
+D. Mở ra thời kì đấu tranh giành độc lập, tự chủ cho dân tộc Việt Nam.
+Câu 1. Trong lịch sử chống giặc ngoại xâm của dân tộc Việt Nam, cuộc khởi nghĩa nào sau đây được nổ ra bằng một hội thề và kết thúc cũng bằng một hội thề?
+/A. Khởi nghĩa Lam Sơn.    B. Khởi nghĩa Tây Sơn.  C. Khởi nghĩa Lý Bí.	  D. Khởi nghĩa Phùng Hưng.
+Câu 2. Trong lịch sử chống giặc ngoại xâm của dân tộc Việt Nam, cuộc khởi nghĩa nào sau đây vừa thực hiện nhiệm vụ đấu tranh giai cấp, vừa thực hiện nhiệm vụ dân tộc?
+A. Khởi nghĩa Lam Sơn.    /B. Khởi nghĩa Tây Sơn.  C. Khởi nghĩa Lý Bí.	D. Khởi nghĩa Phùng Hưng.
+Câu 3. Một trong những đóng góp to lớn của phong trào Tây Sơn (1771-1802) đối với lịch sử dân tộc Việt Nam là
+A. lật đổ ách đô hộ tàn bạo của nhà Minh ở Việt Nam.      B. thống nhất đất nước hoàn toàn về mặt nhà nước.
+/C. bước đầu hoàn thành sự nghiệp thống nhất đất nước.  D. ngăn chặn được nguy cơ Pháp xâm lược Việt Nam.
+Câu 4. Một trong những đóng góp to lớn của phong trào Tây Sơn (1771-1802) đối với lịch sử dân tộc Việt Nam là
+A. lật đổ ách đô hộ tàn bạo của nhà Minh ở Việt Nam.
+B. thống nhất đất nước hoàn toàn về mặt nhà nước.
+/C. đánh tan quân xâm lược, bảo vệ nền độc lập dân tộc.
+D. ngăn chặn được nguy cơ Pháp xâm lược Việt Nam.
+Câu 5. Một trong những đóng góp to lớn của phong trào Tây Sơn (1771-1802) đối với lịch sử dân tộc Việt Nam là
+A. lật đổ ách đô hộ tàn bạo của nhà Minh ở Việt Nam.
+B. thống nhất đất nước hoàn toàn về mặt nhà nước.
+/C. bước đầu thực hiện một số cải cách để xây dựng đất nước.
+D. ngăn chặn được nguy cơ Pháp xâm lược Việt Nam.
+Câu 1. Cuộc cải cách của Hồ Quý Ly tiến hành trong bối cảnh lịch sử nào sau đây?
+/A. Nước Đại Việt lâm vào khủng hoảng trầm trọng.
+B. Nhà Trần đang giai đoạn phát triển thịnh đạt.
+C. Giặc Tống sang xâm lược nước ta lần thứ nhất.
+D. Chế độ phong kiến Việt Nam phát triển đỉnh cao.
+Câu 2. Về kinh tế - xã hội, nhằm hạn chế sự phát triển của chế độ sở hữu ruộng đất lớn trong các điền trang, thái ấp của quý tộc, Hồ Quý Ly đã
+A. cho phát hành tiền giấy.			/B. ban hành chính sách hạn điền.
+C. cải cách chế độ giáo dục.			D. thống nhất đơn vị đo lường.
+Câu 3. Trong cải cách của Hồ Quý Ly, việc quy định số lượng gia nô được sở hữu của các vương hầu, quý tộc, quan lại được gọi là
+/A. phép hạn gia nô.		B. chính sách hạn điền.	C. chính sách quân điền.	D. bình quân gia nô.
+Câu 4. Xây dựng nhiều thành luỹ kiên cố, chế tạo súng thần cơ, đóng thuyền chiến là nội dung cải cách của Hồ Quý Ly và triều Hồ về
+A. kinh tế.	B. văn hoá.		/C. quân sự.		D. xã hội.
+
+Câu 5. Hạn chế sự phát triển của Phật giáo, chấn chỉnh lại chế độ thi cử, đề cao chữ Nôm là nội dung cải cách của Hồ Quý Ly và triều Hồ về
+A. kinh tế, xã hội.   /B. văn hoá, giáo dục.    C. chính trị, quân sự.     D. hành chính, pháp luật.
+Câu 1. Nội dung nào sau đây là một trong những nguyên nhân dẫn đến sự suy yếu của triều đại nhà Trần ở nửa sau thế kỉ XIV?
+A. Giặc Minh lăm le sang xâm lược, quân Chăm-pa tấn công.
+/B. Nhà nước không quan tâm sản xuất, quan lại ăn chơi hưởng lạc.
+C. Chu Văn An dâng sớ chém gian thần không được chấp thuận.
+D. Nhà Trần tiến hành nhiều cuộc chiến tranh xâm lược tốn kém.
+Câu 2. Nội dung nào sau đây không phải là khó khăn của triều đại nhà Trần ở nửa sau thế kỉ XIV?
+A. Giặc Minh lăm le sang xâm lược, quân Chăm-pa tấn công.
+/B. Hồ Quý Ly đã tiến hành cuộc cải cách trên nhiều lĩnh vực.
+C. Hạn hán, lũ lụt, mất mùa, đói kém xảy ra ở nhiều địa phương.
+D. Nhiều cuộc khởi nghĩa nông dân diễn ra chống lại triều đình.
+Câu 3. Sự suy yếu của triều đại nhà Trần cuối thế kỉ XIV đã dẫn đến nguy cơ nào sau đây?
+A. Đánh mất dần bản sắc văn hoá dân tộc.
+B. Mất độc lập bởi sự xâm lược của phương Tây.
+/C. Không còn khả năng bảo vệ sự an toàn của đất nước.
+D. Các khởi nghĩa nông dân sẽ lật đổ được triều đình.
+Câu 4. Trong bối cảnh đời sống sa sút nghiêm trọng, nhân dân Đại Việt cuối thế kỉ XIV đã 
+A. đồng loạt suy tôn Hồ Quý Ly lên ngôi vua.
+B. bán ruộng đất cho quý tộc, biến mình thành nô tì.
+/C. nổi dậy khởi nghĩa ở nhiều nơi trong cả nước.
+D. bất lực trước thực trạng, không phản kháng.
+Câu 5. Để khuyến khích và đề cao chữ Nôm, Hồ Quý Ly đã thực hiện biện pháp nào sau đây?
+/A. Dịch nhiều sách chữ Hán sang chữ Nôm.
+B. Chính thức đưa văn thơ Nôm vào nội dung thi cử.
+C. Bắt buộc tất cả sách biên soạn bằng chữ Nôm.
+D. Mở trường dạy học hoàn toàn bằng chữ Nôm.
+Câu 1. Nội dung nào sau đây không phải yêu cầu đặt ra cho Đại Việt cuối thế kỉ XIV?
+A. Giải quyết khủng hoảng kinh tế - xã hội.
+/B. Thiết lập vương triều mới thay nhà Trần.
+C. Thủ tiêu yếu tố các cứ của quý tộc nhà Trần.
+D. Xây dựng, củng cố đất nước về mọi mặt.
+Câu 2. Nội dung nào sau đây phản ánh đúng về nhận định: “Hồ Quý Ly là một nhà cải cách lớn, kiên quyết và táo bạo”?
+/A. Thực hiện cuộc cải cách trên nhiều lĩnh vực, phần nào đáp ứng được yêu cầu lịch sử.
+B. Tiến hành một số cải cách trên các lĩnh vực, chưa đáp ứng được yêu cầu lịch sử.
+C. Tiến hành cải cách, dù chưa đưa đất nước thoát khỏi khủng hoảng nhưng giữ được độc lập.
+D. Tiến hành cải cách nhưng chưa đưa đất nước thoát khỏi khủng hoảng và không giữ được độc lập.
+Câu 3. Cải cách của Hồ Quý Ly cuối thế kỉ XIV đầu thế kỉ XV có điểm tiến bộ nào sau đây?
+A. Nho giáo trở thành tư tưởng chủ đạo trong xã hội.
+B. Nền giáo dục, khoa cử từng bước phát triển.
+/C. Thể hiện tinh thần dân tộc, ý thức tự cường.
+D. Xác lập thể chế quân chủ trung ương tập quyền.
+Câu 4. Nội dung nào sau đây không phải là ý nghĩa của chính sách hạn điền, hạn nô ở cuối thế kỉ XIV đầu thế kỉ XV?
+A. Làm suy yếu tầng lớp quý tộc triều Trần.
+B. Tăng nguồn thu nhập cho Nhà nước.
+C. Tăng cường quyền lực của Nhà nước.
+/D. Xác lập thể chế quân chủ trung ương tập quyền.
+Câu 5. Yếu tố nào sau đây là nguyên nhân cơ bản nhất dẫn đến cải cách của Hồ Quý Ly đầu thế kỉ XV không thành công?
+/A. Lòng dân không thuận theo nhà Hồ.
+B. Sự uy hiếp của các thế lực ngoại xâm.
+C. Sự chống đối của thế lực phong kiến cũ.
+D. Tiềm lực đất nước hoàn toàn suy sụp.
+Câu 1. Năm 1460, vua Lê Thánh Tông lên ngôi trong bối cảnh tình hình chính trị, kinh tế, xã hội của đất nước 
+A. khủng hoảng, suy thoái.				/B. đã từng bước ổn định.
+C. khó khăn và bị chia cắt.				D. rối ren, cát cứ khắp nơi.
+Câu 2. Năm 1460, sau khi lên ngôi, vua Lê Thánh Tông đã tiến hành 
+/A. cuộc cải cách trên nhiều lĩnh vực.			B. mở cuộc tiến công sang Trung Quốc.
+C. công cuộc thống nhất đất nước.			D. khuyến khích phát triển ngoại thương.
+Câu 3. Nguyên tắc ban cấp ruộng đất của chế độ quân điền là
+A. lấy ruộng đất công chia cho dân.			B. ưu tiên phần nhiều cho quan lại.
+/C. ruộng xã nào chia cho dân xã ấy.			D. không chia cho trẻ em mồ coi.
+Câu 4. Về cải cách hành chính, ở trung ương, vua Lê Thánh Tông cho xóa bỏ hầu hết các chức quan
+/A. đại thần.		B. thừa ty.		C. hiến ty.		D. đô ty.
+Câu 5. Năm 1466, ở địa phương, vua Lê Thánh Tông chia đất nước thành
+A. 10 đạo thừa tuyên và phủ Trung Đô.		B. 11 đạo thừa tuyên và phủ Trung Đô.
+/C. 12 đạo thừa tuyên và phủ Trung Đô.		D. 13 đạo thừa tuyên và phủ Trung Đô.
+Câu 6. Bộ máy chính quyền thời Lê sơ được hoàn chỉnh dưới thời vua 
+A. Lê Thái Tổ.		B. Lê Thái Tông.	C. Lê Nhân Tông.	/D. Lê Thánh Tông.
+Câu 7. Để tập trung quyền lực vào tay nhà vua, Lê Thánh Tông chủ trương
+A. chia cả nước thành 12 đạo thừa tuyên.
+B. cho ban hành bộ Quốc triều hình luật.
+C. tăng cường lực lượng quân đội triều đình.
+/D. xóa bỏ hầu hết quan đại thần có quyền lực lớn.
+Câu 8. Chính sách cải cách nào sau đây của vua Lê Thánh Tông đã góp phần khẳng định quyền sở hữu tối cao của Nhà nước tạo nền tảng cho kinh tế nông nghiệp phát triển?
+A. Đồn điền.		B. Đê điều.		/C. Ruộng đất.		D. Khẩn hoang.
+Câu 9. Nội dung nào sau đây là một trong những ý nghĩa về cuộc cải cách của vua Lê Thánh Tông ở thế kỉ XV?
+A. Mở ra khả năng độc lập, tự chủ đầu tiên cho dân tộc ta.
+/B. Làm chuyển biến toàn bộ các hoạt động của quốc gia.
+C. Tạo thế và lực cho ta đánh bại quân xâm lược Minh.
+D. Tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.
+Câu 10. Nội dung nào dưới đây là một trong những ý nghĩa về cuộc cải cách của vua Lê Thánh Tông ở thế kỉ XV?
+A. Mở ra khả năng độc lập, tự chủ, thống nhất lâu dài cho dân tộc ta.
+/B. Tạo cơ sở cho nhà Lê sơ phát triển vững mạnh, đất nước hưng thịnh.
+C. Tạo thế và lực cho nước ta đánh bại quân xâm lược Minh, bảo vệ Tổ quốc. 
+D. Mở ra khả năng mới, tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.
+Câu 1. Nội dung nào sau đây phản ánh đúng về chức năng của lục Bộ (sáu bộ) dưới thời vua Lê Thánh Tông?
+A. Cơ quan giúp việc cho lục Tự (sáu tự).
+B. Theo dõi, giám sát hoạt động của lục Khoa.
+/C. Cơ quan cao cấp chủ chốt trong triều đình.
+D. Phụ trách hoạt động quân sự của nhà nước.
+Câu 2. Nội dung nào sau đây phản ánh đúng về cuộc cải cách dưới triều vua Lê Thánh Tông?
+A. Có tính kế thừa từ trung ương đến địa phương.
+B. Có sự nối tiếp từ trung ương đến địa phương.
+C. Có tính liên thông từ trung ương đến địa phương.
+/D. Có tính đồng bộ từ trung ương đến địa phương.
+Câu 3. Nội dung nào sau đây không phải là cải cách hành chính ở trung ương của vua Lê Thánh Tông?
+/A. Chia đất nước thành 12 đạo thừa tuyên và phủ Trung Đô.
+B. Xóa bỏ hầu hết các chức quan đại thần có quyền lực lớn.
+C. Giữ lại một số ít quan đại thần cùng vua bàn việc khi cần.
+D. Tổ chức hoàn thiện cơ cấu, chức năng của lục Bộ (sáu bộ).
+Câu 4. Nội dung nào sau đây không phải là cải cách hành chính ở địa phương của vua Lê Thánh Tông?
+A. Chia đất nước thành 12 đạo thừa tuyên và phủ Trung Đô.
+/B. Xóa bỏ hầu hết các chức quan đại thần có quyền lực lớn.
+C. Đứng đầu Thừa tuyên là Đô ty, Thừa ty, Hiến ty.
+D. Dưới đạo thừa tuyên là phủ, huyện, châu và xã.
+Câu 5. Điểm tương đồng về quan điểm xây dựng đội ngũ quan lại trong bộ máy nhà nước thời vua Lê Thánh Tông so với công tác xây dựng cán bộ của Đảng và Nhà nước ta hiện nay là
+/A. có năng lực và phẩm chất tốt.
+B. có năng lực, xuất thân dòng tộc.
+C. ưu tiên tuyển chọn con em quan lại.
+D. chỉ chú trọng con cháu người có công.
+Câu 1. Cuộc cải cách hành chính lớn nhất dưới triều Nguyễn được tiến hành bởi vua
+A. Gia Long.		/B. Minh Mạng.	C. Tự Đức.	D. Hàm Nghi.
+Câu 2. Để khắc phục tình trạng phân quyền, thiếu thống nhất triều đình nhà Nguyễn, vua Minh Mạng đã
+A. thành lập Cơ mật viện.		/B. tiến hành cuộc cải cách.
+C. cải tổ Văn thư phòng.		D. cải tổ Quốc tử giám. 
+Câu 3. Trọng tâm cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) là 
+A. kinh tế.		B. chính trị.		/C. hành chính.		D. quân sự.
+Câu 4. Trong bộ máy chính quyền trung ương thời Minh Mạng, các cơ quan Nội các và Cơ mật viện có vai trò tư vấn cho nhà vua về 
+A. kinh tế.		/B. quân sự.		C. giáo dục.		D. tài chính.
+Câu 5. Trong bộ máy chính quyền trung ương thời Minh Mạng, các cơ quan Nội các và Cơ mật viện có vai trò tư vấn cho nhà vua về 
+A. kinh tế.		/B. hành chính.		C. giáo dục.		D. tài chính.
+
+Câu 11. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) không mang lại kết quả nào sau đây?
+A. Xây dựng được chế độ quân chủ trung ương tập quyền cao độ.
+B. Thống nhất đơn vị hành chính địa phương trong cả nước.
+C. Quản lí chặt chẽ, tinh gọn tổ chức cơ cấu bộ máy nhà nước.
+/D. Đặt nền móng cho sự phát triển đỉnh cao của chế độ phong kiến.
+Câu 12. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) đã mang lại kết quả nào sau đây?
+/A. Phân định cụ thể chức năng, nhiệm vụ của các cơ quan nhà nước.
+B. Đặt nền móng cho sự phát triển đỉnh cao của chế độ phong kiến.
+C. Chấm dứt hoàn toàn tình trạng bất mãn, chống đối trong xã hội.
+D. Giải quyết triệt để các mâu thuẫn trong xã hội, đất nước thái bình.
+Câu 13. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) có ý nghĩa quan trọng nào sau đây?
+A. xóa bỏ tình trạng “bế quan tỏa cảng” của đất nước.
+B. xóa bỏ tình trạng cát cứ của các thế lực phong kiến.
+/C. hoàn thành thống nhất đất nước về mặt hành chính.
+D. hoàn thành thống nhất đất nước về mặt lãnh thổ.
+Câu 14. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) có ý nghĩa quan trọng nào sau đây?
+A. xóa bỏ tình trạng “bế quan tỏa cảng” của đất nước.
+B. xóa bỏ tình trạng cát cứ của các thế lực phong kiến.
+/C. làm cho hoạt động của bộ máy nhà nước hiệu quả hơn.
+D. hoàn thành thống nhất đất nước về mặt lãnh thổ.
+Câu 15. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) có ý nghĩa quan trọng nào sau đây?
+A. xóa bỏ tình trạng “bế quan tỏa cảng” của đất nước.
+B. xóa bỏ tình trạng cát cứ của các thế lực phong kiến.
+/C. làm cho hoạt động của bộ máy nhà nước hiệu quả hơn.
+D. hoàn thành thống nhất đất nước về mặt lãnh thổ.
+Câu 1. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+/A. Nâng cao vai trò quản lí của chính quyền ở trung ương.
+B. Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+C. Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+D. Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+Câu 2. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+A. Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+B. Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+C. Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+/D. Tăng cường và tập trung quyền lực trong tay nhà vua.
+Câu 3. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+A. Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+/B. Nội dung cải cách phù hợp với yêu cầu của đất nước. 
+C. Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+D. Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+Câu 4. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+A. Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+/B. Tác động lớn đến sự phát triển của đất nước trên nhiều mặt.
+C. Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+D. Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+Câu 5. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+A. Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+B. Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+C. Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+/D. Để lại nhiều bài học kinh nghiệm quý báu cho thế hệ sau.
+
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
