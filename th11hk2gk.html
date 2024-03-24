@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      LS 11 HKII GK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  let removeAB = true;
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1: Làm thể nào để có thể vận hành duy trì cho các CSDL hoạt động thông suốt, luôn sẵn sàng đáp ứng được nhu cầu khai thác?
+Cần có các phần mềm thông minh mới
+Cần có các chính sách thích hợp
+1Cần có những nhà quản trị cơ sở dữ liệu để đảm bảo quản lí các dữ liệu liên quan
+Cần tạo lập, cập nhật, khai thác liên tục
+Câu 2: Quản trị CSDL chịu trách nhiệm chính về?
+Cập nhật dữ liệu
+Thiết kế dữ liệu
+Sao lưu dữ liệu
+1Thiết, kế, cập nhật, sao lưu dữ liệu
+Câu 3: Theo lịch sử phát triển, máy tính thay đổi như thế nào về điện năng tiêu thụ?
+Từ tiêu thụ nhiều điện đến tiêu thụ ít điện năng
+Từ không tiêu thụ điện năng đến tiêu thụ nhiều điện và đến tiêu thụ ít điện năng
+1Từ tiêu thụ nhiều điện đến tiêu thụ ít điện năng và không tiêu thụ điện năng
+Từ tiêu thụ ít điện đến tiêu thụ nhiều điện năng
+Câu 4: Theo lịch sử phát triển, máy tính thay đổi như thế nào về tốc độ tính toán?
+Từ không đáng tin cậy đến nhanh nhạy và chính xác
+Từ nhanh nhạy và chính xác đến đáng tin cậy
+1Từ không đáng tin cậy đến nhanh nhạy và chính xác, đáng tin cậy
+Từ không nhanh nhạy và không chính xác đến không đáng tin cậy
+Câu 5: Các hiểu biết về kĩ năng CSDL sẽ hết sức hữu ích cho?
+1Những ai có nhu cầu phát triển năng lực chuyên môn ở những bậc học cao hơn liên quan đến tin học
+Những công nhân viên chức
+Những nhân viên văn phòng
+Những giáo viên trung học
+Câu 6: Khả năng học tập suốt đời giúp người quản trị CSDL?
+Phát triển khả năng chuyên môn
+1Nâng cao bản lĩnh nghề nghiệp
+Phát triển sáng tạo
+Phát triển khả năng hướng nghiệp
+Câu 7: Để QTCSDL thì điều quan trọng nhất là?
+1Phải làm chủ được một hệ QTCSDL
+Có khả năng ham học hỏi
+Có kiến thức chuyên môn
+Có kiến thức lập trình
+Câu 8: Vì sao người quản trị CSDL cần thường xuyên tạo các bản sao dữ liệu dự phòng?
+Phù hợp với sự phát triển
+Tiết kiện điện
+1Để khi gặp sự cố có thể khôi phục dữ liệu kịp thời
+Càng nhiều bản sao thì phần mềm chạy tốt hơn
+Câu 9: Vì sao người quản trị CSDL cần nắm bắt sự phát triển của công nghệ, đánh giá hoạt động của hệ thống?
+1Nâng cấp công nghệ khi cần thiết
+Để khi gặp sự cố có thể khôi phục dữ liệu kịp thời
+Phù hợp với sự phát triển
+Nâng cao trình độ thiết kế Web
+Câu 10: Vì sao người quản trị CSDL cần thường xuyên theo dõi các số liệu thống kê về tình hình sử dụng?
+Phù hợp với sự phát triển
+1Để nắm bắt biến động nhu cầu tài nguyên để điều chỉnh hoặc bổ sung
+Để khi gặp sự cố có thể khôi phục dữ liệu kịp thời
+Theo dõi số người đang sử dụng phần mềm
+Câu 11: Vì sao người quản trị CSDL  tạo lập và làm hồ sơ về CSDL?
+Để nắm bắt biến động nhu cầu tài nguyên để điều chỉnh hoặc bổ sung
+Để khi gặp sự cố có thể khôi phục dữ liệu kịp thời
+Phù hợp với sự phát triển
+1Để phục vụ hoạt động duy trì và nâng cấp hệ thống sau này
+
+Câu 1: Tại sao lại phải thay đổi thói quen quản lí thủ công, chuyển sang sử dụng máy tính với hệ QTCSDL?
+Tiện lợi, kịp thời
+Nhanh chóng
+Hạn chế sai sót
+1Tiện lợi, kịp thời , nhanh chóng và hạn chế sai sót.
+Câu 2: Do đâu mà Quản lý CSDL trên máy tính cung cấp khả năng kiểm soát truy cập và độ bảo mật cao hơn so với quản lý thủ công?
+Dữ liệu trong CSDL có thể được tìm kiếm, lọc, và phân tích theo nhiều tiêu chí khác nhau trong thời gian ngắn, giúp người quản lý dễ dàng đưa ra quyết định hoặc tìm kiếm thông tin cần thiết.
+Các hoạt động cập nhật và chỉnh sửa dữ liệu trên máy tính thường được tự động hóa và có thể được thực hiện đồng thời trên nhiều bản ghi, giúp tiết kiệm thời gian và giảm bớt công sức so với quản lý thủ công mà phải xử lý từng bản ghi một
+Được trải nghiệm nhiều tính năng khác nhau: nghe, gọi, chơi trò chơi, xem video...
+1Dữ liệu trong CSDL có thể được bảo vệ bằng các biện pháp bảo mật như mã hóa
+Câu 3: Do đâu mà Quản lý CSDL trên máy tính thường nhanh chóng, tiết kiệm thời gian và công sức hơn so với quản lý thủ công?
+Dữ liệu trong CSDL có thể được tìm kiếm, lọc, và phân tích theo nhiều tiêu chí khác nhau trong thời gian ngắn, giúp người quản lý dễ dàng đưa ra quyết định hoặc tìm kiếm thông tin cần thiết.
+1Các hoạt động cập nhật và chỉnh sửa dữ liệu trên máy tính thường được tự động hóa và có thể được thực hiện đồng thời trên nhiều bản ghi, giúp tiết kiệm thời gian và giảm bớt công sức so với quản lý thủ công mà phải xử lý từng bản ghi một
+Được trải nghiệm nhiều tính năng khác nhau: nghe, gọi, chơi trò chơi, xem video...
+Dữ liệu trong CSDL có thể được bảo vệ bằng các biện pháp bảo mật như mã hóa
+Câu 4: Do đâu mà Quản lý CSDL trên máy tính mang lại khả năng tra cứu và phân tích dữ liệu hiệu quả hơn so với quản lý thủ công?
+1Dữ liệu trong CSDL có thể được tìm kiếm, lọc, và phân tích theo nhiều tiêu chí khác nhau trong thời gian ngắn, giúp người quản lý dễ dàng đưa ra quyết định hoặc tìm kiếm thông tin cần thiết.
+Các hoạt động cập nhật và chỉnh sửa dữ liệu trên máy tính thường được tự động hóa và có thể được thực hiện đồng thời trên nhiều bản ghi, giúp tiết kiệm thời gian và giảm bớt công sức so với quản lý thủ công mà phải xử lý từng bản ghi một
+Được trải nghiệm nhiều tính năng khác nhau: nghe, gọi, chơi trò chơi, xem video...
+Dữ liệu trong CSDL có thể được bảo vệ bằng các biện pháp bảo mật như mã hóa
+Câu 5. Hệ QTCSDL nào sau đây là sản phẩm mã nguồn mở miễn phí?
+ORACLE.
+SQL Server.
+DB2.
+1MySQL.
+Câu 6.  Phần mềm MySQL và HeidiSQL là các phần mềm?
+Mã nguồn đóng
+Thương mại
+Tự do
+1Mã nguồn mở
+Câu 7. Trước đây khi chưa có máy tính, việc quản lí dữ liệu thủ công là công việc?
+Rất tiện lợi
+1Rất vất vả
+Rất nhanh chóng
+Rất kịp thời
+Câu 8. Khi nháy đúp chuột vào biểu tượng phần mềm HeidiSQL, một cửa sổ như bên dưới xuất hiện. Để vào cửa sổ làm việc của HeidiSQL, cần thực hiện các công việc nào sau đây? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoKWfEU-3DEdZHyaubq9xF0WaDGHaQiROd3BkmV5Y0AtppGweoXRBCcaU2xrO-2i_vMKvKZjkjkWsJk0qQKu25nxypnabCNNV6OTRsBG6TW75KTYPRQB7ApZqP8B4-2CzQtlhTJv7nWKxHTTfOwit3XTtvlY8GM8ID-4sWWOSZMXULV_uzwSOJINsOYQ/s1600/Screenshot_6.png
+Nhập Người dùng và Mật khẩu sau đó nháy vào nút Mới.
+Không cần nhập Người dùng và Mật khẩu, chỉ cần nháy vào nút Mở.
+1Nhập Người dùng và Mật khẩu sau đó nháy vào nút Mở.
+Không cần nhập Người dùng và Mật khẩu, chỉ cần nháy vào nút Mới.
+Câu 9. MySQL và HeidiSQL là các phần mềm
+mã nguồn đóng
+thương mại
+tự do
+1mã nguồn mở
+Câu 1: Quản lý CSDL âm nhạc giúp tổ chức có thể tối ưu hóa hoạt động trong việc?
+Quản lý dữ liệu
+Phân tích
+Bảo mật
+1Quản lý dữ liệu, phân tích và Bảo mật
+Câu 2: Để thực hiện mô hình quản lí danh sách tên quận/huyện của các tỉnh thành phố em phải xác định mối quan hệ giữa?
+1Tỉnh thành phố và Quận/Huyện
+Tính và Thị trấn
+Tỉnh và thị xã
+Huyện và thị trấn
+Câu 3: Để thực hiện mô hình quản lí danh sách tên quận/huyện của các tỉnh thành phố, em có thể xác định khóa chính trong trong bảng Tỉnh thành phố là?
+Mã của huyện
+Mã của thị trấn
+1Mã của tỉnh thành phố
+Mã của thị xã
+Câu 4: Có các loại khóa nào trong CSDL?
+Khóa chính
+Khóa ngoài
+Khóa cấm trùng lặp giá trị
+1Khóa chính, khóa ngoài và khóa cấm trùng lặp giá trị
+Câu 5. Về các kiểu dữ liệu của các trường. Để đơn giản, các trường khoá chính thường có kiểu … và tự động tăng giá trị (AUTO_INCREMENT). Hãy điền từ còn thiếu và dấu ba chấm.
+FLOAT
+CHAR
+1INT
+VARCHAR
+Câu 6. Về các kiểu dữ liệu của các trường. Các trường tenNhacsi, tenCasi, tenBannhac có thể chọn là … có độ dài tối đa 255 kí tự (VARCHAR(255)). Hãy điền từ còn thiếu và dấu ba chấm.
+Kiểu số nguyên
+Trường khoá chính
+Trường khoá ngoài
+1Xâu kí tự
+Câu 7. Chọn câu trả lời đúng nhất. Tại sao phải tổ chức lại bảng dữ liệu gồm nhiều bảng thay vì ít bảng hơn?
+Để ngắn gọn và dễ hiểu.
+Để nhìn đẹp mắt hơn.
+1Để khắc phục tình trạng dữ liệu bị trùng lặp.
+Để dễ nhập dữ liệu hơn.
+Câu 8: Nếu muốn quản lí thêm thông tin nơi sinh của nhạc sĩ, ca sĩ (tên tỉnh/thành phố), CSDL cần thay đổi như thế nào?
+Cần xóa bỏ cấu trúc CSDL và thay bằng cấu trúc khác
+Thêm các trường vào CSDL
+1Cần thay đổi cấu trúc CSDL bằng cách thêm một bảng mới để lưu trữ thông tin này
+Đáp án khác
+Câu 9: Để thêm thông tin ngày sinh của các nhạc sĩ, ca sĩ vào CSDL, bạn cần?
+Cần thay đổi cấu trúc CSDL bằng cách thêm một bảng mới để lưu trữ thông tin này
+1Thêm một trường mới vào bảng "nhacsi" và bảng "casi" để lưu trữ thông tin ngày sinh
+Cần xóa bỏ cấu trúc CSDL và thay bằng cấu trúc khác
+Đáp án khác
+Câu 10: Để thực hiện mô hình quản lí danh sách tên quận/huyện của các tỉnh thành phố, trong bảng Quận/Huyện thì MaTinhThanhPho sẽ là?
+Khóa chính
+Khóa ngoại tham chiếu tới bảng Quận/Huyện
+1Khóa ngoại tham chiếu tới bảng Tỉnh thành phố
+Đáp án khác
+Câu 11: Để tạo lập bảng thì cần?
+1Tổng kết tất cả các thông tin cần quản lý
+Phân tích và sắp xếp lại dữ liệu
+Cùng xem xét lại các bài toán quản lý
+Tất cả đều đúng
+Câu 112: Để tổ chức lại bảng dữ liệu thì cần?
+1Phân tích và sắp xếp lại dữ liệu để hạn chế dữ liệu lặp lại
+Tổng kết tất cả các thông tin cần quản lý
+Cùng xem xét lại các bài toán quản lý
+Tất cả đều đúng
+Câu 1: Cần phải xác định và khai báo gì để tạo lập bảng?
+Tên bảng
+Kiểu dữ liệu
+Khai báo kích thước của mỗi trường
+1Tên bảng, kiểu dữ liệu và khai báo kích thước của mỗi trường.
+Câu 2: Để tạo bảng mới trong HeidiSQL, em chọn?
+Create database
+Root
+1Create new
+Create new index
+Câu 3: Để ấn định khóa chính thì ta thực hiện?
+1Chọn Create new index -> Primary
+Chọn Create new index -> Key
+Chọn Create new index -> Unique
+Chọn Create new index -> Fulltext
+Câu 4: Để thực hiện mô hình quản lí danh sách tên quận/huyện của các tỉnh thành phố em phải xác định mối quan hệ giữa?
+1Tỉnh thành phố và Quận/Huyện
+Tính và Thị trấn
+Tỉnh và thị xã
+Huyện và thị trấn
+Câu 5. Để tạo lập CSDL mymusic, có các bước thực hiện sau:<br>(1). Nháy chuột phải ở vùng danh sách các CSDL đã có;<br>(2). Chọn Cơ sở dữ liệu;<br>(3). Chọn Tạo mới;<br>(4). Nhập mymusic;<br>(5). Chọn OK.<br>Sắp xếp lại các bước để được cách làm đúng.
+(1), (2), (3), (4), (5)
+(1), (4), (3), (2), (5)
+(3), (2), (1), (4), (5)
+1(1), (3), (2), (4), (5)
+Câu 6. Để tạo bảng, cách thực hiện nào sau đây là đúng?
+Nháy chuột phải vào vùng danh sách các CSDL đã có; Chọn Tạo mới; Chọn Cơ sở dữ liệu; Nhập tên bảng.
+1Nháy chuột phải vào vùng danh sách các CSDL đã có; Chọn Tạo mới; Chọn Bảng; Nhập tên bảng.
+Nháy chuột phải vào vùng danh sách các CSDL đã có; Chọn Bảng; Chọn Tạo mới; Nhập tên bảng.
+Nháy chuột phải vào vùng danh sách các CSDL đã có; Chọn Tạo mới; Chọn Cơ sở dữ liệu; Nhập tên cơ sở dữ liệu.
+Câu 7. Để thêm trường vào bảng, các cách làm nào sau đây là đúng?
+Nháy vào Thêm mới hoặc bấm phím Ctrl+Insert hoặc nháy chuột phải chọn New column.
+Nháy vào Thêm mới hoặc bấm phím Shift+Insert hoặc nháy chuột phải chọn Add column.
+1Nháy vào Thêm mới hoặc bấm phím Ctrl+Insert hoặc nháy chuột phải chọn Add column.
+Nháy vào Thêm trường hoặc bấm phím Ctrl+Insert hoặc nháy chuột phải chọn Add column.
+Câu 8. Để chọn AUTO_INCREMENT cho trường khoá chính, ta chọn ở vị trí nào sau đây?
+Phía dưới nhãn Length/Set.
+Phía dưới nhãn Allow NULL.
+1Phía dưới nhãn Mặc định.
+Phía dưới nhãn Kiểu dữ liệu.
+Câu 9. Để xoá trường, cách thực hiện nào sau đây là đúng?
+1Nháy chuột phải vào tên trường muốn xoá, chọn Remove column.
+Nháy chuột phải vào tên trường muốn xoá, chọn Add column.
+Nháy chuột phải vào tên trường muốn xoá, chọn Delete column.
+Nháy chuột trái vào tên trường muốn xoá, chọn Remove column.
+Câu 10. Hãy cho biết Cơ sở dữ liệu và Bảng có liên quan gì với nhau?
+1Cơ sở dữ liệu chứa Bảng.
+Bảng chứa Cơ sở dữ liệu.
+Cơ sở dữ liệu và Bảng cùng cấp.
+Cơ sở dữ liệu và Bảng không tồn tại đồng thời.
+Câu 11: Việc đầu tiên để tạo lập một CSDL quan hệ là ?
+Thu thập dữ liệu
+Xử lý dữ liệu
+1Tạo ra một hay nhiều bảng
+Cả ba đáp án trên đều sai
+Câu 5: Mở HeidiSQL và kết nối đến cơ sở dữ liệu của bạn (nếu đã có). Nếu chưa có cơ sở dữ liệu, bạn có thể tạo mới một cơ sở dữ liệu bằng cách nhấp chuột phải vào?
+" Create database"
+"Create new"
+1"Root"
+Đáp án khác
+Câu 12:  Sau khi kết nối đến cơ sở dữ liệu, bạn có thể chọn cơ sở dữ liệu đó trong?
+Danh sách cơ sở dữ liệu được hiển thị bên dưới của HeidiSQL
+Danh sách cơ sở dữ liệu được hiển thị bên phải của HeidiSQL
+1Danh sách cơ sở dữ liệu được hiển thị bên trái của HeidiSQL
+Đáp án khác
+Câu 13: Để tạo bảng mới trong HeidiSQL, em chọn?
+" Create database"
+"Root"
+1"Create new"
+Đáp án khác
+Câu 14: Sau khi đã tạo các bảng, bạn có thể thiết lập các quan hệ giữa các bảng bằng cách?
+Thiết lập khóa phụ
+Thiết lập khóa chính
+1Thiết lập khóa ngoại
+Đáp án khác
+Câu 15: Nếu muốn quản lí thêm thông tin nơi sinh của nhạc sĩ, ca sĩ (tên tỉnh/thành phố), CSDL cần thay đổi như thế nào?
+Cần xóa bỏ cấu trúc CSDL và thay bằng cấu trúc khác
+Thêm các trường vào CSDL
+1Cần thay đổi cấu trúc CSDL bằng cách thêm một bảng mới để lưu trữ thông tin này
+Đáp án khác
+Câu 19: Để tạo lập bảng thì cần?
+1Tổng kết tất cả các thông tin cần quản lý
+Phân tích và sắp xếp lại dữ liệu
+Cùng xem xét lại các bài toán quản lý
+Tất cả đều đúng
+Câu 20: Khoá ngoài có tác dụng?
+Thể hiện dữ liệu chính
+Liên kết các dữ liệu trong bảng với nhau
+1Liên kết dữ liệu giữa các bảng
+Cả ba đáp án trên đều đúng
+Câu 21: Vệc thiết lập khoá ngoài được thực hiện như thế nào??
+Việc thiết lập khoá ngoài được thực hiện bằng cách xác định cột trong bảng hiện tại là khoá ngoài
+Việc thiết lập khoá ngoài được thực hiện bằng cách chỉ định bảng mà khoá ngoài này tham chiếu đến (bảng gốc)
+1Việc thiết lập khoá ngoài được thực hiện bằng cách xác định cột trong bảng hiện tại là khoá ngoài, và chỉ định bảng mà khoá ngoài này tham chiếu đến (bảng gốc)
+Cả ba đáp án trên đều sai
+Câu 22: Để chọn giá trị mặc định là AUTO_INCREMENT thì nháy chuột vào ô?
+Allow NULL
+Add column
+1No default
+Đáp án khác
+Câu 23: Các trường là khóa ngoài của bảng là ?
+Các dữ liệu trong một cột liên kết đến một cột của bảng khác
+Các ô trong bảng liên kết đến một ô của bảng khác
+1Các trường tham chiếu đến một trường khóa chính của bảng khác
+Cả ba đáp án trên đều đúng
+Câu 24: Cần khai báo giá trị mặc định phù hợp với?
+Giá trị tương ứng của hàng
+Giá trị tương ứng của cột
+1Giá trị tương ứng của k
+Đáp án khác
+Câu 25: Tên các trường không được trùng lặp giá trị nên phải khai báo khóa?
+Chính
+Phụ
+1Cấm trùng lặp
+Đáp án khác
+Câu 26: Để khai báo khóa cấm trùng lặp ta dùng?
+Chọn Create new index -> Primary
+Chọn Create new index -> Key
+1Chọn Create new index -> Unique
+Chọn Create new index -> Fulltext
+Câu 8: Để khai báo khóa ngoài chọn thẻ?
+" Create database"
+"Create new"
+"Root"
+1Foreign keys
+Câu 27: Để chọn bảng tham chiếu ta chọn ô?
+" Create database"
+"Create new"
+1Reference table
+Foreign keys
+Câu 29: Để tạo bảng mới trong HeidiSQL, em chọn?
+" Create database"
+"Root"
+1"Create new"
+Đáp án khác
+Câu 30: Khi chọn thêm mới để thêm trường thì một trường mới hiện ra với tên mặc định là?
+Cột mới
+Trường mới
+1Column 1
+Row 1
+Câu 1: Để khai báo khóa cấm trùng lặp ta dùng?
+Chọn Create new index -> Primary
+Chọn Create new index -> Key
+1Chọn Create new index -> Unique
+Chọn Create new index -> Fulltext
+Câu 2: Để khai báo khóa ngoài chọn thẻ?
+Create database
+Create new
+Root
+1Foreign keys
+Câu 3: Để chọn bảng tham chiếu ta chọn ô?
+Create database
+Create new
+1Reference table
+Foreign keys
+Câu 4. Khi nào thì dùng AUTO_INCREMENT?
+AUTO_INCREMENT thường được dùng cho các trường khoá chính và có kiểu dữ liệu là kiểu FLOAT.
+AUTO_INCREMENT thường được dùng cho các trường khoá chính và có kiểu dữ liệu là kiểu VARCHAR.
+AUTO_INCREMENT thường được dùng cho các trường khoá chính và có kiểu dữ liệu là kiểu CHAR.
+1AUTO_INCREMENT thường được dùng cho các trường khoá chính và có kiểu dữ liệu là kiểu INT.
+Câu 6. Khi nào thì dùng đến thẻ Foreign keys?
+Khi các thao tác liên quan đến khoá chính.
+1Khi các thao tác liên quan đến khoá ngoài.
+Khi các thao tác liên quan đến khoá không trùng lặp.
+Khi các thao tác liên quan đến dữ liệu.
+Câu 7 Các trường là khoá ngoài của bảng là các trường tham chiếu đến một trường … của một bảng khá Hãy điền cụm từ còn thiếu vào dấu ba chấm.
+1khoá chính
+khoá ngoài
+khoá chống trùng lặp
+dữ liệu
+Câu 8. Để khai báo khoá ngoài, nháy vào thẻ nào trong hình bên dưới? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgxTKQjvrjsHbTXrQHjpv1qdu909Nfdt0_T5tZarfpssoYrjaz_pNVyYITzRo_sy4WUGRh298lYX2BzST2N_LENSSsuhJseMb1PUMJghKnUVx5OWvmBT72cYv2x8fIMNXXAxsqqPE6bZQxWBc1qOWpuY700uWQ5ooJ-PlAuHBOWTw0pLFudZm6XvZKt3w/s1600/Screenshot_2.png
+Nháy vào thẻ Indexes.
+1Nháy vào thẻ Foreign keys.
+Nháy vào thẻ Basi
+Nháy vào thẻ Check containts.
+Câu 9. Quan sát hình bên dưới và cho biết trường nào là khoá chính, trường nào là khoá ngoài? https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEV5qoLP_cw91VjcY6_uXwAQJ_UN_7HgTB63MuI5ZZkWYdM6gzkT8WbQkY0cvhHtSgV39b6Qx52RgCgVg4C6qBRAjH5Faj9a53HN9ZVj2Kd7VhG0z0lC5KlKmbISqNQYmyuLqazVjUaPAliV9IFa5lgfF2kl3NTIJfNCPFF-1BGScSkTBSgUe4G4lnqA/s1600/Screenshot_3.png
+Trường khoá chính là trường idBannhac, trường khoá ngoài là trường tenBannha
+Trường khoá chính là trường idNhacsi, trường khoá ngoài là trường idBannha
+1Trường khoá chính là trường idBannhac, trường khoá ngoài là trường idNhacsi.
+Trường khoá chính là trường idNhacsi, trường khoá ngoài là trường tenBannha
+Câu 10. Chọn câu trả lời đúng nhất. Quan sát hình bên dưới và cho biết trường nào là trường khoá chống trùng lặp?https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhypLuxjyewendegQo0S-nGmEIjQPc_bSwmBmMA_depO6cryhZ79ppyVz52Czo00KvDdRVBbb6FKHJiTSx9PnoLfwCijo-Zl3OuRbQyC-vvVA74cvmGg1eq7LJuSmHscYELKnDIQOg0qr-w3UqEJ4XUsnAp4WCR2_IjfCwYvVcoS8buyVEsVRjeMmqJAg/s1600/Screenshot_4.png
+Trường khoá chống trùng lặp là trường tenBannhac và trường idNhacsi.
+Trường khoá chống trùng lặp là trường idBannhac và trường tenBannha
+1Trường khoá chống trùng lặp là trường idBannhac và trường idNhacsi.
+Không có trường nào là trường khoá chống trùng lặp.
+Câu 1: Muốn truy xuất tất cả các dòng dữ liệu từ bảng "casi" ta dùng ?
+SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+SELECT * FROM casi WHERE idcasi = 1;
+1SELECT * FROM casi;
+SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 2: Muốn truy xuất các ca sĩ theo thứ tự tên theo thứ tự từ A đến Z ta dùng ?
+SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+SELECT * FROM casi WHERE idcasi = 1;
+1SELECT * FROM casi ORDER BY tencasi ASC;
+SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 3: Để chỉnh sửa dữ liệu trong bảng ta thực hiện?
+1Nháy đúp chuột vào ô dữ liệu cần sửa và nhập lại
+Nhấn phím Insert
+Nháy nút phải chuột vào ô cần sửa
+Nháy nút trái chuột vào ô dữ liệu cần sửa
+Câu 4: Để biểu diễn thứ tự tăng dần ta dùng?
+DESC
+LIKE
+AND
+1ASC
+Câu 5: Để biểu diễn thứ tự GIẢM dần ta dùng?
+ASC
+LIKE
+AND
+1DESC
+Câu 7: Muốn truy xuất dữ liệu các ca sĩ theo thứ tự "idcasi" giảm dần ta dùng ?
+SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+SELECT * FROM casi WHERE idcasi = 1;
+1SELECT * FROM casi ORDER BY idcasi DESC;
+SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 6. Để xem toàn bộ dữ liệu trong bảng nhacsi, cách thực hiện nào sau đây là đúng?
+Chọn bảng nhacsi, nháy vào thẻ Table: nhacsi.
+Chọn bảng nhacsi, nháy vào thẻ Cở sở dữ liệu: mymusi
+1Chọn bảng nhacsi, nháy vào thẻ Dữ liệu.
+Chọn bảng nhacsi, nháy vào thẻ Truy vấn.
+Câu 1: Hệ QTCSDL không ngăn chặn được các lỗi nào dưới đây?
+Lỗi theo logic đã được khai báo
+1Các lỗi không liên quan đến logic nào
+Lỗi theo logic chưa được khai báo
+Lỗi theo kí tự đã được khai báo
+Câu 2: Để truy xuất dữ liệu từ bảng "banthuam" với điều kiện cụ thể trên trường "idbannhac" ta dùng câu lệnh? (Giả sử giá trị idbannhac cần tìm là 1)
+SELECT * FROM banthuam;
+SELECT * FROM banthuam ORDER BY idbannhac ASC;
+SELECT idbannhac, idcasi FROM banthuam;
+1SELECT * FROM banthuam WHERE idbannhac = 1;
+
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            var answerString = answerStrings[j].trim();
+            
+            const isCorrect = answerString.startsWith("1");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|đúng|nêu\slên|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
