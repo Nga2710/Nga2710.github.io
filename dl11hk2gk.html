@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      DL 11 HKII GK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  let removeAB = true;
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1. Loại cây lương thực chính của Liên bang Nga là
+A. sắn.	B. ngô.	/C. lúa mì.	D. lúa gạo.
+Câu 2. Phát biểu nào sau đây đúng với vị trí địa lí của Nhật Bản?
+A. Trong khu vực kinh tế kém năng động.
+B. Nằm trong khu vực có rất ít thiên tai.
+/C. Trong khu vực kinh tế phát triển sôi động.
+D. Là quốc đảo thuộc Đại Tây Dương.
+Câu 3. Ngành khai thác thủy sản của Hoa Kỳ phát triển mạnh do nguyên nhân chủ yếu nào sau đây?
+A. Thị trường tiêu thụ lớn.	B. Công nghiệp phát triển mạnh.
+C. Nguồn lao động dồi dào.	/D. Nguồn lợi hải sản dồi dào.
+Câu 4. Phát biểu nào sau đây không đúng với hoạt động du lịch của Hoa Kỳ?
+A. Ngành du lịch phát triển mạnh mẽ.	B. Có được doanh thu hàng năm lớn.
+C. Du khách hầu hết là khách nội địa.	/D. Cơ sở hạ tầng ngày càng hiện đại.
+Câu 5. Phát biểu nào sau đây đúng với xã hội Liên bang Nga?
+A. Tuổi thọ trung bình giảm.	B. Tỉ lệ người biết chữ thấp.
+/C. Nền văn hóa đa dạng, độc đáo.	D. Chất lượng cuộc sống rất thấp.
+Câu 6. Công nghiệp Hoa Kỳ có sự dịch chuyển phân bố từ vùng Đông Bắc đến
+A. vùng Trung tâm và phía Bắc.	/B. vùng phía Nam và vùng phía Tây.
+C. ven Đại Tây Dương và phía Nam.	D. vùng phía Bắc và phía Nam.
+Câu 7. Cho bảng số liệu:<br>GDP CỦA HOA KỲ VÀ MỘT SỐ CHÂU LỤC NĂM 2020<br>(Đơn vị: tỉ USD) <table border=”1”><tr><th>Châu lục/quốc gia</th><th>Hoa Kỳ</th><th>Châu Âu</th><th>Châu Á</th><th>Châu Phi</th></tr><tr><td>GDP</td><td>20,893.74</td><td>20,796.66</td><td>32,797.13</td><td>2,350.14</td></tr></table><br>(Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng khi so sánh GDP của Hoa Kỳ với các châu lục, năm 2020?
+A. Lớn hơn châu Phi và lớn hơn châu Á.
+B. Lớn hơn châu Á và nhỏ hơn châu Âu.
+C. Nhỏ hơn châu Âu và lớn hơn châu Phi.
+/D. Lớn hơn châu Âu và nhỏ hơn châu Á.
+Câu 8. Phát biểu nào sau đây đúng với vị trí địa lí của Nhật Bản?
+A. Nằm trong khu vực có nhiều thiên tai.
+B. Trong khu vực kinh tế kém năng động.
+C. Là quốc đảo thuộc Bắc Băng Dương.
+/D. Nằm trong khu vực có rất ít thiên tai.
+Câu 9. Các trung tâm công nghiệp của Liên bang Nga tập trung nhiều nhất ở vùng nào sau đây?
+A. Khu vực dãy U-ran.	/B. Đồng bằng Đông Âu.
+C. Khu vực Viễn Đông.	D. Đồng bằng Tây Xi-bia.
+Câu 10. Phần lớn lãnh thổ Liên bang Nga có khí hậu
+A. cận cực.	B. cận nhiệt.	C. nhiệt đới.	/D. ôn đới.
+Câu 11. Lợn được nuôi nhiều nhất ở nơi nào sau đây của Liên bang Nga?
+A. Trung Xi-bia.	/B. Đồng bằng Đông Âu.
+C. Đồng bằng Tây Xi-bia.	D. Dãy U-ran.
+Câu 12. Quần đảo Ha-oai của Hoa Kỳ nằm giữa đại dương nào sau đây?
+A. Bắc Băng Dương.	B. Ấn Độ Dương.	/C. Thái Bình Dương.	D. Đại Tây Dương.
+Câu 13. Cho bảng số liệu:<br>TUỔI THỌ TRUNG BÌNH VÀ SỐ NĂM ĐI HỌC TRUNG BÌNH CỦA NGƯỜI TỪ 25 TUỔI TRỞ LÊN CỦA NHẬT BẢN NĂM 2000 VÀ 2020<br>(Đơn vị: Năm)<br> <table><thead><tr><th>Năm</th><th>2000</th><th>2020</th></tr></thead><tbody><tr><td>Tuổi thọ trung bình</td><td>81,2</td><td>84,7</td></tr><tr><td>Số năm đi học trung bình</td><td>12,1</td><td>13,4</td></tr></tbody></table>(Nguồn: Liên hợp quốc, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng với tuổi thọ trung bình và số năm đi học trung bình của người dân Nhật Bản năm 2020 so với 2000?
+A. Tuổi thọ trung bình giảm.
+/B. Tuổi thọ trung bình tăng.
+C. Số năm đi học trung bình không đổi.
+D. Số năm đi học trung bình giảm nhanh.
+Câu 14. Phát biểu nào sau đây không đúng với tự nhiên Nhật Bản?
+A. Là quần đảo, hình vòng cung.	B. Địa hình chủ yếu là đồi núi.
+/C. Tài nguyên khoáng sản giàu có.	D. Có 4 đảo lớn và nhiều đảo nhỏ.
+Câu 15. Nhật Bản nằm trong khu vực hoạt động chủ yếu của gió nào sau đây?
+/A. Gió Tây.	B. Đông cực.	C. Gió mùa.	D. Gió phơn.
+Câu 16. Phát biểu nào sau đây không đúng với ngoại thương của Hoa Kỳ?
+A. Tổng kim ngạch xuất, nhập khẩu lớn.	B. Luôn là một nước xuất siêu rất lớn.
+C. Chiếm tỉ trọng lớn trong GDP.	/D. Luôn là một nước nhập siêu rất lớn.
+Câu 17. Đặc điểm nổi bật của dân cư Nhật Bản là
+A. cơ cấu dân số già.	B. tập trung ở miền núi.
+C. tốc độ gia tăng cao.	D. dân số không đông.
+Câu 18. Cho bảng số liệu:<br>CƠ CẤU GDP CỦA HOA KỲ, NĂM 2010 VÀ 2020<br>(Đơn vị: %)<table><thead><tr><th>Năm</th><th>2010</th><th>2020</th></tr></thead><tbody><tr><td>Nông nghiệp, lâm nghiệp, thủy sản</td><td>1,0</td><td>1,1</td></tr><tr><td>Công nghiệp, xây dựng</td><td>19,3</td><td>18,4</td></tr><tr><td>Dịch vụ</td><td>76,3</td><td>80,1</td></tr><tr><td>Thuế sản phẩm trừ trợ cấp sản phẩm</td><td>3,4</td><td>0,4</td></tr></tbody></table><br>(Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng với tỉ trọng các ngành kinh tế trong cơ cấu GDP của Hoa Kỳ năm 2020 so với 2010?
+/A. Dịch vụ giảm.
+B. Công nghiệp, xây dựng tăng.
+C. Nông nghiệp, lâm nghiệp, thủy sản tăng.
+D. Nông nghiệp, lâm nghiệp, thủy sản giảm.
+Câu 19. Phía Bắc của Liên bang Nga tiếp giáp với đại dương nào sau đây?
+A. Ấn Độ Dương.	/B. Thái Bình Dương.	C. Đại Tây Dương.	/D. Bắc Băng Dương.
+Câu 20. Tôn giáo chủ yếu ở Liên bang Nga là
+A. Hồi giáo.	B. Phật giáo.	C. Thiên chúa giáo.	/D. Chính thống giáo.
+Câu 21. Đặc điểm nào sau đây không đúng với dân cư Hoa Kỳ?
+/A. Hiện nay không có dân nhập cư.	B. Tăng nhanh do nhập cư.
+C. Dân cư phân bố không đồng đều.	D. Có quy mô dân số lớn.
+Câu 22. Vùng kinh tế nào sau đây của Liên bang Nga giàu tài nguyên, công nghiệp phát triển nhưng nông nghiệp còn hạn chế?
+A. Viễn Đông.	B. Trung ương.
+C. Trung tâm đất đen.	/D. U-ran.
+Câu 23. Nhật Bản là một quốc đảo nằm ở đại dương nào sau đây?
+A. Ấn Độ Dương.	B. Bắc Băng Dương.	C. Đại Tây Dương.	/D. Thái Bình Dương.
+Câu 24. Trung tâm tài chính quan trọng nhất của Hoa Kỳ là
+/A. Phi-la-đen-phi-a.	B. Bô-xtơn.	C. Lát-vê-gát.	D. Niu Oóc.
+Câu 25. Ngành dịch vụ của Hoa Kỳ có
+/A. tỉ trọng trong GDP lớn nhất.	B. hàng hóa ít có sự đa dạng.
+C. tốc độ tăng trưởng rất chậm.	D. số lượng lao động ít nhất.
+Câu 26. Vùng Đồng bằng Trung tâm Hoa Kỳ chuyên canh các loại cây chủ yếu nào sau đây?
+A. Lúa mì, ngô.	/B. Lúa gạo, ngô.	C. Lúa mì, bông.	D. Lúa gạo, bông.
+Câu 27. Dân cư Nhật Bản phân bố tập trung ở
+A. các vùng núi ở giữa.	B. dọc các dòng sông.
+C. ở các sườn núi thấp.	/D. đồng bằng ven biển.
+Câu 28. Phía Bắc phần lãnh thổ trung tâm Bắc Mỹ của Hoa Kỳ phần lớn nằm trong đới khí hậu nào sau đây?
+A. Xích đạo.	B. Cận cực.	C. Nhiệt đới.	/D. Ôn đới.
+Câu 29. Phát biểu nào sau đây không đúng về dân cư Nhật Bản?
+/A. Tỉ suất gia tăng tự nhiên dân số cao.
+B. Phần lớn dân ở các đô thị ven biển.
+C. Tỉ lệ người già ngày càng gia tăng.
+D. Nhật Bản là một nước đông dân.
+Câu 30. Quần đảo Ha-oai là nơi có nhiều
+A. hoang mạc.	/B. núi lửa.	C. đầm lầy.	D. cao nguyên.
+Câu 31. Liên Bang Nga có chung biên giới với bao nhiêu quốc gia?
+/A. 14.	/B. 11.	/C. 13.	/D. 12.
+Câu 32. Cho bảng số liệu:<br>SỐ DÂN VÀ TỈ LỆ GIA TĂNG DÂN SỐ CỦA NHẬT BẢN, GIAI ĐOẠN 2000 – 2020<br> <table><thead><tr><th>Năm</th><th>2000</th><th>2005</th><th>2010</th><th>2015</th><th>2020</th></tr></thead><tbody><tr><td>Số dân (triệu người)</td><td>126,9</td><td>127,7</td><td>128,0</td><td>127,0</td><td>126,2</td></tr><tr><td>Tỉ lệ gia tăng dân số (%)</td><td>0,18</td><td>0,13</td><td>0,03</td><td>-0,09</td><td>-0,30</td></tr></tbody></table>(Nguồn: Niên giám thống kê Nhật Bản, 2022 và prb.org, 2021)<br>Theo bảng số liệu, nhận xét nào sau đây đúng về sự thay đổi số dân và tỉ lệ tăng dân số của Nhật Bản, giai đoạn 2010 - 2020?
+A. Tỉ lệ gia tăng dân số tăng không liên tục.
+B. Số dân tăng không liên tục.
+/C. Số dân giảm không liên tục.
+D. Tỉ lệ gia tăng dân số tăng liên tục.
+Câu 33. Cho bảng số liệu:<br>SẢN LƯỢNG KHAI THÁC, XUẤT KHẨU DẦU THÔ CỦA LIÊN BANG NGA<br>< table><thead><tr><th>Năm</th><th>2010</th><th>2015</th><th>2018</th><th>2020</th></tr></thead><tbody><tr><td>Khai thác</td><td>9 694,0</td><td>10 111,1</td><td>10 383,1</td><td>9 459,7</td></tr><tr><td>Xuất khẩu</td><td>4 977,8</td><td>4 899,2</td><td>5 207,1</td><td>4 617,0</td></tr></tbody></table>(Đơn vị: nghìn thùng dầu/ngày)<br>(Nguồn: CEIC, 2021)<br>Theo bảng số liệu, nhận xét nào sau đây đúng về sự thay đổi sản lượng dầu thô khai thác và xuất khẩu của Liên bang Nga, năm 2020 so với 2010?
+A. Sản lượng xuất khẩu tăng.	B. Sản lượng khai thác tăng.
+/C. Sản lượng khai thác giảm.	D. Sản lượng xuất khẩu ổn định.
+Câu 34. Loại rừng chiếm diện tích chủ yếu ở Liên bang Nga là
+A. rừng lá rộng.	/B. rừng tai-ga.	C. thường xanh.	D. rừng lá cứng.
+Câu 35. Phát biểu nào sau đây đúng về sự thay đổi tỉ trọng của dịch vụ trong cơ cấu kinh tế Hoa Kỳ (giai đoạn 2000 - 2020)?
+/A. Chiếm tỉ trọng lớn nhất và giảm.	B. Chiếm tỉ trọng lớn thứ hai và giảm.
+C. Chiếm tỉ trọng lớn nhất và tăng.	D. Chiếm tỉ trọng nhỏ nhất và giảm.
+Câu 36. Hoa Kỳ là quốc gia rộng lớn nằm ở
+A. Nam Mĩ.	B. Trung Mĩ.	C. Ca-ri-bê.	/D. Bắc Mĩ.
+Câu 37. Phát biểu nào sau đây không đúng với tự nhiên Nhật Bản?
+A. Nhiều đồng bằng phù sa màu mỡ.	B. Đất nước là một quần đảo trải dài.
+C. Vùng biển có nhiều ngư trường lớn.	/D. Nghèo khoáng sản, nhiều thiên tai.
+Câu 38. Vùng kinh tế nào sau đây chiếm diện tích lớn nhất của Liên bang Nga?
+A. U-ran.	/B. Viễn Đông.
+C. Trung tâm đất đen.	D. Trung ương.
+Câu 39. Loại hình giao thông vận tải phát triển mạnh và có vai trò quan trọng nhất ở các thành phố lớn của Liên bang Nga là
+A. đường ô tô cao tốc.	/B. tàu điện ngầm.
+C. đường sông, hồ.	D. đường hàng không.
+Câu 40. Dân tộc nào sau đây chiếm đa số ở Liên bang Nga?
+A. Chu-vát.	B. Tác-ta.	/C. Nga.	D. Bát-xkia.
+Câu 41. Cho bảng số liệu:<br>DIỆN TÍCH MỘT SỐ VÙNG KINH TẾ Ở LIÊN BANG NGA<br>(Đơn vị: km2) <table><thead><tr><th>Vùng</th><th>Trung ương</th><th>Trung tâm đất đen</th><th>Bắc Cáp-ca</th><th>U-ran</th><th>Viễn Đông</th></tr></thead><tbody><tr><td>Diện tích</td><td>482 300</td><td>167 000</td><td>381 600</td><td>832 300</td><td>6 900 000</td></tr></tbody></table><br>(Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng khi so sánh diện tích một số vùng kinh tế của Liên bang Nga?
+A. Bắc Cáp-ca lớn hơn Trung tâm đất đen, nhỏ hơn U-ran.
+B. U-ran lớn hơn Trung tâm đất đen, lớn hơn Viễn Đông.
+C. Trung ương lớn hơn U-ran, nhỏ hơn Bắc Cáp-ca.
+/D. Viễn Đông nhỏ hơn U-ran, lớn hơn Trung tâm đất đen.
+Câu 42. Phát biểu nào sau đây đúng với cơ cấu GDP của Hoa Kỳ?
+A. Dịch vụ chiếm tỉ trọng nhỏ nhất.	B. Công nghiệp xây dựng lớn nhất.
+/C. Dịch vụ chiếm tỉ trọng lớn nhất.	D. Tăng nhanh tỉ trọng nông nghiệp.
+Câu 43. Phát biểu nào sau đây không đúng với dân cư - xã hội Liên bang Nga?
+A. Tỉ lệ dân sống ở thành thị lớn.	/B. Mật độ dân số trung bình rất cao.
+C. Nhiều người di cư ra nước ngoài.	D. Người Nga là dân tộc chủ yếu.
+Câu 44. Phía Đông của Liên bang Nga tiếp giáp với đại dương nào sau đây?
+/A. Thái Bình Dương.	B. Ấn Độ Dương.	C. Đại Tây Dương.	D. Bắc Băng Dương.
+Câu 45. Ngành nào sau đây tạo nguồn hàng xuất khẩu chủ yếu cho Hoa Kỳ?
+A. Ngư nghiệp.	B. Tiểu thủ công.	/C. Công nghiệp.	D. Nông nghiệp.
+Câu 46. Phát biểu nào sau đây đúng về sự thay đổi tỉ trọng của nông nghiệp, lâm nghiệp và thủy sản trong cơ cấu kinh tế Hoa Kỳ (giai đoạn 2000 - 2020)?
+A. Chiếm tỉ trọng nhỏ và tăng.	B. Chiếm tỉ trọng lớn và tăng.
+C. Chiếm tỉ trọng nhỏ và giảm.	/D. Chiếm tỉ trọng lớn và giảm.
+Câu 47. Nhật Bản có
+A. vùng biển rộng, đường bờ biển dài.
+/B. đường bờ biển dài, có ít vũng vịnh.
+C. nhiều dòng biển nóng, có rất ít đảo.
+D. ít vũng vịnh, nhiều dòng biển nóng.
+Câu 48. Phát biểu nào sau đây đúng về sự thay đổi tỉ trọng của công nghiệp và xây dựng trong cơ cấu kinh tế Hoa Kỳ (giai đoạn 2000 - 2020)?
+/A. Chiếm tỉ trọng lớn thứ hai và giảm.	B. Chiếm tỉ trọng lớn nhất và giảm.
+C. Chiếm tỉ trọng lớn thứ hai và tăng.	D. Chiếm tỉ trọng nhỏ nhất và giảm.
+Câu 49. Phần lãnh thổ Ca-li-nin-grát của Liên bang Nga giáp quốc gia nào sau đây?
+/A. Thụy Điển.	B. Phần Lan.	C. Na Uy.	D. Ba Lan.
+Câu 50. Hình thức tổ chức sản xuất chủ yếu trong nông nghiệp Hoa Kỳ là
+/A. trang trại.	B. đồn điền.	C. hợp tác xã.	D. nông hộ.
+Câu 51. Phát biểu nào sau đây đúng với tài nguyên biển của Liên bang Nga?
+/A. Có nhiều biển lớn.	B. Phần lớn là biển nhỏ.
+C. Đóng băng quanh năm.	D. Đường bờ biển ngắn.
+Câu 52. Nhật Bản nằm ở vị trí nào sau đây?
+A. Nam Á.	B. Tây Á.	/C. Đông Á.	D. Bắc Á.
+Câu 53. Đặc điểm nào sau đây không đúng với vị trí địa lí của Hoa Kỳ?
+A. Tiếp giáp với Mê-hi-cô.	B. Tiếp giáp với Ca-na-đa.
+C. Giáp Đại Tây Dương.	/D. Nằm ở bán cầu Đông.
+Câu 54. Vùng kinh tế phát triển nhất của Liên Bang Nga là
+/A. Viễn Đông.	B. U - ran.
+C. Trung tâm đất đen.	D. Trung ương.
+Câu 55. Vùng có mật độ dân số cao nhất của Hoa Kỳ là
+A. phía Bắc.	/B. Đông Bắc.	C. phía Tây.	D. trung tâm.
+Câu 56. Nông nghiệp là hoạt động kinh tế chính ở vùng kinh tế nào sau đây của Liên bang Nga?
+A. U-ran.	/B. Trung tâm đất đen.
+C. Trung ương.	D. Viễn Đông.
+Câu 57. Phần lãnh thổ Ca-li-nin-grát của Liên bang Nga giáp quốc gia nào sau đây?
+A. Na Uy.	B. Bê-la-rút.	C. Lít-va.	/D. Thụy Điển.
+Câu 58. Địa hình chủ yếu ở phía Bắc Đồng bằng Tây Xi-bia của Liên bang Nga là
+A. thảo nguyên.	B. sơn nguyên.	C. núi cao.	/D. đầm lầy.
+Câu 59. Cho bảng số liệu:<br>CƠ CẤU GDP CỦA LIÊN BANG NGA, NĂM 2010 VÀ 2020<br>(Đơn vị: %)<br><table><thead><tr><th>Năm</th><th>2010</th><th>2020</th></tr></thead><tbody><tr><td>Nông nghiệp, lâm nghiệp, thủy sản</td><td>3,3</td><td>4,0</td></tr><tr><td>Công nghiệp và xây dựng</td><td>34,0</td><td>29,9</td></tr><tr><td>Dịch vụ</td><td>53,1</td><td>56,1</td></tr><tr><td>Thuế sản phẩm trừ trợ cấp sản phẩm</td><td>9,6</td><td>10,0</td></tr></tbody></table><br>(Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng với tỉ trọng các ngành kinh tế trong cơ cấu GDP của Liên bang Nga năm 2020 so với 2010?
+A. Nông nghiệp, lâm nghiệp, thủy sản giảm.
+B. Nông nghiệp, lâm nghiệp, thủy sản tăng.
+C. Dịch vụ giảm.
+/D. Công nghiệp, xây dựng tăng.
+Câu 60. Phát biểu nào sau đây đúng với công nghiệp Hoa Kỳ?
+A. Ít chú trọng đến ngành năng lượng.
+/B. Là siêu cường công nghiệp của thế giới.
+C. Chỉ phát triển mạnh các ngành chế biến.
+D. Chỉ đầu tư mạnh ngành khai khoáng.
+Câu 61. Dạng địa hình nào sau đây chiếm phần lớn diện tích tự nhiên của Nhật Bản?
+A. Đầm lầy.	B. Cao nguyên.	/C. Đồi núi.	D. Đồng bằng.
+Câu 62. Vùng phía Tây Hoa Kỳ phát triển mạnh hoạt động lâm nghiệp chủ yếu do
+/A. diện tích rừng lớn.	B. cao nguyên rộng.
+C. nhiều dãy núi trẻ.	D. các bồn địa lớn.
+Câu 63. Phát biểu nào sau đây đúng với ngành nông nghiệp Hoa Kỳ?
+A. Sử dụng lực lượng lao động nhiều nhất.
+B. Chiếm tỉ trọng lớn trong cơ cấu GDP.
+/C. Chiếm tỉ trọng nhỏ trong cơ cấu GDP.
+D. Tạo ra khối lượng sản phẩm không lớn.
+Câu 64. Phát biểu nào sau đây đúng về đô thị hóa ở Nhật Bản?
+A. Không có siêu đô thị.	/B. Tỉ lệ dân thành thị cao.
+C. Dân đô thị đang giảm.	D. Số lượng đô thị rất ít.
+Câu 65. Ngành công nghiệp nào sau đây chiếm phần lớn trị giá xuất khẩu của Hoa Kỳ?
+A. Khai thác than.	B. Điện lực.	/C. Chế biến.	D. Dầu khí.
+Câu 66. Các trung tâm công nghiệp của Hoa Kỳ tập trung nhiều nhất ở vùng nào sau đây?
+/A. Đông Bắc.	B. Ven vịnh Mê-hi-cô.
+C. Ven Thái Bình Dương.	D. Phía Bắc.
+Câu 67. Phát biểu nào sau đây đúng với vị trí địa lí của Nhật Bản?
+A. Nằm ở phía tây của châu Âu.	B. Nằm ở phía bắc của châu Á.
+/C. Nằm ở phía đông của châu Á.	D. Nằm ở phía Nam của châu Mỹ.
+Câu 68. Phía Đông phần lãnh thổ trung tâm Bắc Mỹ của Hoa Kỳ tiếp giáp với
+A. Mê-hi-cô.	/B. Ca-na-đa.	C. Đại Tây Dương.	D. Thái Bình Dương.
+Câu 69. Phát biểu nào sau đây đúng với quá trình đô thị hóa của Hoa Kỳ?
+A. Có rất ít đô thị lớn với quy mô dân số đông.
+B. Tỉ lệ dân thành thị giảm rất nhanh do xuất cư.
+C. Dân tập trung của yếu ở các đô thị trung tâm.
+/D. Quá trình đô thị hóa nhanh và có trình độ cao.
+Câu 70. Giao thông vận tải đường sông của Liên bang Nga phát triển nhất trên hệ thống sông nào sau đây?
+/A. Von-ga.	B. Ô-bi.	C. A-mua.	D. I-ê-nít-xây.
+Câu 71. Phát biểu nào sau đây không đúng với giao thông vận tải của Hoa Kỳ hiện nay?
+/A. Vận tải đường hàng hải không phát triển.
+B. Mạng lưới đường bộ đến khắp mọi miền.
+C. Có số lượng sân bay nhiều nhất thế giới.
+D. Phát triển hiện đại bậc nhất trên thế giới.
+Câu 72. Phần lớn các sông của Liên bang Nga chảy theo hướng nào sau đây?
+A. Đông - Tây.	B. Bắc - Nam.	/C. Tây - Đông.	D. Nam - Bắc.
+Câu 73. Cho bảng số liệu:<br>SỐ DÂN VÀ TỈ LỆ DÂN THÀNH THỊ CỦA LIÊN BANG NGA, GIAI ĐOẠN 1950 – 2020<br> <table><thead><tr><th>Năm</th><th>1950</th><th>1970</th><th>1990</th><th>2000</th><th>2010</th><th>2020</th></tr></thead><tbody><tr><td>Số dân (triệu người)</td><td>103</td><td>130</td><td>148</td><td>146</td><td>143</td><td>146</td></tr><tr><td>Tỉ lệ dân thành thị (%)</td><td>44,1</td><td>62,5</td><td>73,4</td><td>73,4</td><td>73,7</td><td>74,8</td></tr></tbody></table> (Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng với sự thay đổi số dân và tỉ lệ dân thành thị của Liên bang Nga, giai đoạn 1950 - 2020?
+A. Số dân tăng không liên tục.
+B. Tỉ lệ dân thành thị giảm nhanh liên tục.
+C. Số dân giảm không liên tục.
+/D. Tỉ lệ dân thành thị giảm không liên tục.
+Câu 74. Cho bảng số liệu:<br>CƠ CẤU DÂN SỐ THEO NHÓM TUỔI CỦA NHẬT BẢN, NĂM 2010 VÀ 2020<br>(Đơn vị: %)<br><table><thead><tr><th>Năm</th><th>2010</th><th>2020</th></tr></thead><tbody><tr><td>Từ 0 đến 14 tuổi</td><td>13,2</td><td>12,0</td></tr><tr><td>Từ 15 đến 64 tuổi</td><td>63,8</td><td>59,0</td></tr><tr><td>Từ 65 tuổi trở lên</td><td>23,0</td><td>29,0</td></tr></tbody></table><br>(Nguồn: Niên giám thống kê Nhật Bản, 2022 và prb.org, 2021)<br>Theo bảng số liệu, nhận xét nào sau đây đúng về tỉ trọng số dân thuộc các nhóm tuổi ở Nhật Bản năm 2020 so với 2010?
+A. Từ 0 đến 14 tuổi tăng.	/B. Từ 0 đến 14 tuổi giảm.
+C. Từ 65 tuổi trở lên giảm.	D. Từ 15 đến 64 tuổi tăng.
+Câu 75. Vùng kinh tế lâu đời nhất của Liên bang Nga là
+A. Trung ương.	/B. Trung tâm đất đen.
+C. U-ran.	D. Viễn Đông.
+Câu 76. Phát biểu nào sau đây đúng với cơ cấu GDP của Hoa Kỳ?
+A. Tỉ trọng dịch vụ giảm nhanh.	B. Tăng nhanh tỉ trọng nông nghiệp.
+/C. Tỉ trọng dịch vụ tăng liên tục.	D. Tỉ trọng công nghiệp tăng dần.
+Câu 77. Phía Tây phần lãnh thổ trung tâm Bắc Mỹ của Hoa Kỳ tiếp giáp với
+A. Đại Tây Dương.	B. Thái Bình Dương.	/C. Ca-na-đa.	D. Mê-hi-cô.
+Câu 78. Vùng nào sau đây có mật độ dân số cao nhất ở Liên bang Nga?
+A. Đồng bằng Đông Âu.	/B. Đông Xi-bia.
+C. Đồng bằng Tây Xi-bia.	D. Cao nguyên Trung Xi-bia.
+Câu 79. Dân số Nhật Bản không có đặc điểm nào sau đây?
+A. Dân cư tập trung ở ven biển.	B. Tỉ lệ người già ngày càng cao.
+/C. Quy mô dân số tăng rất nhanh.	D. Tỉ suất gia tăng tự nhiên thấp.
+Câu 80. Cho bảng số liệu:<br>SỐ DÂN VÀ TỈ LỆ GIA TĂNG DÂN SỐ CỦA HOA KỲ, GIAI ĐOẠN 2000 – 2020<br><table><thead><tr><th>Năm</th><th>2000</th><th>2005</th><th>2010</th><th>2015</th><th>2020</th></tr></thead><tbody><tr><td>Số dân (triệu người)</td><td>282,2</td><td>295,5</td><td>309,3</td><td>320,7</td><td>331,5</td></tr><tr><td>Tỉ lệ gia tăng dân số (%)</td><td>1,2</td><td>0,9</td><td>0,9</td><td>0,8</td><td>0,6</td></tr></tbody></table>(Nguồn: WB, 2022)<br>Theo bảng số liệu, nhận xét nào sau đây đúng với số dân và tỉ lệ gia tăng dân số của Hoa Kỳ, giai đoạn 2000 - 2020?
+/A. Tỉ lệ tăng dân số giảm dần.	B. Số dân giảm không liên tục.
+C. Số dân tăng không liên tục.	D. Tỉ lệ tăng dân số tăng dần.
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            var answerString = answerStrings[j].trim();
+            
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|đúng|nêu\slên|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
