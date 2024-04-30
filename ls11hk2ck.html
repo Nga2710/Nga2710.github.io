@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      LS 11 HKII GK <sup style="color:red">+</sup>
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Nhằm tăng cường sức mạnh quân sự để đối phó với cuộc xâm lược của nhà Minh cuối thế kỉ XIV, Hồ Quý Ly đã tiến hành
+cải cách văn hoá, xã hội, giáo dục.
+/xây dựng toà thành Tây Đô kiên cố.
+buộc vua Trần nhường ngôi cho mình.
+ban hành chính sách hạn điền, hạn nô.
+Câu 2. Nửa sau thế kỉ XIV, cuộc khởi nghĩa nông dân nào sau đây đã diễn ra để chống lại nhà Trần?
+/Khởi nghĩa Ngô Bệ (Hải Dương).
+Khởi nghĩa Phan Bá Vành (Thái Bình).
+Khởi nghĩa Yên Thế (Bắc Giang).
+Khởi nghĩa Lam Sơn (Thanh Hoá).
+Câu 3. Năm 1400, Hồ Quý Ly buộc vua Trần nhường ngôi và lập ra triều đại
+nhà Lê sơ.
+nhà Nguyễn.
+/nhà Hồ.
+nhà Lý.
+Câu 4. Sau khi lên ngôi và lập ra nhà Hồ, Hồ Quý Ly đã
+A. tổ chức kháng chiến chống quân Xiêm.
+tạo ra cục diện chiến tranh Nam-Bắc triều.
+mở rộng lãnh thổ về phía Nam.
+/tiến hành cuộc cải cách sâu rộng.
+Câu 5. Công cuộc cải cách của Hồ Quý Ly và triều đại nhà Hồ không đề cập đến lĩnh vực nào sau đây?
+Văn hoá - giáo dục.
+Chính trị - quân sự.
+Kinh tế - xã hội.
+/Thể thao - du lịch.
+Câu 6. Cuộc cải cách của Hồ Quý Ly tiến hành trong bối cảnh lịch sử nào sau đây?
+/Nước Đại Việt lâm vào khủng hoảng trầm trọng.
+Nhà Trần đang giai đoạn phát triển thịnh đạt.
+Giặc Tống sang xâm lược nước ta lần thứ nhất.
+Chế độ phong kiến Việt Nam phát triển đỉnh cao.
+Câu 7. Về kinh tế - xã hội, nhằm hạn chế sự phát triển của chế độ sở hữu ruộng đất lớn trong các điền trang, thái ấp của quý tộc, Hồ Quý Ly đã
+cho phát hành tiền giấy.
+/ban hành chính sách hạn điền.
+cải cách chế độ giáo dục.
+thống nhất đơn vị đo lường.
+Câu 8. Trong cải cách của Hồ Quý Ly, việc quy định số lượng gia nô được sở hữu của các vương hầu, quý tộc, quan lại được gọi là
+/phép hạn gia nô.
+chính sách hạn điền.
+chính sách quân điền.
+bình quân gia nô.
+Câu 9. Xây dựng nhiều thành luỹ kiên cố, chế tạo súng thần cơ, đóng thuyền chiến là nội dung cải cách của Hồ Quý Ly và triều Hồ về 
+kinh tế.
+văn hoá.
+/quân sự.
+xã hội.
+Câu 10. Hạn chế sự phát triển của Phật giáo, chấn chỉnh lại chế độ thi cử, đề cao chữ Nôm là nội dung cải cách của Hồ Quý Ly và triều Hồ về
+kinh tế, xã hội.
+/văn hoá, giáo dục.
+chính trị, quân sự.
+hành chính, pháp luật.
+Câu 1. Nội dung nào sau đây là một trong những nguyên nhân dẫn đến sự suy yếu của triều đại nhà Trần ở nửa sau thế kỉ XIV?
+Giặc Minh lăm le sang xâm lược, quân Chăm-pa tấn công.
+/Nhà nước không quan tâm sản xuất, quan lại ăn chơi hưởng lạc.
+Chu Văn An dâng sớ chém gian thần không được chấp thuận.
+Nhà Trần tiến hành nhiều cuộc chiến tranh xâm lược tốn kém.
+Câu 2. Nội dung nào sau đây không phải là khó khăn của triều đại nhà Trần ở nửa sau thế kỉ XIV?
+Giặc Minh lăm le sang xâm lược, quân Chăm-pa tấn công.
+/Hồ Quý Ly đã tiến hành cuộc cải cách trên nhiều lĩnh vực.
+Hạn hán, lũ lụt, mất mùa, đói kém xảy ra ở nhiều địa phương.
+Nhiều cuộc khởi nghĩa nông dân diễn ra chống lại triều đình.
+Câu 3. Sự suy yếu của triều đại nhà Trần cuối thế kỉ XIV đã dẫn đến nguy cơ nào sau đây?
+ Đánh mất dần bản sắc văn hoá dân tộc.
+Mất độc lập bởi sự xâm lược của phương Tây.
+/Không còn khả năng bảo vệ sự an toàn của đất nước.
+Các khởi nghĩa nông dân sẽ lật đổ được triều đình.
+Câu 4. Trong bối cảnh đời sống sa sút nghiêm trọng, nhân dân Đại Việt cuối thế kỉ XIV đã
+đồng loạt suy tôn Hồ Quý Ly lên ngôi vua.
+bán ruộng đất cho quý tộc, biến mình thành nô tì.
+/nổi dậy khởi nghĩa ở nhiều nơi trong cả nước.
+bất lực trước thực trạng, không phản kháng.
+Câu 5. Để khuyến khích và đề cao chữ Nôm, Hồ Quý Ly đã thực hiện biện pháp nào sau đây?
+/Dịch nhiều sách chữ Hán sang chữ Nôm.
+Chính thức đưa văn thơ Nôm vào nội dung thi cử.
+Bắt buộc tất cả sách biên soạn bằng chữ Nôm.
+Mở trường dạy học hoàn toàn bằng chữ Nôm.
+Câu 6. Năm 1397, Hồ Quý Ly đã đặt phép hạn điền nhằm mục đích nào sau đây?
+ Quy định số lượng gia nô được sở hữu của vương hầu, quý tộc.
+Thể hiện sự quan tâm đến sản xuất, giúp nông nghiệp phát triển.
+Giải quyết nhu cầu về ruộng đất cho những nông dân nghèo.
+/Hạn chế sở hữu ruộng tư, đánh mạnh vào chế độ điền trang.
+Câu 3. Cải cách của Hồ Quý Ly cuối thế kỉ XIV đầu thế kỉ XV có điểm tiến bộ nào sau đây?
+Nho giáo trở thành tư tưởng chủ đạo trong xã hội.
+Nền giáo dục, khoa cử từng bước phát triển.
+/Thể hiện tinh thần dân tộc, ý thức tự cường.
+Xác lập thể chế quân chủ trung ương tập quyền.
+Câu 5. Yếu tố nào sau đây là nguyên nhân cơ bản nhất dẫn đến cải cách của Hồ Quý Ly đầu thế kỉ XV không thành công?
+/Lòng dân không thuận theo nhà Hồ.
+Sự uy hiếp của các thế lực ngoại xâm.
+Sự chống đối của thế lực phong kiến cũ.
+Tiềm lực đất nước hoàn toàn suy sụp.
+Câu 7. Nội dung nào sau đây phản ánh rõ nét tính thực tiễn trong cải cách giáo dục của Hồ Quý Ly cuối thế kỉ XIV đầu thế kỉ XV?
+Dạy văn chương chữ Nôm cho phi tần, cung nữ.
+Chú trọng tổ chức các kì thi, lấy đỗ gần 200 người.
+Bổ sung chức học quan, cấp học điền cho trường học.
+/Sửa đổi chế độ thi cử, thêm kì thi viết chữ và làm toán.
+Câu 1. Năm 1460, vua Lê Thánh Tông lên ngôi trong bối cảnh tình hình chính trị, kinh tế, xã hội của đất nước
+khủng hoảng, suy thoái.
+/đã từng bước ổn định.
+khó khăn và bị chia cắt.
+rối ren, cát cứ khắp nơi.
+Câu 2. Năm 1460, sau khi lên ngôi, vua Lê Thánh Tông đã tiến hành
+/cuộc cải cách trên nhiều lĩnh vực.
+mở cuộc tiến công sang Trung Quốc.
+công cuộc thống nhất đất nước.
+khuyến khích phát triển ngoại thương.
+Câu 3. Nguyên tắc ban cấp ruộng đất của chế độ quân điền là
+ lấy ruộng đất công chia cho dân.
+ưu tiên phần nhiều cho quan lại.
+/ruộng xã nào chia cho dân xã ấy.
+không chia cho trẻ em mồ coi.
+Câu 4. Về cải cách hành chính, ở trung ương, vua Lê Thánh Tông cho xóa bỏ hầu hết các chức quan
+ /đại thần.
+thừa ty.
+hiến ty.
+đô ty.
+Câu 5. Năm 1466, ở địa phương, vua Lê Thánh Tông chia đất nước thành
+ 10 đạo thừa tuyên và phủ Trung Đô.
+11 đạo thừa tuyên và phủ Trung Đô.
+/12 đạo thừa tuyên và phủ Trung Đô.
+13 đạo thừa tuyên và phủ Trung Đô.
+Câu 6. Trong bộ máy nhà nước dưới thời vua Lê Thánh Tông, quan lại được tuyển chọn chủ yếu thông qua
+kế vị.
+đề cử.
+ứng cử.
+/khoa cử.
+Câu 7. Năm 1483, vua Lê Thánh Tông cho ban hành
+Hoàng Việt luật lệ.
+/Quốc triều hình luật.
+Hình luật.
+Hình thư.
+Câu 8. Tổ chức bộ máy chính quyền địa phương thời Lê sơ từ sau cải cách của vua Lê Thánh Tông là
+/đạo thừa tuyên, phủ, huyện, châu, xã.
+phủ Thừa Thiên, châu, huyện, xã, làng.
+đạo thừa tuyên, phủ, châu, hương, xã.
+phủ Thừa Thiên, huyện, châu, xã, làng.
+Câu 9. Quân đội dưới thời vua Lê Thánh Tông được gọi là
+ thân binh và tân binh.
+tân binh và ngoại binh.
+thủy binh và bộ binh.
+/cấm binh và ngoại binh.
+Câu 10. Để rèn luyện quân đội, nhà Lê sơ ngoài việc duyệt binh sĩ hàng năm còn có quy định nào sau đây?
+Mua sắm vũ khí phương Tây trang bị cho quân đội.
+Thường xuyên huấn luyện theo kiểu phương Tây.
+/Cứ 3 năm tổ chức một kỳ thi khảo võ nghệ.
+Mời võ sĩ phương Tây huấn luyện cho quân đội.
+Câu 11. Để phát triển kinh tế, vua Lê Thánh Tông đã ban hành các chính sách
+lập quan Hà đê sứ và quan quân điền.
+cho đào kênh máng, đắp đê “quai vạc”.
+lập quan Hà đê sứ và đắp đê “quai vạc”.
+/chế độ lộc điền và chế độ quân điền.
+Câu 12. Để tôn vinh những người đỗ đại khoa, vua Lê Thánh Tông đã
+phong làm quan đại thần.
+/dựng bia đá ở Văn Miếu.
+cấp bằng Thạc sĩ, Tiến sĩ.
+cử làm thầy đồ dạy học.
+Câu 1. Sau khi lên ngôi, vua Lê Thánh Tông từng bước tiến hành cải cách nhằm mục đích
+/tăng cường quyền lực của vua và bộ máy nhà nước.
+đưa nước ta trở thành một nước công nghiệp tiên tiến.
+tăng cường bình đẳng, dân chủ và hạn chế phân quyền.
+xóa bỏ tình trạng phân tán quyền lực, thống nhất đất nước.
+Câu 2. Khi lên ngôi, vua Lê Thánh Tông chủ trương xóa bỏ hầu hết các chức quan đại thần có quyền lực lớn ở triều đình trung ương nhằm
+giảm cồng kềnh bộ máy hành chính.
+/tập trung quyền lực vào tay nhà vua.
+làm mới lại tổ chức bộ máy nhà nước.
+để bộ máy hành chính không quan liêu.
+Câu 3. Dưới thời vua Lê Thánh Tông, việc dựng bia Tiến sĩ ở Văn Miếu nhằm mục đích
+ khẳng định nền giáo dục Nho học của nước Đại Việt.
+ghi số lượng những người đỗ Tiến sĩ qua các kì thi Hội.
+/đề cao Nho học và tôn vinh những người đỗ đại khoa.
+trùng tu, mở rộng, làm mới Văn Miếu – Quốc Tử Giám.
+Câu 4. Một trong những điểm mới và tiến bộ của bộ luật Quốc triều hình luật là
+ đề cao quyền tự do, dân chủ của nhân dân.
+bảo vệ tuyệt đối quyền và lợi ích của vua.
+bảo vệ quyền và lợi ích của quân cấm binh.
+/bảo vệ quyền lợi và địa vị của người phụ nữ.
+Câu 5. Trọng tâm trong công cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) là lĩnh vực
+ kinh tế.
+pháp luật.
+/hành chính.
+giáo dục.
+Câu 6. Bộ máy chính quyền thời Lê sơ được hoàn chỉnh dưới thời vua
+Lê Thái Tổ.
+Lê Thái Tông.
+Lê Nhân Tông.
+/Lê Thánh Tông.
+Câu 7. Để tập trung quyền lực vào tay nhà vua, Lê Thánh Tông chủ trương
+chia cả nước thành 12 đạo thừa tuyên.
+cho ban hành bộ Quốc triều hình luật.
+tăng cường lực lượng quân đội triều đình.
+/xóa bỏ hầu hết quan đại thần có quyền lực lớn.
+Câu 8. Chính sách cải cách nào sau đây của vua Lê Thánh Tông đã góp phần khẳng định quyền sở hữu tối cao của Nhà nước tạo nền tảng cho kinh tế nông nghiệp phát triển?
+Đồn điền.
+Đê điều.
+/Ruộng đất.
+Khẩn hoang.
+Câu 9. Nội dung nào sau đây là một trong những ý nghĩa về cuộc cải cách của vua Lê Thánh Tông ở thế kỉ XV?
+Mở ra khả năng độc lập, tự chủ đầu tiên cho dân tộc ta.
+/Làm chuyển biến toàn bộ các hoạt động của quốc gia.
+Tạo thế và lực cho ta đánh bại quân xâm lược Minh.
+Tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.
+Câu 10. Nội dung nào dưới đây là một trong những ý nghĩa về cuộc cải cách của vua Lê Thánh Tông ở thế kỉ XV?
+Mở ra khả năng độc lập, tự chủ, thống nhất lâu dài cho dân tộc ta.
+/Tạo cơ sở cho nhà Lê sơ phát triển vững mạnh, đất nước hưng thịnh.
+Tạo thế và lực cho nước ta đánh bại quân xâm lược Minh, bảo vệ Tổ quốc.
+Mở ra khả năng mới, tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.c/ Vận dụng
+Câu 1. Nội dung nào sau đây phản ánh đúng về chức năng của lục Bộ (sáu bộ) dưới thời vua Lê Thánh Tông?
+Cơ quan giúp việc cho lục Tự (sáu tự).
+Theo dõi, giám sát hoạt động của lục Khoa.
+/Cơ quan cao cấp chủ chốt trong triều đình.
+Phụ trách hoạt động quân sự của nhà nước.
+Câu 8. Điểm giống nhau cơ bản giữa cuộc cải cách của vua Lê Thánh Tông và vua Minh Mạng là trọng tâm cải cách về
+/hành chính.
+giáo dục.
+pháp luật.
+quân đội.
+Câu 9. Mô hình quân chủ chuyên chế thời Lê sơ đã ảnh hưởng như thế nào đến các nhà nước phong kiến ở Việt Nam ở giai đoạn sau?
+Mô hình thử nghiệm cho các triều đại phong kiến.
+/Trở thành khuôn mẫu cho các triều đại về sau.
+Đặt nền móng cho sự hình thành chế độ phong kiến.
+Hình mẫu thí điểm cho các triều đại phong kiến.
+Câu 1. Cuộc cải cách hành chính lớn nhất dưới triều Nguyễn được tiến hành bởi vua
+Gia Long.
+/Minh Mạng.
+Tự Đức.
+Hàm Nghi.
+Câu 2. Để khắc phục tình trạng phân quyền, thiếu thống nhất triều đình nhà Nguyễn, vua Minh Mạng đã
+thành lập Cơ mật viện.
+/tiến hành cuộc cải cách.
+cải tổ Văn thư phòng.
+cải tổ Quốc tử giám.
+Câu 3. Trọng tâm cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) là
+ kinh tế.
+chính trị.
+/hành chính.
+quân sự.
+Câu 4. Trong bộ máy chính quyền trung ương thời Minh Mạng, các cơ quan Nội các và Cơ mật viện có vai trò tư vấn cho nhà vua về
+kinh tế.
+/quân sự.
+giáo dục.
+tài chính.
+Câu 7. Trong bộ máy chính quyền trung ương thời Minh Mạng, các cơ quan Nội các và Cơ mật viện có vai trò tư vấn cho nhà vua về
+kinh tế.
+/chính trị.
+giáo dục.
+tài chính.
+Câu 8. Ở địa phương, trong công cuộc cải cách hành chính, vua Minh Mạng đã chia cả nước thành
+/30 tỉnh và phủ Thừa Thiên.
+Bắc Thành, Gia Định thành và trực doanh.
+từ phủ Thừa Thiên ra Bắc thành 18 tỉnh.
+từ phủ Thừa Thiên vào Nam thành 12 tỉnh.
+Câu 11. Trong cuộc cải cách hành chính của vua Minh Mạng (nửa đầu thế kỉ XIX), cơ quan nào sau đây có chức năng như một cơ quan hành chính trung ương?
+/Nội các.
+Quốc tử giám.
+Hàm lâm viện.
+Đô sát viện.
+Câu 12. Dưới thời vua Minh Mạng, đứng đầu tỉnh là
+/Tổng đốc, Tuần phủ.
+Quan Thượng thư.
+Khâm sai đại thần.
+Tả tướng quân.
+Câu 1. Cuộc cải cách Minh Mạng (nửa đầu thế kỉ XIX) được thực hiện trong bối cảnh
+/đất nước vừa trải qua thời gian chiến tranh, bị chia cắt lâu dài.
+bộ máy hành chính nhà nước phong kiến cơ bản đã hoàn chỉnh.
+tình trạng phân quyền, thiếu thống nhất ở địa phương đã khắc phục.
+vua Gia Long đã tiến hành cuộc cải cách hành chính hoàn chỉnh.
+Câu 2. Cuộc cải cách Minh Mạng (nửa đầu thế kỉ XIX) được thực hiện trong bối cảnh
+/Quan lại trong bộ máy nhà nước chủ yếu do các võ quan nắm giữ.
+bộ máy hành chính nhà nước phong kiến cơ bản đã hoàn chỉnh.
+tình trạng phân quyền, thiếu thống nhất ở địa phương đã khắc phục.
+vua Gia Long đã tiến hành cuộc cải cách hành chính hoàn chỉnh.
+Câu 3. Cuộc cải cách Minh Mạng (nửa đầu thế kỉ XIX) được thực hiện trong bối cảnh
+/tính phân quyền còn đậm nét với sự tồn tại Bắc Thành và Gia Định Thành.
+bộ máy hành chính nhà nước phong kiến cơ bản đã hoàn chỉnh.
+tình trạng phân quyền, thiếu thống nhất ở địa phương đã khắc phục.
+vua Gia Long đã tiến hành cuộc cải cách hành chính hoàn chỉnh.
+Câu 4. Cuộc cải cách Minh Mạng (nửa đầu thế kỉ XIX) được thực hiện trong bối cảnh
+/tình trạng phân quyền, thiếu thống nhất vẫn tồn tại đậm nét.
+bộ máy hành chính nhà nước phong kiến cơ bản đã hoàn chỉnh.
+tình trạng phân quyền, thiếu thống nhất ở địa phương đã khắc phục.
+vua Gia Long đã tiến hành cuộc cải cách hành chính hoàn chỉnh.
+Câu 1. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+//Nâng cao vai trò quản lí của chính quyền ở trung ương.
+Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+Câu 2. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+/Tăng cường và tập trung quyền lực trong tay nhà vua.
+Câu 3. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+/Nội dung cải cách phù hợp với yêu cầu của đất nước.
+Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+Câu 5. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
+Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
+Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
+Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
+/Để lại nhiều bài học kinh nghiệm quý báu cho thế hệ sau.
+Câu 1. Quần đảo Hoàng Sa và quần đảo Trường Sa thuộc chủ quyền của quốc gia nào sau đây?
+Nam Phi.
+Đan Mạch.
+/Việt Nam.
+Thụy Điển.
+Câu 2. Khu vực Biển Đông có diện tích khoảng 3,5 triệu km2 thuộc vùng biển
+/Thái Bình Dương.
+Ấn Độ Dương.
+Đại Tây Dương.
+Bắc Băng Dương.
+Câu 3. Vùng biển nào sau đây là tuyến đường di chuyển ngắn nhất nối Thái Bình Dương và Ấn Độ Dương?
+Biển Na Uy.
+/Biển Đông.
+Biển Đỏ.
+Biển Đen.
+Câu 4. Các quốc gia Đông Nam Á ven biển đang được hưởng lợi ích trực tiếp từ
+/Biển Đông.
+Biển Đỏ.
+Biển Đen.
+Biển Hồ.
+Câu 5. Quần đảo nào sau đây thuộc chủ quyền của Việt Nam nằm ở trung tâm của Biển Đông?
+ Quần đảo Mã Lai.
+Quần đảo Bắc Cực.
+Quần đảo Thế giới.
+/Quần đảo Trường Sa.
+Câu 6. Ở Việt Nam, tỉnh nào sau đây của có đường bờ biển tiếp giáp với Biển Đông?
+ Đồng Tháp.
+Bắc Giang.
+/Kiên Giang.
+Bình Phước.
+Câu 7. Biển Đông là một trong những biển lớn và là đường vận chuyển huyết mạch của khu vực
+/châu Á - Thái Bình Dương.
+Bắc Mĩ và eo biển Đan Mạch.
+châu Âu và mũi Hảo Vọng.
+châu Phi và châu Nam Cực.
+Câu 8. Địa hình của quần đảo Hoàng Sa và quần đảo Trường Sa là sự nối tiếp liên tục của lục địa Việt Nam từ
+ vùng núi ra biển.
+/đất liền ra biển.
+hoạt động lấn biển.
+hoạt động núi lửa.
+Câu 11. Eo biển nào sau đây ở Đông Nam Á là điểm điều tiết giao thông đường biển quan trọng bậc nhất ở châu Á?
+/Eo Ma-lắc-ca.
+Eo Đài Loan.
+Eo Miệng Rồng
+Eo Cá Heo.
+Câu 16. Ngày nay, quần đảo Trường Sa thuộc địa phận tỉnh nào của Việt Nam?
+Quảng Ninh.
+Kiên Giang.
+/Khánh Hòa.
+Đồng Tháp.
+Câu 19. Ngày nay, quần đảo Hoàng Sa thuộc địa phận tỉnh, thành nào của Việt Nam?
+/Đà Nẵng.
+Hà Nội.
+Hải Phòng.
+Cần Thơ.
+Câu 20. Biển Đông trải dài khoảng 3000 km theo trục đông bắc – tây nam, nối liền Thái Bình Dương và
+ Bắc Băng Dương.
+Địa Trung Hải.
+Đại Tây Dương.
+/Ấn Độ Dương.
+Câu 1. Ở Biển Đông, nguồn tài nguyên thiên nhiên nào sau đây có trữ lượng lớn nhất thế giới?
+ Muối biển.
+Đất hiếm.
+/Dầu khí.
+Quặng sắt.
+Câu 2. Hệ thống đảo, quần đảo trên Biển Đông có ý nghĩa chiến lược về quốc phòng, an ninh đối với nhiều quốc gia ven biển vì lí do nào sau đây?
+/Nằm trên tuyến đường hàng hải quốc tế quan trọng, kết nối các châu lục.
+Đây là con đường duy nhất kết nối trực tiếp vùng biển châu Âu với biển Ả rập.
+Biển Đông là tuyến vận tải biển quan trọng bậc nhất nối châu Á và châu Âu.
+Biển Đông là tuyến vận tải đường biển ngắn nhất từ châu Âu sang châu Á.
+Câu 3. Biển Đông có vị trí chiến lược quan trọng trong giao thông hàng hải quốc tế vì
+ là tuyến đường biển duy nhất trên thế giới.
+/tập trung nhiều tuyến đường biển chiến lược.
+ít có sự hoạt động của áp thất nhiệt đới, bão.
+bị nhiều cường quốc lớn chi phối, khống chế.
+Câu 4. Biển Đông có vị trí chiến lược quan trọng trong giao thông hàng hải quốc tế vì
+ là tuyến đường biển duy nhất trên thế giới.
+ít có sự hoạt động của áp thất nhiệt đới, bão.
+/khu vực Biển Đông có nhiều eo biển quan trọng.
+bị nhiều cường quốc lớn chi phối, khống chế.
+Câu 5. Tầm quan trọng chiến lược của Biển Đông được thể hiện ở điểm nào sau đây?
+Lượng mưa thay đổi theo vĩ độ và mùa.
+Nối Đại Tây Dương đến Ấn Độ Dương.
+Là vùng biển chính cho tàu thuyền neo đậu.
+/Là tuyến đường giao thông biển huyết mạch.
+Câu 6. Tầm quan trọng chiến lược của Biển Đông được thể hiện ở điểm nào sau đây?
+ Ít có các đảo, quần đảo lớn bao bọc xunh quanh.
+Ít có sự hoạt động của áp thất nhiệt đới, bão.
+/Có nguồn tài nguyên thiên nhiên phong phú.
+Là tuyến giao thông hàng hải duy nhất trên biển.
+Câu 1. Nội dung nào sau đây phản ánh đúng về vị trí chiến lược của Biển Đông đối với sự phát triển kinh tế của Việt Nam?
+Góp phần giảm thiểu chi phí trong ngành vận tải đường biển.
+Rút ngắn thời gian vận chuyển, giao lưu kinh tế được dễ dàng.
+Biển Đông là tuyến đường vận tải biển duy nhất của thế giới.
+/Là cửa ngõ để Việt Nam giao thương với khu vực và thế giới.
+Câu 2. Đối với Việt Nam, Biển Đông có vai trò quan trọng nào sau đây ?
+/Cung cấp nguồn tài nguyên phong phú để phát triển đất nước.
+Đảm bảo nguồn an ninh lương thực cho nhân dân Việt Nam.
+Là tuyến đường duy nhất để Việt Nam xuất khẩu hàng nông sản.
+Là nền tảng duy nhất để Việt Nam phát triển công nghiệp nặng.
+Câu 1. Hiện nay, Việt Nam có bao nhiêu tỉnh, thành phố tiếp giáp với biển?
+26 tỉnh, thành phố.
+27 tỉnh, thành phố.
+/28 tỉnh, thành phố.
+29 tỉnh, thành phố.
+Câu 2. Hiện nay, về mặt hành chính, huyện đảo Hoàng Sa (Việt Nam) thuộc quyền quản lý hành chính của
+/thành phố Đà Nẵng.
+tỉnh Bình Thuận.
+tỉnh An Giang.
+tỉnh Trà Vinh.
+Câu 3. Hiện nay, về mặt hành chính, huyện đảo Trường Sa (Việt Nam) thuộc quyền quản lý hành chính của tỉnh
+/Khánh Hòa.
+Bình Thuận.
+An Giang.
+Trà Vinh.
+Câu 4. Hoạt động xác lập chủ quyền, quản lí liên tục mang tính nhà nước của các chúa Nguyễn và nhà Nguyễn đối với quần đảo Hoàng Sa, quần đảo Trường Sa được khẳng định thông qua việc
+/thành lập và hoạt động của các đội Hoàng Sa, Bắc Hải.
+di dân đến khai hoang và sinh sống lâu dài trên các đảo.
+cử quân đội chính quy đến đồn trú để bảo vệ các đảo.
+các chúa Nguyễn thường xuyên đến các đảo để thị sát.
+Câu 5. Dưới thời vua Gia Long, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng
+Sa, quần đảo Trường Sa được thể hiện qua việc
+di dân số lượng lớn đến khai hoang và sinh sống lâu dài trên các đảo.
+/tổ chức đội thủy quân chuyên trách thực thi chủ quyền ở các đảo.
+xây dựng Hoàng Sa và Trường Sa thành ngư trướng đánh bắt lớn.
+vua Gia Long thường xuyên đến các đảo để thị sát, nắm tình hình.
+Câu 6. Dưới thời vua Minh Mạng, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng
+Sa, quần đảo Trường Sa được thể hiện qua việc
+di dân số lượng lớn đến khai hoang và sinh sống lâu dài trên các đảo.
+/cử thủy quân ra đảo, cho vẽ bản đồ, cắm dấu mốc tại nơi khảo sát.
+xây dựng Hoàng Sa và Trường Sa thành ngư trướng đánh bắt lớn.
+vua Minh Mạng thường xuyên đến các đảo để thị sát, nắm tình hình.
+Câu 15. Một trong những công trình sử học và địa lí ghi chép về cương vực, lãnh thổ và hoạt động thực thi, bảo vệ chủ quyền của nhà nước phong kiến Việt Nam ở quần đảo Hoàng Sa, quần đảo Trường Sa là
+/Đại Nam nhất thống chí.
+Lam Sơn thực lục.
+Bình Ngô đại cáo.
+Ức Trai thi tập.
+Câu 1. Nội dung sau đây là thái độ của các nước tham dự Hội nghị Hoà bình Xan Phran-xixcô, (tháng 9-1951), khi chủ quyền của Việt Nam đối với quần đảo Hoàng Sa và quần đảo Trường Sa tiếp tục được tuyên bố?
+Trung Quốc phản đối quyết liệt và không được thông qua.
+Các nước Đông Nam Á phản và không được thông qua.
+/Không có quốc gia nào tham dự hội nghị phản đối.
+Mĩ phản đối quyết liệt và không được hội nghị thông qua.
+Câu 2. Về quốc phòng, an ninh, tầm quan trọng của Biển Đông đối với Việt Nam được thể hiện ở điểm nào sau đây?
+Là nơi có trữ lượng dầu khí lớn nhất thế giới.
+Là nơi có nguồn tài nguyên sinh vật đa dạng.
+Là khu vực tập trung các tuyến đường chiến lược.
+/Là tuyến phòng thủ từ phía đông của đất nước.
+Câu 3. Về phát triển các ngành kinh tế trọng điểm, tầm quan trọng của Biển Đông đối với Việt Nam được thể hiện ở điểm nào sau đây?
+Là nơi có trữ lượng dầu khí lớn nhất thế giới.
+Là nơi có nguồn tài nguyên sinh vật đa dạng.
+Là khu vực tập trung các tuyến đường chiến lược.
+/Phát triển kinh tế biển đa dạng với nhiều ngành.
+Câu 4. Đối với Việt Nam, biển Đông là “cửa ngõ” để giao lưu kinh tế và hợp tác với các nước trên thế giới, đặc biệt là với khu vực
+Châu Á - Châu Đại Dương.
+/Châu Á - Thái Bình Dương.
+Châu Đại Dương - Thái Bình Dương.
+Ấn Độ Dương - Bắc Băng Dương.
+Câu 6. Biển Đông đóng vai trò là tuyến phòng thủ phía đông của Việt Nam vì lí do nào sau đây?
+/Có nhiều đảo và quần đảo hợp thành tuyến phòng thủ.
+Có rất ít các đảo che chắn nên có thể quan sát từ xa.
+Là biển nông cạn nên các tàu chiến cỡ lớn khó ra vào.
+Do bốn mặt giáp Biển Đông nên rất thuận lợi phòng thủ.
+
+Câu 1. Lễ Khao lề thế lính nhằm tri ân Hải đội Hoàng Sa năm xưa, đồng thời giáo dục thế hệ trẻ về trách nhiệm giữ gìn biển đảo quê hương, hàng năm được tổ chức ở
+/huyện đảo Lý Sơn (Quảng Ngãi).
+huyện đảo Cô Tô (Quảng Ninh).
+huyện đảo Phú Quốc (Kiên Giang).
+Côn Đảo (Bà Rịa - Vũng Tàu).
+Câu 2. Nội dung nào sau đây phản ánh đúng chủ trương của Việt Nam trong việc bảo vệ quyền, chủ quyền và các lợi ích hợp pháp ở Biển Đông?
+Nhân nhượng các nước lớn để đổi lấy hòa bình trên biển.
+/Không đánh đổi chủ quyền để đổi lấy hòa bình viễn vông.
+Sẵn sàng khơi mào quân sự để bảo vệ chủ quyền chính đáng.
+Ưu tiên phát triển Hải quân để bảo vệ chủ quyền trên biển.
+Câu 3. Nội dung nào sau đây là một trong những khó khăn của Việt Nam trong việc bảo vệ quyền, chủ quyền và các lợi ích hợp pháp trên Biển Đông hiện nay?
+/Tình trạng chồng lấn giữa vùng biển đảo của nhiều quốc gia.
+Quân lực của nước ta quá yếu so với các nước tranh chấp Biển Đông.
+Các Ủy viên thường trực của Liên Hợp Quốc điều ủng hộ Trung Quốc.
+Thiếu các bằng chứng pháp lí để khẳng định chủ quyền ở Biển Đông.
+Câu 5. Hội nghị Hoà bình Xan Phran-xi-xcô, (tháng 9-1951), khi chủ quyền của Việt Nam đối với quần đảo Hoàng Sa và quần đảo Trường Sa tiếp tục được tuyên bố mà không bị các quốc gia tham dự hội nghị phản đối. Điều đó cho thấy
+/tính pháp lý quốc tế và lịch sử về chủ quyền của Việt Nam.
+đây là những quần đảo không có giá trị cao về kinh tế.
+đây là những quần đảo không có giá trị cao về quốc phòng.
+các quốc gia tham dự hội nghị đều tuyệt đối tôn trọng luật Biển.
+Câu 7. Nội dung nào sau đây phản ánh đúng về tầm quan trọng của Biển Đông đối với Việt Nam?
+/Hình thành thế phòng thủ liên hoàn biển - đảo - bờ để bảo vệ Tổ quốc.
+Là bàn đạp thuận lợi để Việt Nam mở rộng lãnh thổ Tổ quốc.
+Thuận lợi để hình thành liên minh quân sự với các nước trong khu vực.
+Là con đường duy nhất để hàng hóa xuất-nhập khẩu với bên ngoài.
+Câu 8. Trong kháng chiến chống Mỹ (1954-1975), đảo nào sau đây được xem là “vọng gác tiền tiêu” của miền Bắc Việt Nam?
+Đảo Hoàng Sa.
+Đảo Trường Sa.
+/Đảo Cồn Cỏ.
+Đảo Phú Quốc.
+Câu 9. Vịnh biển nào sau đây được UNESCO công nhận là di sản thiên nhiên thế giới đầu tiên của Việt Nam?
+Vịnh Cam Ranh.
+Vịnh Bắc Bộ.
+/Vịnh Hạ Long.
+Vịnh Thái Lan.
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
