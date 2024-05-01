@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      LS 11 HKII GK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Do đâu mà Quản lý CSDL trên máy tính thường nhanh chóng, tiết kiệm thời gian và công sức hơn so với quản lý thủ công?
+A. Dữ liệu trong CSDL có thể được tìm kiếm, lọc, và phân tích theo nhiều tiêu chí khác nhau trong thời gian ngắn, giúp người quản lý dễ dàng đưa ra quyết định hoặc tìm kiếm thông tin cần thiết.
+/B. Các hoạt động cập nhật và chỉnh sửa dữ liệu trên máy tính thường được tự động hóa và có thể được thực hiện đồng thời trên nhiều bản ghi, giúp tiết kiệm thời gian và giảm bớt công sức so với quản lý thủ công mà phải xử lý từng bản ghi một
+C. Được trải nghiệm nhiều tính năng khác nhau: nghe, gọi, chơi trò chơi, xem video...
+D. Dữ liệu trong CSDL có thể được bảo vệ bằng các biện pháp bảo mật như mã hóa
+Câu 2. Việc đầu tiên để làm việc với một CSDL là?
+A. Thu thập	     B. Xử lý	     /C. Tạo lập	     D. Cài đặt phần mềm
+Câu 3. Mở HeidiSQL và kết nối đến cơ sở dữ liệu của bạn (nếu đã có). Nếu chưa có cơ sở dữ liệu, bạn có thể tạo mới một cơ sở dữ liệu bằng cách nhấp chuột phải vào?
+/A. " Create database"	     B. "Create new"	     C. "Root"	     D. File 🡪 New
+Câu 4. Muốn truy xuất tất cả các dòng dữ liệu từ bảng "casi" ta dùng ?
+A. SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+B. SELECT * FROM casi WHERE idcasi = 1;
+/C. SELECT * FROM casi;
+D. SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 5. Bạn có thể chọn các tùy chọn sao lưu dữ liệu ở trong cửa sổ nào?
+A. "File"	     B. "New Session"	     /C. "Export Database"	     D. "Select All"
+Câu 6. Megapixel là?
+A. Đơn vị đo lường kích thước của hình ảnh
+/B. Đơn vị đo lường kích thước của hình ảnh được chụp bởi máy ảnh hoặc thiết bị camera khác
+C. Thiết bị đo lường kích thước của hình ảnh được chụp bởi máy ảnh hoặc thiết bị camera khác
+D. Đơn vị đo độ sáng của ảnh
+Câu 7. Độ phân giải (dpi) là số lượng điểm ảnh (pixel) được?
+A. In trên mười inch của một hình ảnh	     B. In trên mỗi inch của nhiều hình ảnh
+/C. In trên mỗi inch của một hình ảnh	     D. In trên bề mặt cả tấm ảnh
+Câu 8. Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 72 dpi là?
+/A. 41.67 x 27.78 inch	     B. 20 x 13.33 inch	     C. 10 x 6.67 inch	     D. 5 x 3.33 inch
+Câu 9. Nếu ảnh có hình một chiếc đĩa hình tròn, em dùng công cụ nào để chọn chiếc đĩa đó?
+A. "Hue-Saturation"	     B. "Curves"
+/C. "Elliptical Select Tool"	     D. "Split Tone"
+Câu 10. "Elliptical Select Tool" dùng để?
+/A. Công cụ lựa chọn hình ellip	     B. Thay đổi giá trị của các kênh màu
+C. Chỉnh màu trên toàn bộ ảnh	     D. Tăng độ bão hòa
+Câu 11. Công cụ "Rectangle Select Tool" là?
+A. Công cụ lựa chọn tự do	     B. Công cụ lựa chọn hình ellip
+/C. Công cụ lựa chọn hình chữ nhật	     D. Công cụ lựa chọn theo màu sắc
+Câu 12. Công cụ "Elliptical Select Tool" là?
+A. Công cụ lựa chọn tự do	   /B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật	     D. Công cụ lựa chọn theo màu sắc
+Câu 13. Công cụ Paint Brush có chức năng?
+/A. Vẽ thêm cho lớp đang chọn
+B. Tô màu vùng chọn
+C. Tô màu chuyển sắc vùng chọn
+D. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+Câu 14. Công cụ Clone có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+/D. Vẽ bằng cách sao chép chính xác một vùng chọn
+Câu 15. Công cụ Bucket Fill có chức năng?
+/A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 16. Công cụ Gradient có chức năng?
+A. Tô màu vùng chọn
+/B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 17: Để xuất ra tệp ảnh động, em chọn?
+A. File -> Save
+B. File -> Open as Layers
+/C. File -> Export As
+D. File ->Import
+Câu 18. Lớp có tên là Frame 1 (1000ms) sẽ được hiển thị bao nhiêu giây trước khi chuyển sang hình tiếp theo?
+A. 1000 giây trước khi chuyển sang hình tiếp theo
+B. 10 giây (10000 mili-giây) trước khi chuyển sang hình tiếp theo
+/C. 1 giây (1000 mili-giây) trước khi chuyển sang hình tiếp theo
+D. 100 giây trước khi chuyển sang hình tiếp theo
+Câu 19. Số lượng khung hình trung gian được tính bằng?
+/A. Tích của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+B. Thương của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+C. Hiệu của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+D. Tổng của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+Câu 20. Ngăn tư liệu là nơi?
+/A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm
+Câu 21. Con trỏ là?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+/D. Thời điểm
+Câu 22. Trong chế độ hiển thị theo phân cảnh thì mỗi phân cảnh có thể là?
+A. Mỗi đoạn phim có nhiều lớp	     /B. Mỗi ảnh hoặc một video clip
+C. Một đoạn phim	     D. Một mili giây hiển thị ảnh
+Câu 23. Một phân cảnh phim với yêu cầu như sau: Tại giây thứ 10 của phim, video clip số 1 sẽ hiện ra, từ giây thứ 12 đến 18, dòng chữ “Video clip này được thực hiện tại Nha Trang. ngày 20/6/2021" hiện ra. Để thêm dòng chữ "Video clip này được thực hiện tại Nha Trang. Ngày 20/6/2021" vào giây thứ 12 đến 18 của video clip số 1 thì cần sử dụng công cụ nào dưới đây ?
+A. Công cụ chỉnh sửa âm thanh	     B. Công cụ căn chỉnh thời gian
+/C. Công cụ tạo phụ đề	     D. Công cụ tạo văn bản
+Câu 24. Công cụ chuyển cảnh giúp?
+A. Đặt thời điểm xuất hiện của video clip	     B. Để tạo phụ đề cho đoạn phim
+C. Tạo tính liên kết giữa các cảnh trong phim	     D. Giúp hình ảnh trong phim được mượt hơn
+Câu 25. Trong quá trình kéo tăng giảm thời lượng, có thể quan sát sự thay đổi thời lượng của phân cảnh tại ô?
+/A. Duration	     B. Timeline	     C. audio editor	     D. Speed
+Câu 26. Khi tạo phim hoạt hình, kịch bản được xây dựng phải?
+A. Có các nguồn lực hỗ trợ	     B. Có sự sáng tạo
+/C. Đảm bảo tính khả thi	     D. Trung thực
+Câu 27. Sử dụng các công cụ trong VideoPad để?
+A. Thêm tiêu đề	     B. Thêm chú thích
+C. Thêm các hiệu ứng đặc biệt	     /D. Công cụ chỉnh sửa âm thanh (audio editor)
+Câu 28. Mở phần mềm Videopad và tạo dự án mới bằng cách chọn?
+A. "Thêm âm thanh"	     B. "Transitions"	     /C. "New Project"	     D. "Text"
+Câu 29. Do đâu mà Quản lý CSDL trên máy tính mang lại khả năng tra cứu và phân tích dữ liệu hiệu quả hơn so với quản lý thủ công?
+/A. Dữ liệu trong CSDL có thể được tìm kiếm, lọc, và phân tích theo nhiều tiêu chí khác nhau trong thời gian ngắn, giúp người quản lý dễ dàng đưa ra quyết định hoặc tìm kiếm thông tin cần thiết.
+B. Các hoạt động cập nhật và chỉnh sửa dữ liệu trên máy tính thường được tự động hóa và có thể được thực hiện đồng thời trên nhiều bản ghi, giúp tiết kiệm thời gian và giảm bớt công sức so với quản lý thủ công mà phải xử lý từng bản ghi một
+C. Được trải nghiệm nhiều tính năng khác nhau: nghe, gọi, chơi trò chơi, xem video...
+D. Dữ liệu trong CSDL có thể được bảo vệ bằng các biện pháp bảo mật như mã hóa
+Câu 30. Việc đầu tiên để tạo lập một CSDL quan hệ là ?
+A. Thu thập dữ liệu	     B. Xử lý dữ liệu
+/C. Tạo ra một hay nhiều bảng	     D. Xây dựng mối quan hệ giữa các bảng
+Câu 31. Để tạo bảng mới trong HeidiSQL, em chọn?
+A. " Create database"	     B. "Root"	     /C. "Create new"	     D. Insert 🡪 Table
+Câu 32. Muốn truy xuất các ca sĩ theo thứ tự tên theo thứ tự từ A đến Z ta dùng ?
+A. SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+B. SELECT * FROM casi WHERE idcasi = 1;
+/C. SELECT * FROM casi ORDER BY tencasi ASC;
+D. SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 33. Để sao lưu các bảng ta chọn?
+/A. "Select All"	     B. "File"
+C. "New Session"	     D. "Export Database"
+Câu 34. Máy ảnh với độ phân giải cao, sẽ?
+A. Ghi lại hỉnh ảnh bao quát hơn
+B. Ghi lại hình ảnh với nhiều chi tiết hơn
+/C. Ghi lại hình ảnh chi tiết hơn với độ rõ nét cao hơn
+D. Lưu được nhiều ảnh hơn.
+Câu 35. Khi in cùng một hình ảnh với độ phân giải khác nhau thì?
+A. Kích thước của hình ảnh sẽ không thay đổi
+/B. Kích thước của hình ảnh sẽ thay đổi tương ứng để đạt được độ phân giải mong muốn
+C. Kích thước hình ảnh tăng đều theo chiều ngang
+D. Kích thước hình ảnh tăng đều theo chiều dọc
+Câu 36. Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 150 dpi là?
+A. 41.67 x 27.78 inch	     /B. 20 x 13.33 inch	     C. 10 x 6.67 inch	     D. 5 x 3.33 inch
+Câu 37. Công cụ "Free Select Tool là?
+/A. Công cụ lựa chọn tự do	     B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật	     D. Công cụ lựa chọn theo màu sắc
+Câu 38. Công cụ "Select by Color Tool" là?
+A. Công cụ lựa chọn tự do	     B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật	     /D. Công cụ lựa chọn theo màu sắc
+Câu 39. Công cụ "Fuzzy Select Tool" là?
+A. Công cụ lựa chọn tự do	     B. Công cụ lựa chọn hình ellip
+/C. Công cụ lựa chọn theo mờ	     D. Công cụ lựa chọn theo màu sắc
+Câu 40. "Feather edges" (Đường viền mờ) dùng để?
+A. Điều chỉnh độ mờ của đường viền của vùng chọn tự do
+B. Điều chỉnh độ mờ của đường viền của vùng chọn hình ellip
+C. Điều chỉnh độ mờ của đường viền của vùng chọn hình chữ nhật
+D. Điều chỉnh ngưỡng của màu sắc để lựa chọn vùng tương tự
+Câu 41. Công cụ Healing có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+/D. Vẽ bằng cách sao chép một vùng chọn
+Câu 42. Công cụ Clone được sử dụng để?
+/A. Sao chép và nhân bản một vùng chọn
+B. Loại bỏ các khuyết điểm trên ảnh một cách tự động và mịn màng
+C. Giá trị màu nổi sẽ được sử dụng trong các công cụ hoạt động với màu nổi
+D. Giá trị màu nền sẽ được sử dụng trong các công cụ hoạt động với màu nền
+Câu 43. Công cụ Healing được sử dụng để?
+/A. Loại bỏ các khuyết điểm trên ảnh một cách tự động và mịn màng
+B. Sao chép và nhân bản một vùng chọn
+C. Giá trị màu nổi sẽ được sử dụng trong các công cụ hoạt động với màu nổi
+D. Giá trị màu nền sẽ được sử dụng trong các công cụ hoạt động với màu nền
+Câu 44. Công cụ Clone trong GIMP cho phép bạn sao chép nội dung từ?
+/A. Một vùng ảnh đã chọn ở bức ảnh khác và đưa nó vào một vùng khác trong cùng hình ảnh
+B. Một vùng ảnh chưa chọn và đưa nó vào một vùng khác trong cùng hình ảnh
+C. Một vùng ảnh đã chọn và đưa nó vào một vùng khác trong cùng hình ảnh
+D. Từ file ảnh này sang file ảnh khác
+Câu 45: Bạn có thể sử dụng công cụ nào để tô màu quả bóng?
+A. Ellipse
+B. Hình tròn
+/C. Fill
+D. Clone
+Câu 46. X trong cụm “(Xms)” là?
+/A. Số mili-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+B. Số micro-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+C. Số giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+D. Số phút mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+Câu 47. Một tệp ảnh mở trong GIMP có 5 lớp ảnh. Nếu dùng hiệu ứng Blend với số khung hình trung gian là 5 thì số lượng khung hình do GIMP tạo ra đề làm trung gian là bao nhiêu?
+A. 55 khung hình trung gian sẽ được tạo ra bởi GIMP
+B. 35 khung hình trung gian sẽ được tạo ra bởi GIMP
+/C. 25 khung hình trung gian sẽ được tạo ra bởi GIMP
+D. 15 khung hình trung gian sẽ được tạo ra bởi GIMP
+Câu 48. Thanh công cụ là nơi?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+/B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm
+Câu 49. Ngăn xem trước là nơi?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+/C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm
+Câu 50. Trong chế độ hiển thị theo phân cảnh thì con số chỉ thời lượng dưới mỗi phân cảnh thể hiện?
+A. Số lớp	     B. Màu sắc	    /C. Thời gian	     D. Độ trễ
+Câu 51. Một phân cảnh phim với yêu cầu như sau: Tại giây thứ 10 của phim, video clip số 1 sẽ hiện ra, từ giây thứ 12 đến 18, dòng chữ “Video clip này được thực hiện tại Nha Trang. ngày 20/6/2021" hiện ra.Để đặt thời điểm xuất hiện của video clip số 1 là giây thứ 10 của phim thì cần sử dụng công cụ nào dưới đây ?
+A. Công cụ chỉnh sửa âm thanh	     /B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề	     D. Công cụ tạo văn bản
+Câu 52. Để thêm hiệu ứng chuyển cảnh giữa các tư liệu đầu vào thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh	     B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề	     /D. Công cụ chuyển cảnh
+Câu 53. Để thêm, cắt, chỉnh sửa âm thanh và nhạc nền cho đoạn phim của em thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh	     B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề	     /D. Công cụ chỉnh sửa âm thanh (audio editor)
+Câu 54. Để tạo được một đoạn phim hoạt hình em cần?
+A. Thực hiện các ý tưởng	     B. Tìm kiếm sự trợ giúp
+/C. Xây dựng kịch bản cho phim đó	     D. Biết vẽ
+Câu 55. Để thêm hiệu ứng chuyển cảnh giữa các tư liệu đầu vào thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh	     B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề	     /D. Công cụ chuyển cảnh
+Câu 56. Thêm ảnh hoặc video clip vào dự án của bạn bằng cách sử dụng công cụ?
+A. "Chỉnh sửa âm thanh"	     B. "Căn chỉnh thời gian"
+C. "Tạo phụ đề"	     /D. "Thêm tư liệu"
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
