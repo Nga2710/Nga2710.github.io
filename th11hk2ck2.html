@@ -1,0 +1,1295 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      TH 11 HKII CK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+   Câu 2: Các phần mềm chỉnh sửa có chức năng nào dưới đây?
+A. Chỉnh sửa, cắt, dán ảnh
+B. Phóng to, thu nhỏ ảnh
+C. Chỉnh sửa màu sắc ảnh
+D. /Cả ba đáp án trên đều đúng
+Câu 3: Megapixel là?
+A. Đơn vị đo lường kích thước của hình ảnh
+/B. Đơn vị đo lường kích thước của hình ảnh được chụp bởi máy ảnh hoặc thiết bị camera khác
+C. Thiết bị đo lường kích thước của hình ảnh được chụp bởi máy ảnh hoặc thiết bị camera khác
+D. Cả ba đáp án trên đều đúng
+Câu 4: Một megapixel tương đương với?
+A. Một triệu điểm ảnh
+B. Một triệu pixel
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 5: Trong ngữ cảnh của máy ảnh, số megapixel được đề cập đến thường là?
+A. Độ phân giải của hình ảnh
+B. Số lượng điểm ảnh (pixel) được ghi lại trong một bức ảnh
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 6: Máy ảnh với độ phân giải cao, tức là?
+A. Có nhiều megapixel
+B. Có ít megapixel
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 7: Máy ảnh với độ phân giải cao, sẽ?
+A. Ghi lại hỉnh ảnh bao quát hơn
+B. Ghi lại hình ảnh với nhiều chi tiết hơn
+/C. Ghi lại hình ảnh chi tiết hơn với độ rõ nét cao hơn
+D. Đáp án khác
+Câu 8: Ghi lại hình ảnh chi tiết hơn với độ rõ nét cao hơn tương đương với việc?
+/A. Bạn có thể phóng to hình ảnh lớn hơn mà vẫn giữ được chất lượng hình ảnh tốt hơn
+B. Bạn có thể thu nhỏ hình ảnh mà vẫn giữ được chất lượng hình ảnh tốt hơn
+C. Bạn có thể thay đổi kích thước mà vẫn giữ được chất lượng hình ảnh tốt hơn
+D. Đáp án khác
+Câu 9: Yếu tố quyết định chất lượng hình ảnh của một máy ảnh có thể là?
+A. Công nghệ cảm biến
+B. Độ lớn của cảm biến
+C. Ống kính, độ nhạy sáng....
+/D. Cả ba đáp án trên đều đúng
+Câu 10: Độ phân giải (dpi) là số lượng điểm ảnh (pixel) được?
+A. In trên mười inch của một hình ảnh
+B. In trên mỗi inch của nhiều hình ảnh
+/C. In trên mỗi inch của một hình ảnh
+D. Đáp án khác
+Câu 11: Khi in cùng một hình ảnh với độ phân giải khác nhau thì?
+A. Kích thước của hình ảnh sẽ không thay đổi
+/B. Kích thước của hình ảnh sẽ thay đổi tương ứng để đạt được độ phân giải mong muốn
+C. Kích thước hình ảnh tăng đều theo chiều ngang
+D. Đáp án khác
+Câu 12: Với ảnh có kích thước 600 x 600 pixel, nếu in với độ phân giải 100 dpi, kích thước của hình ảnh sẽ là?
+A. Kích thước chiều ngang = 600 pixel / 200 dpi = 3 inch Kích thước chiều dọc = 600 pixel / 200 dpi = 3 inch
+/B. Kích thước chiều ngang = 600 pixel / 100 dpi = 6 inch Kích thước chiều dọc = 600 pixel / 100 dpi = 6 inch
+C. Kích thước chiều ngang = 600 pixel / 200 dpi = 3 inch Kích thước chiều dọc = 600 pixel / 300 dpi = 2 inch
+D. Đáp án khác
+Câu 13: Với ảnh có kích thước 600 x 600 pixel, nếu in với độ phân giải 200 dpi, kích thước của hình ảnh sẽ là?
+/A. Kích thước chiều ngang = 600 pixel / 200 dpi = 3 inch Kích thước chiều dọc = 600 pixel / 200 dpi = 3 inch
+B. Kích thước chiều ngang = 600 pixel / 100 dpi = 6 inch Kích thước chiều dọc = 600 pixel / 100 dpi = 6 inch
+C. Kích thước chiều ngang = 600 pixel / 200 dpi = 3 inch Kích thước chiều dọc = 600 pixel / 300 dpi = 2 inch
+D. Đáp án khác
+Câu 14: Vậy, kích thước của hình ảnh in với độ phân giải 200 dpi sẽ như thế nào so với hình ảnh in với độ phân giải 100 dpi?
+A. Bằng
+B. Lớn hơn gấp 2 lần
+/C. Nhỏ hơn gấp 2 lần
+D. Đáp án khác
+Câu 15:  Sau khi chụp ảnh kỉ yếu lớp, Minh tập hợp và chính lại các ảnh trước khi in. Em có biết Minh có thể dùng phần mềm nào để thực hiện việc đó không??
+A. Adobe Photoshop
+B. Photoshop
+C. GIMP
+/D. Cả ba đáp án trên đều đúng
+Câu 16: Để xử lí một bức ảnh thiếu sáng em sử dụng những phần mềm nào sau đây?
+A. PowerPoint
+B. Inkscape
+/C. GIMP
+D. Đáp án khác
+Câu 17: GIMP là một phần mềm chỉnh sửa ảnh như thế nào?
+A. Chuyên nghiệp và miễn phí
+B. Cung cấp nhiều công cụ và tính năng mạnh mẽ để chỉnh sửa
+C. Điều chỉnh độ sáng, độ tương phản, và màu sắc của ảnh
+/D. Cả ba đáp án trên đều đúng
+Câu 18: Để thay đổi giao diện hiển thị một cửa số của phần mềm GIMP, em thực hiện như thế nào?
+A. Mở phần mềm GIMP trên máy tính của bạn. Chọn "Tables" vào singe-window Mode
+/B. Mở phần mềm GIMP trên máy tính của bạn. Chọn "Windows" vào singe-window Mode
+C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 19: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 72 dpi là?
+/A. 41.67 x 27.78 inch
+B. 20 x 13.33 inch
+C. 10 x 6.67 inch
+D. 5 x 3.33 inch
+Câu 20: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 150 dpi là?
+A. 41.67 x 27.78 inch
+/B. 20 x 13.33 inch
+C. 10 x 6.67 inch
+D. 5 x 3.33 inch
+Câu 21: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 300 dpi là?
+A. 41.67 x 27.78 inch
+B. 20 x 13.33 inch
+/C. 10 x 6.67 inch
+D. 5 x 3.33 inch
+Câu 22: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 600 dpi là?
+A. 41.67 x 27.78 inch
+B. 20 x 13.33 inch
+C. 10 x 6.67 inch
+/D. 5 x 3.33 inch
+Câu 23:  Nếu in một ảnh ở độ phân giải 300 dpi thì thu được ảnh in có kích thước 10 - 10 inch. Để ảnh in có kích thước 5 x 5 inch thì cần in ảnh ở độ phân giải cao hơn hay thấp hơn 300 dpi??
+A. Để in một ảnh có kích thước 5 x 5 inch, cần in ảnh ở độ phân giải dpi thấp hơn 300 dpi B. Để in một ảnh có kích thước 5 x 5 inch, cần in ảnh ở độ phân giải dpi bằng 300 dpi
+/C. Để in một ảnh có kích thước 5 x 5 inch, cần in ảnh ở độ phân giải dpi cao hơn 300 dpi
+D. Đáp án khác
+Câu 1: Khi em đi in ảnh, có nhiều khi ảnh nhận được trông rất xỉn màu, khác xa tấm hình mà em đã chọn. Lí do có thể là?
+A. Độ phân giải của ảnh
+B. Chế độ màu sắc
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 2: Nếu ảnh ban đầu có độ phân giải thấp, khi in ảnh lớn hơn hoặc zoom in để in thì?
+A. Chất lượng của ảnh có thể bị giảm đi
+B. Chất lượng của ảnh được tăng lên đi
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 3:  Theo em bức ảnh này gặp vấn đề gì? (Làm biếng add hình)
+
+A. Bức ảnh có ánh sáng mạnh
+/B. Bức ảnh có ánh sáng yếu
+C. Bức ảnh có quá nhiều đối tượng
+D. Cả ba đáp án trên đều đúng
+Câu 4: Cần làm gì để ảnh đẹp hơn?
+
+A. Phóng to bức ảnh
+B. Thu nhỏ bức ảnh
+/C. Chỉnh sửa ánh sáng và cân bằng màu
+D. Cả hai đáp án trên đều sai
+Câu 5: Nếu em muốn bông hoa thược dược đỏ hơn thì dùng công cụ gì trong phần mềm GIMP?
+A. "Curves"
+B. "Levels"
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 6: Trong cửa sổ điều chỉnh Curves hoặc Levels, bạn có thể
+A. Phóng to bức ảnh
+/B. Thay đổi giá trị của các kênh màu đỏ, xanh lá cây và xanh dương để điều chỉnh màu sắc
+C. Thay đổi số điểm ảnh
+D. Đáp án khác
+Câu 7: Công cụ "Hue-Saturation" dùng để?
+A. Thay đổi giá trị của các kênh màu
+B. Chỉnh màu trên toàn bộ ảnh
+/C. Tăng độ bão hòa
+D. Đáp án khác
+Câu 8: Công cụ "Split Tone" dùng để?
+/A. Tách màu
+B. Thay đổi giá trị của các kênh màu
+C. Chỉnh màu trên toàn bộ ảnh
+D. Tăng độ bão hòa
+Câu 9: Trong cửa sổ điều chỉnh Split Tone, bạn có thể?
+A. Thay đổi màu sắc của Highlights (Điểm sáng)
+B. Thay đổi màu sắc của Shadows (Bóng)
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 10: Trong cửa sổ điều chỉnh Split Tone, bạn có thể thay đổi màu sắc của Highlights (Điểm sáng) và Shadows (Bóng) bằng cách?
+A. Chọn màu trong bảng màu
+B. Nhập giá trị mã màu RGB
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 11: Để tạo hiệu ứng trái táo gồm hai nửa với màu sắc khác nhau, ta thực hiện?
+A. Thay đổi số lượng điểm ảnh
+B. Sử dụng các kênh màu phù hợp
+/C. Chọn màu khác nhau cho Highlights và Shadows
+D. Đáp án khác
+Câu 12: Nếu ảnh có hình một chiếc đĩa hình tròn, em dùng công cụ nào để chọn chiếc đĩa đó?
+A. "Hue-Saturation"
+B. "Curves"
+/C. "Elliptical Select Tool"
+D. "Split Tone"
+Câu 13: "Elliptical Select Tool" dùng để?
+/A. Công cụ lựa chọn hình ellip
+B. Thay đổi giá trị của các kênh màu
+C. Chỉnh màu trên toàn bộ ảnh
+D. Tăng độ bão hòa
+Câu 14: Khi đã có vùng chọn hình tròn, bạn có thể thực hiện các thao tác nào?
+A. Cắt
+B. Sao chép
+C. Dán
+/D. Cả ba đáp án trên đều đúng
+Câu 15: Công cụ "Rectangle Select Tool" là?
+A. Công cụ lựa chọn tự do
+B. Công cụ lựa chọn hình ellip
+/C. Công cụ lựa chọn hình chữ nhật
+D. Công cụ lựa chọn theo màu sắc Câu 16: Công cụ "Elliptical Select Tool" là?
+A. Công cụ lựa chọn tự do
+/B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật
+D. Công cụ lựa chọn theo màu sắc
+Câu 17: Công cụ "Free Select Tool là?
+/A. Công cụ lựa chọn tự do
+B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật
+D. Công cụ lựa chọn theo màu sắc
+Câu 18: Công cụ "Select by Color Tool" là?
+A. Công cụ lựa chọn tự do
+B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật
+D. /Công cụ lựa chọn theo màu sắc
+Câu 19: Công cụ "Fuzzy Select Tool" là?
+A. Công cụ lựa chọn tự do
+B. Công cụ lựa chọn hình ellip
+/C. Công cụ lựa chọn theo mờ
+D. Công cụ lựa chọn theo màu sắc
+Câu 20: "Feather edges" (Đường viền mờ) dùng để?
+A. Điều chỉnh độ mờ của đường viền của vùng chọn tự do
+B. Điều chỉnh độ mờ của đường viền của vùng chọn hình ellip
+/C. Điều chỉnh độ mờ của đường viền của vùng chọn hình chữ nhật
+D. Điều chỉnh ngưỡng của màu sắc để lựa chọn vùng tương tự Câu 21: "Rectangle Select Tool" dùng để?
+A. Điều chỉnh độ mờ của đường viền của vùng chọn tự do
+/B. Điều chỉnh độ mờ của đường viền của vùng chọn hình ellip
+C. Điều chỉnh độ mờ của đường viền của vùng chọn hình chữ nhật
+D. Điều chỉnh ngưỡng của màu sắc để lựa chọn vùng tương tự Câu 22: "Threshold" (Ngưỡng) dùng để?
+A. Điều chỉnh độ mờ của đường viền của vùng chọn tự do
+B. Điều chỉnh độ mờ của đường viền của vùng chọn hình ellip
+C. Điều chỉnh độ mờ của đường viền của vùng chọn hình chữ nhật
+/D. Điều chỉnh ngưỡng của màu sắc để lựa chọn vùng tương tự
+Câu 23: Có thể điều chỉnh màu sắc của hai nửa táo bằng cách sử dụng các công cụ chỉnh sửa màu sắc như?
+A. "Colors" > "Brightness-Contrast"
+B. "Colors" > "Hue-Saturation"
+C. "Colors" > "Color Balance"
+D. /Cả ba đáp án trên đều đúng
+Câu 24: Điều chỉnh độ sáng và độ tương phản của ảnh bằng cách sử dụng công cụ?
+/A. "Colors" > "Brightness-Contrast"
+B. "Colors" > "Hue-Saturation"
+C. "Colors" > "Color Balance"
+D. Cả ba đáp án trên đều đúng
+Câu 25: Sử dụng công cụ "Levels" (Mức độ) để?
+A. Điều chỉnh độ sáng
+B. Điều chỉnh độ tương phản
+C. Điều chỉnh màu sắc của ảnh
+D. /Cả ba đáp án trên đều đúng
+Câu 1: Khi chỉnh sửa ảnh em có thể thực hiện những việc gì?
+A. Điều chỉnh độ sáng và độ tương phản
+B. Tinh chỉnh màu sắc
+C. Tăng cường độ sắc
+/D. Cả ba đáp án trên đều đúng
+Câu 2: Có thể sử dụng phần mềm chỉnh sửa ảnh nào để chính sửa?
+A. Lightroom
+B. Lightroom
+C. Adobe Photoshop
+/D. Cả ba đáp án trên đều đúng
+Câu 3: Nền màu xanh khi chụp quay dùng để?
+A. Tối giản những phát sinh khách quan trong qua trình làm phim
+B. Khắc phục những hạn chế mà bối cảnh thực không đáp ứng được đúng với yêu cầu của kịch bản
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 4: Nền màu xanh (hoặc màu xanh lá cây) thường được sử dụng trong trường quay vì?
+A. Ít gây nhiễu với các đối tượng và người mẫu trong cảnh quay
+B. Có độ tương phản cao
+C. Giúp dễ dàng phân tách nền và đối tượng
+/D. Cả ba đáp án trên đều đúng
+Câu 5: Phông xanh có thể khắc phục những hạn chế mà bối cảnh thực không đáp ứng được đúng với yêu cầu của kịch bản nào?
+A. Thời tiết
+B. Địa lý
+C. Bối cảnh lịch sử
+/D. Cả ba đáp án trên đều đúng
+Câu 6: Lớp nào được hiển thị trong hình sau? (Lười add ảnh)
+A. Lớp LSC
+/B. Lớp SK
+C. Lớp ORG
+D. Đáp án khác
+Câu 7: Hình dưới đây là một bức ảnh nổi tiếng của nhiếp ảnh gia Kusaikabe Kimbei được chụp từ những năm 1870. Em có thể xác định được tác giả đã phải vẽ thêm những gì để thu được tấm hình này không? (Lười add ảnh)
+A. Tác giả vẽ thêm chiếc ô
+B. Tác giả đã vẽ thêm cái váy
+/C. Không thể xác định được tác giả đã phải vẽ thêm những gì để thu được tấm hình này
+D. Đáp án khác
+Câu 8: Công cụ Clone được sử dụng để?
+/A. Sao chép và nhân bản một vùng chọn
+B. Loại bỏ các khuyết điểm trên ảnh một cách tự động và mịn màng
+C. Giá trị màu nổi sẽ được sử dụng trong các công cụ hoạt động với màu nổi
+D. Giá trị màu nền sẽ được sử dụng trong các công cụ hoạt động với màu nền Câu 9: Công cụ Healing được sử dụng để?
+/A. Loại bỏ các khuyết điểm trên ảnh một cách tự động và mịn màng
+B. Sao chép và nhân bản một vùng chọn
+C. Giá trị màu nổi sẽ được sử dụng trong các công cụ hoạt động với màu nổi
+D. Giá trị màu nền sẽ được sử dụng trong các công cụ hoạt động với màu nền Câu 10: Khi viết trong vở học sinh thường dùng mực màu gì?
+A. Đen
+B. Xanh
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 11: Khi viết trên bảng, các thầy cô sử dụng phắn màu trắng nhưng thầy cô không sử dụng bút mực trắng khi viết trong vở học sinh do?
+A. Bút mực trắng không phổ biến
+B. Bút mực trắng không dễ dàng tìm thấy như bút mực đen
+C. Bút mực trắng cũng có thể gây khó khăn trong việc đọc và giải quyết bài tập của học sinh trên giấy trắng thông thường
+/D. Cả ba đáp án trên đều đúng
+Câu 12: Bút mực đen được sử dụng rộng rãi vì?
+A. Có độ đậm và độ tương phản cao trên giấy trắng
+B. Giúp viết chữ rõ ràng, dễ đọc và dễ chấm điểm
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 13: Có ba lớp ảnh theo thứ tự từ dưới lên là 1, 2 và 3. Lớp 1 có một bông hoa, lớp 2 có một quả táo và lớp 3 có một chiếc bàn. Biết chỉ có lớp 2 có kênh alpha và độ mờ của cả 3 lớp là 100. Hỏi khi hiển thị cả ba lớp em thấy hình gì?
+/A. Em sẽ thấy bông hoa của lớp 1, quả táo của lớp 2 (với độ mờ được áp dụng), và
+chiếc bàn của lớp 3, tất cả đang được hiển thị trên cùng một ảnh ghép lại.
+B. Em sẽ thấy bông hoa của lớp 1
+C. Em sẽ thấy bông hoa của lớp 1, quả táo của lớp 2
+D. Đáp án khác
+Câu 14: Nếu ta cần sử dụng công cụ Clone trên một vùng ảnh hình chữ nhật thì theo em ta nên dùng đầu cọ nào?
+A. "Square"
+B. "Block"
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 15: Công cụ Clone trong GIMP cho phép bạn sao chép nội dung từ?
+A. Một vùng ảnh đã chọn ở bức ảnh khác và đưa nó vào một vùng khác trong cùng hình ảnh
+B. Một vùng ảnh chưa chọn và đưa nó vào một vùng khác trong cùng hình ảnh
+/C. Một vùng ảnh đã chọn và đưa nó vào một vùng khác trong cùng hình ảnh
+D. Đáp án khác
+Câu 16: Bằng cách chọn một vùng không nhược điểm làm nguồn sao chép bằng công cụ Clone, bạn có thể?
+A. "che" các nhược điểm khác trên ảnh chân dung
+B. "che" các vết nám, mụn trên ảnh chân dung
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 17: Công cụ Healing trong GIMP cung cấp các tính năng?
+A. Điều chỉnh màu sắc
+B. Điều chỉnh ánh sáng
+C. Điều chỉnh độ mịn
+D. /Cả ba đáp án trên đều đúng Câu 18: Công cụ Healing tự động?
+A. Tính toán và điều chỉnh màu sắc của vùng đang chỉnh sửa để làm cho nó phù hợp với xung quanh
+B. Tính toán và điều chỉnh ánh sáng của vùng đang chỉnh sửa để làm cho nó phù hợp với xung quanh
+C. Tính toán và điều chỉnh cấu trúc của vùng đang chỉnh sửa để làm cho nó phù hợp với xung quanh
+D. /Cả ba đáp án trên đều đúng
+Câu 19: Công cụ Paint Brush có chức năng?
+/A. Vẽ thêm cho lớp đang chọn
+B. Tô màu vùng chọn
+C. Tô màu chuyển sắc vùng chọn
+D. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn Câu 20: Công cụ Healing có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. /Vẽ bằng cách sao chép một vùng chọn
+Câu 21: Công cụ Clone có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. /Vẽ bằng cách sao chép chính xác một vùng chọn
+Câu 22: Công cụ Bucket Fill có chức năng?
+/A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 23: Công cụ Gradient có chức năng?
+A. Tô màu vùng chọn
+/B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn Câu 24: Công cụ Eraser có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+/C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 25: Công cụ Clone và Healing thường dùng để?
+A. Sửa nhược điểm trên ảnh
+B. Lấp đầy một vùng ảnh đã cắt
+C. /Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 1: Em có thể nhìn thấy hình ảnh chuyển động nhưng không phải một đoạn phim ở đâu?
+A. Facebook
+B. Instagram
+C. Các trang mạng xã hội
+/D. Cả ba đáp án trên đều đúng
+
+Câu 4: Mỗi khi phải cài đặt một phần mềm mới trên điện  thấythoại hay máy tính, trong thời gian chờ đợi em sẽ thấy?
+A. Có hình vòng tròn quay
+B. Có đồng hồ cát
+C. Có một thanh chạy tăng dần
+/D. Cả ba đáp án trên đều đúng
+Câu 5: Trong khi thực hiện việc chỉnh sửa ta có thể?
+A. Chỉnh sửa cùng một lúc nhiều thành phần
+B. Xóa cùng lúc các thành phần
+/C. Tạo ra nhiều lớp đề xử lí từng phân nhỏ
+D. Cả ba đáp án trên đều sai
+Câu 6: Đề bắt đầu tạo ảnh động, em mở ảnh bằng lệnh?
+A. Filters-> Animation
+/B. File -> Open as Layers
+C. File -> Export As
+D. Đáp án khác
+Câu 7: Ảnh động được tạo gồm?
+A. Các video đã mở, mỗi khung hình là một lớp video, hiện lần lượt theo thứ tự từ dưới lên trên
+/B. Các ảnh đã mở, mỗi khung hình là một lớp ảnh, hiện lần lượt theo thứ tự từ dưới lên trên
+C. Các ảnh đã mở, mỗi khung hình là một lớp ảnh, hiện lần lượt theo thứ tự từ trên xuống dưới
+D. Đáp án khác
+Câu 8: Em có thể thiết lập thời gian xuất hiện cho mỗi khung hình bằng cách?
+/A. Thêm vào phía sau tên lớp tương ứng cụm “(Xms)”
+B. Cài đặt thời gian chuyển động
+C. Sử dụng phần mềm đếm giờ
+D. Đáp án khác
+Câu 9: X trong cụm “(Xms)” là?
+/A. Số mili-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+B. Số micro-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+C. Số giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+D. Đáp án khác
+Câu 10:  Lớp có tên là Frame 1 (1000ms) sẽ được hiển thị bao nhiêu giây trước khi chuyển sang hình tiếp theo?
+A. 100 giây (100000 mili-giây) trước khi chuyển sang hình tiếp theo
+B. 10 giây (10000 mili-giây) trước khi chuyển sang hình tiếp theo
+/C. 1 giây (1000 mili-giây) trước khi chuyển sang hình tiếp theo
+D. Đáp án khác
+Câu 11: Để xuất ra tệp ảnh động, em chọn?
+A. File -> Save
+B. File -> Open as Layers
+/C. File -> Export As
+D. Đáp án khác
+Câu 12:  "Delay between frames where unspecified" là?
+A. Thời gian độ trễ giữa các khung ảnh trong ảnh động (animation) khi được chỉ định (unspecified)
+/B. Thời gian độ trễ giữa các khung ảnh trong ảnh động (animation) khi không được chỉ định (unspecified)
+C. Thời gian xuất hiện các khung ảnh trong ảnh động (animation) khi không được chỉ định (unspecified)
+D. Đáp án khác
+Câu 13: Nếu giá trị của "Delay between frames where unspecified" là 2000 (ms), thì thời gian xuất hiện của mỗi khung ảnh sẽ là?
+A. 2000 ms
+B. 1 giây
+C. 1000 ms
+/D. 2 giây
+Câu 14: "Delay between frames where unspecified" là 2000 (ms) có nghĩa là?
+A. Mỗi khung ảnh sẽ được hiển thị trong 10 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+B. Mỗi khung ảnh sẽ được hiển thị trong 20 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+C. Mỗi khung ảnh sẽ được hiển thị trong 1 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+/D. Mỗi khung ảnh sẽ được hiển thị trong 2 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+Câu 15: Để chạy hiệu ứng hoạt hình của bạn theo một tốc độ nhanh hơn hoặc chậm hơn, em cần?
+A. Thay đổi thời gian trễ
+B. Thay đổi thời gian xuất hiện
+/C. Thay đổi thiết đặt thời lượng
+D. Đáp án khác
+Câu 16: Một tệp ảnh mở trong GIMP có 5 lớp ảnh. Nếu dùng hiệu ứng Blend với số khung hình trung gian là 5 thì số lượng khung hình do GIMP tạo ra đề làm trung gian là bao nhiêu?
+A. 55 khung hình trung gian sẽ được tạo ra bởi GIMP
+B. 35 khung hình trung gian sẽ được tạo ra bởi GIMP
+/C. 25 khung hình trung gian sẽ được tạo ra bởi GIMP
+D. 15 khung hình trung gian sẽ được tạo ra bởi GIMP
+Câu 17: Số lượng khung hình trung gian được tính bằng?
+/A. Tích của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+B. Thương của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+C. Hiệu của số lượng lớp ảnh trong tệp và số khung hình trung gian mà bạn đã thiết lập
+D. Đáp án khác
+Câu 18:  Tạo một tệp ảnh mới trong GIMP bằng cách chọn?
+A. File -> Save
+B. File -> Open as Layers
+C. File -> Export As
+/D. File -> New
+Câu 19: Bạn có thể sử dụng công cụ nào để vẽ quả bóng?
+A. Ellipse
+B. Hình tròn
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 20: Bạn có thể sử dụng công cụ nào để tô màu quả bóng?
+A. Ellipse
+B. Hình tròn
+/C. Fill
+D. Clone
+Câu 21: Tạo các lớp ảnh động cho quả bóng, bạn có thể?
+/A. Sao chép lớp ảnh gốc chứa quả bóng, sau đó dịch chuyển và thay đổi kích thước của quả bóng để tạo hiệu ứng nảy
+B. Sao chép lớp ảnh gốc chứa quả bóng, sau đó dịch chuyển quả bóng để tạo hiệu ứng nảy
+C. Sao chép lớp ảnh gốc chứa quả bóng, sau đó thay đổi kích thước của quả bóng để tạo hiệu ứng nảy D. Đáp án khác
+Câu 22: Điều chỉnh thời gian xuất hiện của các khung hình trong ảnh động ta dùng tính năng?
+A. Đặt kích thước, độ phân giải, và định dạng ảnh theo mong muốn
+/B. Delay của các khung hình trong GIMP
+C. Tô màu cho quả bóng
+D. Đáp án khác
+
+Câu 1: Bạn Nam làm một đoạn phim để kể lại những điều thú vị diễn ra trong kì nghỉ hè của mình. Tư liệu được sử dụng trong phim có thể là?
+A. Ảnh mà Nam đã ciụp
+B. Video mà Nam đã quay
+/C. Cả hai đáp án trên đều đúng
+C. Cả hai đáp án trên đều sai
+Câu 2: Thanh công cụ là nơi?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+/B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm
+Câu 3: Ngăn tư liệu là nơi?
+/A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm
+Câu 4: Ngăn xem trước là nơi?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+/C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+D. Thời điểm Câu 5: Con trỏ là?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+/D. Thời điểm
+Câu 6: Ngăn tiến trình là?
+A. Chứa các tệp ảnh, tệp video clip, tệp âm thanh,.... là tư liệu đầu vào cho phim
+B. Chứa các nút lệnh để thiết lập các tính năng hay các thao tác chỉnh sửa phim
+C. Đoạn phim và các lệnh chỉnh dửa, điều khiển đối tượng đang xem trước
+/D. Khu vực giúp theo dõi, quản lý toàn bộ trình tự cũng như thành phần của phim
+Câu 7: Đâu là chế độ hiển thị trong ngăn tiến trình?
+A. Hiển thị theo phân cảnh
+B. Hiển thị theo dòng thời gian
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 8: Hiển thị theo phân cảnh là chế độ?
+/A. Hiển thị đơn giản, giúp quan sát trực quan chuỗi các phân cảnh trong phim
+B. Hiển thị toàn bộ các thành phần của đoạn phim dưới dạng các lớp theo đúng trình tự thời gian của phim
+C. Hiển thị đơn giản các lớp theo trình tự thời gian
+D. Đáp án khác
+Câu 9: Hiển thị theo Dòng thời gian là chế độ?
+A. Hiển thị đơn giản, giúp quan sát trực quan chuỗi các phân cảnh trong phim
+/B. Hiển thị toàn bộ các thành phần của đoạn phim dưới dạng các lớp theo đúng trình tự thời gian của phim
+C. Hiển thị đơn giản các lớp theo trình tự thời gian
+D. Đáp án khác
+Câu 10: Trong chế độ hiển thị theo phân cảnh thì mỗi phân cảnh có thể là?
+A. Mỗi đoạn phim có nhiều lớp
+/B. Mỗi ảnh hoặc một video clip
+C. Một đoạn phim
+D. Đáp án khác
+Câu 11:  Trong chế độ hiển thị theo phân cảnh thì con số chỉ thời lượng dưới mỗi phân cảnh thể hiện?
+A. Số lớp
+B. Màu sắc
+/C. Thời gian
+D. Độ trễ
+Câu 14: Sequences lưu trữ tư liệu nào?
+A. Đoạn phim mở đầu
+B. Đoạn phim chính
+C. Đoạn phim chính
+/D. Cả ba đáp án trên đều đúng
+Câu 15:  Video files lưu trữ tư liệu nào?
+A. Video cho đoạn phim mở đầu
+B. Video cho đoạn phim chính
+C. Video cho đoạn phim kết thúc
+/D. Cả ba đáp án trên đều đúng
+Câu 16: Audio files lưu trữ tư liệu nào?
+A. Video cho đoạn phim mở đầu
+B. Ảnh cho đoạn phim mở đầu
+/C. File nhạc cho đoạn phim
+D. Đoạn phim mở đầu
+Câu 17: Images lưu trữ tư liệu nào?
+A. Ảnh cho đoạn phim mở đầu
+B. Ảnh cho đoạn phim chính
+C. Ảnh cho đoạn phim kết thúc
+/D. Cả ba đáp án trên đều đúng
+Câu 18: Trong hộp thoại Tạo mới Đoạn phim, bạn có thể?
+A. Đặt thuộc tính chiều rộng
+B. Đặt thuộc tính chiều cao
+C. Đặt thuộc tính tỷ lệ khung hình
+/D. Cả ba đáp án trên đều đúng
+Câu 19: Bạn có thể sử dụng các công cụ và tính năng của GIMP để?
+A. Chỉnh sửa cho các tư liệu đầu vào
+B. Biên tập cho các tư liệu đầu vào
+C. Tạo hiệu ứng cho các tư liệu đầu vào
+/D. Cả ba đáp án trên đều đúng
+Câu 20: Có thể xuất đoạn phim dưới dạng?
+A. File video
+B. GIF
+C. AVI
+/D. Cả ba đáp án trên đều đúng
+Câu 21: Phần mềm làm phim có các tính năng giúp sắp xếp các tư liệu theo?
+A. Một trình tự nhất định
+B. Một thời lượng nhất định
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 22: Các phần mềm làm phim hầy hết đều cung cấp tính năng nào dưới đây?
+A. Cho phép tạo ra các phân cảnh phim từ các tư liệu đầu vào
+B. Mỗi phân cảnh được thiết đặt thời lượng xuất hiện trên phim
+C. Thiết lập hiệu ứng chuyển cảnh, ghép âm thanh làm nhạc nền....
+D. /Cả ba đáp án trên đều đúng
+Câu 1: Các công cụ cần thiết để thực hiện được một phân cảnh phim với yêu cầu như sau: Tại giây thứ 10 của phim, video clip số 1 sẽ hiện ra, từ giây thứ 12 đến 18, dòng chữ “Video clip này được thực hiện tại Nha Trang. ngày 20/6/2021" hiện ra là?
+A. Công cụ căn chỉnh thời gian
+B. Công cụ tạo phụ đề
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 2: Một phân cảnh phim với yêu cầu như sau: Tại giây thứ 10 của phim, video clip số 1 sẽ hiện ra, từ giây thứ 12 đến 18, dòng chữ “Video clip này được thực hiện tại Nha Trang. ngày 20/6/2021" hiện ra.Để thêm dòng chữ "Video clip này được thực hiện tại Nha Trang. Ngày 20/6/2021" vào giây thứ 12 đến 18 của video clip số 1 thì cần sử dụng công cụ nào dưới đây ?
+A. Công cụ chỉnh sửa âm thanh
+B. Công cụ căn chỉnh thời gian
+/C. Công cụ tạo phụ đề
+D. Cả ba đáp án trên đều sai
+Câu 3: Một phân cảnh phim với yêu cầu như sau: Tại giây thứ 10 của phim, video clip số 1 sẽ hiện ra, từ giây thứ 12 đến 18, dòng chữ “Video clip này được thực hiện tại Nha Trang. ngày 20/6/2021" hiện ra.Để đặt thời điểm xuất hiện của video clip số 1 là giây thứ 10 của phim thì cần sử dụng công cụ nào dưới đây ?
+A. Công cụ chỉnh sửa âm thanh
+/B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề
+D. Cả ba đáp án trên đều sai
+Câu 4: Để thêm hiệu ứng chuyển cảnh giữa các tư liệu đầu vào thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh
+B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề
+D. /Công cụ chuyển cảnh
+Câu 5: Công cụ chuyển cảnh giúp?
+A. Đặt thời điểm xuất hiện của video clip
+B. Để tạo phụ đề cho đoạn phim
+/C. Tạo tính liên kết giữa các cảnh trong phim
+D. Cả ba đáp án trên đều sai
+Câu 6: Để người xem dễ dàng theo dõi cả kênh hình lẫn kênh chữ thì cần?
+A. Thêm, cắt, chỉnh sửa âm thanh và nhạc nền cho đoạn phim của em
+/B. Điều chỉnh thời lượng của mỗi chuyển cảnh sao cho phù hợp với nội dung và phụ đề của đoạn phim
+C. Chọn âm thanh, nhạc nền phù hợp với nội dung và tạo liên kết hài hòa giữa hình ảnh và âm thanh/nhạc nền trong đoạn phim
+D. Đáp án khác
+Câu 7: Để thêm, cắt, chỉnh sửa âm thanh và nhạc nền cho đoạn phim của em thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh
+B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề
+D. /Công cụ chỉnh sửa âm thanh (audio editor)
+Câu 8: Để tăng giảm thời lượng cho một phân cảnh thì cần?
+/A. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên hai chiều thì kéo thả chuột sang trái để giảm thời lượng hoặc sang phải để tăng thời lượng
+B. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên thì kéo thả chuột sang trái để giảm thời lượng hoặc sang phải để tăng thời lượng
+C. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên hai chiều thì kéo chuột lên trên để tăng và kéo xuống dưới để giảm
+D. Đáp án khác
+Câu 9: Trong quá trình kéo tăng giảm thời lượng, có thể quan sát sự thay đổi thời lượng của phân cảnh tại ô?
+/A. Duration
+B. Timeline
+C. audio editor
+D. Đáp án khác
+Câu 10: Thêm ảnh hoặc video clip vào dự án của bạn bằng cách sử dụng công cụ?
+A. "Chỉnh sửa âm thanh"
+B. "Căn chỉnh thời gian"
+C. "Tạo phụ đề"
+/D. "Thêm tư liệu"
+Câu 11:Sắp xếp và chỉnh sửa thứ tự của các tư liệu đầu vào để?
+A. Tạo nên sự hấp dẫn và mạch lạc cho đoạn phim
+B. Tạo thành một câu chuyện hoặc một chuỗi các cảnh liên kết lại với nhau
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 12: Thêm bài hát yêu thích của bạn vào dự án của bạn bằng cách sử dụng công cụ?
+A. "Thêm âm thanh"
+B. "Thêm tư liệu"
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 13: Chỉnh sửa âm lượng của bài hát cần tránh việc?
+A. Âm thanh quá ồn
+B. Âm thanh quá nhỏ
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 14: Để Căn chỉnh thời lượng của mỗi phân cảnh trong chế độ Dòng thời gian cần?
+A. Chuyển sang chế độ Thêm tư liệu trong GIMP
+B. Chuyển sang chế độ Thêm âm thanh trong GIMP
+C. Chuyển sang chế độ Căn chỉnh thời gian trong GIMP
+D. /Chuyển sang chế độ Dòng thời gian (Timeline) trong GIMP
+Câu 15: Đâu là tính năng biên tập của phần mềm làm phim?
+A. Chỉnh sửa hình ảnh
+B. Chỉnh sửa âm thanh
+C. Tạo các hiệu ứng chuyển cảnh
+/D. Cả ba đáp án trên đều đúng
+Câu 16: Các thao tác thường dùng khi chỉnh sửa hình ảnh hay video clip là ?
+A. Bổ sung, thay thế hoặc xóa
+B. Căn chỉnh hướng, góc quay
+C. Tạo hiệu ứng cho ảnh hoặc videoclip
+D. /Cả ba đáp án trên đều đúng
+Câu 17: Phần mềm làm phim cho phép?
+A. Đưa các tệp âm thanh vào đoạn phim
+B. Ghép nối
+C. Thay đổi độ dài, âm lượng
+/D. Cả ba đáp án trên đều đúng
+Câu 18: Một đoạn phim có thể chứa?
+A. Nhiều lớp băng hình khác nhau
+B. Nhiều lớp âm thanh khác nhau
+C. Nhiều lớp chữ hay phụ đề khác nhau
+D. /Cả ba đáp án trên đều đúng
+Câu 19: Một trong những yếu tố quan trọng của một đoạn phim là?
+/A. Thời lượng của từng phân cảnh
+B. Số lớp băng hình
+C. Số lượng âm thanh
+D. Đáp án khác
+Câu 20: Tạo phụ đề cho phim giúp?
+A. Đoạn phim trở nên chuyên nghiệp
+B. Truyền tải thông tin tốt hơn
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+Câu 21: Trong ngăn tiến trình, em có thể?
+/A. Thay đổi vị trí các phân cảnh bằng cách kéo thả
+B. Thay đổi vị trí các âm thanh bằng cách kéo thả
+C. Thay đổi vị trí các lớph bằng cách kéo thả
+D. Đáp án khác
+Câu 22: Để mở bảng lệnh chỉnh sửa âm thanh thì cần?
+A. Nháy nút phải chuột vào vị trí bất kì của lớp băng hình
+/B. Nháy nút phải chuột vào vị trí bất kì của đoạn âm thanh trong lớp Âm thanh
+C. Nháy nút trái chuột vào vị trí bất kì của đoạn âm thanh trong lớp Âm thanh
+D. Đáp án khác
+Câu 1: Để tạo được một đoạn phim hoạt hình em cần?
+A. Thực hiện các ý tưởng
+B. Tìm kiếm sự trợ giúp
+/C. Xây dựng kịch bản cho phim đó
+D. Cả hai đáp án trên đều sai
+Câu 2: Kịch bản được xây dựng phải?
+A. Có các nguồn lực hỗ trợ
+B. Có sự sáng tạo
+C. Đảm bảo tính khả thi
+D. Cả ba đáp án trên đều sai
+Câu 3: Chỉnh sửa video bằng cách chọn tập tin video bạn muốn chỉnh sửa trên ?
+A. Nút "Thêm tập tin" trên giao diện của VideoPad
+/B. Timeline của VideoPad
+C. Công cụ tạo phụ đề
+D. Cả ba đáp án trên đều sai
+Câu 4: Để thêm hiệu ứng chuyển cảnh giữa các tư liệu đầu vào thì sử dụng công cụ?
+A. Công cụ chỉnh sửa âm thanh
+B. Công cụ căn chỉnh thời gian
+C. Công cụ tạo phụ đề
+/D. Công cụ chuyển cảnh
+Câu 5: Có thể thêm các hiệu ứng nào để tạo sự liên kết hợp lý giữa các cảnh?
+A. Đặt thời điểm xuất hiện của video clip
+B. Để tạo phụ đề cho đoạn phim
+/C. Các hiệu ứng chuyển tiếp giữa các đoạn video khác nhau
+D. Cả ba đáp án trên đều sai
+Câu 6: Có thể thực hiện thao tác nào với các đoạn âm thanh không mong muốn?
+A. Điều chỉnh âm lượng
+B. Cắt, sao chép
+C. Xóa
+/D. Cả ba đáp án trên đều đúng
+Câu 7: Sử dụng các công cụ trong VideoPad để?
+A. Thêm tiêu đề
+B. Thêm chú thích
+C. Thêm các hiệu ứng đặc biệt
+/D. Công cụ chỉnh sửa âm thanh (audio editor)
+Câu 8: Để tăng giảm thời lượng cho một phân cảnh thì cần?
+/A. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên hai chiều thì kéo thả chuột sang trái để giảm thời lượng hoặc sang phải để tăng thời lượng
+B. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên thì kéo thả chuột sang trái để giảm thời lượng hoặc sang phải để tăng thời lượng
+C. Đưa trỏ chuột vào vị trí cuối của một phân cảnh, cho tới khi con trỏ chuột có hình mũi tên hai chiều thì kéo chuột lên trên để tăng và kéo xuống dưới để giảm
+D. Đáp án khác
+Câu 9: Có thể thực hiện thao tác nào với các tiêu đề và hiệu ứng?
+A. Tùy chỉnh kiểu dáng
+B. Tùy chỉnh kích thước
+C. Tùy chỉnh màu sắc và độ trễ
+/D. Cả ba đáp án trên đều đúng
+Câu 10: Thêm ảnh hoặc video clip vào dự án của bạn bằng cách sử dụng công cụ?
+A. "Chỉnh sửa âm thanh"
+B. "Căn chỉnh thời gian"
+C. "Tạo phụ đề"
+/D. "Thêm tư liệu"
+Câu 11: Để tạo một bộ phim hoàn chỉnh phục vụ học tập hoặc giải trí với thời lượng dưới 3 phút ta cần chuẩn bị gì?
+A. Ảnh phù hợp với nội dung của bộ phim
+B. Video clip phù hợp với nội dung của bộ phim
+C. Nhạc nền phù hợp với nội dung của bộ phim
+/D. Cả ba đáp án trên đều đúng
+Câu 12: Mở phần mềm Videopad và tạo dự án mới bằng cách chọn?
+A. "Thêm âm thanh"
+B. "Transitions"
+/C. "New Project"
+D. "Text"
+Câu 13: Để chọn và áp dụng hiệu ứng chuyển cảnh phù hợp giữa các phân cảnh của bộ phim ta sử dụng chức năng
+A. "New Project"
+B. "Text"
+/C. "Transitions"
+D. "Voiceover"
+Câu 14: Sử dụng chức năng "Text" trong Videopad để ?
+A. Chọn và áp dụng hiệu ứng chuyển cảnh phù hợp giữa các phân cảnh của bộ phim
+B. Điều chỉnh âm lượng và thời lượng của nhạc nền và âm thanh trong bộ phim
+C. Thêm thuyết minh hoặc hội thoại giữa các nhân vật vào bộ phim
+/D. Thêm phụ đề vào các phân cảnh của bộ phim
+Câu 15: Để thêm thuyết minh hoặc hội thoại giữa các nhân vật vào bộ phim ta sử dụng chức năng?
+A. "New Project"
+B. "Text"
+C. "Transitions"
+/D. "Voiceover"
+Câu 16: Để điều chỉnh âm lượng và thời lượng của nhạc nền và âm thanh trong bộ phim ta sử dụng chức năng?
+A. "New Project"
+B. "Text"
+C. "Transitions"
+/D. "Audio"
+Câu 17: Phần mềm làm phim cho phép?
+A. Đưa các tệp âm thanh vào đoạn phim
+B. Ghép nối
+C. Thay đổi độ dài, âm lượng
+/D. Cả ba đáp án trên đều đúng
+Câu 18: Để thêm ảnh, video clip, và nhạc nền vào dự án của bạn ta sử dụng chức năng?
+A. "New Project"
+B. "Text"
+C. "Transitions"
+/D. "Import"
+Câu 19: Lời hội thoại cần?
+/A. Khớp với các phân cảnh trên phim
+B. Có sự sáng tạo
+C. Thể hiện sự độc đáo của nội dung
+D. Đáp án khác
+Câu 20: Tạo phụ đề cho phim giúp?
+A. Đoạn phim trở nên chuyên nghiệp
+B. Truyền tải thông tin tốt hơn
+/C. Cả hai đáp án trên đều đúng
+D. Cả hai đáp án trên đều sai
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>

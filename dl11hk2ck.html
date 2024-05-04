@@ -1,0 +1,976 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      ĐL 11 HKII CK
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Lãnh thổ Liên bang Nga gồm có
+/A. phần lớn đồng bằng Đông Âu và toàn bộ phần Bắc Á.
+B. toàn bộ phần Bắc Á và phần lớn lãnh thổ của Đông Á.
+C. toàn bộ phần Bắc Á và một phần lãnh thổ ở Trung Á.
+D. toàn bộ đồng bằng Đông Âu và một phần Tây Nam Á.
+Câu 2. Chiều dài của đường Xích đạo được ví xấp xỉ với chiều dài
+A. chiều dài các sông ở Liên bang Nga.
+B. biên giới Liên bang Nga với châu Á.
+C. đường bờ biển của Liên bang Nga.
+/D. đường biên giới của Liên bang Nga.
+Câu 3. Đại bộ phận địa hình phần lãnh thổ phía Tây sông I-ê-nít-xây là
+A. đồng bằng và đồi núi thấp.
+/B. đồng bằng và vùng trũng.
+C. sơn nguyên và cao nguyên.
+D. đồi núi thấp và trung du.
+Câu 4. Sông nào sau đây là ranh giới để chia Liên bang Nga làm 2 phần phía Tây và phía Đông?
+A. Sông Von-ga.
+/B. Sông I-ê-nit-xây.
+C. Sông Ô-bi.
+D. Sông Lê-na.
+Câu 5. Loại khoáng sản nào sau đây của Liên bang Nga đứng đầu thế giới về trữ lượng?
+A. Than đá.
+B. Quặng sắt.
+C. Dầu mỏ.
+/D. Khí tự nhiên.
+Câu 6. Liên bang Nga giáp với các đại dương nào sau đây?
+A. Bắc Băng Dương và Đại Tây Dương.
+/B. Bắc Băng Dương và Thái Bình Dương.
+C. Đại Tây Dương và Thái Bình Dương.
+D. Thái Bình Dương và Nam Đại Dương.
+Câu 7. Dãy núi nào sau đây làm ranh giới tự nhiên giữa 2 châu lục Á-Âu trên lãnh thổ Liên bang Nga?
+A. Cáp-ca.
+/B. U-ran.
+C. Hi-ma-lay-a.
+D. A-pa-lat.
+Câu 8. Tài nguyên khoáng sản của Liên bang Nga thuận lợi để phát triển những ngành công nghiệp nào sau đây?
+/A. Năng lượng, luyện kim, hóa chất.
+B. Năng lượng, luyện kim, cơ khí.
+C. Năng lượng, luyện kim, xây dựng.
+D. Năng lượng, luyện kim, dệt may.
+Câu 9. Đặc điểm nào sau đây thể hiện rõ nhất Liên bang Nga là một đất nước rộng lớn?
+A. Tiếp giáp với Bắc Băng Dương.
+/B. Có nhiều kiểu khí hậu khác nhau.
+C. Nằm ở cả châu Á và châu Âu.
+D. Đất nước trải dài trên 9 múi giờ.
+Câu 10. Đặc điểm nào sau đây là không đúng với phần phía Đông của Liên bang Nga?
+A. Phần lớn là núi và cao nguyên.
+B. Nguồn khoáng sản, lâm sản lớn.
+C. Có trữ năng thủy điện lớn.
+/D. Đồng bằng Đông Âu khá cao.
+Câu 11. Có nhiều vùng đất cao, đồi thoải xen với các thung lũng rộng hoặc vùng đất thấp là đặc điểm của khu vực địa hình nào dưới đây?
+A. Đồng bằng Tây Xibia.
+/B. Đồng bằng Đông Âu.
+C. Cao nguyên trung Xibia.
+D. Vùng núi già U-ran.
+Đồng bằng Đông Âu rộng, có nhiều vùng đất cao, đồi thoải xen với các thung lũng rộng hoặc vùng đất thấp, có đất đai màu mỡ. Nơi đây thuận lợi để hình thành các vùng trồng cây lương thực, thực phẩm và chăn nuôi gia súc.
+Câu 12. Đại bộ phận lãnh thổ nước Liên bang Nga nằm trong vành đai khí hậu nào sau đây?
+/A. Ôn đới.
+B. Nhiệt đới.
+C. Cận cực.
+D. Cận nhiệt.
+Câu 13. Đặc điểm nào sau đây đúng với phần phía Tây của Liên bang Nga?
+/A. Đại bộ phận là đồng bằng và vùng trũng.
+B. Phần lớn là núi và cao nguyên rộng lớn.
+C. Có nguồn khoáng sản và lâm sản dồi dào.
+D. Có nhiều đồng bằng nhỏ và giàu lâm sản.
+Câu 14. Biển Ban-tích, biển đen và biển Ca-xpi nằm ở khu vực nào sau đây của Liên bang Nga?
+A. Bắc và đông bắc.
+B. Đông và đông nam.
+/C. Tây và tây nam.
+D. Nam và đông nam.
+Câu 15. Nhận định nào đúng khi nói về đặc điểm cơ bản của địa hình Liên bang Nga?
+A. Cao ở phía nam, thấp về phía bắc.
+B. Cao ở phía bắc, thấp về phía nam.
+/C. Cao ở phía đông, thấp về phía tây.
+D. Cao ở phía tây, thấp về phía đông.
+Câu 16. Lãnh thổ Liên bang Nga có các vùng kinh tế quan trọng là
+A. vùng Von-ga, phía bắc, phía tây bắc, phía tây Xi-bia.
+/B. vùng Trung ương, Trung tâm đất đen, U-ran, Viễn Đông.
+C. vùng tây Xi-bia, Trung ương, Bắc Cáp-ca, vùng tây bắc.
+D. vùng Bắc Cáp-ca, vùng Ca-li-nin-grát, vùng đông Xi-bia.
+Câu 17. Ngành công nghiệp mũi nhọn, hằng năm mang lại nguồn tài chính lớn cho Liên bang Nga là
+A. công nghiệp cơ khí.
+B. công nghiệp luyện kim.
+C. công nghiệp thực phẩm.
+/D. công nghiệp khai thác dầu khí.
+Câu 18. Ngành giữ vai trò chủ đạo của nền kinh tế Liên bang Nga là
+A. năng lượng.
+/B. công nghiệp.
+C. nông nghiệp.
+D. dịch vụ.
+Câu 19. Ngành công nghiệp truyền thống của Liên bang Nga là
+A. điện lực.
+B. thực phẩm.
+/C. đóng tàu.
+D. luyện kim.
+Câu 20. Vùng kinh tế nào sau đây của Liên bang Nga giàu tài nguyên, công nghiệp phát triển nhưng nông nghiệp còn hạn chế?
+A. Vùng Trung tâm.
+/B. Vùng U-ran.
+C. Vùng Trung ương.
+D. Vùng Viễn Đông.
+Câu 21. Từ lâu, Liên bang Nga đã được coi là cường quốc về
+A. khai thác dầu khí.
+/B. hàng không vũ trụ.
+C. công nghiệp may.
+D. công nghiệp cơ khí.
+Câu 22. Lúa mì được trồng chủ yếu ở khu vực nào sau đây của Liên bang Nga?
+A. Vùng Viễn Đông.
+/B. Đồng bằng Đông Âu.
+C. Phía bắc Tây Xi-bia.
+D. Cao nguyên Trung Xi-bia.
+Câu 23 Nhận xét không đúng với ngành giao thông vận tải của Liên bang Nga?
+A. Có hệ thống giao thông vận tải tương đối phát triển với đủ các loại hình.
+/B. Đường ô tô đóng vai trò quan trọng trong phát triển vùng đông Xi-bia.
+C. Có thủ đô Mátxcơva nổi tiếng thế giới về hệ thống đường xe điện ngầm.
+D. Gần đây nhiều hệ thống đường giao thông được nâng cấp, mở rộng hơn.
+Câu 24. Nhận định nào sau đây đúng với hoạt động ngoại thương của Liên bang Nga?
+A. Giá trị xuất khẩu luôn cân bằng với giá trị nhập khẩu.
+B. Hàng xuất khẩu chính là thủy sản, máy móc, thiết bị.
+/C. Xuất khẩu, nhập khẩu hàng hóa lớn và luôn xuất siêu.
+D. Hàng nhập khẩu chính là dầu mỏ, khí tự nhiên và gỗ.
+Câu 25. Đặc điểm nào sau đây không đúng với nền kinh tế Liên bang Nga?
+A. Kinh tế đối ngoại là ngành khá quan trọng.
+B. Các hoạt động dịch vụ đang phát triển mạnh.
+/C. Sản lượng nông nghiệp đứng hàng đầu thế giới.
+D. Công nghiệp khai thác dầu khí là ngành mũi nhọn.
+Câu 26. Loại hình vận tải nào sau đây có vai trò quan trọng nhất thúc đẩy sự phát triển của vùng Đông Xi-bia?
+A. Hàng không.
+/B. Đường sắt.
+C. Đường sông.
+D. Đường biển.
+Câu 27. Mặt hàng xuất khẩu nào sau đây chiếm tỉ lệ cao nhất của Liên bang Nga?
+/A. Nguyên liệu, năng lượng.
+B. Lương thực và thủy sản.
+C. Máy móc, hàng tiêu dùng.
+D. Nhiên liệu và khoáng sản.
+Câu 28. Các ngành công nghiệp nào sau đây có điều kiện tài nguyên thuận lợi để phát triển ở phần lãnh thổ phía Tây của nước Nga?
+/A. Chế biến gỗ, khai thác, năng lượng, luyện kim.
+B. Chế biến gỗ, khai thác, luyện kim, dệt, hóa chất.
+C. Chế biến gỗ, khai thác, thực phẩm, hóa chất.
+D. Chế biến gỗ, khai thác, chế tạo máy, hóa chất.
+Câu 29. Quan hệ Việt Nam - Liên bang Nga đã chính thức được thiết lập vào năm nào sau đây?
+A. 1945.
+/B. 1950.
+C. 1965.
+D. 1995.
+Câu 30. Chức năng gắn kết Âu - Á thể hiện nội dung nào trong chiến lược kinh tế mới của Liên bang Nga?
+A. Nâng cao vị thế trên trường quốc tế.
+/B. Mở rộng ngoại giao, coi trọng châu Á.
+C. Tăng cường liên kết kinh tế khu vực.
+D. Tăng ảnh hưởng với các nước châu Á.
+Câu 31. Dựa vào bảng số liệu sau: <br>SẢN LƯỢNG LƯƠNG THỰC CỦA LIÊN BANG NGA (Đơn vị: triệu tấn)<br> <table><tr><th>Năm</th><th>1995</th><th>1998</th><th>1999</th><th>2000</th><th>2001</th><th>2002</th><th>2015</th></tr><tr><td>Sản lượng</td><td>62,0</td><td>46,9</td><td>53,8</td><td>64,3</td><td>83,6</td><td>92,0</td><td>78,2</td></tr></table> Biểu đồ thích hợp nhất thể hiện sản lượng lương thực của Liên Bang Nga từ năm 1995 đến 2005 là:
+A. Biểu đồ đường	/B. Biểu đồ cột	C. Biểu đồ tròn 		D. Biểu đồ miền
+Câu 32. Thủ đô Mát- xcơ-va nằm trong vùng:
+A. Trung tâm đất đen.		/B. Trung tâm		C. Uran			D. Viễn đông.
+Câu 33. Đặc điểm nào sau đây không đúng với kinh tế Nga?
+A. Kinh tế đối ngoại là ngành khá quan trọng
+B. Các ngành dịch vụ đang phát triển mạnh
+/C. Sản lượng nông nghiệp đứng hàng thứ tư trên thế giới
+D. Công nghiệp khai thác dầu khí là ngành mũi nhọn
+Câu 34: Ngành công nghiệp mũi nhọn hàng đầu của nền kinh tế LB Nga là:
+A. Khai thác than   /B. Khai thác dầu khí        C. Luyện kim     D. Khai thác vàng và kim cương
+Câu 35: Các ngành công nghiệp được LB Nga tập trung phát triển là:
+A. Khai thác dầu khí, luyện kim, chế tạo máy                  B. Hóa dầu, hàng không vũ trụ, năng lượng
+/C. Điện tử - tin học, hàng không vũ trụ, quốc phòng  D. Chế tạo máy, sản xuất  giấy, luyện kim
+Câu 36. Các trung tâm công nghiệp của LB Nga  tập trung nhiều nhất ở:
+/A. Đồng bằng Đông Âu     B. Tây Xi- bia           C. Vùng Uran         	D. Viễn Đông
+Câu 37: Điều kiện tự nhiên thuận lợi nhất để phát triển nông nghiệp của LB Nga là:
+A. Lãnh thổ rộng lớn, Khí hậu đa dạng                 / B. Có quỹ đất nông nghiệp rất lớn
+C. Các đồng bằng có đất đai màu mỡ                     D. Có lượng mưa cao, nhiều sông suối
+Câu 38. Loại hình vận tải nào sau đây có vai trò quan trọng nhất thúc đẩy sự phát ở phần lãnh thổ phía đông của Liên Bang Nga?
+   A. Hàng không.	/B. Đường sắt.	C. Đường sông.	D. Đường biển.
+Câu 39: Phần lớn lãnh thổ Liên bang Nga có khí hậu
+   A. cận cực.	/B. ôn đới.	C. cận nhiệt.	D. nhiệt đới.
+Câu 40: Dân tộc nào sau đây chiếm đa số ở Liên bang Nga?
+   A. Tác-ta.	B. Chu-vát.	/C. Nga.	D. Bát-xkia.
+Câu 41: Lãnh thổ của Liên bang Nga
+   /A. có diện tích lớn nhất thế giới.	B. nằm hoàn toàn ở châu Âu.
+   C. tiếp giáp với Ấn Độ Dương.	D. liền kề với Đại Tây Dương.
+Câu 42: Liên bang Nga có vị trí tiếp giáp giữa Thái Bình Dương với đại dương nào sau đây?
+   /A. Bắc Băng Dương.   B. Đại Tây Dương.   C. Ấn Độ Dương.    D. Địa Trung Hải.
+Câu 43: Dân cư Nga tập trung đông đúc ở
+   /A. đồng bằng Đông Âu.	B. đồng bằng Tây Xi-bia.
+   C. cao nguyên Trung Xi-biA. 	D. vùng Đông Xi-bia.
+Câu 44: Vùng Trung tâm đất đen có đặc điểm nổi bật là
+   A. phát triển công nghiệp khai thác khoáng sản, khai thác gỗ.
+   /B. có dải đất đen phì nhiêu, thuận lợi phát triển nông nghiệp.
+   C. tập trung nhiều ngành công nghiệp, sản lượng lương thực lớn.
+   D. công nghiệp khai thác kim loại màu, cơ khí phát triển.
+Câu 45. Cho bảng số liệu sau:<br>Cơ cấu GDP của Liên Bang Nga, giai đoạn 1990 – 2020<br>(Đơn vị:%)<table><tr><th>Năm</th><th>1990</th><th>2010</th><th>2020</th></tr><tr><td>Nông nghiệp, lâm nghiệp, thuỷ sản</td><td>15,5</td><td>3,3</td><td>4,0</td></tr><tr><td>Công nghiệp và xây dựng</td><td>45,0</td><td>34,0</td><td>29,9</td></tr><tr><td>Dịch vụ</td><td>32,6</td><td>53,1</td><td>56,1</td></tr><tr><td>Thuế sản phẩm trừ trợ cấp sản phẩm</td><td>6,9</td><td>9,6</td><td>10,0</td></tr></table>Dựa vào bảng số liệu trên, nhận xét nào sau đây là đúng
+A. Nông nghiệp, lâm nghiệp, thuỷ sản và dịch vụ giảm liên tục.
+B. Công nghiệp và xây dựng và thuế sản phẩm trừ trợ cấp sản phẩm giảm.
+C. Nông nghiệp, lâm nghiệp, thuỷ sản và công nghiệp và xây dựng giảm liên tục.
+/D. Dịch vụ và thuế sản phẩm trừ trợ cấp sản phẩm tăng liên tục.
+Câu 1: Quốc đảo Nhật Bản nằm ở:
+A.	Tây Nam Á.	   /B. Đông Á.		 C. Đông Nam Á.	      D. Nam Á.
+Câu 2: Đảo lớn nhất (chiếm 61% diện tích) của Nhật Bản là
+A.	Hô-cai-đô.	   /B. Hôn-su. 		 C. Xi-cô-cư. 		      D. Kiu-xiu.
+Câu 3: Bốn đảo theo thứ tự từ Bắc xuống Nam của Nhật Bản là
+A.	Kiu-xiu, Xi-cô-cư, Hôn-su, Hô-cai-đô.
+B.	Xi-cô-cư, Hôn-su, Kiu-xiu, Hô-cai-đô.
+/C. Hô-cai-đô, Hôn-su, Xi-cô-cư, Kiu-xiu.
+D.	Hôn-su, Hô-cai-đô, Kiu-xiu, Xi-cô-cư.
+Câu 4: Địa hình của Nhật Bản có đặc điểm:
+A. Núi tập trung chủ yếu ở phía đông, đồng bằng ở phía tây.
+/B. Núi chiếm 80% diện tích, chỉ có những đồng bằng duyên hải nhỏ hẹp.
+C. Núi chiếm đa số diện tích nhưng phần lớn là đồi núi thấp dưới 500m.
+D. Núi cao tập trung chủ yếu ở phía bắc, phía nam là núi thấp và đồng bằng.
+Câu 5: Đặc điểm nào sau đây không đúng với đặc điểm dân cư Nhật Bản?
+A. Tốc độ gia tăng dân số thấp và đang giảm dần.
+B. Tuổi thọ trung bình cao nhất thế giới.
+C. Nước đông dân.
+/D. Tỉ lệ người già trên 65 tuổi ngày càng giảm.
+Câu 6: Những năm 1973-1974 và 1979-1980, kinh tế Nhật Bản bị suy thoái do:
+A.	Cơ cấu nền kinh tế không hợp lí.
+B.	Không còn nguồn viện trợ của Hoa Kì.
+C.	Ảnh hưởng của động đất, sóng thần.
+/D. Cuộc khủng hoảng dầu mỏ của thế giới.
+Câu 7: Địa hình của Nhật Bản đã tạo thuận lợi nhất cho:
+A. Phát triển nông nghiệp.			C. Nuôi trồng thủy sản.
+B. Xây dựng thủy điện.			/D. Giao thông vận tải đường biển.
+Câu 8: Vùng biển quanh Nhật Bản có nhiều ngư trường lớn vì:
+A.	Bờ biển khúc khuỷu, có nhiều vũng vịnh.
+B.	Có hàng nghìn đảo lớn nhỏ trải ra theo hướng vòng cung.
+C.	Lãnh thổ Nhật Bản là một vòng cung ôm lấy lục địa châu Á.
+/D. Là nơi gặp nhau của các dòng biển nóng và lạnh.
+Câu 9: Đặc điểm nổi bật về dân cư của Nhật Bản:
+/A. Là nước đông dân, tỉ lệ người già trong dân cư ngày càng lớn, dân cư chủ yếu sống ở các thành phố ven biển.
+A.	Là nước đông dân, tỉ lệ người trẻ trong dân cư ngày càng lớn, dân cư chủ yếu sống ở các thành phố ven biển.
+B.	Là nước đông dân, tỉ lệ người già trong dân cư ngày càng lớn, dân cư chủ yếu sống ở các thành phố sâu trong đất liền để tránh sóng thần.
+C.	Là nước đông dân, tỉ lệ người già trong dân cư ngang bằng với người trẻ, dân cư chủ yếu sống ở các thành phố ven biển.
+Câu 10: Hạn chế lớn nhất của tự nhiên Nhật Bản đối với sự phát triển kinh tế - xã hội:
+/A. Nằm trong vùng thường xuyên bị thiên tai.	B. Diện tích lãnh thổ nhỏ hẹp lại bị chia tách.
+C. Nghèo về tài nguyên khoáng sản.			D. Nằm tách rời, khó giao lưu với nước ngoài.
+Câu 11: Nguyên nhân chính của những thành công về kinh tế của Nhật Bản là
+A. Có nhiều điều kiện tự nhiên thuận lợi được phát huy trong sản xuất.
+B. Có dân số đông, lực lượng alo động dồi dào với trình độ cao.
+C. Ý chí vượt khó vươn lên của người Nhật do sự nghèo nàn về tài nguyên.
+/D. Những ưu điểm của người lao động Nhật được phát huy trong sản xuất.
+
+Câu 12. Đây được xem là ngành công nghiệp mũi nhọn của Nhật Bản
+A. Công nghiệp chế tạo.				/B. Công nghiệp sản xuất điện tử.
+C. Xây dựng và công trình công cộng.		D. Công nghiệp dệt.
+Câu 13. Công nghiệp Nhật Bản tập trung chủ yếu ở đảo
+A. Kiu Xiu.  	 	B. Hô cai đô.		C. Xi cô cư.       /D. Hôn Su.
+Câu 14. Nông nghiệp đóng vai trò chính trong hoạt động kinh tế của vùng kinh tế/ đảo
+A. Kiu Xiu.	B. Hô cai đô.  /C. Xi cô cư.	D. Hôn Su
+Câu 15. Đây là cây trồng chính trong nông nghiệp của Nhật Bản
+/A. Lúa gạo.   B. Củ cải đường.     C. Chè.         D. Hoa quả.
+Câu 16. Sản xuất các phẩm nổi bật trong ngành công nghiệp điện tử của Nhật bản không phải là hãng
+A. Sony.            B. Toshiba.		/C. ToyotA.         D. Hitachi.
+Câu 17. Nhận xét không đúng về nông nghiệp của Nhật Bản là
+/A. những năm gần đây một số diện tích trồng cây khác được chuyển sang trồng lúa.
+B. chè, thuốc lá, dầu tằm là những cây trồng phổ biến.
+C. chăn nuôi tương đối phát triển, các vật nuôi chính là bò, lợn, gà.
+D. chăn nuôi theo phương pháp tiên tiến bằng hình thức trang trại.
+Câu 18. Ngành nông nghiệp có vai trò thứ yếu trong nền kinh tế Nhật Bản vì:
+A. Nền nông nghiệp phát triển theo hướng thâm canh.		B. Diện tích đất nông nghiệp ít.
+/C. Tỉ trọng nông nghiệp trong GDP thấp.		D. Năng suất trong ngành nông nghiệp không cao.
+Câu 19. Từ những năm 1990 trở lại đây tốc độ tăng trưởng kinh tế Nhật Bản chậm lại là do:
+A. Hậu quả sau chiến tranh thế giới.		B. Khủng hoảng kinh tế toàn cầu.
+C. Đường lối phát triển kinh tế không đúng.	/D. Sự cạnh tranh của các nền kinh tế khác.
+Câu 20.  Khó khăn lớn nhất trong sản xuất nông nghiệp của Nhật Bản là:
+A. Thiếu lao động 	B. Thiếu tài nguyên  /C. Thiếu diện tích đất canh tác	D. Khí hậu khắc nghiệt
+Câu 21. Trong ngành dịch vụ Nhật Bản, câu nào sau đây là chính xác nhất:
+A. Nhật Bản đứng hàng thứ nhất thế giới về thương mại.
+B. Bạn hàng buôn bán của Nhật Bản chủ yếu là các nước đang phát triển.
+/C. Nhật Bản là nước có ngành tài chính, ngân hàng đứng hàng đầu thế giới.
+D. Ngành giao thông vận tải biển đứng hàng thứ tư thế giới.
+
+Câu 22: Mặt hàng nhập khẩu chủ yếu của Nhật Bản là:
+A. Sản phẩm công nghiệp chế biến và nguyên liệu công nghiệp.
+B. Sản phẩm tin học, nguyên liệu công nghiệp và năng lượng.
+/C. Nguyên liệu công nghiệp , năng lượng và sản phẩm nông nghiệp.
+D. Sản phẩm nông nghiệp, năng lượng và sản phẩm tin học.
+Câu 23: Mặt hàng xuất khẩu chủ yếu của Nhật Bản là:
+/A. Tàu biển, ô tô, sản phẩm tin học
+B. Thực phẩm, dược phẩm, sản phẩm tin học
+C. Lương thực, ô tô, tàu biển
+D. Tàu biển, ô tô, dược phẩm
+Câu 24: Trong kinh tế đối ngoại, Nhật Bản hiện đứng đầu thế giới về:
+A. Giá trị xuất khẩu		
+B. Giá trị nhập khẩu
+C. Thu hút đầu tư trực tiếp và viện trợ phát triển chính thức		
+/D.  Đầu tư trực tiếp ra nước ngoài và viện trợ phát triển chính thức
+Câu 25: Nhật Bản dẫn đầu thế giới trong nhiều ngành kinh tế  chủ yếu là do
+A. Tận dụng nguồn vốn đầu tư của Hoa Kì
+/B. Tận dụng và khai thác những thành tựu khoa học – kĩ thuật
+C. Đẩy mạnh đầu tư trực tiếp ra nước ngoài		
+D. Sức ép cạnh tranh của các nước trên thế giới
+Câu 26: Cho bảng số liệu:<br>GIÁ TRỊ XUẤT, NHẬP KHẨU CỦA NHẬT BẢN QUA CÁC NĂM<br>( đơn vị: tỉ USD)<table><tr><th>Năm</th><th>2001</th><th>2004</th><th>2007</th><th>2019</th></tr><tr><td>Xuất khẩu</td><td>403,5</td><td>565,7</td><td>712,7</td><td>580,9</td></tr><tr><td>Nhập khẩu</td><td>349,1</td><td>454,5</td><td>621,1</td><td>551,0</td></tr></table>Biểu đồ thích hợp nhất  để thể hiện giá trị xuất khẩu, nhập khẩu của Nhật Bản giai đoạn 2001 - 2019 là:
+/A. Biểu đồ cột		B. Biểu đồ tròn.		
+Câu 27: Nhận xét nào sau đây không đúng về tình hình ngoại thương của Nhật Bản giai đoạn trên:
+A. Cán cân thương mại luôn dương		    /B. Tổng kim ngạch lớn nhất thế giới		
+C. Cơ cấu xuất khẩu lớn hơn cơ cấu nhập khẩu    D. Giá trị nhập khẩu tăng nhanh hơn giá trị xuất khẩu
+Câu 28: Đầu tư trực tiếp ra nước ngoài của Nhật Bản hiện nay:
+/A. Đứng đầu thế giới.                       B.  Đứng thứ 2 thế giới.  
+	C. Đứng sau EU và Hoa Kì.             D.  Ngang bằng với Hoa Kì.
+Câu 29: Chính phủ Nhật Bản viện trợ ODA phần lớn cho các nước:
+A. Tây Á		B. Nam Mĩ		C. Bắc Phi		/D. Đông Nam Á
+Câu 30: Cho bảng số liệu sau:<br>GIÁ TRỊ XUẤT, NHẬP KHẨU CỦA NHẬT BẢN QUA CÁC NĂM<br>(Đơn vị: tỉ USD)<table><tr><th>Năm</th><th>1990</th><th>1995</th><th>2000</th><th>2001</th><th>2014</th></tr><tr><td>Xuất khẩu</td><td>287,6</td><td>443,1</td><td>479,2</td><td>403,5</td><td>565,7</td></tr><tr><td>Nhập Khẩu</td><td>235,4</td><td>335,9</td><td>379,5</td><td>349,1</td><td>454,5</td></tr><tr><td>Cán cân thương mại</td><td>52,5</td><td>107,2</td><td>99,7</td><td>54,4</td><td>111,2</td></tr></table>Vẽ biểu đồ thích hợp nhất thể hiện cơ cấu giá trị xuất, nhập khẩu của Nhật Bản qua các năm.
+A. Cột			B. Tròn 		/C. Miền 		D. Đường
+Câu 31: Đảo có diện tích lớn nhất Nhật Bản là
+    A. Hô-cai-đô.		/B. Hôn-su.		C. Xi-cô-cư.		D. Kiu-xiu.
+Câu 32: Các vùng biển quanh Nhật Bản có nhiều cá là do
+A. có nhiều động đất và núi lửa.	   B. vùng biển không đóng băng vào mùa đông.
+/C. có dòng biển nóng, lạnh gặp nhau.	   D. nằm trong vùng khí hậu gió mùa.
+Câu 33: Đặc điểm nào sau đây không đúng với dân cư Nhật Bản?
+A. Dân số đang diễn biến theo xu hướng già hóa.
+B. Tốc độ gia tăng dân số hằng năm giảm.
+C. Là nước có dân số đông.			
+/D. Tỉ lệ dân số trên 65 tuổi ngày càng giảm.
+Câu 34: Năm 2020, cây trồng chủ lực chiếm 36% diện tích trồng trọt ở Nhật Bản là
+    /A. lúa gạo.		B. lúa mì.		C. ngô.		D. tơ tằm.
+Câu 35: Núi Phú Sĩ của Nhật Bản nằm trên đảo
+    A. Hô-cai-đô.		B. Kiu-xiu.		C. Xi-cô-cư.		/D. Hôn-su.
+Câu 36: Phát biểu nào sau đây không đúng với tự nhiên Nhật Bản?
+   A. Là quần đảo, hình vòng cung.	B. Có 4 đảo lớn và nhiều đảo nhỏ.
+   C. Địa hình chủ yếu là đồi núi.	/D. Tài nguyên khoáng sản giàu có.
+Câu 37: Năng suất lao động xã hội ở Nhật Bản cao là do người lao động Nhật Bản
+A. luôn độc lập suy nghĩ và sáng tạo trong lao động.
+B. làm việc tích cực vì sự hùng mạnh của đất nước.
+C. thường xuyên làm việc tăng ca và tăng cường độ lao động.
+/D. làm việc tích cực, tự giác, tinh thần trách nhiệm cao.
+Câu 38: Nhật Bản có 4 đảo lớn, trong đó đảo nào có diện tích nhỏ nhất?
+/A. Xicôcư.                       B. Hônsu.                  C. Kiuxiu.                        D. Hôcaiđô.
+Câu 1:Nhận xét không đúng về đặc điểm vị trí và lãnh thổ Trung Quốc là
+/A. có diện tích lãnh thổ rộng lớn và đứng thứ ba thế giới.
+B. lãnh thổ trải rộng từ bắc xuống nam, từ đông sang tây.
+C. có đường biên giới giáp 14 nước chủ yếu qua núi cao và hoang mạc.
+D. phía đông giáp biển với đường bờ biển dài khoảng 9000 km.
+Câu 2: Về tự nhiên, miền Tây Trung Quốc không có đặc điểm
+A. gồm các dãy núi và cao nguyên đồ sộ xen lẫn các bồn địa.
+/B. gồm các dãy núi và cao nguyên đồ sộ xen lẫn các đồng bằng màu mỡ.
+C. khí hậu ôn đới lục địa khắc nghiệt, ít mưa.
+D. có nhiều hoang mạc và bán hoang mạc rộng lớn.
+Câu 3: Nhận xét không đúng về đặc điểm miền Đông Trung Quốc là
+A. có các đồng bằng châu thổ rộng lớn, đất phù sa mầu mỡ.
+B. dân cư tập trung đông đúc, nông nghiệp trù phú.
+C. từ bắc xuống nam khí hậu chuyển từ ôn đới gió mùa sang cận nhiệt đới gió mùa.
+/D. nghèo khoáng sản, chỉ có than đá là đáng kể.
+Câu 4: Nhận xét không chính xác về sự đối lập của tự nhiên giữa miền Đông và miền Tây Trung Quốc là
+A. miền Đông chủ yếu là đồng bằng còn miền Tây chủ yếu là núi và cao nguyên.
+B. miền Tây khí hậu lục địa, ít mưa còn miền Đông khí hậu gió mùa, mưa nhiều.
+C. miền Tây là thượng nguồn của các sông lớn chảy về phía đông.
+/D. miền Đông giàu khoáng sản còn miền Tây thì nghèo.
+Câu 5:Nhận xét đúng về đặc điểm đường biên giới với các nước trên đất liền của Trung Quốc là
+/A. chủ yếu là núi cao và hoang mạC.        B. chủ yếu là đồi núi thấp và đồng bằng.
+C. chủ yếu là đồng bằng và hoang mạC.   D. chủ yếu là núi và cao nguyên.
+Câu 6: Vấn đề được quan tâm hàng đầu đối với dân số Trung Quốc trong giai đoạn hiện nay là:
+A.sự tăng trưởng nhanh của dân số.
+B.việc thực hiện chính sách dân số kế hoạch hóa gia đình.
+/C.sự mất cân bằng trong cơ cấu giới tính.
+D.tư tưởng “trọng nam khinh nữ”.
+Câu 7: Trung Quốc có hai đặc khu hành chính nằm ven biển là
+A. Hồng Công và Thượng Hải.		/B. Hồng Công và Ma Cao.
+C. Hồng Công và Quảng Châu.		D. Ma Cao và Thượng Hải.
+Câu 8. Lãnh thổ của Trung Quốc nằm trong khu vực
+/A. Đông Á và Trung Á. 				B. Đông Á và Đông Nam Á.
+C. Đông Á Và Bắc Á. 				D. Trung Á và Nam Á.
+Câu 9. Dạng địa hình chủ yếu ở miền Tây của Trung Quốc là
+A. Núi cao và vực sâu. 				B. Sơn nguyên đồ sộ xen lẫn đồng bằng.
+/C. Núi cao và sơn nguyên xen lẫn bồn địA. 	D. Sơn nguyên bằng phẳng xen lẫn bồn địa.
+Câu 10. Miền Tây của Trung Quốc có nhiều hoang mạc rộng lớn chủ yếu là do
+/A. Nằm sâu trong lục địa, khí hậu khô hạn. 	          B. Có nhiều bồn địa khuất gió.
+C. Núi cao bao bọc các bồn địA. 				D. Thảm thực vật bị tàn phá.
+Câu 11. Phát minh nào dưới đây không phải của Trung Quốc?
+A. La bàn.						B. Kĩ thuật in.
+C. Thuốc súng. 					/D. Thuyền buồm.
+Câu 12. Đặc điểm chế độ mưa ở miền Đông Trung Quốc là
+/A. Mưa nhiều vào mùa hạ.			B. Mưa quanh năm.
+C. Mưa chủ yếu vào thu đông. 			D. Lượng mưa thấp quanh năm.
+Câu 13. Miền Tây của Trung Quốc có mật độ dân số thấp là do nguyên nhân chủ yếu nào?
+A. Là vùng mới được khai tháC. 		/B. Điều kiện tự nhiên khắc nghiệt.
+C. Kinh tế chưa phát triển. 			D. Là nơi sinh sống của các dân tộc ít người.
+Câu 14. Đặc điểm nào sau đây không đúng với đặc điểm dân cư Trung Quốc?
+/A. Dân cư tập trung nhiều ở thành thị. 	B. Dân cư tập trung chủ yếu ở miền Đông.
+C. Tỉ suất gia tăng dân số tự nhiên giảm. 		D. Dân tộc người Hán chiếm đa số.
+Câu 15. Khí hậu ở miền Đông Trung Quốc có sự chuyển đổi như thế nào từ Nam lên Bắc?
+A. Chuyển từ nhiệt đới gió mùa sang cận nhiệt đới gió mùa.
+/B. Chuyển từ cận nhiệt đới gió mùa sang ôn  đới gió mùa.
+C. Từ ôn đới gió mùa sang cận nhiệt đới gió mùa.
+D. Từ Nhiệt đới sang ôn đới.
+Câu 16. Thiên nhiên ở Trung Quốc gây ra những khó khăn gì đối với phát triển kinh tế?
+A. Đất đai kém màu mỡ ở đồng bằng. 	/B. Khô hạn ở miền Tây, bão và lũ lụt ở miền Đông.
+C. Khó khai thác tài nguyên thiên nhiên.  D. Giàu tài nguyên khoáng sản.
+Câu 18. Các trung tâm công nghiệp lớn của Trung Quốc phân bố tập trung chủ yếu ở vùng
+A. Tây Bắc		B. Đông Bắc.
+C. Tây Nam.		/D. Đông Nam.
+Câu 19. Nhận định nào sau đây, không phải là thành tựu phát triển kinh tế - xã hội của Trung Quốc do công cuộc hiện đại hóa mang lại?
+A. Tốc độ tăng trưởng GDP cao nhất thế giới	         B. Đời sống người dân được cải thiện
+/C. Nằm trong các nước công nghiệp G8		D. Thu nhập bình quân đầu người tăng
+Câu 20. Miền Tây Trung Quốc phát triển chăn nuôi cừu do
+/A. có nhiều đồng cỏ.	B. địa hình hiểm trở.
+C. dân cư thưa thớt.	D. khí hậu khô hạn.
+Câu 21. Loại hình nông nghiệp phát triển nhất ở miền Tây Trung Quốc là
+/A. Chăn nuôi gia súc lớn				B. Chăn nuôi lợn và gia cầm
+C. Trồng cây công nghiệp lâu năm		D. Trồng lúa
+Câu 22. Vùng đồng bằng Đông Bắc và Hoa Bắc của Tung Quốc chủ yếu trồng
+A. Lúa gạo			/B. Lúa Mì
+C. Ngô				D. lúa Mạch
+Câu 23.Các trung tâm công nghiệp lớn của Trung Quốc phân bố tập trung ở vùng 
+A. phía Tây				B. phía Bắc
+C. phía Nam				/D. phía Đông
+Câu 24. Nông nghiệp Trung Quốc phát triển nhằm mục tiêu chủ yếu
+A. Dẫn đầu thế giới về sản lượng một số nông sản.
+/B. Đảm bảo lương thực cho nhân dân.
+C. Tạo nguồn hàng xuất khẩu để thu ngoại tệ.
+D. Phát huy tiềm năng của tự nhiên.
+Câu 25. Trung Quốc không phải là nước xuất khẩu hàng đầu về lương thực do
+/A. dân số quá đông		B. không có nhiều điều kiện để sản xuất lương thực
+C. có nhiều thiên tai		D. Trung Quốc chủ yếu trồng cây công nghiệp
+Câu 26. Đâu không phải là nguyên nhân dẫn đến sự phát triển công nghiệp Trung Quốc?
+A. Chính sách mở cửa nền kinh tế, thu hút đầu tư nước ngoài.
+B. Hiện đại hóa trang thiết bị, ứng dụng công nghệ cao.
+C. Cơ chế thị trường tạo điều kiện phát triển sản xuất.
+/D. Là nước giàu có nhất thế giới về tài nguyên thiên nhiên.
+Câu 27.Cây lương thực chiếm vị trí quan trọng nhất trong ngành trồng trọt của Trung Quốc do có điều kiện tự nhiên thuận lợi và do
+/A. đông dân nhu cầu lương thực lớn.		B. cung cấp thức ăn cho chăn nuôi
+C. có nhiều giống mới, kĩ thuật hiện đại	D. mặt hàng xuất khẩu có giá trị
+Câu 28. Miền Đông Bắc Trung Quốc trồng lúa mì được do nguyên nhân chính nào?
+A. Có nhiều đồng bằng rộng lớn	B. Sông ngòi dày đặt, lượng nước dồi dào
+/C. Khí hậu ôn đới gió mùa		D. Địa hình đồng bằng và đồi núi thấp
+Câu 29. Dựa vào bảng số liệu sau:<br>GDP CỦA TRUNG QUỐC VÀ THẾ GIỚI   (Đơn vị: tỉ USD)<table><tr><th>Năm</th><th>1985</th><th>2004</th><th>2012</th></tr><tr><td>Trung Quốc</td><td>239,0</td><td>1649,3</td><td>8 358,4</td></tr><tr><td>Toàn thế giới</td><td>12 360,0</td><td>40887,8</td><td>72 689,7</td></tr></table>Tỉ trọng GDP của Trung Quốc so với thế giới năm 2012 chiếm:
+A. 12,0 %.              B. 11,0 %.                       C. 0,11 %,              /D. 11,49 %
+
+Câu 30. Cho bảng số liệu: Cơ cấu giá trị xuất, nhập khẩu của    (Đơn vị:%)<table><tr><th>Năm</th><th>1985</th><th>2014</th></tr><tr><td>Xuất khẩu</td><td>39,3</td><td>51,4</td></tr><tr><td>Nhập khẩu</td><td>60,7</td><td>48,6</td></tr></table>Để thể hiện cơ cấu giá trị xuất, nhập khẩu của Trung Quốc năm 1985 và 2014, biểu đồ nào sau đây thích hợp nhất?
+/A. Biểu đồ tròn.		B. Biểu đồ miền.    C. Biểu đồ cột.	        D. Biểu đồ đường biểu diễn.
+Câu 31. Cho bảng số liệu: Sản lượng lạc và mía của Trung quốc qua các năm.  (Đơn vị: triệu tấn)<table><tr><th></th><th>Năm</th><th>1985</th><th>1995</th><th>2000</th><th>2014</th></tr><tr><td>Loại</td><td>Lạc</td><td>6,6</td><td>10,2</td><td>14,4</td><td>14,3</td></tr><tr><td></td><td>Mía</td><td>58,7</td><td>70,2</td><td>69,3</td><td>93,2</td></tr></table>Để thể hiện sản lượng lạc và mía của Trung quốc qua các năm, biểu đồ nào sau đây thích hợp nhất?
+A. Biểu đồ kết hợp cột và đường biểu diễn.		B. Biểu đồ miền.
+/C. Biểu đồ cột đôi.						D. Biểu đồ đường biểu diễn.
+Câu 32. Cho bảng số liệu: Cơ cấu giá trị xuất, nhập khẩu của Trung Quốc.  (Đơn vị:%)<table><tr><th>Năm</th><th>1985</th><th>2014</th></tr><tr><td>Xuất khẩu</td><td>39,3</td><td>51,4</td></tr><tr><td>Nhập khẩu</td><td>60,7</td><td>48,6</td></tr></table>Nhận xét nào sau đây đúng với cán cân xuất, nhập khẩu của Trung Quốc?
+A. Cán cân xuất, nhập khẩu của Trung Quốc luôn luôn dương.
+B. Cán cân xuất, nhập khẩu của Trung Quốc luôn luôn âm.
+C. Năm 1985 cán cân xuất, nhập khẩu dương, năm 2014 cán cân xuất, nhập khẩu âm.
+/D. Năm 1985 cán cân xuất, nhập khẩu âm, năm 2014 cán cân xuất, nhập khẩu dương.
+
+Câu 34: Cho bảng số liệu: CƠ CẤU GDP PHÂN THEO NGÀNH KINH TẾ CỦA TRUNG QUỐC NĂM 2015   (Đơn vị: %)<table><tr><th>Ngành kinh tế</th><th>Nông nghiệp</th><th>Công nghiệp</th><th>Dịch vụ</th></tr><tr><td>Cơ cấu GDP</td><td>9,0</td><td>40,5</td><td>50,5</td></tr></table>(Nguồn: http://vi.m.wikipedia.org)<br>Để thể hiện cơ cấu GDP phân theo ngành kinh tế của Trung Quốc năm 2015 theo bảng số liệu, biểu đồ nào sau đây là thích hợp nhất?
+A. Miền.	B. Cột.	/C. Tròn.	D. Đường.
+Câu 35: Đồng bằng có điều kiện trồng lúa gạo Trung Quốc là
+   A. Hoa Bắc và Hoa Nam.	/B. Hoa Trung và Hoa Nam.
+   C. Hoa Bắc và Hoa Trung.	D. Đông Bắc và Hoa Nam.
+
+
+
+
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
