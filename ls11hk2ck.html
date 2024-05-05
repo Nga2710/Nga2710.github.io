@@ -243,7 +243,7 @@
 <body>
   <div id="inputStr" class="">
     <header>
-      LS 11 HKII CK <sup style="color:red">+</sup>
+      ĐL 11 HKII CK <sup style="color:red">+</sup>
     </header>
 
     <div style="display: flex">
@@ -281,6 +281,7 @@
     </div>
   </div>
   <script>
+  const al = true
     function pasteFromClipboard() {
       navigator.clipboard.readText()
       .then(function(text) {
@@ -496,7 +497,7 @@ Câu 10. Nội dung nào dưới đây là một trong những ý nghĩa về cu
 Mở ra khả năng độc lập, tự chủ, thống nhất lâu dài cho dân tộc ta.
 /Tạo cơ sở cho nhà Lê sơ phát triển vững mạnh, đất nước hưng thịnh.
 Tạo thế và lực cho nước ta đánh bại quân xâm lược Minh, bảo vệ Tổ quốc.
-Mở ra khả năng mới, tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.c/ Vận dụng
+Mở ra khả năng mới, tạo tiền đề cho cuộc chiến tranh xâm lược phương Bắc.
 Câu 1. Nội dung nào sau đây phản ánh đúng về chức năng của lục Bộ (sáu bộ) dưới thời vua Lê Thánh Tông?
 Cơ quan giúp việc cho lục Tự (sáu tự).
 Theo dõi, giám sát hoạt động của lục Khoa.
@@ -573,7 +574,7 @@ bộ máy hành chính nhà nước phong kiến cơ bản đã hoàn chỉnh.
 tình trạng phân quyền, thiếu thống nhất ở địa phương đã khắc phục.
 vua Gia Long đã tiến hành cuộc cải cách hành chính hoàn chỉnh.
 Câu 1. Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) và cuộc cải cách của vua Lê Thánh Tông (thế kỉ XV) có điểm giống nhau nào sau đây?
-//Nâng cao vai trò quản lí của chính quyền ở trung ương.
+/Nâng cao vai trò quản lí của chính quyền ở trung ương.
 Khuyến khích, tạo điều kiện cho ngoại thương phát triển.
 Ưu tiên cho sự nghiệp thống nhất đất nước về lãnh thổ.
 Chú trọng phát triển kinh tế, xã hội theo hướng hiện đại.
@@ -712,14 +713,12 @@ Câu 4. Hoạt động xác lập chủ quyền, quản lí liên tục mang tí
 di dân đến khai hoang và sinh sống lâu dài trên các đảo.
 cử quân đội chính quy đến đồn trú để bảo vệ các đảo.
 các chúa Nguyễn thường xuyên đến các đảo để thị sát.
-Câu 5. Dưới thời vua Gia Long, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng
-Sa, quần đảo Trường Sa được thể hiện qua việc
+Câu 5. Dưới thời vua Gia Long, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng Sa, quần đảo Trường Sa được thể hiện qua việc
 di dân số lượng lớn đến khai hoang và sinh sống lâu dài trên các đảo.
 /tổ chức đội thủy quân chuyên trách thực thi chủ quyền ở các đảo.
 xây dựng Hoàng Sa và Trường Sa thành ngư trướng đánh bắt lớn.
 vua Gia Long thường xuyên đến các đảo để thị sát, nắm tình hình.
-Câu 6. Dưới thời vua Minh Mạng, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng
-Sa, quần đảo Trường Sa được thể hiện qua việc
+Câu 6. Dưới thời vua Minh Mạng, hoạt động khẳng định chủ quyền đối với quần đảo Hoàng Sa, quần đảo Trường Sa được thể hiện qua việc
 di dân số lượng lớn đến khai hoang và sinh sống lâu dài trên các đảo.
 /cử thủy quân ra đảo, cho vẽ bản đồ, cắm dấu mốc tại nơi khảo sát.
 xây dựng Hoàng Sa và Trường Sa thành ngư trướng đánh bắt lớn.
@@ -790,6 +789,8 @@ Vịnh Cam Ranh.
 Vịnh Bắc Bộ.
 /Vịnh Hạ Long.
 Vịnh Thái Lan.
+
+
 `
     let str = inputElement.value 
     
@@ -869,7 +870,7 @@ Vịnh Thái Lan.
             }
             const answerHTML = `
             <div class="answer">
-            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${answerString.trim()}</label>
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${al ? answerString.trim(): answerString.slice(2).trim()}</label>
             </div>
             `;
             questionAnswers.push(answerHTML);
