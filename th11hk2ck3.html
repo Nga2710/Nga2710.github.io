@@ -375,50 +375,18 @@ B. Người dùng sử dụng các phần mềm thứ ba
 /C. Người dùng cần sử dụng câu lệnh JOIN để kết hợp các bảng với nhau theo khoá ngoài
 D. Người dùng sử dụng khóa cấm trùng lặp.
 Câu 19: Lập danh sách các bản nhạc với tên bản nhạc và tên tác giả, ta dùng câu lệnh nào?
-/A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-	B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-
-C. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=3
+/A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi
+B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi
+C. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=1
+D. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=3
 Câu 20: Lập danh sách bao gồm idBannhac, tenBannhac, tenNhacsi, ta dùng câu lệnh nào?
-A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-	/B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-
-C. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=3
+A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi
+/B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi
+C. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=3
 Câu 21: Lập danh sách bao gồm idBannhac, tenBannhac từ tất cả các bản nhạc của nhạc sĩ Đỗ Nhuận có trong bảng bannhac, ta dùng câu lệnh nào?
-A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-	B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-
-/C. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
-FROM bannhac INNER JOIN nhacsi
-ON bannhac.idNhacsi=nhacsi.idNhacsi
-WHERE bannhac.idNhacsi=3
+A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi
+	B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idnhacsi
+/C. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac FROM bannhac INNER JOIN nhacsi ON bannhac.idNhacsi=nhacsi.idNhacsi WHERE bannhac.idNhacsi=3
 
 Câu 22: Để bắt đầu quá trình sao lưu dữ liệu ta nhấn vào nút?
 A. New Session		B. Export Database		/C. Export		D. Đóng
