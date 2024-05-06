@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    table th,table td {
+      border: 1px solid black;
+      padding: 2px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 500px;
+      /*margin: 10px auto;*/
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin: auto;
+      max-width: 500px;
+      padding: 1px 10px 10px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 10px;
+      /* border: 1px solid black;*/
+    }
+    .question-text {
+
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      padding: 3px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flex {
+      display: flex;
+    }
+    .answer {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .answer input[type="radio"] {
+      margin-right: 5px;
+    }
+    .answer label {
+
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result {
+      display: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #result.correct {
+      color: green;
+    }
+    #result.incorrect {
+      color: red;
+    }
+    #timer {
+
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: warning 2s infinite;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .hide {
+      display: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      bottom: 4%;
+      right: 3%;
+      transform: translateY(-50%);
+    }
+    .floating-buttons button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .floating-buttons button:active {
+      opacity: 0.8;
+    }
+@keyframes floatAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .floating-buttons button:hover {
+      animation: floatAnimation 2s infinite;
+    }
+@keyframes highlight {
+      0%, 100% {}
+      50% {
+        color: lime;
+      }
+    }
+@keyframes warning {
+      0%, 100% {}
+      50% {
+        color: red;
+      }
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px solid #ddd;
+    }
+    .highlight-animation {
+      animation-name: highlight;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    header {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    textarea {
+      width: 80%;
+      height: 260px;
+      font-size: 18px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      padding: 10px;
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+@keyframes radioAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .radio::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 2px solid gray;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]:checked + .radio::before {
+      /* transform: translate(-50%, -50%) scale(1);*/
+      animation: radioCheckedAnimation 0.5s ease-in-out;
+      background-color: #4CAF50;
+    }
+@keyframes radioCheckedAnimation {
+      0% {
+        transform: translate(0%, 0%) scale(0);
+      }
+      50% {
+        transform: translate(0%, 0%) scale(1.2);
+      }
+      100% {
+        transform: translate(0%, 0%) scale(1);
+      }
+    }
+    .help {
+      width: 25px;
+      height: 25px;
+      font-size: 20px;
+      margin-left: auto;
+      background-color: #fff;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      ĐL 11 HKII CK <sup style="color:red">+</sup>
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  const al = false
+    function pasteFromClipboard() {
+      navigator.clipboard.readText()
+      .then(function(text) {
+        var textarea = document.getElementById("text");
+        textarea.value = text;
+      })
+      .catch(function(err) {
+        console.error("Lỗi khi đọc văn bản: ", err);
+      });
+    }
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1: HediSQL là:
+A. Là một phần mềm dùng giao diện dòng lệnh.
+/B. Là một phần mềm dùng giao diện đồ họa.
+C. Là một phần mềm dùng cả giao diện dòng lệnh và giao diện đồ họa
+D. Là một phần mềm không sử dụng giao diện dòng lệnh và không dùng giao diện đồ họa. 
+Câu 2: Trong các phát biểu sau đây, phát biểu nào đúng?
+A. MySQL chỉ thích hợp cho các bài toán quản lí nhỏ.
+B. MySQL chỉ thích hợp cho các bài toán quản lí trên môi trường Internet
+/C. MySQL chỉ thích hợp cho các bài toán quản lí nhỏ và lớn cũng như các ứng dụng quản lí trên môi trường Internet.
+D. MySQL không thích hợp cho các bài toán quản lí trên Internet
+Câu 3: Để khai báo khóa ngoài chọn thẻ?
+    A. " Create database"	B. "Create new"		C. "Root"	/D. Foreign keys
+Câu 4: Các trường là khóa ngoài của bảng là ?
+A. Các dữ liệu trong một cột liên kết đến một cột của bảng khác
+B. Các ô trong bảng liên kết đến một ô của bảng khác
+/C. Các trường tham chiếu đến một trường khóa chính của bảng khác
+D. Các dữ liệu trong một cột liên kết đến một hàng của bảng khác
+Câu 5: Cần khai báo giá trị mặc định phù hợp với?
+A. Giá trị tương ứng của hàng			B. Giá trị tương ứng của cột
+/C. Giá trị tương ứng của k				D. Giá trị tương ứng của hàng và cột
+Câu 6: Vệc thiết lập khoá ngoài được thực hiện như thế nào??
+A. Việc thiết lập khoá ngoài được thực hiện bằng cách xác định cột trong bảng hiện tại là khoá ngoài
+B. Việc thiết lập khoá ngoài được thực hiện bằng cách chỉ định bảng mà khoá ngoài này tham chiếu đến (bảng gốc)
+/C. Việc thiết lập khoá ngoài được thực hiện bằng cách xác định cột trong bảng hiện tại là khoá ngoài, và chỉ định bảng mà khoá ngoài này tham chiếu đến (bảng gốc)
+D. Việc thiết lập khoá ngoài được thực hiện bằng cách xác định hàng trong bảng hiện tại là khoá ngoài
+Câu 7: Đâu là công việc chính khi làm việc với một CSDL?
+A. Cập nhật dữ liệu				B. Truy xuất dữ liệu
+/C. Cập nhật và truy xuất dữ liệu		D. Cả hai đáp án trên đều sai
+Câu 8: HeidiSQL hỗ trợ việc thực hiện Cập nhật dữ liệu như thế nào với những bảng đơn giản, không có khoá ngoài??
+A. Bằng cách chọn bảng cần chỉnh sửa, bạn có thể thêm mới, chỉnh sửa hoặc truy xuất dữ liệu trong bảng
+B. Bằng cách chọn bảng cần truy xuất và sử dụng truy vấn SQL, bạn có thể truy xuất dữ liệu trong bảng
+/C. HeidiSQL cung cấp giao diện đồ họa cho phép bạn chỉnh sửa, thêm mới hoặc xoá dữ liệu trong các bảng
+D. Chỉ duy nhất một cách là sử dụng truy vấn SQL.
+Câu 9: Muốn truy xuất tất cả các dòng dữ liệu từ bảng "casi" ta dùng ?
+A. SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+B. SELECT * FROM casi WHERE idcasi = 1;
+/C. SELECT * FROM casi;
+D. SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 10: Muốn truy xuất các ca sĩ theo thứ tự tên theo thứ tự từ A đến Z ta dùng ?
+A. SELECT * FROM casi WHERE tencasi LIKE '%Hoa%';
+B. SELECT * FROM casi WHERE idcasi = 1;
+/C. SELECT * FROM casi ORDER BY tencasi ASC;
+D. SELECT * FROM casi WHERE tencasi LIKE 'N%';
+Câu 11: Khi cập nhật một bảng có khoá ngoài, dữ liệu của trường khoá ngoài phải là?
+A. Biểu thức logic một bảng khác
+B. Biểu thức kí tự liên kết với một ô trong bảng
+/C. Dữ liệu tham chiếu được đến một trường khoá chính của một bảng tham chiếu
+D. Dữ liệu tham chiếu được đến một trường nào đó của chính bảng có khóa ngoài.
+Câu 12: Khi người dùng cập nhật dữ liệu trong bảng chứa khoá ngoài, HeidiSQL sẽ?
+A. Kiểm tra giá trị của các trường trong bảng để đảm bảo rằng nó phải là giá trị tham chiếu đến một trường khoá chính của bảng tham chiếu
+/B. Kiểm tra giá trị của trường khoá ngoài để đảm bảo rằng nó phải là giá trị tham chiếu đến một trường khoá chính của bảng tham chiếu
+C. Kiểm tra các giá trị trong bảng
+D. Kiểm tra tất cả các giá trị ngoài bảng.
+Câu 13: Để truy vấn dữ liệu trong sql ta sử dụng?
+A. Mệnh đề ORDER BY				/B. Cú pháp câu lệnh SELECT
+C. Dùng toán tử BETWEEN…AND		D. Cú pháp CREATE
+Câu 14: Để truy xuất  tất cả dữ liệu từ bảng "banthuam" ta dùng câu lệnh?
+/A. SELECT * FROM banthuam;
+B. SELECT * FROM banthuam ORDER BY idbannhac ASC;
+C. SELECT idbannhac, idcasi FROM banthuam;
+D. SELECT * FROM banthuam WHERE idbannhac = 1; -- Giả sử giá trị idbannhac cần tìm là 1
+Câu 15: Để truy xuất dữ liệu từ bảng "banthuam" với điều kiện cụ thể trên trường "idbannhac" ta dùng câu lệnh?
+A. SELECT * FROM banthuam;
+B. SELECT * FROM banthuam ORDER BY idbannhac ASC;
+C. SELECT idbannhac, idcasi FROM banthuam;
+/D. SELECT * FROM banthuam WHERE idbannhac = 1; -- Giả sử giá trị idbannhac cần tìm là 1
+Câu 16: Để truy xuất dữ liệu từ bảng "banthuam" với điều kiện kết hợp giữa nhiều trường ta dùng câu lệnh?
+/A. SELECT * FROM banthuam WHERE idcasi = 2 -- Giả sử giá trị idcasi cần tìm là 2 AND banthuam >= 100; -- Giả sử giá trị banthuam cần tìm là lớn hơn hoặc bằng 100
+B. SELECT * FROM banthuam ORDER BY idbannhac ASC;
+C. SELECT idbannhac, idcasi FROM banthuam;
+D. SELECT * FROM banthuam WHERE idbannhac = 1; -- Giả sử giá trị idbannhac cần tìm là 1
+Câu 17: Nhờ khóa ngoại có thể?
+A. Một thiết bị điện tử có khả năng xử lý dữ liệu theo một tập hợp của các mệnh lệnh máy tính (hay câu lệnh)
+B. Một thiết bị điện tử có khả năng xử lý dữ liệu theo một tập hợp của các mệnh lệnh máy tính (hay câu lệnh) đã được chứa sẵn bên trong máy một cách tạm thời 
+/C. Truy xuất dữ liệu từ các bảng khác theo mối quan hệ
+D. Truy xuất dữ liệu từ các bảng mà không cần theo các mối quan hệ.
+Câu 18: Để truy xuất dữ liệu từ các bảng có mối quan hệ với nhau thì?
+A. Người dùng cần sử dụng khóa chính
+B. Người dùng sử dụng các phần mềm thứ ba
+/C. Người dùng cần sử dụng câu lệnh JOIN để kết hợp các bảng với nhau theo khoá ngoài
+D. Người dùng sử dụng khóa cấm trùng lặp.
+Câu 19: Lập danh sách các bản nhạc với tên bản nhạc và tên tác giả, ta dùng câu lệnh nào?
+/A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+	B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+
+C. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=3
+Câu 20: Lập danh sách bao gồm idBannhac, tenBannhac, tenNhacsi, ta dùng câu lệnh nào?
+A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+	/B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+
+C. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=3
+Câu 21: Lập danh sách bao gồm idBannhac, tenBannhac từ tất cả các bản nhạc của nhạc sĩ Đỗ Nhuận có trong bảng bannhac, ta dùng câu lệnh nào?
+A. SELECT bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+	B. SELECT bannhac.idBannhac, bannhac.tenBannhac, nhacsi.tenNhacsi
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+
+/C. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=1	D. SELECT bannhac.idBannhac, bannhac.tenBannhac
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.idNhacsi=nhacsi.idNhacsi
+WHERE bannhac.idNhacsi=3
+
+Câu 22: Để bắt đầu quá trình sao lưu dữ liệu ta nhấn vào nút?
+A. New Session		B. Export Database		/C. Export		D. Đóng
+Câu 23: Để thực hiện sao lưu CSDL, ta chọn?
+/A. Các công cụ  Xuất cơ sở dữ liệu dưới dạng SQL	B. Các công cụ  Load SQL file…
+C. Tập tin  Load SQL file…				D. Tập tin  Xuất tệp cài đặt
+Câu 24: Để thực hiện phục hồi CSDL, ta chọn?
+A. Các công cụ  Xuất cơ sở dữ liệu dưới dạng SQL	B. Các công cụ  Load SQL file…
+/C. Tập tin  Load SQL file…				D. Tập tin  Xuất tệp cài đặt
+Câu 25: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 72 dpi là?
+/A. 41.67 x 27.78 inch	B. 20 x 13.33 inch	C. 10 x 6.67 inch	D. 5 x 3.33 inch
+Câu 26: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 150 dpi là?
+A. 41.67 x 27.78 inch	/B. 20 x 13.33 inch	C. 10 x 6.67 inch	D. 5 x 3.33 inch
+Câu 27: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 300 dpi là?
+A. 41.67 x 27.78 inch	B. 20 x 13.33 inch	/C. 10 x 6.67 inch	D. 5 x 3.33 inch
+Câu 28: Cho ảnh số có số điểm ảnh là 3000 - 2000 điểm ảnh, kích thước ảnh với độ phân giải 600 dpi là?
+A. 41.67 x 27.78 inch	B. 20 x 13.33 inch	C. 10 x 6.67 inch	/D. 5 x 3.33 inch
+Câu 29: dpi là giá trị xác định thông số nào sau đây?
+/A. Số điểm ảnh trên một inch
+B. Số điểm ảnh trên một centimet
+C. Số điểm ảnh trên một milimet
+D. Số điểm ảnh của hình ảnh
+Câu 30: Xác định thành phần sau:
+ 
+A. Thanh bảng chọn				B. Bảng công cụ
+C. Vùng hiển thị ảnh			/D. Hộp tùy chọn công cụ
+Câu 31: Để phóng to hay thu nhỏ hình ảnh, ta sử dụng công cụ nào trong bảng công cụ:
+/A. Zoom		B. Crop		C. Rotate		D. Esc	
+Câu 32: Mối quan hệ giữa các vùng làm việc trong GIMP là gì?
+A. Các vùng làm việc hoạt động độc lập, không liên quan đến nhau. 
+/B. Các vùng làm việc liên kết chặt chẽ, hỗ trợ nhau để chỉnh sửa ảnh hiệu quả. 
+C. Vùng Hình ảnh là trung tâm, các vùng khác chỉ hỗ trợ chức năng cho nó. 
+D. Vùng Lớp là trung tâm, các vùng khác chỉ hỗ trợ chức năng cho nó.
+Câu 33: Giải thích vai trò của Bảng công cụ trên giao diện làm việc của GIMP:
+A. Chứa các lệnh thường dùng liên quan đến tệp ảnh, các lệnh mở, lưu tệp ảnh.
+/B. Chứa các công cụ cơ bản của phần mềm như di chuyển, sao chép, cắt phần ảnh đang chọn, thêm chữ, tạo các hiệu ứng đặc biệt,…
+C. Nằm dưới hộp công cụ, hiển thị các thuộc tính liên quan đến công cụ đang sử dụng.
+D. Hiển thị ảnh đang chỉnh sửa. Có thể quan sát và so sánh ảnh trước và sau mỗi bước chỉnh sửa
+Câu 34: Giải thích vai trò của Vùng hiển thị ảnh trên giao diện làm việc của GIMP:
+A. Chứa các lệnh thường dùng liên quan đến tệp ảnh, các lệnh mở, lưu tệp ảnh.
+B. Chứa các công cụ cơ bản của phần mềm như di chuyển, sao chép, cắt phần ảnh đang chọn, thêm chữ, tạo các hiệu ứng đặc biệt,…
+C. Nằm dưới hộp công cụ, hiển thị các thuộc tính liên quan đến công cụ đang sử dụng.
+/D. Hiển thị ảnh đang chỉnh sửa. Có thể quan sát và so sánh ảnh trước và sau mỗi bước chỉnh sửa
+Câu 35: Giải thích vai trò của Thanh bảng chọn trên giao diện làm việc của GIMP:
+A. Chứa các lệnh thường dùng liên quan đến tệp ảnh, các lệnh mở, lưu tệp ảnh.
+B. Chứa các công cụ cơ bản của phần mềm như di chuyển, sao chép, cắt phần ảnh đang chọn, thêm chữ, tạo các hiệu ứng đặc biệt,…
+/C. Nằm dưới hộp công cụ, hiển thị các thuộc tính liên quan đến công cụ đang sử dụng.
+D. Hiển thị ảnh đang chỉnh sửa. Có thể quan sát và so sánh ảnh trước và sau mỗi bước chỉnh sửa
+Câu 36: Nếu ảnh có hình một chiếc đĩa hình tròn, em dùng công cụ nào để chọn chiếc đĩa đó?
+A. "Hue-Saturation"					B. "Curves"		
+/C. "Elliptical Select Tool"				D. "Split Tone"
+Câu 37: Công cụ "Rectangle Select Tool" là?
+A. Công cụ lựa chọn tự do				B. Công cụ lựa chọn hình ellip
+/C. Công cụ lựa chọn hình chữ nhật		D. Công cụ lựa chọn theo màu sắc
+Câu 38: Công cụ "Free Select Tool là?
+/A. Công cụ lựa chọn tự do				B. Công cụ lựa chọn hình ellip
+C. Công cụ lựa chọn hình chữ nhật		D. Công cụ lựa chọn theo màu sắc
+
+Câu 39: Để chỉnh độ sáng và độ tương phản, chọn công cụ nào trong phần mềm GIMP?
+/A. Brightness-Contrast				B. Color Balance
+C. Hue-Saturation					D. Saturation
+Câu 40: Để chỉnh cân bằng màu, chọn công cụ nào trong phần mềm GIMP?
+A. Brightness-Contrast				/B. Color Balance
+C. Hue-Saturation					D. Saturation
+Câu 41: Công cụ Paint Brush có chức năng?
+/A. Vẽ thêm cho lớp đang chọn	
+B. Tô màu vùng chọn
+C. Tô màu chuyển sắc vùng chọn	
+D.Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+Câu 42: Công cụ Healing có chức năng?
+A. Tô màu vùng chọn						
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+/D. Vẽ bằng cách sao chép một vùng chọn
+Câu 43: Công cụ Clone có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+/D. Vẽ bằng cách sao chép chính xác một vùng chọn
+Câu 44: Công cụ Bucket Fill có chức năng?
+/A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 45: Công cụ Gradient có chức năng?
+A. Tô màu vùng chọn
+/B. Tô màu chuyển sắc vùng chọn
+C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 46: Công cụ Eraser có chức năng?
+A. Tô màu vùng chọn
+B. Tô màu chuyển sắc vùng chọn
+/C. Xóa điểm ảnh trên lớp đang chọn hoặc một vùng chọn
+D. Vẽ bằng cách sao chép một vùng chọn
+Câu 47: Ảnh động được tạo gồm?
+A. Các video đã mở, mỗi khung hình là một lớp video, hiện lần lượt theo thứ tự từ dưới lên trên
+/B. Các ảnh đã mở, mỗi khung hình là một lớp ảnh, hiện lần lượt theo thứ tự từ dưới lên trên
+C. Các ảnh đã mở, mỗi khung hình là một lớp ảnh, hiện lần lượt theo thứ tự từ trên xuống dưới
+D. Các ảnh đã mở, tất cả các chi tiết đều nằm trên cùng 1 lớp ảnh.
+Câu 48: Để xuất ra tệp ảnh động, em chọn?
+A. File -> Save				B. File -> Open as Layers
+/C. File -> Export As				D. Đáp án khác
+Câu 49: X trong cụm “(Xms)” là?
+/A. Số mili-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+B. Số micro-giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+C. Số giây mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo
+D. Số phút mà ta muốn hiển thị khung hình trước khi chuyển sang lớp tiếp theo.
+Câu 50: Trong khi thực hiện việc chỉnh sửa ta có thể?
+A. Chỉnh sửa cùng một lúc nhiều thành phần
+B. Xóa cùng lúc các thành phần
+/C. Tạo ra nhiều lớp đề xử lí từng phân nhỏ
+D. Một lớp ảnh chưa nhiều chi tiết ảnh.
+Câu 51: Đề bắt đầu tạo ảnh động, em mở ảnh bằng lệnh?
+A. Filters Animation			/B. File  Open as Layers
+C. File  Export As				D. File  Open
+Câu 52: Để chạy hiệu ứng hoạt hình của bạn theo một tốc độ nhanh hơn hoặc chậm hơn, em cần?
+A. Thay đổi thời gian trễ			B. Thay đổi thời gian xuất hiện
+/C. Thay đổi thiết đặt thời lượng		D. Không thay đổi
+Câu 53: Nếu giá trị của "Delay between frames where unspecified" là 2000 (ms), thì thời gian xuất hiện của mỗi khung ảnh sẽ là?
+A. 3000 ms		B.1 giây		C. 1000 ms		/D. 2 giây
+Câu 54: "Delay between frames where unspecified" là 2000 (ms) có nghĩa là?
+A. Mỗi khung ảnh sẽ được hiển thị trong 10 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+B. Mỗi khung ảnh sẽ được hiển thị trong 20 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+C. Mỗi khung ảnh sẽ được hiển thị trong 1 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+/D. Mỗi khung ảnh sẽ được hiển thị trong 2 giây trước khi chuyển sang khung ảnh tiếp theo trong ảnh động
+Câu 55: Giải thích ý nghĩa khi nháy vào ô Loop forever:
+A. Tạo ảnh động
+/B. Muốn ảnh lặp lại sau khi hiển thị một lượt từ đầu đến cuối. Nếu không nháy vào ô này, thì ảnh chỉ chạy một lần rồi dừng lại
+C. Xác định số mili-giây dừng giữa các khung hình chưa được đặt thời gian
+D. Xuất hình ảnh
+Câu 56: Bạn Anh làm một đoạn phim để kể lại những điều thú vị diễn ra trong kì nghỉ hè của mình. Tư liệu được sử dụng trong phim có thể là?
+A. Ảnh mà Anh đã chụp				B. Video mà Anh đã quay
+/C. Các hình ảnh và video mà Anh đã có		D. Cả hai đáp án trên đều sai
+
+
+
+
+
+`
+    let str = inputElement.value 
+    
+    function shuffleR(n, excludeArray) {
+      const strN = n.toString();
+      const index = Math.floor(Math.random() * strN.length);
+      let newDigit = Math.floor(Math.random() * 9) + 1;
+
+      // Đảm bảo số mới khác số ban đầu và khác với những số trong mảng
+      while (newDigit === parseInt(strN[index]) || excludeArray.includes(newDigit)) {
+        newDigit = Math.floor(Math.random() * 9) + 1;
+      }
+
+      const modifiedNumber = strN.substring(0, index) + newDigit + strN.substring(index + 1);
+      return parseInt(modifiedNumber);
+    }
+
+
+    inputElement.value = str
+    function replaceLinksToImages(text) {
+      var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
+      // thay thế URLs bằng <img> tags
+      var replacedText = text.replace(urlPattern, function (url) {
+        return '<img src="' + url + '" />';
+      });
+      return replacedText;
+    }
+    /*inputElement.addEventListener('input', function() {
+      localStorage.setItem('inputValue_page1', inputElement.value);
+    });*/
+    // Tải lại giá trị đã lưu khi trang được tải lại
+    /*window.addEventListener('load', function() {
+      const savedValue = localStorage.getItem('inputValue_page1');
+      if (savedValue) {
+        inputElement.value = savedValue;
+      }
+    });*/
+    function help() {
+      let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
+      alert(prompt)
+    }
+    var minutes, seconds, milliseconds
+    function run() {
+      const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
+      const inputString = "\n"+document.getElementById("text").value
+      if (!inputString) return
+      document.getElementById("inputStr").classList.add("hide")
+      document.getElementById("main").classList.remove("hide")
+      function shuffleArray(array) {
+        var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
+      function convertStringToHTML(questionStrings) {
+        const questions = [];
+        for (let i = 0; i < questionStrings.length; i++) {
+          const questionString = questionStrings[i].trim();
+          const lineBreakIndex = questionString.indexOf('\n');
+          const question = questionString.slice(0, lineBreakIndex).trim();
+          const answers = questionString.slice(lineBreakIndex).trim();
+          let answerStrings = answers.split('\n');
+          if (shuffleA) answerStrings = shuffleArray(answerStrings)
+          const questionAnswers = [];
+          for (let j = 0; j < answerStrings.length; j++) {
+            let answerString = answerStrings[j].trim();
+            const isCorrect = answerString.startsWith("\/");
+            if (isCorrect) {
+              answerString = answerString.slice(1)
+            }
+            const answerHTML = `
+            <div class="answer">
+            <input type="radio" id="q${i}-${j}" name="q${i}" value="${isCorrect ? 'correct': 'incorrect'}"><label class="radio" for="q${i}-${j}">${String.fromCharCode(65+j)}. ${al ? answerString.trim(): answerString.slice(2).trim()}</label>
+            </div>
+            `;
+            questionAnswers.push(answerHTML);
+          }
+          const questionHTML = `
+          <div class="question" id="qt${i}">
+          <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không\s+(phải|phản\sánh|có|cần|giúp|được|giống|bao\sgồm)/gi, '<span style="text-decoration: underline;">không</span> $1')}</p><div style="display: inline-block">
+          ${questionAnswers.join('\n')}</div>
+          </div>
+          `;
+          questions.push(questionHTML);
+        }
+        return questions.join('\n');
+      }
+      
+      let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+      questionStrings.shift()
+      if (shuffleQ) questionStrings = shuffleArray(questionStrings)
+      amount = questionStrings.length
+      const htmlString = convertStringToHTML(questionStrings);
+      // console.log(htmlString)
+      // test
+      //  console.log(htmlString);
+      document.getElementById("container").innerHTML = htmlString
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      var startTime = Date.now();
+      function updateTime() {
+        var currentTime = Date.now();
+        var timeDiff = currentTime - startTime;
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = (minutes < 10) ? "0" + minutes: minutes;
+        seconds = (seconds < 10) ? "0" + seconds: seconds;
+        milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
+        timer.textContent = minutes + ":" + seconds + ":" + milliseconds;
+      }
+      // Gọi hàm để kích hoạt hiệu ứng highlight
+      timerInterval = setInterval(updateTime,
+        10);
+      // Lấy tất cả các radio button trong trang
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+      // Gán sự kiện click cho mỗi radio button
+      if (document.getElementById("autoStr").checked) {
+        radioButtons.forEach(function(radio) {
+          radio.addEventListener('click', function() {
+            if (radio.checked) {
+              try {
+                scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
+              }
+              catch {
+                calculateScore()
+                scroll(document.getElementById("result"), false)
+              }
+            }
+          });
+        });
+      }
+    }
+    function change(element) {
+      element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
+      element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
+      //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
+    }
+    function reload() {
+      window.scrollTo(0, 0)
+      window.location.reload()
+    }
+    var timerInterval, amount;
+    function calculateScore() {
+      document.getElementById("start").classList.add("hide")
+      document.getElementById("reload").classList.remove("hide")
+      var score = 0;
+      var inputs = document.querySelectorAll('input[type="radio"]');
+      var result = document.getElementById('result');
+      var timer = document.getElementById('time');
+      inputs.forEach(function(input) {
+        if (input.checked && input.value === 'correct') {
+          score++;
+        }
+        if (input.value === 'correct') {
+          input.parentNode.style.color = "green"
+        } else
+          if (input.checked) {
+          input.parentNode.style.color = "red"
+        }
+      });
+      clearInterval(timerInterval);
+      result.style.display = 'block';
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu`;
+      if ((score/amount)*10 >= 9) {
+        result.className = 'correct';
+      } else {
+        result.className = 'incorrect';
+      }
+      /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+      var prevButton = document.getElementById('prevButton');
+      var nextButton = document.getElementById('nextButton');
+      var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+
+      var filteredInputs = radioInputs.filter(function(input) {
+        return input.value == 'correct' && !input.checked;
+      });
+      var maxIndex = filteredInputs.length-1
+      var currentIndex = 0
+      prevButton.addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex >= 0) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[maxIndex])
+          currentIndex = maxIndex
+        }
+      });
+      nextButton.addEventListener('click',
+        function() {
+          console.log(currentIndex)
+          currentIndex++;
+          if (currentIndex <= maxIndex) {
+            scroll(filteredInputs[currentIndex])
+          } else {
+            scroll(filteredInputs[0])
+            currentIndex = 0
+          }
+        });
+      document.getElementById("floating-buttons").classList.remove("hide")
+      inputs.forEach(function(input) {
+        input.disabled = true
+      })
+    }
+    function scroll(element, highlightText = true) {
+      (highlightText ? element.parentNode: element).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+      if (!highlightText) return
+      element.parentNode.classList.add("highlight-animation");
+
+      setTimeout(function() {
+        element.parentNode.classList.remove("highlight-animation");
+      },
+        1000);
+    }
+
+  </script>
+</body>
+</html>
