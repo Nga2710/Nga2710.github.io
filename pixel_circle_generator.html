@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Coloring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #gridSize {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #gridContainer {
+            display: grid;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+        }
+
+        .black {
+            background-color: black;
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <input type="number" id="gridSize" placeholder="Enter grid size">
+    <button onclick="createGrid()">Create Grid</button>
+    <br>
+    <strong id="alter">Nhập số cao lag máy tự chịu</strong>
+    <div id="gridContainer"></div>
+
+    <script>
+        async function createGrid() {
+            document.getElementById("alter").innerHTML = "Nhập số cao lag máy tự chịu"
+            const gridSize = parseInt(document.getElementById("gridSize").value);
+            const gridContainer = document.getElementById("gridContainer");
+
+            gridContainer.innerHTML = ""; // Clear previous grid if any
+
+            gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 20px)`;
+            var auto = false
+            for (let i = gridSize; i > 0; i--) {
+                let auto = false
+                await setTimeout(()=> {
+                    for (let j = gridSize; j > 0; j--) {
+
+                        const cell = document.createElement("div");
+
+                        if (auto) {
+                            cell.classList.add("black");
+                            gridContainer.appendChild(cell);
+                            continue;
+                        }
+                        if (Math.sqrt((i+0.5)**2 + (j+0.5)**2) <= gridSize+1) {
+                            cell.classList.add("black");
+                            for (let z = j; z > 0; z--) {
+                                const cell2 = document.createElement("div");
+                                cell2.classList.add("black");
+                                gridContainer.appendChild(cell2);
+                            }
+                            break
+                        }
+                        cell.classList.add("cell");
+                        gridContainer.appendChild(cell);
+
+                    }
+                },
+                    0)
+            }
+
+await setTimeout( ()=> {document.getElementById("alter").innerHTML = "Done!"}, 1)
+        }
+    </script>
+</body>
+</html>
