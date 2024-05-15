@@ -39,14 +39,14 @@
         .cell {
             width: 20px;
             height: 20px;
-            border: 1px solid black;
+            border: 1px solid gray;
         }
 
         .black {
             background-color: black;
             width: 20px;
             height: 20px;
-            border: 1px solid black;
+            border: 1px solid gray;
         }
     </style>
 </head>
@@ -67,8 +67,11 @@
 
             gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 20px)`;
             var auto = false
+                            let string = ""
             for (let i = gridSize; i > 0; i--) {
                 let auto = false
+
+                var pre = 0
                 await setTimeout(()=> {
                     for (let j = gridSize; j > 0; j--) {
 
@@ -81,6 +84,9 @@
                         }
                         if (Math.sqrt((i+0.5)**2 + (j+0.5)**2) <= gridSize+1) {
                             cell.classList.add("black");
+
+                            string += `${(j - pre)}—`
+                                                        pre = j
                             for (let z = j; z > 0; z--) {
                                 const cell2 = document.createElement("div");
                                 cell2.classList.add("black");
@@ -96,7 +102,7 @@
                     0)
             }
 
-await setTimeout( ()=> {document.getElementById("alter").innerHTML = "Done!"}, 1)
+await setTimeout( ()=> {document.getElementById("alter").innerHTML = string}, 1)
         }
     </script>
 </body>
