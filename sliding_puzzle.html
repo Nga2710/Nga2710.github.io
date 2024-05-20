@@ -117,7 +117,7 @@
     }
     var emptySquareId = 5;
     var time = document.getElementById('timer');
-    assignRandomNumbers();
+  /*  assignRandomNumbers();*/
 
     time.classList.add('safe-animation')
     var squares = document.querySelectorAll('.square');
@@ -140,7 +140,7 @@
       // Gọi hàm để kích hoạt hiệu ứng highlight
       timerInterval = setInterval(updateTime,
         10);
-      assignRandomNumbers();
+  /*    assignRandomNumbers();*/
 
       var squares = document.querySelectorAll('.square');
       var emptySquare = document.querySelector('.empty-square');
@@ -173,27 +173,26 @@
 
     // Gọi hàm để gán ngẫu nhiên số cho các ô vuông
 
-
+var end = false
     squares.forEach(square => {
       square.addEventListener('click', () => {
         const squareId = parseInt(square.id);
-        if (isAdjacent(squareId, emptySquareId)) {
+        if (!end && isAdjacent(squareId, emptySquareId)) {
           swap(square, emptySquare);
           emptySquareId = squareId;
-          emptySquare.classList.add("square")
-          emptySquare.classList.remove("empty-square")
-          square.classList.add("empty-square")
-          square.classList.remove("square")
           squares = document.querySelectorAll('.square');
           emptySquare = document.querySelector('.empty-square');
           if (isSolved()) {
-            alert('Chúc mừng! Bạn đã giải xong.');
+            squares.forEach(squ => {
+              squ.style.backgroundColor = "yellow";
+end = true
+            })
           }
         }
 
       });
     });
-
+    for (let i = 0; i<32; i++) { squares.forEach(square => {if (Math.random()>0.2) square.click()})}
     function isAdjacent(squareId, emptySquareId) {
       const diff = Math.abs(squareId - emptySquareId);
       return (diff === 1 && Math.floor((squareId - 1) / 3) === Math.floor((emptySquareId - 1) / 3)) || (diff === 3);
@@ -203,6 +202,11 @@
       const tempText = square.innerHTML;
       square.innerHTML = emptySquare.innerHTML;
       emptySquare.innerHTML = tempText;
+      
+          emptySquare.classList.add("square")
+          emptySquare.classList.remove("empty-square")
+          square.classList.add("empty-square")
+          square.classList.remove("square")
     }
 
     function isSolved() {
