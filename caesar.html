@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Caesar và Giải Mã</title>
+    <style>
+    * {
+                  font-weight: bold;
+    }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e9f5e9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+        .container {
+          margin: 10px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #28a745;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 48%;
+            padding: 10px;
+            margin: 5px 1%;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            background-color: #e6f4e6;
+            white-space: pre-wrap; /* preserve whitespace and line breaks */
+            font-weight: bold; /* make all text bold */
+            max-height: 300px; /* limit the height of the output container */
+            overflow-y: auto; /* add vertical scroll if content overflows */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Mã Caesar và Giải Mã</h2>
+        <label for="inputText">Văn bản:</label>
+        <input type="text" id="inputText" placeholder="Nhập văn bản tại đây">
+
+        <label for="shift">Khóa (0-25):</label>
+        <input type="number" id="shift" min="0" max="25" value="0">
+
+        <button onclick="encodeCaesar()">Mã hóa</button>
+        <button onclick="decodeCaesar()">Giải mã</button>
+
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        function caesarCipher(text, shift) {
+            return text.split('').map(char => {
+                if (char.match(/[a-z]/i)) {
+                    const code = char.charCodeAt(0);
+                    const shiftAmount = shift % 26;
+
+                    if (code >= 65 && code <= 90) {
+                        return String.fromCharCode((code - 65 + shiftAmount + 26) % 26 + 65);
+                    } else if (code >= 97 && code <= 122) {
+                        return String.fromCharCode((code - 97 + shiftAmount + 26) % 26 + 97);
+                    }
+                }
+                return char;
+            }).join('');
+        }
+
+        function encodeCaesar() {
+            const text = document.getElementById('inputText').value;
+            const shift = parseInt(document.getElementById('shift').value);
+            const encodedText = caesarCipher(text, shift);
+            document.getElementById('output').innerText = 'Mã hóa: ' + encodedText;
+        }
+
+        function decodeCaesar() {
+            const text = document.getElementById('inputText').value;
+            let allDecodedTexts = 'Giải mã:\n';
+
+            for (let shift = 0; shift < 26; shift++) {
+                const decodedText = caesarCipher(text, -shift);
+                allDecodedTexts += `Khóa ${shift}: ${decodedText}\n`;
+            }
+
+            document.getElementById('output').innerText = allDecodedTexts;
+        }
+    </script>
+</body>
+</html>
