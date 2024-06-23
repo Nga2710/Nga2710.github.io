@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette Generator and Zip Downloader</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="button" id="main" onclick="downloadAllImages()">Tải màu về (ZIP)</button>
+
+  <script>
+    const zip = new JSZip();
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 2;
+    canvas.height = 2;
+
+    // Function to generate RGB color based on index and total colors (n)
+    function generateRGBColor(i, j, k, d) {
+
+      var color = `rgb(${i}, ${j}, ${k})`;
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return [canvas.toDataURL('image/png').split(',')[1],`${i}_${j}_${k}`]
+    }
+
+    // Function to generate and download all color images in a zip file
+    async function downloadAllImages() {
+
+      const d = 8
+      for (let i = 7; i < 256; i+=d) for (let j = 7; j < 256; j+=d) for (let k = 7; k < 256; k+=d) {
+        const imageData = generateRGBColor(i, j, k, d);
+        zip.file(`${imageData[1]}.png`, imageData[0], {
+          base64: true
+        });
+        
+      }
+setTimeout(()=> {document.getElementById("main").innerHTML= `fone`},1)
+      const content = await zip.generateAsync({
+        type: 'blob'
+      });
+      saveAs(content, 'color_palette.zip');
+    }
+  </script>
+</body>
+</html>
