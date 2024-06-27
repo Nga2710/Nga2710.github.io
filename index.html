@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trang Chủ | BDev-Book</title>
   <meta property="og:title" content="Trang Chủ | BDev-Book">
@@ -53,7 +52,6 @@
     .code-editor {
       width: 100%;
       outline: none;
-
       background: #fefefe;
     }
     .code-container textarea::-webkit-scrollbar {
@@ -89,12 +87,10 @@
       display: block;
     }
     body {
-
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
-
     }
     h3, header, footer, .link, button, .box {
       border-top: 3px solid lime;
@@ -109,13 +105,11 @@
       border-right: 3px solid lime;
     }
     h3 {
-
       background-color: #4CAF50;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       padding: 10px;
       color: white;
     }
-
     .link {
       background-color: #4CAF50;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -126,15 +120,12 @@
       left: 50%;
       transform: translate(-50%, -50%);
       justify-content: center;
-
     }
     header, footer {
-
       border-radius: 5px;
       margin: 8px;
       background-color: #4CAF50;
       color: white;
-
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
@@ -167,10 +158,8 @@
       cursor: pointer;
       background-color: #ffffff;
       color: black;
-
       padding: 10px 15px;
       border-radius: 5px;
-
     }
     .openbtn:hover {
       background-color: #45a049;
@@ -178,7 +167,6 @@
     .search-box {
       margin-left: auto;
       margin-right: 3%;
-
     }
     .search-box input[type="text"] {
       padding: 8px;
@@ -186,28 +174,26 @@
       border-radius: 10px;
       width: auto;
       outline: none;
-
     }
     .search-box input[type="text"]:focus {
-      /*     border: 2px solid #45a049;*/
+      /* border: 2px solid #45a049;*/
     }
-    /*   .search-box button {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background-color: #45a049;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-
-    }
-    .search-box button:hover {
-      background-color: #3e8e41;
-    }*/
+    /* .search-box button {
+ position: absolute;
+ right: 0;
+ top: 0;
+ bottom: 0;
+ background-color: #45a049;
+ color: white;
+ border: none;
+ padding: 10px;
+ cursor: pointer;
+ border-top-right-radius: 5px;
+ border-bottom-right-radius: 5px;
+ }
+ .search-box button:hover {
+ background-color: #3e8e41;
+ }*/
     .sidebar {
       height: 100%;
       width: 250px;
@@ -239,7 +225,6 @@
       font-size: 36px;
       margin-left: 50px;
     }
-
     .content {
       padding: 1em;
       margin-top: auto;
@@ -252,7 +237,6 @@
       margin-bottom: 2em;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
       opacity: 0;
-
       animation: fadeInUp 0.5s forwards;
     }
     .post img {
@@ -261,7 +245,6 @@
       display: block;
       margin-bottom: 1em;
       border-radius: 5px;
-
     }
     .post-content {
       max-height: 80px;
@@ -276,13 +259,11 @@
       left: 0;
       right: 0;
       margin-top: 30px;
-
       height: 50px;
       background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     }
     .post-content.expanded {
       max-height: 100%;
-
     }
     .post-content.expanded::after {
       display: none;
@@ -305,16 +286,14 @@
     }
     .box {
       border-radius: 10px;
-
       background-color: #4CAF50;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
       color: white;
     }
     .square {
       width: 2em;
       height: 2em;
-      margin-right: 20px;
+      margin-left: 10px;
       outline: none;
     }
     img {
@@ -329,7 +308,6 @@
       overflow: hidden;
       transition: max-height 0.2s ease-out;
     }
-
     .sub-menu.show {
       transition: max-height 0.2s ease-in-out;
     }
@@ -338,7 +316,6 @@
       color: #4444ff;
     }
     id {
-
       font-size: 30px;
     }
     button {
@@ -351,10 +328,9 @@
       background-color: #ffffaa;
       border: 1px solid #f0ad4e;
       border-radius: 5px;
-
       white-space: pre-wrapx;
       font-weight: bold;
-      max-height: 300px;
+      max-height: 200px;
       overflow-y: auto;
     }
     /*-toast-*/
@@ -362,27 +338,21 @@
       background-color: #ffaaaa;
       border: 2px solid #d9534f;
     }
-
     .toastSuccess {
       background-color: #e6f4e6;
       border: 2px solid #28a745;
     }
-
     .toastWarning {
       background-color: #ffffaa;
       border: 2px solid #f0ad4e;
     }
     .toast {
-
       padding: 2px;
       margin: 2px;
-
       border-radius: 5px;
       width: 200px;
-
       font-weight: bold;
       max-height: 300px;
-
       position: fixed;
       bottom: 3%;
       right: 1%;
@@ -408,26 +378,20 @@
     #toastClose:hover {
       filter: brightness(1);
     }
-
   </style>
-
 </head>
 <body>
-
   <header>
     <div>
-
-      <div id="openBtn" class="openbtn" onclick="openNav()">☰</div>
-
+      <div id="openBtn" class="openbtn" onclick="openNav()">
+        ☰
+      </div>
     </div>
 
-
     <div class="search-box">
-
       <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết...">
     </div>
   </header>
-
   <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
     <a href="#" class="sub-menu-trigger">Toán</a>
@@ -486,9 +450,137 @@
     <div id="no-results">
       Không tìm thấy bài viết
     </div>
+
+    <div class="post">
+      <h3>05 • Giải phương trình</h3>
+      <div id="post05">
+        <input type="number" class="square" placeholder="0">x⁴ +
+        <input type="number" class="square" placeholder="0">x³ +
+        <input type="number" class="square" placeholder="0">x² +
+        <input type="number" class="square" placeholder="0">x +
+        <input type="number" class="square" placeholder="0">=0
+        <div id="output5" class="output">
+          All real numbers
+        </div>
+        <script>
+          const squares05 = document.getElementById("post05").querySelectorAll(".square");
+          squares05.forEach(square => square.addEventListener("input", () => {
+            const values = Array.from(squares05).map(square => parseFloat(square.value) || 0);
+
+            function solveEquation(a, b, c, d, e) {
+              const coefficients = [a || 0,
+                b || 0,
+                c || 0,
+                d || 0,
+                e || 0];
+              // Remove leading zero coefficients
+              while (coefficients.length > 1 && coefficients[0] === 0) {
+                coefficients.shift();
+              }
+              const degree = coefficients.length - 1;
+              return [solveDegree0,
+                solveDegree1,
+                solveDegree2,
+                solveDegree3,
+                solveDegree4][degree](coefficients)
+
+            }
+            function solveDegree0(coefficients) {
+              if (coefficients[0] === 0) {
+                return ["All real numbers"];
+              } else {
+                return ["No solution"];
+              }
+            }
+            function solveDegree1(coefficients) {
+              const [a,
+                b] = coefficients;
+              console.log(-b/a)
+              return [-b / a];
+            }
+            function solveDegree2(coefficients) {
+              const [a,
+                b,
+                c] = coefficients;
+              const discriminant = b * b - 4 * a * c;
+              if (discriminant > 0) {
+                return [(-b + Math.sqrt(discriminant)) / (2 * a),
+                  (-b - Math.sqrt(discriminant)) / (2 * a)];
+              } else if (discriminant === 0) {
+                return [-b / (2 * a)];
+              } else {
+                return []; // No real roots
+              }
+            }
+            function solveDegree3(coefficients) {
+              const [a,
+                b,
+                c,
+                d] = coefficients;
+              // Normalize coefficients
+              const p = (3 * a * c - b * b) / (3 * a * a);
+              const q = (2 * b * b * b - 9 * a * b * c + 27 * a * a * d) / (27 * a * a * a);
+              const discriminant = q * q / 4 + p * p * p / 27;
+              if (discriminant > 0) {
+                const u = Math.cbrt(-q / 2 + Math.sqrt(discriminant));
+                const v = Math.cbrt(-q / 2 - Math.sqrt(discriminant));
+                return [u + v - b / (3 * a)];
+              } else if (discriminant === 0) {
+                const u = Math.cbrt(-q / 2);
+                return [2 * u - b / (3 * a),
+                  -u - b / (3 * a)];
+              } else {
+                const r = Math.sqrt(-p * p * p / 27);
+                const phi = Math.acos(-q / (2 * r));
+                const s = 2 * Math.cbrt(r);
+                return [
+                  s * Math.cos(phi / 3) - b / (3 * a),
+                  s * Math.cos((phi + 2 * Math.PI) / 3) - b / (3 * a),
+                  s * Math.cos((phi + 4 * Math.PI) / 3) - b / (3 * a)
+                ];
+              }
+            }
+            function solveDegree4(coefficients) {
+              const [a,
+                b,
+                c,
+                d,
+                e] = coefficients;
+              // Normalize coefficients
+              const normalizedB = b / a;
+              const normalizedC = c / a;
+              const normalizedD = d / a;
+              const normalizedE = e / a;
+              // Substitutions to reduce quartic equation to a depressed quartic
+              const p = (8 * normalizedC - 3 * normalizedB * normalizedB) / 8;
+              const q = (8 * normalizedD + normalizedB * normalizedB * normalizedB - 4 * normalizedB * normalizedC) / 8;
+              const r = (256 * normalizedE - 64 * normalizedD * normalizedB + 16 * normalizedC * normalizedB * normalizedB - 3 * normalizedB * normalizedB * normalizedB * normalizedB) / 256;
+              // Solve the resolvent cubic
+              const cubicRoots = solveDegree3([1, -p / 2, -r, r * p / 2 - q * q / 8]);
+              const y = Math.max(...cubicRoots);
+              const R = Math.sqrt(normalizedB * normalizedB / 4 - 2 * normalizedC + y);
+              const D = Math.sqrt(y * y / 4 - r);
+              const E = Math.sqrt(normalizedB * normalizedB / 4 - 2 * normalizedC - y);
+              const x1 = (-normalizedB / 4 + R / 2 + Math.sqrt(R * R - 4 * (y / 2 - D)) / 2);
+              const x2 = (-normalizedB / 4 + R / 2 - Math.sqrt(R * R - 4 * (y / 2 - D)) / 2);
+              const x3 = (-normalizedB / 4 - R / 2 + Math.sqrt(E * E - 4 * (y / 2 + D)) / 2);
+              const x4 = (-normalizedB / 4 - R / 2 - Math.sqrt(E * E - 4 * (y / 2 + D)) / 2);
+              return [x1,
+                x2,
+                x3,
+                x4];
+            }
+
+            document.getElementById("output5").innerHTML = `${solveEquation(...values)}`;
+          }));
+        </script>
+      </div>
+      <d>
+        25/6/2024
+      </d>
+    </div>
     <div class="post">
       <h3>04 • Json Field</h3>
-
       <button id="encode">Mã hóa</button>
       <button id="decode">Giải mã</button>
       <code id="input4"></code>
@@ -503,7 +595,6 @@
           let replace = false;
           for (let i = 0; i < str.length; i++) {
             var char = str[i];
-
             if (char == "/" && replace == false && toggleb == true) {
               i++;
               if (str[i] == "*") {
@@ -575,19 +666,17 @@
             } else resultStr += char;
           }
           if (str == resultStr) {
-            toastShow("Lỗi", "Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u[hex][hex][hex][hex]", "w")
+            toastShow("Lỗi", "Chưa có kí tự nào được thay đổi, kiểm tra và đảm bảo mã của bạn ở dạng \\u", "w")
           } else {
             document.getElementById("input4").querySelector(".code-editor").value = resultStr;
             toastShow("Đã giải mã thành công!", "", "s");
           }
         };
-
         function formatjson() {
           try {
             toastShow(`Đã định dạng thành công!`, "", "s");
             document.getElementById("input4").querySelector(".code-editor").value = JSON.stringify(JSON.parse(document.getElementById("input4").querySelector(".code-editor").value), null, `\t`);
           } catch (err) {
-
             toastShow("Lỗi", `${err}`, "e");
           }
         }
@@ -602,16 +691,12 @@
     <div class="post">
       <h3>03 • Uuid Generator</h3>
 
-
       <div id="output3" class="output">
         Error
       </div>
-
       <script>
-
         let hexChar = "0123456789abcdef";
         function generateuuid() {
-
           let uuid = "";
           for (let i = 0; i < 32; i++) {
             if (i == 8 || i == 12 || i == 16 || i == 20)
@@ -631,26 +716,21 @@
     </div>
     <div class="post">
 
-
       <h3>02 • Mã Caesar và Giải Mã</h3>
       <label for="inputText">Văn bản:</label>
       <input type="text" id="inputText" placeholder="Nhập văn bản tại đây">
       <br>
       <label for="shift">Khóa (0-25):</label>
       <input type="number" id="shift" min="0" max="25" value="0">
-
       <button onclick="encodeCaesar()">Mã hóa</button>
       <button onclick="decodeCaesar()">Giải mã</button>
-
       <div id="output2" class="output"></div>
-
       <script>
         function caesarCipher(text, shift) {
           return text.split('').map(char => {
             if (char.match(/[a-z]/i)) {
               const code = char.charCodeAt(0);
               const shiftAmount = shift % 26;
-
               if (code >= 65 && code <= 90) {
                 return String.fromCharCode((code - 65 + shiftAmount + 26) % 26 + 65);
               } else if (code >= 97 && code <= 122) {
@@ -660,7 +740,6 @@
             return char;
           }).join('');
         }
-
         function encodeCaesar() {
           const text = document.getElementById('inputText').value;
           const shift = parseInt(document.getElementById('shift').value);
@@ -668,16 +747,13 @@
             shift);
           document.getElementById('output2').innerText = 'Mã hóa: ' + encodedText;
         }
-
         function decodeCaesar() {
           const text = document.getElementById('inputText').value;
           let allDecodedTexts = 'Giải mã:\n';
-
           for (let shift = 0; shift < 26; shift++) {
             const decodedText = caesarCipher(text, -shift);
             allDecodedTexts += `Khóa ${shift}: ${decodedText}\n`;
           }
-
           document.getElementById('output2').innerText = allDecodedTexts;
         }
       </script>
@@ -686,53 +762,49 @@
       </d>
     </div>
     <div class="post">
-      <h3>01 • Tích giữa 2 Vector</h3>
-
-      <div>
-        Vector A: <input type="number" class="square" id="a" placeholder="0">
-        <input type="number" class="square" id="b" placeholder="0">
-        <input type="number" class="square" id="c" placeholder="0"><br>
+      <h3>01 • Mối liên hệ giữa 2 Vector</h3>
+      <div id="post01">
+        Vector A: <input type="number" class="square" placeholder="0">
+        <input type="number" class="square" placeholder="0">
+        <input type="number" class="square" placeholder="0"><br>
         Vector B:
-        <input type="number" class="square" id="d" placeholder="0">
-        <input type="number" class="square" id="e" placeholder="0">
-        <input type="number" class="square" id="f" placeholder="0">
+        <input type="number" class="square" placeholder="0">
+        <input type="number" class="square" placeholder="0">
+        <input type="number" class="square" placeholder="0">
         <div id="output1" class="output">
-          Tích vô hướng: 0<br>Tích có hướng: (0, 0, 0)<br>S<sub>∆OAB</sub> = 0
-        </div>
 
+        </div>
         <script>
-          const squares = document.querySelectorAll(".square");
+          const squares = document.getElementById("post01").querySelectorAll(".square");
           squares.forEach(square => square.addEventListener("input", () => {
             const values = Array.from(squares).map(square => parseFloat(square.value) || 0);
             let [a, b, c, d, e, f] = values;
 
-            // Tính tích vô hướng
             const dotProduct = a * d + b * e + c * f;
 
-            // Tính tích có hướng
             const crossProduct = [
               b * f - c * e,
               c * d - a * f,
               a * e - b * d
             ];
-
             document.getElementById("output1").innerHTML = `
             Tích vô hướng: ${dotProduct}<br>
             Tích có hướng: (${crossProduct[0]}, ${crossProduct[1]}, ${crossProduct[2]})<br>
-            S<sub>∆OAB</sub> = ${Math.sqrt(crossProduct.reduce((accumulator, currentValue) => accumulator + currentValue**2, 0))/2}
-            `;
+            S<sub>∆OAB</sub> = ${Math.sqrt(crossProduct.reduce((accumulator, currentValue) => accumulator + currentValue**2, 0))/2}<br>
+            Góc AOB: ${Math.acos(dotProduct/(Math.sqrt(a*a+b*b+c*c)*(Math.sqrt(d*d+e*e+f*f))))*180/Math.PI}°<br>
+            Độ dài vector A: ${Math.sqrt(a*a+b*b+c*c)}<br>
+            Độ dài vector B: ${Math.sqrt(d*d+e*e+f*f)}<br>
+            Vector AB: (${d-a},${e-b},${f-c})<br>
+            Độ dài AB: ${Math.sqrt((d-a)**2+(e-b)**2+(f-c)**2)}<br>`;
           }));
         </script>
       </div>
       <d>
         25/6/2024
       </d>
-
     </div>
-
     <div class="post">
       <h3>Template Post</h3>
-
       <div class="post-content">
         <code>console.log("Hello World")</code>
       </div>
@@ -743,10 +815,8 @@
         25/6/2024
       </d>
     </div>
-
     <!-- Thêm các bài viết khác tương tự -->
     <div class="box">
-
       <marquee behavior="scroll" direction="right" style="font-size: 10px;">
         <div>
           ➼
@@ -754,13 +824,31 @@
       </marquee>
     </div>
   </div>
-
   <footer>
     <script>
       document.querySelector("footer").innerHTML = `<span>Copyright©${(new Date).getFullYear() } | Created By @Nga2710 | Hosted By <a href="https://github.com/Nga2710/Nga2710.github.io" target="_blank" title="Mở trang Github trong Tab mới">Github</a></span>`
     </script>
   </footer>
   <script>
+
+    document.querySelectorAll('.output').forEach(element => {
+      element.addEventListener('click', function() {
+        let tempInput = document.createElement('textarea');
+        tempInput.value = element.innerHTML;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        toastShow("Sao chép thành công", element.innerHTML, "s")
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      });
+    });
+
+function countOccurrencesRegex(str, char) {
+
+    let matches = str.match(new RegExp(char, 'g'));
+    return matches ? matches.length: 0;
+}
+
 
 
     //------Code
@@ -793,19 +881,15 @@
         syncScroll(codeEditor, lineNumbers)});
       code.appendChild(lineNumbers)
       code.appendChild(codeEditor)
-
       updateLineNumbers(codeEditor, lineNumbers);
-
     })
     //-------Sidebar
     function openNav() {
       document.getElementById("mySidebar").style.left = "0";
     }
-
     function closeNav() {
       document.getElementById("mySidebar").style.left = "-250px";
     }
-
     function toggleHide(trigger) {
       const element = trigger.nextElementSibling;
       if (element.style.maxHeight) {
@@ -815,22 +899,18 @@
       }
       element.classList.toggle('show');
     }
-
     function toggleReadMore(content) {
-
       if (content.classList.contains('expanded')) {
         content.classList.remove('expanded');
       } else {
         content.classList.add('expanded');
       }
     }
-
     function searchPosts() {
       let input = document.getElementById('searchInput').value.toLowerCase();
       let posts = document.getElementsByClassName('post');
       let noResults = document.getElementById('no-results');
       let found = false;
-
       for (let i = 0; i < posts.length; i++) {
         let post = posts[i];
         if (post.innerHTML.includes(input)) {
@@ -840,7 +920,6 @@
           post.style.display = "none";
         }
       }
-
       if (!found) {
         noResults.style.display = "block";
       } else {
@@ -896,7 +975,6 @@
           toastCreate.classList.add('toastSuccess');
           toastCreate.classList.remove('toastError');
           toastCreate.classList.remove('toastWarning');
-
           document.querySelector('#toastTitle').innerHTML = `${title}`;
           document.querySelector('#toastText').innerHTML = text;
         }
@@ -904,7 +982,6 @@
           toastCreate.classList.add('toastError');
           toastCreate.classList.remove('toastSuccess');
           toastCreate.classList.remove('toastWarning');
-
           document.querySelector('#toastTitle').innerHTML = `${title}`;
           document.querySelector('#toastText').innerHTML = text;
         }
@@ -912,7 +989,6 @@
           toastCreate.classList.add('toastWarning');
           toastCreate.classList.remove('toastSuccess');
           toastCreate.classList.remove('toastError');
-
           document.querySelector('#toastTitle').innerHTML = `${title}`;
           document.querySelector('#toastText').innerHTML = `<black>${text}</black>`;
         }
