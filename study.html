@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trang Chủ | BDev-Book</title>
+  <meta property="og:title" content="Trang Chủ | BDev-Book">
+  <meta name="twitter:title" content="Trang Chủ | BDev-Book">
+  <meta name="description" content="Là một website tĩnh được sử dụng như một công cụ hỗ trợ">
+  <meta property="og:description" content="Là một website tĩnh được sử dụng như một công cụ hỗ trợ">
+  <meta name="twitter:description" content="Là một website tĩnh được sử dụng như một công cụ hỗ trợ">
+  <meta property="og:image" content="assets/media/index.png">
+  <meta name="twitter:image" content="assets/media/index.png">
+  <meta property="og:url" content="https://nga2710.github.io">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:site_name" content="BDev-Book">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/media/book_close.png" type="image/x-icon">
+
+</head>
+<body>
+  <header>
+    <div>
+      <div id="openBtn" class="openbtn" onclick="openNav()">
+        ☰
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết...">
+    </div>
+  </header>
+  <div id="mySidebar" class="sidebar">
+    <div href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</div>
+    <a href="#" class="sub-menu-trigger">Toán</a>
+    <div class="sub-menu">
+      <a href="https://app.box.com/s/p0e9vuroxi1h3gzsu6oaubdlouiz3fux">Main</a>
+      <a href="https://www.mathvn.com/search/label/To%C3%A1n%2012?m=1">Mathvn.com</a>
+
+    </div>
+    <a href="#" class="sub-menu-trigger">Vật Lý</a>
+    <div class="sub-menu">
+      <a href="https://app.box.com/s/ts84gp09axqdfpsdx4w3qcccdw8q3d7p">Main</a>
+
+    </div>
+    <a href="#" class="sub-menu-trigger">Hóa Học</a>
+    <div class="sub-menu">
+      <a href="https://app.box.com/s/211tnk6tdz7ywo0ecqvl59cvz5v5zsay">Main</a>
+
+
+    </div>
+    <a href="#" class="sub-menu-trigger">Tiếng Anh</a>
+    <div class="sub-menu">
+      <a href="https://app.box.com/s/9e1pzq8o5n9muiuueg9eq6o6qe4z9j61">Main</a>
+
+
+    </div>
+    <br>
+    <br>
+    <br>
+  </div>
+
+  <div class="content">
+
+    <div id="no-results">
+      Không tìm thấy bài viết
+    </div>
+
+    <div class="post">
+      <h3>Math</h3>
+      <div>
+        <a href="https://youtube.com/@thaytien.daytoan?si=tTS5KY900P2H6eBp">
+          Thầy Nguyễn Phan Tiến<yt />
+
+        </a>
+        <br>
+        <a href="https://docs.google.com/spreadsheets/u/0/d/1sYNtrfFaJo4jMPdEvo2GK2EIfaz43RFdLZ758dttLtY/htmlview">
+          Thầy Nguyễn Chí (Tổng Hợp Live)
+        </a>        <br>
+        <a href="https://www.facebook.com/tmtschoollive?mibextid=ZbWKwL">
+          Sơ Đồ Toán Tuba
+          <fb />
+        </a>
+
+      </div>
+      <!--div class="link">
+                                Try cập
+                              </div-->
+
+
+      <d>
+        Toán 12
+      </d>
+    </div>
+    <div class="post">
+      <h3>Physic</h3>
+      <div>
+        <a href="https://youtube.com/channel/UC2prfDQAHLCcU7fQk83TyQQ?si=RsMFG-JJLPGxcUqz">
+          Thầy Vũ Tuấn Anh<yt />
+        </a>
+      </div>
+      <!--div class="link">
+                                      Try cập
+                                    </div-->
+
+
+      <d>
+        Vật Lý 12
+      </d>
+    </div>
+    <div class="post">
+      <h3>Chemistry</h3>
+      <div>
+        <a href="#">
+          Thầy ..<yt />
+        </a>
+      </div>
+      <!--div class="link">
+                                      Try cập
+                                    </div-->
+
+
+      <d>
+        Hóa Học 12
+      </d>
+    </div>
+    <div class="post">
+      <h3>English</h3>
+      <div>
+        <a href="#">
+          Thầy ...<yt />
+        </a>
+      </div>
+      <!--div class="link">
+                                    Try cập
+                                  </div-->
+
+
+      <d>
+        Tiếng Anh 12
+      </d>
+    </div>
+
+
+    <!-- Thêm các bài viết khác tương tự -->
+    <div class="box">
+      <marquee behavior="scroll" direction="right" style="font-size: 10px;">
+        <div>
+          ➼
+        </div>
+      </marquee>
+    </div>
+  </div>
+</div>
+<footer>
+  <script>
+    document.querySelector("footer").innerHTML = `<span>Copyright©${(new Date).getFullYear()} | Created By @Nga2710 | Hosted By Github</span>`
+  </script>
+</footer>
+
+<style>
+  .code-container {
+    display: flex;
+    width: 80%;
+    height: 200px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .line-numbers, .code-editor {
+    white-space: pre;
+    height: 100%;
+    overflow: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .line-numbers {
+    outline: none;
+    width: 50px;
+    background: #f7f7f7;
+    color: #999;
+    text-align: right;
+    padding-right: 10px;
+    overflow: hidden;
+  }
+  .code-editor {
+    width: 100%;
+    outline: none;
+    background: #fefefe;
+  }
+  .code-container textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+  .code-container textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .code-container textarea::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  .code-container textarea::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  code {
+    display: block;
+  }
+  * {
+    font-weight: bold;
+  }
+@font-face {
+    src: url(Minecrafter.Reg.ttf);
+    font-family: minecraft
+  }
+  d {
+    font-style: italic;
+    font-family: 'Courier New', Courier;
+    right: 3%;
+    bottom: 3%;
+    position: absolute;
+    color: gray;
+    display: block;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  h3, header, footer, .link, button, .box {
+    border-top: 3px solid lime;
+    border-left: 3px solid lime;
+    border-bottom: 3px solid green;
+    border-right: 3px solid green;
+  }
+  .openbtn, .link:active, #searchInput {
+    border-top: 3px solid green;
+    border-left: 3px solid green;
+    border-bottom: 3px solid lime;
+    border-right: 3px solid lime;
+  }
+  h3 {
+    background-color: #4CAF50;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    color: white;
+  }
+  .link {
+    background-color: #4CAF50;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 6px;
+    color: white;
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+  }
+  header, footer {
+    border-radius: 5px;
+    margin: 8px;
+    background-color: #4CAF50;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+  }
+  footer {
+    border-top-right-radius: 30px;
+    position: sticky;
+    bottom: 0px;
+    flex-wrap: wrap;
+    padding: 5px;
+    z-index: 0;
+  }
+  header {
+    z-index: 3;
+    padding: 12px;
+    position: sticky;
+    top: 0px;
+    flex-wrap: wrap
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  .header-left {
+    margin: 0;
+    margin-left: 20px;
+  }
+  .openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: black;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  .openbtn:hover {
+    background-color: #45a049;
+  }
+  .search-box {
+    margin-left: auto;
+    margin-right: 3%;
+  }
+  .search-box input[type="text"] {
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    width: auto;
+    outline: none;
+  }
+  .search-box input[type="text"]:focus {
+    /* border: 2px solid #45a049;*/
+  }
+  /* .search-box button {
+ position: absolute;
+ right: 0;
+ top: 0;
+ bottom: 0;
+ background-color: #45a049;
+ color: white;
+ border: none;
+ padding: 10px;
+ cursor: pointer;
+ border-top-right-radius: 5px;
+ border-bottom-right-radius: 5px;
+ }
+ .search-box button:hover {
+ background-color: #3e8e41;
+ }*/
+  .sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(1px);
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+    z-index: 100;
+  }
+  .sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #111;
+    display: block;
+    transition: 0.1s;
+  }
+  .sidebar a:hover {
+    background-color: #f1f1f1;
+  }
+  .sidebar .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  .content {
+    padding: 1em;
+    margin-top: auto;
+    transition: margin-left 0.3s;
+  }
+  .post {
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 2em;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeInUp 0.5s forwards;
+  }
+  .post img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 1em;
+    border-radius: 5px;
+  }
+  .post-content {
+    max-height: 80px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.5s ease-out;
+  }
+  .post-content::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 30px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+  }
+  .post-content.expanded {
+    max-height: 100%;
+  }
+  .post-content.expanded::after {
+    display: none;
+  }
+  .post h3 {
+    margin-top: 0;
+  }
+  #no-results {
+    display: none;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+  }
+@keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .box {
+    border-radius: 10px;
+    background-color: #4CAF50;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: white;
+  }
+  .square {
+    width: 2em;
+    height: 2em;
+    margin-left: 10px;
+    outline: none;
+  }
+  img {
+    width: auto;
+  }
+  head {
+    font-size: 30px;
+  }
+  .sub-menu {
+    padding-left: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+  .sub-menu.show {
+    transition: max-height 0.2s ease-in-out;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  a:before {
+    content: "➤";
+  }
+  button {
+    background-color: #45a049;
+    color: white;
+  }
+  .output {
+    padding: 2px;
+    margin: 2px;
+    background-color: #ffffaa;
+    border: 1px solid #f0ad4e;
+    border-radius: 5px;
+    white-space: pre-wrapx;
+    font-weight: bold;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  yt:before {
+    content: "(YouTube)";
+    color: red;
+  }
+  tt:before {
+    content: "(TikTok)";
+    color: #69C9D0;
+  }
+
+  fb:before {
+    content: "(Facebook)";
+    color: #1877F2;
+  }
+</style>
+<script>
+
+  document.querySelectorAll('.output').forEach(element => {
+    element.addEventListener('click', function() {
+      let tempInput = document.createElement('textarea');
+      tempInput.value = element.innerHTML;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      toastShow("Sao chép thành công", element.innerHTML, "s")
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+    });
+  });
+
+  function countOccurrencesRegex(str, char) {
+
+    let matches = str.match(new RegExp(char, 'g'));
+    return matches ? matches.length: 0;
+  }
+
+
+
+
+  function openNav() {
+    document.getElementById("mySidebar").style.left = "0";
+  }
+  function closeNav() {
+    document.getElementById("mySidebar").style.left = "-250px";
+  }
+  function toggleHide(trigger) {
+    const element = trigger.nextElementSibling;
+    if (element.style.maxHeight) {
+      element.style.maxHeight = null;
+    } else {
+      element.style.maxHeight = element.scrollHeight + "px";
+    }
+    element.classList.toggle('show');
+  }
+  function toggleReadMore(content) {
+    if (content.classList.contains('expanded')) {
+      content.classList.remove('expanded');
+    } else {
+      content.classList.add('expanded');
+    }
+  }
+  function searchPosts() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let posts = document.getElementsByClassName('post');
+    let noResults = document.getElementById('no-results');
+    let found = false;
+    for (let i = 0; i < posts.length; i++) {
+      let post = posts[i];
+      if (post.innerHTML.includes(input)) {
+        post.style.display = "";
+        found = true;
+      } else {
+        post.style.display = "none";
+      }
+    }
+    if (!found) {
+      noResults.style.display = "block";
+    } else {
+      noResults.style.display = "none";
+    }
+  }
+  document.addEventListener('click', (event) => {
+    const sidebar = document.getElementById('mySidebar');
+    const openBtn = document.getElementById('openBtn');
+    if (!sidebar.contains(event.target) && event.target !== openBtn) {
+      closeNav();
+    }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('searchInput').addEventListener('input', searchPosts);
+    const subMenuTriggers = document.querySelectorAll('.sub-menu-trigger');
+    subMenuTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        toggleHide(trigger);
+      });
+    });
+    const postContent = document.querySelectorAll('.post-content');
+    postContent.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        toggleReadMore(trigger);
+      });
+    });
+  });
+
+</script>
+</body>
+</html>
