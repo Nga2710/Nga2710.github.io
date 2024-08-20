@@ -25,28 +25,27 @@
     </div>
     <a class="sub-menu-trigger">Toán</a>
     <div class="sub-menu">
-      <a href="https://app.box.com/s/p0e9vuroxi1h3gzsu6oaubdlouiz3fux">Main</a>
+      <a href="https://app.box.com/s/p0e9vuroxi1h3gzsu6oaubdlouiz3fux">NTT</a>
       <a href="https://www.mathvn.com/search/label/To%C3%A1n%2012?m=1">Mathvn.com</a>
       <a href="https://www.nbv.edu.vn/2024/04/chuyen-de-on-thi-tot-nghiep-toan-2025.html">Chuyên đề</a>
-
-
+      <a href="https://docs.google.com/spreadsheets/d/1el1F1Z6v3znD8liW0sxRmqeslNS__QCg6ZI6DnCGeak/htmlview">1000 câu trắc nghiệm đúng sai (ĐVĐ)</a>
 
       <a href="https://youtube.com/playlist?list=PLeFlK_QuXKEwImP9YOfzZK4MYaDwpHrvK&si=qCe4gTdF7YOJqzzc">Sơ đồ V<yt /></a>
     </div>
     <a class="sub-menu-trigger">Vật Lý</a>
     <div class="sub-menu">
-      <a href="https://app.box.com/s/ts84gp09axqdfpsdx4w3qcccdw8q3d7p">Main</a>
+      <a href="https://app.box.com/s/ts84gp09axqdfpsdx4w3qcccdw8q3d7p">NTT</a>
 
     </div>
     <a class="sub-menu-trigger">Hóa Học</a>
     <div class="sub-menu">
-      <a href="https://app.box.com/s/211tnk6tdz7ywo0ecqvl59cvz5v5zsay">Main</a>
+      <a href="https://app.box.com/s/211tnk6tdz7ywo0ecqvl59cvz5v5zsay">NTT</a>
 
 
     </div>
     <a class="sub-menu-trigger">Tiếng Anh</a>
     <div class="sub-menu">
-      <a href="https://app.box.com/s/9e1pzq8o5n9muiuueg9eq6o6qe4z9j61">Main</a>
+      <a href="https://app.box.com/s/9e1pzq8o5n9muiuueg9eq6o6qe4z9j61">NTT</a>
 
 
     </div>
@@ -71,7 +70,8 @@
     <h3>Chemistry</h3>
   </div>
   <div id="english" class="post">
-    <h3>English</h3>
+    <h3>English    <del>I dont care</del><br></h3>
+
   </div>
 
   <script>
@@ -82,7 +82,8 @@
       "Lxo: Luyện Thi Toán THPT|https://youtube.com/@ltdh_toanlxo?si=yXGnW8875J7hl8Gd",
       "Lxo: Luyện Thi Toán THPT|https://www.facebook.com/profile.php?id=61556895790237",
       "Thầy Đỗ Hoàng Tú|https://www.facebook.com/dohoangtumath?mibextid=ZbWKwL",
-      "Thầy Đỗ Hoàng Tú|https://tiktok.com/@dohoangtumath"
+      "Thầy Đỗ Hoàng Tú|https://tiktok.com/@dohoangtumath",
+      "Chị Viên Thị Sáng|https://youtube.com/@vtsdaytoan?si=W_sTiblqtHWLqAGg"
     ];
     
     const physicLinks = [
@@ -93,7 +94,8 @@
     const chemistryLinks = [
       "Học Hóa đến chết|https://youtube.com/@hochoaenchet3956?si=bfSIoJEO2RBw4H9Z",
       "Thầy Phạm Văn Trọng|https://www.facebook.com/PhamVanTrongEducation?mibextid=ZbWKwL",
-      "Hades Hóa Sinh|https://youtube.com/@hades3856?si=8Awb4Cq11gN8NRp9"
+      "Hades Hóa Sinh|https://youtube.com/@hades3856?si=8Awb4Cq11gN8NRp9",
+      "Cô Liên|https://youtube.com/@hochoacungcolien184?si=BkJX4ZiwJV4jdYMV"
     ];
     
     const englishLinks = [
@@ -124,7 +126,7 @@
         subjectDiv.appendChild(document.createElement('br'));
       });
       const footer = document.createElement('d');
- footer.textContent = ['Toán 12', 'Vật Lý 12', 'Hóa Học 12', 'Tiếng Anh 12'][['math', 'physic', 'chemistry', 'english'].indexOf(subjectId)];
+ footer.innerHTML = ['Toán 12', 'Vật Lý 12', 'Hóa Học 12', 'Tiếng Anh 12'][['math', 'physic', 'chemistry', 'english'].indexOf(subjectId)];
       subjectDiv.appendChild(footer);
     };
 
@@ -469,11 +471,11 @@
     color: red;
   }
   tk:before {
-    content: "(Tiktok)";
+    content: "(TikTok)";
     color: #69C9D0;
   }
   fb:before {
-    content: "(Facebook)";
+    content: "(FaceBook)";
     color: #1877F2;
   }
   yt, tk, fb {
@@ -526,7 +528,7 @@
     }
   }
   function searchPosts() {
-    let input = document.getElementById('searchInput').value.toLowerCase();
+    let input = document.getElementById('searchInput').value;
     let posts = document.getElementsByClassName('post');
     let noResults = document.getElementById('no-results');
     let found = false;
