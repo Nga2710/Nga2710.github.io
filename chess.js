@@ -1,4 +1,4 @@
-	async function s(cboard) {
+async function s(cboard) {
   /*return Object.assign({}, cboard)
   //return cboard
   let tboard = {}
@@ -7,7 +7,7 @@
   return JSON.parse(JSON.stringify(cboard))
 }
 var cal = 0
-var mc = {} 
+var mc = {}
 async function checkOver(cboard, color) {
   if (cboard.fm >= 100 || cboard.l.filter(e=> cboard.b == e).length >= 3) return 0
   if (!(await glmove(color, await s(cboard), "tM"))) {
@@ -72,7 +72,7 @@ async function updateBoard(cboard) {
     if (!turn) {
       AImove(await s(dboard), false)
     } else {
-      AImove(await s(dboard), true)
+   //   AImove(await s(dboard), true)
     }
   },
     1)
@@ -80,7 +80,8 @@ async function updateBoard(cboard) {
 async function findBestMove(cboard, depth, color = false) {
   cal = 0
   console.time("A")
-  let validMoves = await glmove(color,await s(cboard))
+  let validMoves = await glmove(color,
+    await s(cboard))
   let workers = []
   // Tạo một worker cho mỗi phần tử trong mảng
   for (let i = 0; i < validMoves.length; i++) {
@@ -94,10 +95,12 @@ async function findBestMove(cboard, depth, color = false) {
       !color],
       [cic,
         playerPiece,
-        AIPiece, posW, posB]]
+        AIPiece,
+        posW,
+        posB]]
     worker.postMessage(gameState);
     worker.onerror = function(e) {
-      reject(e);
+    //  reject(e);
       console.error(e.message, e.lineno)
     }
   }
@@ -107,7 +110,7 @@ async function findBestMove(cboard, depth, color = false) {
       return new Promise(function(resolve) {
         worker.onmessage = function(event) {
           var result = event.data;
-          cal+=result[1]
+          cal += result[1]
 
           resolve(result[0]);
         };
@@ -140,8 +143,9 @@ async function readMove(Move, cboard) {
   }
 }
 async function AImove(cboard, color) {
-  //let lm = (await glmove(false, await s(cboard)))
-  // let amove = lm[Math.floor(Math.random()*lm.length)]
+  /*let lm = (await glmove(false, await s(cboard)))
+   let amove = lm[Math.floor(Math.random()*lm.length)]
+   await updateBoard(await mboard(amove, await s(cboard)))*/
   let amove = new Promise(async (resolve, reject) => {
     resolve(findBestMove(await s(cboard), Number(document.getElementById("depth").value), color))}).then(async amove=> {
     for (let i = 0; i < 8; i++)
@@ -167,8 +171,8 @@ for (let r = 0; r < 8; r++) {
 var board = (i, j) => {
   return document.getElementById("board").querySelectorAll("tr")[i].querySelectorAll("td")[j]
 }
-var fromMove = [-1,-1]
-var toMove = [-1,-1]
+var fromMove = [-1, -1]
+var toMove = [-1, -1]
 var fromMovePos = () => {
   return board(fromMove[0], fromMove[1])
 }
@@ -242,7 +246,7 @@ var nboard = {
       playerPiece[3],
       playerPiece[2],
       playerPiece[1]]],
- 
+
   ack: true,
   acq: true,
   pck: true,
@@ -698,7 +702,7 @@ let rookMovePos = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 let bishopMovePos = [[-1, 1], [1, -1], [1, 1], [-1, -1]]
 let knightMovePos = [[2, 1], [2, -1], [-2, 1], [-2, -1], [-1, 2], [1, 2], [-1, -2], [1, -2]]
 let kingMovePos = [[1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]]
-  var reverseArray = (array) => array.slice().reverse()
+var reverseArray = (array) => array.slice().reverse()
 
 var pawnEvalWhite =
 [
@@ -812,14 +816,14 @@ var kingEvalWhite = [
 ];
 var kingEvalBlack = reverseArray(kingEvalWhite);
 var posW = [pawnEvalWhite,
-    rookEvalWhite,
-    knightEval,
-    bishopEvalWhite,
-    evalQueen,
-    kingEvalWhite]
-  var posB = [pawnEvalBlack,
-    rookEvalBlack,
-    knightEval,
-    bishopEvalBlack,
-    evalQueen,
-    kingEvalBlack]
+  rookEvalWhite,
+  knightEval,
+  bishopEvalWhite,
+  evalQueen,
+  kingEvalWhite]
+var posB = [pawnEvalBlack,
+  rookEvalBlack,
+  knightEval,
+  bishopEvalBlack,
+  evalQueen,
+  kingEvalBlack]

@@ -66,6 +66,7 @@ async function eboard(cboard, color) {
 
   return ap-pp
 }
+
 async function checkOver(cboard, color) {
   if (cboard.fm >= 100 || cboard.l.filter(e=> cboard.b == e).length >= 3) return 0
   if (!(await glmove(color, await s(cboard), "tM"))) {
