@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Test</title>
+  <style>
+    * {
+      font-weight: bold;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #00f0ff;
+    }
+    p {
+      font-size: 1.2rem;
+      color: #b3f9ff;
+      text-shadow: 0 0 5px #b3f9ff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 80px;
+      height: 80px;
+      background: #1b1b1b;
+      border: 2px solid #2c5364;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+    .cell.active {
+      background: #00ff7f;
+      box-shadow: 0 0 15px #00ff7f, 0 0 30px #00ff7f, 0 0 45px #00ff7f;
+    }
+    .cell.correct {
+      background: #00ff00;
+      box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00;
+    }
+    .cell.wrong {
+      background: #ff4c4c;
+      box-shadow: 0 0 15px #ff4c4c, 0 0 30px #ff4c4c, 0 0 45px #ff4c4c;
+    }
+    .cell:hover {
+      transform: scale(1.1);
+    }
+    button {
+      margin-top: 20px;
+      padding: 5px 8px;
+      font-size: 1.2rem;
+      background: #ff2222;
+      color: white;
+      border: 5px solid red;
+      border-radius: 20px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: #ff1493;
+      box-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493;
+      transform: scale(1.1);
+    }
+    .input-container {
+      margin-top: 20px;
+    }
+    .input-container input {
+      width: 100px;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00f0ff;
+      text-align: center;
+      margin-right: 10px;
+      outline: none;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      opacity: 0;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .message.show {
+      opacity: 1;
+    }
+    .message.success {
+      color: #00ff7f;
+      text-shadow: 0 0 10px #00ff7f, 0 0 20px #00ff7f;
+    }
+    .message.fail {
+      color: #ff4c4c;
+      text-shadow: 0 0 10px #ff4c4c, 0 0 20px #ff4c4c;
+    }
+    .streak {
+      font-size: 1.2rem;
+      color: #ffeb3b;
+      margin-top: 10px;
+      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Memory Test</h1>
+    <div class="streak" id="streak">
+      Streak: 0
+    </div>
+    <div class="streak" id="bestScore">
+      Best Score: 0
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="input-container">
+      <input type="number" id="sequenceLength" placeholder="Sequence" min="1" max="16">
+      <button id="startBtn">Start</button>
+    </div>
+    <div class="message" id="message"></div>
+
+  </div>
+  <script>
+    const gridSize = 16;
+    const sequence = [];
+    let currentIndex = 0;
+    let streak = 0;
+    let bestScore = 0;
+    const grid = document.getElementById("grid");
+    const startBtn = document.getElementById("startBtn");
+    const sequenceLengthInput = document.getElementById("sequenceLength");
+    const message = document.getElementById("message");
+    const streakDisplay = document.getElementById("streak");
+    const bestScoreDisplay = document.getElementById("bestScore");
+
+    // Generate grid
+    for (let i = 0; i < gridSize; i++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.dataset.index = i;
+      grid.appendChild(cell);
+    }
+
+    const cells = Array.from(document.querySelectorAll(".cell"));
+
+    function generateSequence(length) {
+      sequence.length = 0;
+      for (let i = 0; i < length; i++) {
+        sequence.push(Math.floor(Math.random() * gridSize));
+      }
+    }
+
+    function highlightSequence() {
+      let delay = 0;
+      sequence.forEach((index) => {
+        setTimeout(() => {
+          cells[index].classList.add("active");
+          setTimeout(() => cells[index].classList.remove("active"), 500);
+        }, delay);
+        delay += 600;
+      });
+    }
+
+    function showMessage(text, isSuccess) {
+      message.textContent = text;
+      message.className = `message show ${isSuccess ? "success": "fail"}`;
+      setTimeout(() => {
+        message.classList.remove("show");
+      }, 2000);
+    }
+
+    function resetGame() {
+      currentIndex = 0;
+      cells.forEach(cell => {
+        cell.classList.remove("correct", "wrong");
+      });
+    }
+
+    function updateStreak(isSuccess) {
+      if (isSuccess) {
+        streak++;
+        if (streak > bestScore)
+          bestScoreDisplay.textContent = `Best Score: ${streak}`;
+      } else {
+        streak = 0;
+      }
+      streakDisplay.textContent = `Streak: ${streak}`;
+
+    }
+
+    function handleCellClick(e) {
+      const clickedIndex = Number(e.target.dataset.index);
+      if (clickedIndex === sequence[currentIndex]) {
+        e.target.classList.add("correct");
+        currentIndex++;
+        updateStreak(true);
+        if (currentIndex === sequence.length) {
+          showMessage("You won! Starting a new round.", true);
+          setTimeout(startGame, 2000);
+        }
+      } else {
+        e.target.classList.add("wrong");
+        showMessage("You lost! Try again.", false);
+        updateStreak(false);
+        setTimeout(resetGame, 2000);
+      }
+    }
+
+    function startGame() {
+      resetGame();
+      const sequenceLength = parseInt(sequenceLengthInput.value) || 5;
+      generateSequence(sequenceLength);
+      highlightSequence();
+    }
+
+    startBtn.addEventListener("click", startGame);
+    cells.forEach(cell => cell.addEventListener("click", handleCellClick));
+  </script>
+</body>
+</html>
