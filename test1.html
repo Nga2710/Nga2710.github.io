@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Scanner</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ff6f91, #ffc1f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ff6f91, 0 0 20px #ff6f91, 0 0 30px #ffc1f3; }
+            to { text-shadow: 0 0 20px #ff6f91, 0 0 40px #ff6f91, 0 0 50px #ffc1f3; }
+        }
+        input[type="number"] {
+            padding: 15px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            width: 80px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background: linear-gradient(90deg, #ff6f91, #ffc1f3);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 20px rgba(255, 111, 145, 0.5);
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(255, 111, 145, 0.7);
+        }
+        .progress-container {
+            display: none;
+            margin: 20px 0;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff6f91, #ffc1f3);
+            box-shadow: 0 0 20px #ff6f91;
+            animation: load 5s linear forwards;
+        }
+        .process-log {
+            text-align: left;
+            font-size: 1.2em;
+        }
+        .process-log span {
+            display: block;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .result {
+            display: none;
+            font-size: 2em;
+            margin-top: 20px;
+            animation: popIn 0.5s ease-out forwards;
+        }
+        @keyframes load {
+            to { width: 100%; }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mind Scanner</h1>
+        <p>Nhập số từ 1 đến 10 và để tôi đọc suy nghĩ của bạn!</p>
+        <input type="number" id="userInput" min="1" max="10" placeholder="1-10">
+        <br>
+        <button onclick="readMyMind()">Scan Mind</button>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>        <div class="result" id="result"></div>
+        <div class="process-log" id="processLog"></div>
+
+    </div>
+
+    <script>
+        function readMyMind() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput < 1 || userInput > 10 || userInput === "") {
+                alert("Vui lòng nhập số từ 1 đến 10!");
+                return;
+            }
+            document.getElementById('processLog').innerHTML = '';
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            const processes = [
+                'Connecting to neural network...',
+                'Extracting thought patterns...',
+                'Decrypting cognitive signals...',
+                'Scanning memory sectors...',
+                'Calibrating brainwave frequency...',
+                'Analyzing synaptic responses...',
+
+                'Finalizing result...'
+            ];
+
+            let progress = 0;
+            let index = 0;
+            const progressBar = document.getElementById('progressBar');
+            const processLog = document.getElementById('processLog');
+
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (index < processes.length) {
+                    const span = document.createElement('span');
+                    span.textContent = processes[index];
+                    span.style.animationDelay = `${index * 0.1}s`;
+                    processLog.appendChild(span);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('result').innerText = `Bạn đã nghĩ đến số ${userInput}!`;
+                    document.getElementById('result').style.display = 'block';
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
