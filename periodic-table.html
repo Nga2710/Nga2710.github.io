@@ -5,1038 +5,1043 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Periodic-Table</title>
   <style>
-  * {    font-weight: bold;}
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    * {
+      font-weight: bold;
+      user-select: none;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      
+    }
+    table {
+      table-layout: fixed;
+      width: 1600px;
+    }
+    td {
+      border: 1px solid #aaa;
+      text-align: center;
+      padding: 3px;
+      border-radius: 10px;
+    }
+    td {
 
-}
-
-table {
-    border-collapse: collapse;
-    table-layout: fixed;
-   
-}
-
-th, td {
-    border: 5px solid #aaa;
-    text-align: center;
-    padding: 4px;
-   
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-.element {
-    background-color: #f9f9f9;
-    cursor: pointer;
-}
-
-.empty {
-    background-color: #fff;
-    border: none;
-}
-
-.metal {
-    background-color: #ffcc99;
-}
-
-.nonmetal {
-    background-color: #99ccff;
-}
-
-.metalloid {
-    background-color: #99ff99;
-}
-
-.lanthanides {
-    background-color: #cccccc;
-}
-
-.actinides {
-    background-color: #999999;
-}
-.noblegas {
-  background-color: #ff77ff;
-}
-.transitionmetal {
-  background-color: #ffffaa;
-}
-.halogen {
-
-  background-color: #ffffdd;
-
-}
+    }
+    th {
+      background-color: #ffffff;
+    }
+    .element {
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+    .empty {
+      background-color: #fff;
+      border: none;
+    }
+    .metal {
+      background: linear-gradient(145deg, #ffb74d, #ff9800);
+      color: #b35800;
+    }
+    .nonmetal {
+      background: linear-gradient(145deg, #81d4fa, #4fc3f7);
+      color: #1b4d73;
+    }
+    .metalloid {
+      background: linear-gradient(145deg, #a5d6a7, #81c784);
+      color: #2d6036;
+    }
+    .lanthanides {
+      background: linear-gradient(145deg, #bdbdbd, #9e9e9e);
+      color: #3f3f3f;
+    }
+    .actinides {
+      background: linear-gradient(145deg, #616161, #424242);
+      color: #9c9c9c;
+    }
+    .noblegas {
+      background: linear-gradient(145deg, #f48fb1, #f06292);
+      color: #a3264f;
+    }
+    .transitionmetal {
+      background: linear-gradient(145deg, #fff59d, #fff176);
+      color: #7a6a00;
+    }
+    .halogen {
+      background: linear-gradient(145deg, #fff9c4, #fff59d);
+      color: #8c7500;
+    }
+    td.element:hover {
+      transform: scale(1.2);
+      z-index: 1;
+      box-shadow: 0 0 25px 15px rgba(255, 255, 255, 0.6), 0 0 50px 30px rgba(255, 255, 255, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    caption {
+      
+      font-size: 4rem;
+    font-weight: bold;
+    color: #a00;
+    
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+    }
   </style>
 </head>
 <body>
-  <h1>Periodic-Table</h1>
   <table id="periodic-table">
+      <caption>Periodic-Table</caption>
     <tr>
-<th>IA</th><th>IIA</th><th>IIIB</th><th>IVB</th><th>VB</th><th>VIB</th><th>VIIB</th><th colspan="3">VIIIB</th>
+      <th>IA</th><th>IIA</th><th>IIIB</th><th>IVB</th><th>VB</th><th>VIB</th><th>VIIB</th><th colspan="3">VIIIB</th>
       <th>IB</th><th>IIB</th><th>IIIA</th><th>IVA</th><th>VA</th><th>VIA</th><th>VIIA</th><th>VIIIA</th>
     </tr>
   </table>
   <script>
-    const wikiBaseURL = 'https://en.wikipedia.org/wiki/';
-const elements = [
-  {
-    symbol: 'H',
-    number: 1,
-    group: 1,
-    period: 1,
-    type: 'nonmetal',
-    name: 'Hydrogen'
-  },
-  {
-    symbol: 'He',
-    number: 2,
-    group: 18,
-    period: 1,
-    type: 'noblegas',
-    name: 'Helium'
-  },
-  {
-    symbol: 'Li',
-    number: 3,
-    group: 1,
-    period: 2,
-    type: 'metal',
-    name: 'Lithium'
-  },
-  {
-    symbol: 'Be',
-    number: 4,
-    group: 2,
-    period: 2,
-    type: 'metal',
-    name: 'Beryllium'
-  },
-  {
-    symbol: 'B',
-    number: 5,
-    group: 13,
-    period: 2,
-    type: 'metalloid',
-    name: 'Boron'
-  },
-  {
-    symbol: 'C',
-    number: 6,
-    group: 14,
-    period: 2,
-    type: 'nonmetal',
-    name: 'Carbon'
-  },
-  {
-    symbol: 'N',
-    number: 7,
-    group: 15,
-    period: 2,
-    type: 'nonmetal',
-    name: 'Nitrogen'
-  },
-  {
-    symbol: 'O',
-    number: 8,
-    group: 16,
-    period: 2,
-    type: 'nonmetal',
-    name: 'Oxygen'
-  },
-  {
-    symbol: 'F',
-    number: 9,
-    group: 17,
-    period: 2,
-    type: 'halogen',
-    name: 'Fluorine'
-  },
-  {
-    symbol: 'Ne',
-    number: 10,
-    group: 18,
-    period: 2,
-    type: 'noblegas',
-    name: 'Neon'
-  },
-  {
-    symbol: 'Na',
-    number: 11,
-    group: 1,
-    period: 3,
-    type: 'metal',
-    name: 'Sodium'
-  },
-  {
-    symbol: 'Mg',
-    number: 12,
-    group: 2,
-    period: 3,
-    type: 'metal',
-    name: 'Magnesium'
-  },
-  {
-    symbol: 'Al',
-    number: 13,
-    group: 13,
-    period: 3,
-    type: 'metal',
-    name: 'Aluminum'
-  },
-  {
-    symbol: 'Si',
-    number: 14,
-    group: 14,
-    period: 3,
-    type: 'metalloid',
-    name: 'Silicon'
-  },
-  {
-    symbol: 'P',
-    number: 15,
-    group: 15,
-    period: 3,
-    type: 'nonmetal',
-    name: 'Phosphorus'
-  },
-  {
-    symbol: 'S',
-    number: 16,
-    group: 16,
-    period: 3,
-    type: 'nonmetal',
-    name: 'Sulfur'
-  },
-  {
-    symbol: 'Cl',
-    number: 17,
-    group: 17,
-    period: 3,
-    type: 'halogen',
-    name: 'Chlorine'
-  },
-  {
-    symbol: 'Ar',
-    number: 18,
-    group: 18,
-    period: 3,
-    type: 'noblegas',
-    name: 'Argon'
-  },
-  {
-    symbol: 'K',
-    number: 19,
-    group: 1,
-    period: 4,
-    type: 'metal',
-    name: 'Potassium'
-  },
-  {
-    symbol: 'Ca',
-    number: 20,
-    group: 2,
-    period: 4,
-    type: 'metal',
-    name: 'Calcium'
-  },
-  {
-    symbol: 'Sc',
-    number: 21,
-    group: 3,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Scandium'
-  },
-  {
-    symbol: 'Ti',
-    number: 22,
-    group: 4,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Titanium'
-  },
-  {
-    symbol: 'V',
-    number: 23,
-    group: 5,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Vanadium'
-  },
-  {
-    symbol: 'Cr',
-    number: 24,
-    group: 6,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Chromium'
-  },
-  {
-    symbol: 'Mn',
-    number: 25,
-    group: 7,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Manganese'
-  },
-  {
-    symbol: 'Fe',
-    number: 26,
-    group: 8,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Iron'
-  },
-  {
-    symbol: 'Co',
-    number: 27,
-    group: 9,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Cobalt'
-  },
-  {
-    symbol: 'Ni',
-    number: 28,
-    group: 10,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Nickel'
-  },
-  {
-    symbol: 'Cu',
-    number: 29,
-    group: 11,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Copper'
-  },
-  {
-    symbol: 'Zn',
-    number: 30,
-    group: 12,
-    period: 4,
-    type: 'transitionmetal',
-    name: 'Zinc'
-  },
-  {
-    symbol: 'Ga',
-    number: 31,
-    group: 13,
-    period: 4,
-    type: 'metal',
-    name: 'Gallium'
-  },
-  {
-    symbol: 'Ge',
-    number: 32,
-    group: 14,
-    period: 4,
-    type: 'metalloid',
-    name: 'Germanium'
-  },
-  {
-    symbol: 'As',
-    number: 33,
-    group: 15,
-    period: 4,
-    type: 'metalloid',
-    name: 'Arsenic'
-  },
-  {
-    symbol: 'Se',
-    number: 34,
-    group: 16,
-    period: 4,
-    type: 'nonmetal',
-    name: 'Selenium'
-  },
-  {
-    symbol: 'Br',
-    number: 35,
-    group: 17,
-    period: 4,
-    type: 'halogen',
-    name: 'Bromine'
-  },
-  {
-    symbol: 'Kr',
-    number: 36,
-    group: 18,
-    period: 4,
-    type: 'noblegas',
-    name: 'Krypton'
-  },
-
-  {
-    symbol: 'Rb',
-    number: 37,
-    group: 1,
-    period: 5,
-    type: 'metal',
-    name: 'Rubidium'
-  },
-  {
-    symbol: 'Sr',
-    number: 38,
-    group: 2,
-    period: 5,
-    type: 'metal',
-    name: 'Strontium'
-  },
-  {
-    symbol: 'Y',
-    number: 39,
-    group: 3,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Yttrium'
-  },
-  {
-    symbol: 'Zr',
-    number: 40,
-    group: 4,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Zirconium'
-  },
-  {
-    symbol: 'Nb',
-    number: 41,
-    group: 5,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Niobium'
-  },
-  {
-    symbol: 'Mo',
-    number: 42,
-    group: 6,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Molybdenum'
-  },
-  {
-    symbol: 'Tc',
-    number: 43,
-    group: 7,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Technetium'
-  },
-  {
-    symbol: 'Ru',
-    number: 44,
-    group: 8,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Ruthenium'
-  },
-  {
-    symbol: 'Rh',
-    number: 45,
-    group: 9,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Rhodium'
-  },
-  {
-    symbol: 'Pd',
-    number: 46,
-    group: 10,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Palladium'
-  },
-  {
-    symbol: 'Ag',
-    number: 47,
-    group: 11,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Silver'
-  },
-  {
-    symbol: 'Cd',
-    number: 48,
-    group: 12,
-    period: 5,
-    type: 'transitionmetal',
-    name: 'Cadmium'
-  },
-  {
-    symbol: 'In',
-    number: 49,
-    group: 13,
-    period: 5,
-    type: 'metal',
-    name: 'Indium'
-  },
-  {
-    symbol: 'Sn',
-    number: 50,
-    group: 14,
-    period: 5,
-    type: 'metal',
-    name: 'Tin'
-  },
-  {
-    symbol: 'Sb',
-    number: 51,
-    group: 15,
-    period: 5,
-    type: 'metalloid',
-    name: 'Antimony'
-  },
-  {
-    symbol: 'Te',
-    number: 52,
-    group: 16,
-    period: 5,
-    type: 'metalloid',
-    name: 'Tellurium'
-  },
-  {
-    symbol: 'I',
-    number: 53,
-    group: 17,
-    period: 5,
-    type: 'halogen',
-    name: 'Iodine'
-  },
-  {
-    symbol: 'Xe',
-    number: 54,
-    group: 18,
-    period: 5,
-    type: 'noblegas',
-    name: 'Xenon'
-  },
-  {
-    symbol: 'Cs',
-    number: 55,
-    group: 1,
-    period: 6,
-    type: 'metal',
-    name: 'Cesium'
-  },
-  {
-    symbol: 'Ba',
-    number: 56,
-    group: 2,
-    period: 6,
-    type: 'metal',
-    name: 'Barium'
-  },
-  // Lathanides (Chu kì 9)
-  {
-    symbol: 'La',
-    number: 57,
-    group: 3,
-    period: 6,
-    type: 'lathanide',
-    name: 'Lanthanum'
-  },
-  {
-    symbol: 'Ce',
-    number: 58,
-    group: 4,
-    period: 9,
-    type: 'lathanide',
-    name: 'Cerium'
-  },
-  {
-    symbol: 'Pr',
-    number: 59,
-    group: 5,
-    period: 9,
-    type: 'lathanide',
-    name: 'Praseodymium'
-  },
-  {
-    symbol: 'Nd',
-    number: 60,
-    group: 6,
-    period: 9,
-    type: 'lathanide',
-    name: 'Neodymium'
-  },
-  {
-    symbol: 'Pm',
-    number: 61,
-    group: 7,
-    period: 9,
-    type: 'lathanide',
-    name: 'Promethium'
-  },
-  {
-    symbol: 'Sm',
-    number: 62,
-    group: 8,
-    period: 9,
-    type: 'lathanide',
-    name: 'Samarium'
-  },
-  {
-    symbol: 'Eu',
-    number: 63,
-    group: 9,
-    period: 9,
-    type: 'lathanide',
-    name: 'Europium'
-  },
-  {
-    symbol: 'Gd',
-    number: 64,
-    group: 10,
-    period: 9,
-    type: 'lathanide',
-    name: 'Gadolinium'
-  },
-  {
-    symbol: 'Tb',
-    number: 65,
-    group: 11,
-    period: 9,
-    type: 'lathanide',
-    name: 'Terbium'
-  },
-  {
-    symbol: 'Dy',
-    number: 66,
-    group: 12,
-    period: 9,
-    type: 'lathanide',
-    name: 'Dysprosium'
-  },
-  {
-    symbol: 'Ho',
-    number: 67,
-    group: 13,
-    period: 9,
-    type: 'lathanide',
-    name: 'Holmium'
-  },
-  {
-    symbol: 'Er',
-    number: 68,
-    group: 14,
-    period: 9,
-    type: 'lathanide',
-    name: 'Erbium'
-  },
-  {
-    symbol: 'Tm',
-    number: 69,
-    group: 15,
-    period: 9,
-    type: 'lathanide',
-    name: 'Thulium'
-  },
-  {
-    symbol: 'Yb',
-    number: 70,
-    group: 16,
-    period: 9,
-    type: 'lathanide',
-    name: 'Ytterbium'
-  },
-  {
-    symbol: 'Lu',
-    number: 71,
-    group: 17,
-    period: 9,
-    type: 'lathanide',
-    name: 'Lutetium'
-  },
-  // Tiếp tục từ nguyên tố 72
-  {
-    symbol: 'Hf',
-    number: 72,
-    group: 4,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Hafnium'
-  },
-  {
-    symbol: 'Ta',
-    number: 73,
-    group: 5,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Tantalum'
-  },
-  {
-    symbol: 'W',
-    number: 74,
-    group: 6,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Tungsten'
-  },
-  {
-    symbol: 'Re',
-    number: 75,
-    group: 7,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Rhenium'
-  },
-  {
-    symbol: 'Os',
-    number: 76,
-    group: 8,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Osmium'
-  },
-  {
-    symbol: 'Ir',
-    number: 77,
-    group: 9,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Iridium'
-  },
-  {
-    symbol: 'Pt',
-    number: 78,
-    group: 10,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Platinum'
-  },
-  {
-    symbol: 'Au',
-    number: 79,
-    group: 11,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Gold'
-  },
-  {
-    symbol: 'Hg',
-    number: 80,
-    group: 12,
-    period: 6,
-    type: 'transitionmetal',
-    name: 'Mercury'
-  },
-  {
-    symbol: 'Tl',
-    number: 81,
-    group: 13,
-    period: 6,
-    type: 'metal',
-    name: 'Thallium'
-  },
-  {
-    symbol: 'Pb',
-    number: 82,
-    group: 14,
-    period: 6,
-    type: 'metal',
-    name: 'Lead'
-  },
-  {
-    symbol: 'Bi',
-    number: 83,
-    group: 15,
-    period: 6,
-    type: 'metal',
-    name: 'Bismuth'
-  },
-  {
-    symbol: 'Po',
-    number: 84,
-    group: 16,
-    period: 6,
-    type: 'metalloid',
-    name: 'Polonium'
-  },
-  {
-    symbol: 'At',
-    number: 85,
-    group: 17,
-    period: 6,
-    type: 'halogen',
-    name: 'Astatine'
-  },
-  {
-    symbol: 'Rn',
-    number: 86,
-    group: 18,
-    period: 6,
-    type: 'noblegas',
-    name: 'Radon'
-  },
-  {
-    symbol: 'Fr',
-    number: 87,
-    group: 1,
-    period: 7,
-    type: 'metal',
-    name: 'Francium'
-  },
-  {
-    symbol: 'Ra',
-    number: 88,
-    group: 2,
-    period: 7,
-    type: 'metal',
-    name: 'Radium'
-  },
-  // actinidess (Chu kì 10)
-  {
-    symbol: 'Ac',
-    number: 89,
-    group: 3,
-    period: 7,
-    type: 'actinides',
-    name: 'Actinium'
-  },
-  {
-    symbol: 'Th',
-    number: 90,
-    group: 4,
-    period: 10,
-    type: 'actinides',
-    name: 'Thorium'
-  },
-  {
-    symbol: 'Pa',
-    number: 91,
-    group: 5,
-    period: 10,
-    type: 'actinides',
-    name: 'Protactinium'
-  },
-  {
-    symbol: 'U',
-    number: 92,
-    group: 6,
-    period: 10,
-    type: 'actinides',
-    name: 'Uranium'
-  },
-  {
-    symbol: 'Np',
-    number: 93,
-    group: 7,
-    period: 10,
-    type: 'actinides',
-    name: 'Neptunium'
-  },
-  {
-    symbol: 'Pu',
-    number: 94,
-    group: 8,
-    period: 10,
-    type: 'actinides',
-    name: 'Plutonium'
-  },
-  {
-    symbol: 'Am',
-    number: 95,
-    group: 9,
-    period: 10,
-    type: 'actinides',
-    name: 'Americium'
-  },
-  {
-    symbol: 'Cm',
-    number: 96,
-    group: 10,
-    period: 10,
-    type: 'actinides',
-    name: 'Curium'
-  },
-  {
-    symbol: 'Bk',
-    number: 97,
-    group: 11,
-    period: 10,
-    type: 'actinides',
-    name: 'Berkelium'
-  },
-  {
-    symbol: 'Cf',
-    number: 98,
-    group: 12,
-    period: 10,
-    type: 'actinides',
-    name: 'Californium'
-  },
-  {
-    symbol: 'Es',
-    number: 99,
-    group: 13,
-    period: 10,
-    type: 'actinides',
-    name: 'Einsteinium'
-  },
-  {
-    symbol: 'Fm',
-    number: 100,
-    group: 14,
-    period: 10,
-    type: 'actinides',
-    name: 'Fermium'
-  },
-  {
-    symbol: 'Md',
-    number: 101,
-    group: 15,
-    period: 10,
-    type: 'actinides',
-    name: 'Mendelevium'
-  },
-  {
-    symbol: 'No',
-    number: 102,
-    group: 16,
-    period: 10,
-    type: 'actinides',
-    name: 'Nobelium'
-  },
-  {
-    symbol: 'Lr',
-    number: 103,
-    group: 17,
-    period: 10,
-    type: 'actinides',
-    name: 'Lawrencium'
-  },
-  // Các nguyên tố khác từ 104 đến 118
-  {
-    symbol: 'Rf',
-    number: 104,
-    group: 4,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Rutherfordium'
-  },
-  {
-    symbol: 'Db',
-    number: 105,
-    group: 5,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Dubnium'
-  },
-  {
-    symbol: 'Sg',
-    number: 106,
-    group: 6,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Seaborgium'
-  },
-  {
-    symbol: 'Bh',
-    number: 107,
-    group: 7,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Bohrium'
-  },
-  {
-    symbol: 'Hs',
-    number: 108,
-    group: 8,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Hassium'
-  },
-  {
-    symbol: 'Mt',
-    number: 109,
-    group: 9,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Meitnerium'
-  },
-  {
-    symbol: 'Ds',
-    number: 110,
-    group: 10,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Darmstadtium'
-  },
-  {
-    symbol: 'Rg',
-    number: 111,
-    group: 11,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Roentgenium'
-  },
-  {
-    symbol: 'Cn',
-    number: 112,
-    group: 12,
-    period: 7,
-    type: 'transitionmetal',
-    name: 'Copernicium'
-  },
-  {
-    symbol: 'Nh',
-    number: 113,
-    group: 13,
-    period: 7,
-    type: 'metal',
-    name: 'Nihonium'
-  },
-  {
-    symbol: 'Fl',
-    number: 114,
-    group: 14,
-    period: 7,
-    type: 'metal',
-    name: 'Flerovium'
-  },
-  {
-    symbol: 'Mc',
-    number: 115,
-    group: 15,
-    period: 7,
-    type: 'metal',
-    name: 'Moscovium'
-  },
-  {
-    symbol: 'Lv',
-    number: 116,
-    group: 16,
-    period: 7,
-    type: 'metal',
-    name: 'Livermorium'
-  },
-  {
-    symbol: 'Ts',
-    number: 117,
-    group: 17,
-    period: 7,
-    type: 'halogen',
-    name: 'Tennessine'
-  },
-  {
-    symbol: 'Og',
-    number: 118,
-    group: 18,
-    period: 7,
-    type: 'noblegas',
-    name: 'Oganesson'
-  }
-  
-];
-
+    const wikiBaseURL = 'https://vi.wikipedia.org/wiki/';
+    const elements = [{
+      symbol: 'H',
+      number: 1,
+      group: 1,
+      period: 1,
+      type: 'nonmetal',
+      name: 'Hydrogen'
+    },
+      {
+        symbol: 'He',
+        number: 2,
+        group: 18,
+        period: 1,
+        type: 'noblegas',
+        name: 'Helium'
+      },
+      {
+        symbol: 'Li',
+        number: 3,
+        group: 1,
+        period: 2,
+        type: 'metal',
+        name: 'Lithium'
+      },
+      {
+        symbol: 'Be',
+        number: 4,
+        group: 2,
+        period: 2,
+        type: 'metal',
+        name: 'Beryllium'
+      },
+      {
+        symbol: 'B',
+        number: 5,
+        group: 13,
+        period: 2,
+        type: 'metalloid',
+        name: 'Boron'
+      },
+      {
+        symbol: 'C',
+        number: 6,
+        group: 14,
+        period: 2,
+        type: 'nonmetal',
+        name: 'Carbon'
+      },
+      {
+        symbol: 'N',
+        number: 7,
+        group: 15,
+        period: 2,
+        type: 'nonmetal',
+        name: 'Nitrogen'
+      },
+      {
+        symbol: 'O',
+        number: 8,
+        group: 16,
+        period: 2,
+        type: 'nonmetal',
+        name: 'Oxygen'
+      },
+      {
+        symbol: 'F',
+        number: 9,
+        group: 17,
+        period: 2,
+        type: 'halogen',
+        name: 'Fluorine'
+      },
+      {
+        symbol: 'Ne',
+        number: 10,
+        group: 18,
+        period: 2,
+        type: 'noblegas',
+        name: 'Neon'
+      },
+      {
+        symbol: 'Na',
+        number: 11,
+        group: 1,
+        period: 3,
+        type: 'metal',
+        name: 'Sodium'
+      },
+      {
+        symbol: 'Mg',
+        number: 12,
+        group: 2,
+        period: 3,
+        type: 'metal',
+        name: 'Magnesium'
+      },
+      {
+        symbol: 'Al',
+        number: 13,
+        group: 13,
+        period: 3,
+        type: 'metal',
+        name: 'Aluminum'
+      },
+      {
+        symbol: 'Si',
+        number: 14,
+        group: 14,
+        period: 3,
+        type: 'metalloid',
+        name: 'Silicon'
+      },
+      {
+        symbol: 'P',
+        number: 15,
+        group: 15,
+        period: 3,
+        type: 'nonmetal',
+        name: 'Phosphorus'
+      },
+      {
+        symbol: 'S',
+        number: 16,
+        group: 16,
+        period: 3,
+        type: 'nonmetal',
+        name: 'Sulfur'
+      },
+      {
+        symbol: 'Cl',
+        number: 17,
+        group: 17,
+        period: 3,
+        type: 'halogen',
+        name: 'Chlorine'
+      },
+      {
+        symbol: 'Ar',
+        number: 18,
+        group: 18,
+        period: 3,
+        type: 'noblegas',
+        name: 'Argon'
+      },
+      {
+        symbol: 'K',
+        number: 19,
+        group: 1,
+        period: 4,
+        type: 'metal',
+        name: 'Potassium'
+      },
+      {
+        symbol: 'Ca',
+        number: 20,
+        group: 2,
+        period: 4,
+        type: 'metal',
+        name: 'Calcium'
+      },
+      {
+        symbol: 'Sc',
+        number: 21,
+        group: 3,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Scandium'
+      },
+      {
+        symbol: 'Ti',
+        number: 22,
+        group: 4,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Titanium'
+      },
+      {
+        symbol: 'V',
+        number: 23,
+        group: 5,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Vanadium'
+      },
+      {
+        symbol: 'Cr',
+        number: 24,
+        group: 6,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Chromium'
+      },
+      {
+        symbol: 'Mn',
+        number: 25,
+        group: 7,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Manganese'
+      },
+      {
+        symbol: 'Fe',
+        number: 26,
+        group: 8,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Iron'
+      },
+      {
+        symbol: 'Co',
+        number: 27,
+        group: 9,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Cobalt'
+      },
+      {
+        symbol: 'Ni',
+        number: 28,
+        group: 10,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Nickel'
+      },
+      {
+        symbol: 'Cu',
+        number: 29,
+        group: 11,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Copper'
+      },
+      {
+        symbol: 'Zn',
+        number: 30,
+        group: 12,
+        period: 4,
+        type: 'transitionmetal',
+        name: 'Zinc'
+      },
+      {
+        symbol: 'Ga',
+        number: 31,
+        group: 13,
+        period: 4,
+        type: 'metal',
+        name: 'Gallium'
+      },
+      {
+        symbol: 'Ge',
+        number: 32,
+        group: 14,
+        period: 4,
+        type: 'metalloid',
+        name: 'Germanium'
+      },
+      {
+        symbol: 'As',
+        number: 33,
+        group: 15,
+        period: 4,
+        type: 'metalloid',
+        name: 'Arsenic'
+      },
+      {
+        symbol: 'Se',
+        number: 34,
+        group: 16,
+        period: 4,
+        type: 'nonmetal',
+        name: 'Selenium'
+      },
+      {
+        symbol: 'Br',
+        number: 35,
+        group: 17,
+        period: 4,
+        type: 'halogen',
+        name: 'Bromine'
+      },
+      {
+        symbol: 'Kr',
+        number: 36,
+        group: 18,
+        period: 4,
+        type: 'noblegas',
+        name: 'Krypton'
+      },
+      {
+        symbol: 'Rb',
+        number: 37,
+        group: 1,
+        period: 5,
+        type: 'metal',
+        name: 'Rubidium'
+      },
+      {
+        symbol: 'Sr',
+        number: 38,
+        group: 2,
+        period: 5,
+        type: 'metal',
+        name: 'Strontium'
+      },
+      {
+        symbol: 'Y',
+        number: 39,
+        group: 3,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Yttrium'
+      },
+      {
+        symbol: 'Zr',
+        number: 40,
+        group: 4,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Zirconium'
+      },
+      {
+        symbol: 'Nb',
+        number: 41,
+        group: 5,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Niobium'
+      },
+      {
+        symbol: 'Mo',
+        number: 42,
+        group: 6,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Molybdenum'
+      },
+      {
+        symbol: 'Tc',
+        number: 43,
+        group: 7,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Technetium'
+      },
+      {
+        symbol: 'Ru',
+        number: 44,
+        group: 8,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Ruthenium'
+      },
+      {
+        symbol: 'Rh',
+        number: 45,
+        group: 9,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Rhodium'
+      },
+      {
+        symbol: 'Pd',
+        number: 46,
+        group: 10,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Palladium'
+      },
+      {
+        symbol: 'Ag',
+        number: 47,
+        group: 11,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Silver'
+      },
+      {
+        symbol: 'Cd',
+        number: 48,
+        group: 12,
+        period: 5,
+        type: 'transitionmetal',
+        name: 'Cadmium'
+      },
+      {
+        symbol: 'In',
+        number: 49,
+        group: 13,
+        period: 5,
+        type: 'metal',
+        name: 'Indium'
+      },
+      {
+        symbol: 'Sn',
+        number: 50,
+        group: 14,
+        period: 5,
+        type: 'metal',
+        name: 'Tin'
+      },
+      {
+        symbol: 'Sb',
+        number: 51,
+        group: 15,
+        period: 5,
+        type: 'metalloid',
+        name: 'Antimony'
+      },
+      {
+        symbol: 'Te',
+        number: 52,
+        group: 16,
+        period: 5,
+        type: 'metalloid',
+        name: 'Tellurium'
+      },
+      {
+        symbol: 'I',
+        number: 53,
+        group: 17,
+        period: 5,
+        type: 'halogen',
+        name: 'Iodine'
+      },
+      {
+        symbol: 'Xe',
+        number: 54,
+        group: 18,
+        period: 5,
+        type: 'noblegas',
+        name: 'Xenon'
+      },
+      {
+        symbol: 'Cs',
+        number: 55,
+        group: 1,
+        period: 6,
+        type: 'metal',
+        name: 'Cesium'
+      },
+      {
+        symbol: 'Ba',
+        number: 56,
+        group: 2,
+        period: 6,
+        type: 'metal',
+        name: 'Barium'
+      },
+      {
+        symbol: 'La',
+        number: 57,
+        group: 3,
+        period: 6,
+        type: 'lanthanides',
+        name: 'Lanthanum'
+      },
+      {
+        symbol: 'Ce',
+        number: 58,
+        group: 4,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Cerium'
+      },
+      {
+        symbol: 'Pr',
+        number: 59,
+        group: 5,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Praseodymium'
+      },
+      {
+        symbol: 'Nd',
+        number: 60,
+        group: 6,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Neodymium'
+      },
+      {
+        symbol: 'Pm',
+        number: 61,
+        group: 7,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Promethium'
+      },
+      {
+        symbol: 'Sm',
+        number: 62,
+        group: 8,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Samarium'
+      },
+      {
+        symbol: 'Eu',
+        number: 63,
+        group: 9,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Europium'
+      },
+      {
+        symbol: 'Gd',
+        number: 64,
+        group: 10,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Gadolinium'
+      },
+      {
+        symbol: 'Tb',
+        number: 65,
+        group: 11,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Terbium'
+      },
+      {
+        symbol: 'Dy',
+        number: 66,
+        group: 12,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Dysprosium'
+      },
+      {
+        symbol: 'Ho',
+        number: 67,
+        group: 13,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Holmium'
+      },
+      {
+        symbol: 'Er',
+        number: 68,
+        group: 14,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Erbium'
+      },
+      {
+        symbol: 'Tm',
+        number: 69,
+        group: 15,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Thulium'
+      },
+      {
+        symbol: 'Yb',
+        number: 70,
+        group: 16,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Ytterbium'
+      },
+      {
+        symbol: 'Lu',
+        number: 71,
+        group: 17,
+        period: 9,
+        type: 'lanthanides',
+        name: 'Lutetium'
+      },
+      {
+        symbol: 'Hf',
+        number: 72,
+        group: 4,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Hafnium'
+      },
+      {
+        symbol: 'Ta',
+        number: 73,
+        group: 5,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Tantalum'
+      },
+      {
+        symbol: 'W',
+        number: 74,
+        group: 6,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Tungsten'
+      },
+      {
+        symbol: 'Re',
+        number: 75,
+        group: 7,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Rhenium'
+      },
+      {
+        symbol: 'Os',
+        number: 76,
+        group: 8,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Osmium'
+      },
+      {
+        symbol: 'Ir',
+        number: 77,
+        group: 9,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Iridium'
+      },
+      {
+        symbol: 'Pt',
+        number: 78,
+        group: 10,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Platinum'
+      },
+      {
+        symbol: 'Au',
+        number: 79,
+        group: 11,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Gold'
+      },
+      {
+        symbol: 'Hg',
+        number: 80,
+        group: 12,
+        period: 6,
+        type: 'transitionmetal',
+        name: 'Mercury'
+      },
+      {
+        symbol: 'Tl',
+        number: 81,
+        group: 13,
+        period: 6,
+        type: 'metal',
+        name: 'Thallium'
+      },
+      {
+        symbol: 'Pb',
+        number: 82,
+        group: 14,
+        period: 6,
+        type: 'metal',
+        name: 'Lead'
+      },
+      {
+        symbol: 'Bi',
+        number: 83,
+        group: 15,
+        period: 6,
+        type: 'metal',
+        name: 'Bismuth'
+      },
+      {
+        symbol: 'Po',
+        number: 84,
+        group: 16,
+        period: 6,
+        type: 'metalloid',
+        name: 'Polonium'
+      },
+      {
+        symbol: 'At',
+        number: 85,
+        group: 17,
+        period: 6,
+        type: 'halogen',
+        name: 'Astatine'
+      },
+      {
+        symbol: 'Rn',
+        number: 86,
+        group: 18,
+        period: 6,
+        type: 'noblegas',
+        name: 'Radon'
+      },
+      {
+        symbol: 'Fr',
+        number: 87,
+        group: 1,
+        period: 7,
+        type: 'metal',
+        name: 'Francium'
+      },
+      {
+        symbol: 'Ra',
+        number: 88,
+        group: 2,
+        period: 7,
+        type: 'metal',
+        name: 'Radium'
+      },
+      {
+        symbol: 'Ac',
+        number: 89,
+        group: 3,
+        period: 7,
+        type: 'actinides',
+        name: 'Actinium'
+      },
+      {
+        symbol: 'Th',
+        number: 90,
+        group: 4,
+        period: 10,
+        type: 'actinides',
+        name: 'Thorium'
+      },
+      {
+        symbol: 'Pa',
+        number: 91,
+        group: 5,
+        period: 10,
+        type: 'actinides',
+        name: 'Protactinium'
+      },
+      {
+        symbol: 'U',
+        number: 92,
+        group: 6,
+        period: 10,
+        type: 'actinides',
+        name: 'Uranium'
+      },
+      {
+        symbol: 'Np',
+        number: 93,
+        group: 7,
+        period: 10,
+        type: 'actinides',
+        name: 'Neptunium'
+      },
+      {
+        symbol: 'Pu',
+        number: 94,
+        group: 8,
+        period: 10,
+        type: 'actinides',
+        name: 'Plutonium'
+      },
+      {
+        symbol: 'Am',
+        number: 95,
+        group: 9,
+        period: 10,
+        type: 'actinides',
+        name: 'Americium'
+      },
+      {
+        symbol: 'Cm',
+        number: 96,
+        group: 10,
+        period: 10,
+        type: 'actinides',
+        name: 'Curium'
+      },
+      {
+        symbol: 'Bk',
+        number: 97,
+        group: 11,
+        period: 10,
+        type: 'actinides',
+        name: 'Berkelium'
+      },
+      {
+        symbol: 'Cf',
+        number: 98,
+        group: 12,
+        period: 10,
+        type: 'actinides',
+        name: 'Californium'
+      },
+      {
+        symbol: 'Es',
+        number: 99,
+        group: 13,
+        period: 10,
+        type: 'actinides',
+        name: 'Einsteinium'
+      },
+      {
+        symbol: 'Fm',
+        number: 100,
+        group: 14,
+        period: 10,
+        type: 'actinides',
+        name: 'Fermium'
+      },
+      {
+        symbol: 'Md',
+        number: 101,
+        group: 15,
+        period: 10,
+        type: 'actinides',
+        name: 'Mendelevium'
+      },
+      {
+        symbol: 'No',
+        number: 102,
+        group: 16,
+        period: 10,
+        type: 'actinides',
+        name: 'Nobelium'
+      },
+      {
+        symbol: 'Lr',
+        number: 103,
+        group: 17,
+        period: 10,
+        type: 'actinides',
+        name: 'Lawrencium'
+      },
+      {
+        symbol: 'Rf',
+        number: 104,
+        group: 4,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Rutherfordium'
+      },
+      {
+        symbol: 'Db',
+        number: 105,
+        group: 5,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Dubnium'
+      },
+      {
+        symbol: 'Sg',
+        number: 106,
+        group: 6,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Seaborgium'
+      },
+      {
+        symbol: 'Bh',
+        number: 107,
+        group: 7,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Bohrium'
+      },
+      {
+        symbol: 'Hs',
+        number: 108,
+        group: 8,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Hassium'
+      },
+      {
+        symbol: 'Mt',
+        number: 109,
+        group: 9,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Meitnerium'
+      },
+      {
+        symbol: 'Ds',
+        number: 110,
+        group: 10,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Darmstadtium'
+      },
+      {
+        symbol: 'Rg',
+        number: 111,
+        group: 11,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Roentgenium'
+      },
+      {
+        symbol: 'Cn',
+        number: 112,
+        group: 12,
+        period: 7,
+        type: 'transitionmetal',
+        name: 'Copernicium'
+      },
+      {
+        symbol: 'Nh',
+        number: 113,
+        group: 13,
+        period: 7,
+        type: 'metal',
+        name: 'Nihonium'
+      },
+      {
+        symbol: 'Fl',
+        number: 114,
+        group: 14,
+        period: 7,
+        type: 'metal',
+        name: 'Flerovium'
+      },
+      {
+        symbol: 'Mc',
+        number: 115,
+        group: 15,
+        period: 7,
+        type: 'metal',
+        name: 'Moscovium'
+      },
+      {
+        symbol: 'Lv',
+        number: 116,
+        group: 16,
+        period: 7,
+        type: 'metal',
+        name: 'Livermorium'
+      },
+      {
+        symbol: 'Ts',
+        number: 117,
+        group: 17,
+        period: 7,
+        type: 'halogen',
+        name: 'Tennessine'
+      },
+      {
+        symbol: 'Og',
+        number: 118,
+        group: 18,
+        period: 7,
+        type: 'noblegas',
+        name: 'Oganesson'
+      }]
     const table = document.getElementById('periodic-table');
-
     for (let period = 1; period <= 10; period++) {
       const row = document.createElement('tr');
       for (let group = 1; group <= 18; group++) {
@@ -1046,11 +1051,9 @@ const elements = [
       }
       table.appendChild(row);
     }
-
     elements.forEach(element => {
       const row = table.rows[element.period];
       const cell = row.cells[element.group - 1];
-
       cell.classList.remove('empty');
       cell.classList.add('element', element.type);
       cell.innerHTML = `<sup>${element.number}</sup><div style="font-size: 30px">${element.symbol}</div><sup style="font-size: 10px">${element.name}</sup>`;
