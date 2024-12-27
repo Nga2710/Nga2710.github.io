@@ -1,4 +1,4 @@
-console.log(window.location.hostname);
+
     function pasteFromClipboard() {
       navigator.clipboard.readText()
       .then(function(text) {
@@ -98,6 +98,7 @@ console.log(window.location.hostname);
         }
         return array;
       }
+      if (window.location.hostname != "nga2710.github.io") {crack()} else
       function convertStringToHTML(questionStrings) {
         const questions = [];
         for (let i = 0; i < questionStrings.length; i++) {
