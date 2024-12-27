@@ -1,4 +1,16 @@
+        window.addEventListener('scroll', function() {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPosition = window.scrollY;
+      const scrollPercentage = (scrollPosition / docHeight) * 100;
 
+      // Cập nhật thanh tiến độ
+      const progressBar = document.querySelector('.progress-bar');
+      progressBar.style.width = scrollPercentage + '%';
+
+      // Cập nhật phần trăm cuộn
+      const scrollPercentageDisplay = document.getElementById('scrollPercentage');
+      scrollPercentageDisplay.textContent = Math.round(scrollPercentage) + '%';
+    });
     function pasteFromClipboard() {
       navigator.clipboard.readText()
       .then(function(text) {

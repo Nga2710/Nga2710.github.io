@@ -8,11 +8,15 @@
   <link rel="stylesheet" href="tncss.css">
 </head>
 <body>
+
   <div id="inputStr" class="">
+
     <header>
       Nạp Trắc Nghiệm
     </header>
-
+    <div class="help" onclick="help()">
+      ?
+    </div>
     <div style="display: flex">
       <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
 
@@ -29,6 +33,12 @@
       </div>
     </div>
   </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
   <div id="main" class="hide">
     <span style="color: green">Good Luck!</span>
     <div class="" id="container">
@@ -832,7 +842,7 @@ Câu 20. Trong đường lối đổi mới đất nước (từ tháng 12-1986)
 A. duy trì cơ chế quản lí kinh tế bao cấp.           B. duy trì cơ chế quản lý kinh tế tập trung.
 /C. xây dựng nền dân chủ xã hội chủ nghĩa.        D. chưa mở rộng quan hệ kinh tế đối ngoại.
 
-`
+    `
   </script>
   <script src="tnjs.js"></script>
 </body>
