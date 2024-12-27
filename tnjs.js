@@ -98,7 +98,7 @@
         }
         return array;
       }
-      if (window.location.hostname != "nga2710.github.io") {crack()} else
+
       function convertStringToHTML(questionStrings) {
         const questions = [];
         for (let i = 0; i < questionStrings.length; i++) {
