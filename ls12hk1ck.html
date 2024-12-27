@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+  <div id="inputStr" class="">
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Sự kiện nào được xem là khởi đầu cho chính sách chống Liên Xô của Mỹ, gây nên cuộc chiến tranh lạnh?
+/A. Thông điệp Tổng thống Tơ-ru-man (3 – 1947).
+B. Sự ra đời của kế hoạch Mác-san (6 – 1947).
+C. Hội đồng tương trợ kinh tế ra đời (1 – 1949).
+D. Thành lập Tổ chức quân sự NATO (4 – 1949).
+Câu 2. Hội nghị I-an-ta (tháng 2 – 1945) diễn ra trong giai đoạn nào của Chiến tranh thế giới thứ hai?
+A. Vừa mới kết thúc.	B. Bùng nổ và lan rộng.
+/C. Giai đoạn sắp kết thúc.	D. Đang diễn ra ác liệt.
+Câu 3. Quyết định nào sau đây không phải là của Hội nghị I-an-ta (tháng 2 – 1945)?
+A. Thành lập tổ chức quốc tế là Liên hợp quốc.
+B. Thống nhất tiêu diệt tận gốc chủ nghĩa phát xít.
+/C. Hình thành trật tự thế giới mới sau chiến tranh.
+D. Phân chia phạm vi ảnh hưởng của Liên Xô, Mỹ.
+Câu 4. Mục tiêu chung được các cường quốc thỏa thuận trong Hội nghị I-an-ta (tháng 2 – 1945) là
+A. chấm dứt tình trạng nội chiến ở Trung Quốc, Áo và Phần Lan.
+B. thủ tiêu chủ nghĩa thực dân và chủ nghĩa phân biệt chủng tộc.
+C. xây dựng nước Đức trở thành quốc gia thống nhất và dân chủ.
+/D. tiêu diệt tận gốc phát xít Đức và chủ nghĩa quân phiệt Nhật Bản.
+Câu 5. Để tiêu diệt chủ nghĩa quân phiệt Nhật Bản và nhanh chóng kết thúc chiến tranh, Hội nghị I-an-ta (tháng 2 – 1945) đã quyết định
+A. Anh, Pháp, Mỹ sẽ tham gia chiến tranh chống Nhật ở châu Âu.
+B. Anh và Liên Xô sẽ tiêu diệt lực lượng quân Nhật tại Trung Quốc.
+/C. Liên Xô sẽ tham gia chiến tranh chống Nhật ở châu Á.
+D. Liên Xô không tham gia chiến tranh chống Nhật ở châu Á.
+Câu 6. Một trong những khu vực được Hội nghị I-an-ta (tháng 2 – 1945) quy định thuộc phạm vi ảnh hưởng của Liên Xô là
+A. Tây Âu,	/B. Đông Âu.	C. Nhật Bản.	D. Triều Tiên.
+Câu 7. Một trong những khu vực được Hội nghị I-an-ta (tháng 2 – 1945) quy định thuộc phạm vi ảnh hưởng của Mỹ là
+/A. Tây Âu.	B. Đông Âu.	C. Mông Cổ	D. Trung Đông.
+Câu 8. Đâu là ranh giới phân chia phạm vi chiếm đóng Triều Tiên của Mỹ và Liên Xô được Hội nghị I-an-ta (tháng 2 – 1945) quy định?
+/A. Vĩ tuyến 38.	B. Sông Áp Lục.	C. Vĩ tuyến 17	D. Cảng Icheon.
+Câu 9. Trật tự thế giới mới được hình thành sau Chiến tranh thế giới thứ hai (1939 – 1945) là
+A. đơn cực.	/B. I-an-ta.	C. Vec-xai.	D. đa cực.
+Câu 10. Quốc gia đứng đầu khối tư bản chủ nghĩa sau Chiến tranh thế giới thứ hai (1939 – 1945) là
+A. Anh.	B. Pháp.	/C. Mỹ.	D. Đức.
+Câu 11. Quốc gia đứng đầu khối xã hội chủ nghĩa sau Chiến tranh thế giới hai (1939 – 1945) là
+A. Trung Quốc.	B. Việt Nam.	C. Triều Tiên.	/D. Liên Xô.
+Câu 12. Những quốc gia nào sau đây tham dự Hội nghị I-an-ta (tháng 2 – 1945)
+A. Liên Xô, Mỹ, Pháp.	/B. Liên Xô, Mỹ, Anh.
+C. Trung Quốc, Mỹ, Anh.	D. Liên Xô, Anh, Pháp.
+Câu 13. Liên Xô và Mỹ đẩy mạnh đối thoại hợp tác từ
+/A. nửa sau những năm 80.	B. nửa sau những năm 90.
+C. nửa đầu những năm 90.	D. nửa đầu những năm 80.
+Câu 14. Năm 1989, tại đảo Man-ta Mỹ và Liên Xô đã có hành động nào sau đây?
+A. Tuyên bố chung về vũ khí chiến lược.
+B. Ký nhiều hiệp định thương mại tự do.
+/C. Tuyên bố chấm dứt Chiến tranh lạnh.
+D. Cam kết hòa bình giữa Mỹ và Liên Xô.
+Câu 15. Sự kiện nào sau đây đánh dấu trật tự hai cực I-an-ta chấm dứt?
+/A. Liên Xô chính thức tan rã (1991).	B. Chiến tranh lạnh kết thúc (1989).
+C. Bức tường Béc-lin sụp đổ (1989).	D. Khủng hoảng năng lượng (1973).
+Câu 16. Sự kiện nào sau đây có ý nghĩa mở ra bước đột phá đầu tiên đối với trật tự thế giới hai cực I-an-ta?
+/A. Thắng lợi của cách mạng Trung Quốc (1949).
+B. Cách mạng tháng Tám ở Việt Nam (1945).
+C. Chế độ độc tài thân Mỹ thất bại ở Cuba (1959).
+D. Anh, Pháp rút quân khỏi kênh đào Xuy-ê (1956).
+Câu 17. Nội dung tranh cãi gay gắt quyết liệt nhất trong Hội nghị I-an-ta (tháng 2 – 1945) là
+A. quốc gia nào sẽ tham chống Nhật ở châu Á.
+/B. phân chia phạm vi ảnh hưởng sau chiến tranh.
+C. ranh giới phân chia để chiếm đóng Triều Tiên.
+D. số phận của các nước phát xít sau chiến tranh.
+Câu 18. Xu thế hoà hoãn Đông – Tây xuất hiện có tác động như thế nào đến Trật tự hai cực I-an-ta?
+A. Đã xuất hiện xu thế đa cực.	B. Các mâu thuẫn càng sâu sắc.
+/C. Làm suy yếu trật tự hai cực.	D. Đã củng cố trật tự hai cực.
+Câu 19. Một trong những biểu hiện của xu thế hoà hoãn Đông – Tây là
+/A. các cuộc gặp gỡ cấp cao Xô – Mỹ.	B. khủng hoảng năng lượng, dầu mỏ.
+C. Cách mạng Trung Quốc thắng lợi.	D. sự vươn lên mạnh mẽ của Nhật Bản.
+Câu 20. Một trong những mục đích của Mỹ khi triển khai thực hiện kế hoạch Mác-san (tháng 6 – 1947) đối với các nước Tây Âu là
+A. phát xít hóa cho nước Đức.	B. tiêu diệt Đảng Cộng sản Ý.
+/C. hỗ trợ khôi phục kinh tế.	D. chiếm thuộc địa của Tây Âu.
+
+Câu 21. Một trong những mục đích của Mỹ khi thành lập khối quân sự Bắc Đại Tây Dương (NATO) năm 1949 là
+/A. chống lại Liên Xô và các nước Đông Âu.
+B. muốn bán vũ khí cho các nước đồng minh.
+C. chuẩn bị phát động chiến tranh chống Đức.
+D. tấn công tyêu diệt các nước tư bản chủ nghĩa.
+Câu 22. Sự kiện đánh dấu Chiến tranh lạnh bao trùm thế giới là
+A. thắng lợi của cách mạng Cuba (1959).
+B. Liên Xô đã thành lập khối SEV (1949).
+C. thông điệp của Tổng thống Mỹ (1947).
+/D.sự ra đời của NATO và Vác-sa-va (1955).
+Câu 23. Vì sao từ sau Chiến tranh thế giới thứ hai (1939 – 1945), Mỹ và Liên Xô đối đầu gay gắt?
+/A. Khác nhau về mục tiêu và đường lối chiến lược.
+B. Do những mâu thuẫn trong hội nghị I-an-ta.
+C. Mâu thuẫn gay gắt về vấn đề thị trường, thuộc địa.
+D. Sự cạnh tranh gay gắt về ngành công nghiệp vũ trụ.
+Câu 1 (NB). Nội dung nào sau đây phản ánh đúng xu thế phát triển của thế giới từ sau khi Chiến tranh lạnh chấm dứt?
+A.Các quốc gia đều tập trung lấy phát triển quân sự làm trọng điểm.
+B.Trật tự thế giới đơn cực được xác lập trong quan hệ quốc tế.
+C. Mỹ nắm vai trò là siêu cường duy nhất chi phối quan hệ quốc tế
+/D.Các nước điều chỉnh quan hệ theo hướng hòa hoãn, đối thoại, hợp tác
+Câu 2 (NB). Trật tự thế giới đa cực được hình thành sau khi
+A. chiến tranh thế giới thứ hai kết thúc.
+/B.Chiến tranh lạnh chấm dứt.
+C.xu thế hòa hoãn Đông – Tây xuất hiện.
+D.Mỹ phát động chiến tranh lạnh.
+Câu 3 (NB). Sau Chiến tranh lạnh, một trong những mục tiêu của các quốc gia là
+A.triệt tiêu cạnh tranh trong phát triển kinh tế.
+/B.xây dựng nền kinh tế vững mạnh.
+C.xóa bỏ hoàn toàn hệ thống thuộc địa.
+D.khôi phục lại trật tự thế giới hai cực.
+Câu 4 (NB)Sau khi chiến tranh lạnh chấm dứt, một trong những xu thế phát triển chính của thế giới là
+/A.đối thoại, hợp tác trong quan hệ quốc tế.          B.hình thành trật tự thế giới mới đơn cực.
+C.ráo riết chuẩn bị chiến tranh toàn cầu.              D.hạn chế tình trạng cạnh tranh giữa các nước.
+Câu 5 (NB). “Một trật tự thế giới mới có sự tham gia của các quốc gia, các trung tâm khác nhau, trong đó không có một quốc gia nào có quyền lực áp đảo ác quốc gia khác, chi phối sự phát triển của thế giới” là khái niệm về trật tự thế giới
+A. hai cực Ianta.	B. Vecxai-Oasinhtơn.	    C. đơn cực.	           /D. đa cực.
+Câu 6 (NB). Một trong những xu thế phát triển chính của thế giới sau Chiến tranh lạnh là
+/A. xu thế đa cực.	B. xu thế đơn cực.    C. xu thế hòa hoãn.	D. xu thế hòa giải.
+Câu 7 (NB). Một trong những xu thế phát triển chính của thế giới sau Chiến tranh lạnh là
+/A.sự hình thành trật tự thế giới đa cực.                 B.xu thế đơn cực vươn lên mạnh mẽ.
+C.các trung tâm quyền lực đối đầu gay gắt.           D.Nga, Mỹ chi phối mọi quan hệ quốc tế.
+Câu 8 (NB). Một trong những xu thế phát triển chính của thế giới sau khi Chiến tranh lạnh chấm dứt là
+A. trật tự thế giới “đơn cực” đang dần được hình thành.
+/B. trật tự thế giới “đa cực” đang dần được hình thành.
+C. cuộc cách mạng khoa học kĩ thuật phát triển nhanh chóng.
+D. hệ thống đế quốc chủ nghĩa có những chuyển biến quan trọng.
+Câu 9 (NB). Nội dung nào sau đây là biểu hiện của xu thế đa cực?
+/A.Sự gia tăng sức mạnh, tầm ảnh hưởng và vị thế kinh tế, chính trị...của các nước lớn.
+B.Các nước tăng cường chạy đua về kinh tế và quân sự, hình thành các liên minh lớn.
+C.Sự vươn lên mạnh mẽ của Trung Quốc, đe doạ đến vị trí số một của Mỹ.
+D.Các nước trong khối NATO liên kết với nhau tạo ra sức mạnh quân sự vượt trội.
+Câu 10 (NB). Nội dung nào sau đây là biểu hiện của xu thế đa cực?
+A.Sự vươn lên mạnh mẽ của Trung Quốc, đe doạ đến vị trí số một của Mỹ.
+B.Các nước tăng cường chạy đua về kinh tế và quân sự, hình thành các liên minh lớn.
+/C.Mĩ suy giảm sức mạnh tương đối của trong tương quan so sánh với các cường quốc khác.
+D.Các nước trong khối NATO liên kết với nhau tạo ra sức mạnh quân sự vượt trội.
+Câu 11 (NB). Nội dung nào sau đây là biểu hiện của xu thế đa cực?
+/A.Vai trò ngày càng gia tăng của các trung tâm kinh tế, tài chính lớn.
+B.Các nước tăng cường chạy đua về kinh tế và quân sự, hình thành các liên minh lớn.
+C.Sự vươn lên mạnh mẽ của Trung Quốc, đe doạ đến vị trí số một của Mỹ.
+D.Các nước trong khối NATO liên kết với nhau tạo ra sức mạnh quân sự vượt trội.
+Câu 12 (NB). Nội dung nào sau đây không phải là biểu hiện của xu thế đa cực?
+A.Mỹ bị suy giảm sức mạnh tương đối trong tương quan so sánh với các cường quốc khác.
+/B.Cách mạng công nghiệp lần thứ ba đạt được nhiều thành tựu, đặc biệt là về kinh tế.
+C.Sự gia tăng sức mạnh, tầm ảnh hưởng và vị thế kinh tế, chính trị...của các nước lớn.
+D.Vai trò của các trung tâm, tổ chức kinh tế, tài chính quốc tế và khu vực ngày càng lớn.
+Câu 13 (NB). Trong xu thế đa cực, tổ chức kinh tế, tài chính khu vực nào sau đây có vai trò ngày càng lớn đối với sự phát triển của thế giới?
+/A. ASEM.	B. UNICEF.	  C. WHO.	D. UNESCO.
+Câu 14 (NB). Trong xu thế đa cực, tổ chức kinh tế, tài chính khu vực nào sau đây có vai trò ngày càng lớn đối với sự phát triển của thế giới?
+A. UNESCO.	     B. UNICEF.	   C. WHO.	/D. G20.
+Câu 15 (NB). Trong xu thế đa cực, tổ chức kinh tế, tài chính khu vực nào sau đây có vai trò ngày càng lớn đối với sự phát triển của thế giới?
+/A. Liên minh châu (EU).       B. UNICEF.	             C. WHO.	                       D. UNESCO.
+Câu 16 (NB). Trong xu thế đa cực, tổ chức kinh tế, tài chính khu vực nào sau đây có vai trò ngày càng lớn đối với sự phát triển của thế giới?
+A. UNICEF.   	/B. ASEAN.	     C. WHO.	      D. UNESCO.
+Câu 17 (NB). Quốc gia nào sau đây nằm trong nhóm G20?
+A. Thái Lan.	B. Việt Nam.	     /C. Nam Phi.	D. Ai Cập.
+Câu 18 (NB). Quốc gia nào sau đây nằm trong nhóm G7?
+A. Thái Lan.	    B. Việt Nam.	/C. Nhật Bản.	       D. Ai Cập.
+Câu 19 (NB). “Chiếm 2/3 dân số, 90% GDP, 80% thương mại toàn cầu”. Những số liệu này đang nói đến các quốc gia thuộc tổ chức kinh tế tài chính nào?
+/A. G20.	      B. NICS.	       C. EU.	D. ASEAN.
+Câu 20 (NB). Tổ chức liên kết kinh tế, thương mại, tài chính lớn nhất hiện nay là
+A. Diễn đàn hợp tác Á - Âu.	                B. Hiệp ước thương mại tự do.
+/C. Liên minh Châu Âu (EU)	                D. Các nước xuất khẩu dầu mỏ.
+Câu 1. Năm nước sáng lập ASEAN là
+/A. In-đô-nê-xi-a, Ma-lai-xi-a, Phi-lip-pin, Xin-ga-po, Thái Lan.
+B. In-đô-nê-xi-a, Bru-nây, Phi-lip-pin, Xin-ga-po, Thái Lan.
+C. In-đô-nê-xi-a, Lào, Phi-lip-pin, Xin-ga-po, Thái Lan.
+D. In-đô-nê-xi-a, Cam-pu-chia, Phi-lip-pin, Xin-ga-po, Thái Lan.
+Câu 2. Tổ chức ASEAN được thành lập tại quốc gia nào sau đây?
+A. Xin-ga-po.       B. Ma-lai-xi-a.       C. In-đô-nê-xi-a.    /D. Thái Lan.
+Câu 3. Hiệp hội các quốc gia Đông Nam Á (ASEAN) được thành lập
+/A. tại Băng Cốc, ngày 8/8/1967.             B.tại Gia-các-ta, năm 6/8/1966.
+C.tại Cua-la Lăm-pơ, tháng 11/1971.     D.tại Hà Nội, ngày 28/7/1965.
+Câu 4. Một trong những nước tham gia sáng lập Hiệp hội các quốc gia Đông Nam Á (ASEAN) là
+/A. Thái Lan.     	B. Nhật Bản.	    C. Ca-na-đa.	D. Đan Mạch.
+Câu 5. Thành viên thứ 10 của ASEAN là
+A. Bru-nây.	            B. Lào.	         /C. Cam-pu-chia.	       D. Mi-an-ma.
+Câu 6. Năm nước gia nhập ASEAN từ năm 1984 đến năm 1999 là
+A.Việt Nam, In-đô-nê-xi-a, Lào, Mi-an-ma, Cam-pu-chia.
+/B.Bru-nây, Việt Nam, Lào, Mi-an-ma, Cam-pu-chia.
+C.Bru-nây, Phi-lip-pin, Việt Nam, Lào, Cam-pu-chia.
+D.Phi-lip-pin, Việt Nam, Lào, Cam-pu-chia, Mi-an-ma.
+Câu 7. Ban Thư kí ASEAN có trụ sở tại
+/A. Gia-các-ta.              B. Xin-ga-po.	      C. Viêng Chăn.	D. Ma-ni-la.
+Câu 8. Quốc gia nào sau đây trở thành thành viên thứ 6 của tổ chức ASEAN?
+A. Việt Nam	       B. Lào	   /C. Bru-nây	    D. Mi-an-ma
+Câu 9. Quốc gia nào sau đây trở thành thành viên thứ 7 của tổ chức ASEAN?
+/A. Việt Nam	     B. Cam-pu-chia	C. Bru-nây	D. Mi-an-ma
+Câu 10. ASEAN đã phát triển từ ASEAN 5 lên ASEAN 10 trong giai đoạn:
+A. 1968 – 1984.	B. 1961 – 1976.    /C. 1976 – 1999.	D. 1995 – 2003.
+Câu 11. Năm 1961, Ma-lai-xi-a, Thái Lan và Phi-líp-pin thỏa thuận thành lập:
+A.Hiệp hội các quốc gia Đông Nam Á (ASEAN).     /B.Hiệp hội Đông Nam Á (ASA).
+C.Tổ chức MAPHILINDO.                                        D.Cộng đồng kinh tế ASEAN (AEC).
+Câu 12. Hiệp hội các quốc gia Đông Nam Á được thành lập vào thời gian nào và ở đâu?
+A.Tháng 8-1968, tại Gia-cac-ta (In-đô-nê-xi-a).       B.Tháng 8-1968, tại Ba-li (In-đô-nê-xi-a).
+/C.Tháng 8-1967, tại Băng Cốc (Thái Lan).               D.Tháng 10-1967, tại Xin-ga-po.
+Câu 14. Quốc gia nào sau đây sau khi tuyên bố độc lập đã được kết nạp ngay vào ASEAN chỉ sau 1 tuần?
+A. Việt Nam.    	B. Cam-pu-chia.	/C. Bru-nây.	D. Mi-an-ma.
+Câu 15. ASEAN được thành lập là biểu hiện rõ nét của xu thế nào sau đây?
+A. Toàn cầu hóa.	B. Quốc tế hóa.      /C. Liên kết khu vực.	D. lấy hợp tác làm chủ đạo.
+Câu 16. ASEAN là một liên minh hợp tác kinh tế- chính trị của các nước thuộc khu vực
+A. Đông Bắc Á.	B. Nam Á.       C. Tây Á.	            /D. Đông Nam Á.
+Câu 17. ASEAN ra đời khi
+A.Liên minh châu Âu (EU) đã phát triển mạnh.
+B.tất cả các nước châu Á đã giành được độc lập.
+/C.xu hướng khu vực hóa trên thế giới phát triển.
+D.cuộc chiến tranh lạnh đã chấm dứt hoàn toàn.
+Câu 18. Sự ra đời và thành công bước đầu của tổ chức khu vực nào sau đây đã cổ vũ các nước Đông Nam Á liên kết hợp tác với nhau?
+A.Liên minh châu Âu (EU).                          B.Liên minh châu Phi (AU).
+C.Liên hợp quốc (UN).                                  /D.Cộng đồng kinh tế châu Âu (EEC).
+Câu 19. Nội dung nào không phải là bối cảnh, yêu cầu lịch sử dẫn đến sự hình thành lập của ASEAN?
+A.Sau khi giành độc lập dân tộc, các nước Đông Nam Á có nhu cầu hợp tác khu vực.
+B.xu thế khu vực hóa trên thế giới xuất hiện từ những năm 50, 60 của thế kỉ XX.
+C.Nhiều nước Đông Nam Á muốn hạn chế ảnh hưởng của các quốc bên ngoài.
+/D.Xung đột giữa các nước trong khu vực Đông Nam Á ngày càng gia tăng.
+Câu 20. Yếu tố quốc tế nào sau đây tác động đến quá trình hình thành của tổ chức ASEAN?
+A.Quá trình giải phóng dân tộc ở Đông Nam Á.
+B.Sự ra đời của tổ chức Hiệp ước Đông Nam Á (SEATO).
+C.Các nước Đông Nam Á muốn hạn chế hợp tác với bên ngoài.
+/D.Xu thế liên kết khu vực trên thế giới đang phát triển.
+Câu 1. Ý tưởng thành lập cộng đồng ASEAN bắt đầu xuất hiện khi nào?
+/A. Tuyên bố Băng Cốc (1967).                B.Tuyên bố Kua-la-lăm-pơ (2015).
+C.Hội nghị cấp cao ASEAN (1997).        D. Hiến chương ASEAN (2007).
+Câu 2. Mục tiêu chính của cộng đồng ASEAN là gì?
+/A. Đảm bảo hòa bình, ổn định lâu dài, thịnh vượng của khu vực.
+B. Thúc đẩy hợp tác kinh tế giữa các nước.
+C. Bảo vệ môi trường và phát triển bền vững.
+D. Tăng cường vị thế và vai trò của ASEAN trên trường quốc tế.
+Câu 3. Mục tiêu xây dựng cộng đồng ASEAN là
+A.xây dựng một tổ chức hợp tác sâu rộng trên 3 trụ cột: Kinh tế- chính trị, văn hóa, xã hội.
+B.xây dựng một tổ chức hợp tác sâu rộng trên 3 trụ cột: Kinh tế, Chính trị, văn hóa-lịch sử.
+/C.xây dựng một tổ chức hợp tác sâu rộng trên 3 trụ cột: Kinh tế, Chính trị-an ninh, văn hóa - xã hội.
+D.xây dựng một tổ chức hợp tác sâu rộng trên 3 trụ cột: Kinh tế- xã hội, văn hóa – thể dục thể thao.
+Câu 4. Kế hoạch xây dựng Cộng đồng ASEAN được thông qua tại Hội nghị Cấp cao ASEAN lần thứ mấy?
+/A. Lần thứ 10	         B. Lần thứ 15.       C. Lần thứ 20.	         D. Lần thứ 25.
+Câu 5. Ba trụ cột của Cộng đồng ASEAN là
+/A. Cộng đồng Chính trị - an ninh, Cộng đồng Kinh tế, Cộng đồng Văn hóa - xã hội.
+B. Cộng đồng Chính trị - an ninh, Cộng đồng Kinh tế, Cộng đồng Khoa học - công nghệ.
+C. Cộng đồng Kinh tế, Cộng đồng Văn hóa - xã hội, Cộng đồng Môi trường.
+D. Cộng đồng Chính trị - an ninh, Cộng đồng Kinh tế, Cộng đồng Giáo dục - đào tạo.
+Câu 6. Đâu không phải là nội dung của Cộng đồng Chính trị - An ninh ASEAN?
+A. Điều phối sự hợp tác an ninh, chính trị trong khu vực.
+/B. Tạo khối phòng thủ chung.
+C. Thúc đẩy hòa bình, ổn định, hợp tác trong khu vực.
+D. Mở rộng an ninh bên ngoài.
+Câu 7. Năm 2015, các nhà lãnh đạo ASEAN có quyết định chính thức
+A. thành lập tổ chức Hiệp hội các quốc gia Đông Nam Á.
+/B. thành lập Cộng đồng ASEAN.
+C. xác lập quan hệ ngoại giao với EU.
+D. kết nạp Đông Timor vào Hiệp hội các quốc gia Đông Nam Á.
+Câu 8. Trong Cộng đồng ASEAN để giải quyết các vấn đề xung đột cần dựa vào
+A. quyết định của Hội nghị thượng đỉnh ASEAN.
+B. sự hoạt động của Diễn đàn khu vực ASEAN.
+/C. Hiến chương của ASEAN.
+D. Hội đồng điều phối ASEAN.
+Câu 9. Phương án nào thể hiện mục tiêu của Cộng đồng Chính trị - An ninh ASEAN?
+A. Năm 2003, ra kế hoạch tổ chức tập trận chung.
+/B. Xây dựng một khu vực hòa bình, ổn định, phát triển.
+C. Giải quyết các tranh chấp bằng biện pháp hòa bình.
+D. Tăng cường hợp tác quốc tế trong các vấn đề an sinh.
+Câu 10. “Xây dựng ASEAN thành Cộng đồng gắn kết về chính trị, hợp tác kinh tế và có trách nhiệm xã hội với người dân” là
+/A. kế hoạch của Cộng đồng ASEAN.
+B. nguyên tắc thực hiện của Cộng đồng ASEAN.
+C. mục tiêu đối ngoại giữa ASEAN với các đối tác.
+D. cơ chế hoạt động của cộng đồng.
+Câu 11. Năm 2007, văn bản “Tầm nhìn ASEAN 2020” xác định Cộng đồng ASEAN được xây dựng dựa trên sự nhận thức rõ ràng về yếu tố
+A. tương đồng chính trị.               B. liên kết an ninh.
+C. tương đồng về kinh tế.             /D. lịch sử - văn hóa.
+Câu 12.  Cộng đồng Chính trị - An ninh ASEAN có những ưu điểm gì?
+A.Thúc đẩy hợp tác kinh tế và phòng chống tội phạm.
+B. Giải quyết các quyền và bình đẳng xã hội.
+C. Đảm bảo quyền lợi phát triển con người.
+/D. Thúc đẩy hợp tác an ninh và phòng chống khủng bố.
+Câu 13. Đâu là điểm hạn chế của Cộng đồng Chính trị - An ninh ASEAN?
+A. Thúc đẩy hợp tác an ninh và phòng chống khủng bố.
+B. Góp phần quan trọng duy trì hòa bình, ổn định trong khu vực.
+C. Thúc đẩy sự hợp tác đối phó với các thách thức ở Biển Đông.
+/D. Cơ chế pháp lí phối hợp giữa các nước thành viên chưa hiệu quả.
+Câu 14. Cộng đồng Chính trị - An ninh ASEAN có vai trò như thế nào trong việc duy trì hòa bình, ổn định ở khu vực Đông Nam Á?
+A. Quyết định trong việc thúc đẩy hợp tác an ninh, phòng chống khủng bố.
+B. Quyết định trực tiếp giải quyết các tranh chấp bằng biện pháp hòa bình.
+/C. Góp phần hạn chế sự tác động của các nước lớn đối với an ninh khu vực.
+D. Xây dựng mối quan hệ song phương với các đối tác, thị trường tự do.
+Câu 15. Cộng đồng Chính trị - An ninh ASEAN đã đạt được những thành tựu gì?
+/A. Từng bước đa dạng hóa, thúc đẩy hợp tác quốc phòng ở khu vực.
+B. Giải quyết các tranh chấp triệt để bằng biện pháp hòa bình.
+C. Xây dựng được thị trường tự do, ổn định và phát triển.
+D. Tăng cường hợp tác quốc tế trong các lĩnh vực an sinh xã hội.
+Câu 16. Mục tiêu chính của Cộng đồng Chính trị - An ninh ASEAN (APSC) là gì?
+A. Thành lập lực lượng quân sự khu vực.     /B. Bảo đảm hòa bình, ổn định khu vực.
+C. Tạo rào cản kinh tế.                                  D. Thúc đẩy giao lưu văn hóa.
+Câu 17. Đâu là thách thức của Cộng đồng ASEAN trong việc đạt được sự hội nhập sâu rộng hơn?
+/A. Hệ thống chính trị và trình độ kinh tế đa dạng.   B. Văn hóa và ngôn ngữ đồng nhất, phong phú.
+C. Chính sách kinh tế thống nhất.                            D. Thiếu tài nguyên thiên nhiên.
+Câu 18. Việc thiếu một lực lượng quân sự thống nhất được coi là hạn chế đối với Cộng đồng Chính trị - An ninh ASEAN vì
+A. gây cản trở sự hợp tác, tăng trưởng kinh tế.
+/B. dẫn đến chính sách quốc phòng không nhất quán.
+C. cản trở các chương trình giao lưu văn hóa.
+D. làm giảm số lượng các hiệp định thương mại.
+Câu 19. Điểm khác biệt cơ bản giữa Cộng đồng ASEAN so với Liên minh Châu Âu là
+A. Cộng đồng ASEAN chú trọng nguyên tắc bỏ phiếu theo đa số.
+/B. Cộng đồng ASEAN nhấn mạnh sự đồng thuận.
+C. ASEAN có cơ cấu chính trị tập trung, nhất thể hóa.
+D. Cộng đồng ASEAN chỉ tập trung liên minh chính trị, kinh tế.
+Câu 20. Đâu là điểm tương đồng của Cộng đồng Chính trị - An ninh ASEAN với Cộng đồng Kinh tế ASEAN?
+A. Đều tập trung vào hợp tác an ninh, kinh tế kiến tạo môi trường hòa bình, ổn định.
+B. Thành lập vào năm 1967, tập trung giải quyết các tranh chấp bằng giải pháp hòa bình.
+C. Có vai trò quyết định trong việc duy trì hòa bình, ổn định và thịnh vượng ở khu vực Đông Nam Á.
+/D. Đều là trụ cột của Cộng đồng ASEAN, nhằm mục tiêu thúc đẩy sự hợp tác, phát triển giữa các nước thành viên.
+Câu 21. Đâu là điểm khác biệt giữa Cộng đồng Chính trị - An ninh ASEAN so với Cộng đồng Kinh tế ASEAN?
+A. Mục tiêu nhằm thúc đẩy hợp tác giữa các nước thành viên.
+B. Thành lập vào năm 2015, tập trung vào việc thúc đẩy tăng trưởng kinh tế.
+C. Tập trung vào việc thúc đẩy tăng trưởng kinh tế quốc tế.
+/D. Tập trung vào việc giải quyết các tranh chấp bằng biện pháp hòa bình.
+Câu 22. Trong bối cảnh hiện nay, nội dung nào không phải là thách thức của Cộng đồng Chính trị - An ninh ASEAN?
+A. Sự gia tăng các cuộc khủng bố, tội phạm xuyên quốc gia.
+B. Sự gia tăng căng thẳng và mâu thuẫn giữa các cường quốc.
+/C. Quan hệ quốc tế sâu rộng của ASEAN/ Sự vươn lên của khu vực Đông Nam Á.
+D. Vấn đề quản trị lưu vực sông Mê Công.
+Câu 23. Một trong những lợi ích của việc Việt Nam tham gia vào Cộng đồng ASEAN là gì?
+A. Thúc đẩy tăng trưởng kinh tế, giảm nghèo và phát triển bền vững.
+/B. Nâng cao vị thế và vai trò của Việt Nam trên trường quốc tế.
+C. Bảo vệ môi trường và phát triển bền vững.
+D. Loại bỏ hoàn toàn tham nhũng và tội phạm.
+Câu 24. Để nâng cao vai trò của mình trong Cộng đồng ASEAN, Việt Nam cần tập trung ưu tiên thực hiện nội dung nào?
+A. Sự cạnh tranh doanh nghiệp nhà nước.      B. Hợp tác với các nước lớn.
+/C. Ngoại giao đa phương linh hoạt.               D. Phát triển công nghiệp truyền thống.
+Câu 25. Cơ chế hợp tác nào sau đây đóng vai trò quan trọng trong việc tăng cường hợp tác an ninh quốc phòng giữa các nước ASEAN?
+A. Diễn đàn An ninh khu vực ASEAN (ARF).
+/B. Hội nghị Bộ trưởng Quốc phòng ASEAN (ADMM).
+C. Cộng đồng Chính trị - An ninh ASEAN (APSC).
+D. Cơ chế hợp tác ASEAN+1, ASEAN+3.
+Câu 26. Hiểu thế nào là một Cộng đồng kinh tế  ASEAN (AEC)?
+/A.Là khuôn khổ hợp tác xây dựng ASEAN thành thị trường, hệ thống sản xuất thống nhất.
+B.Là khuôn khổ hợp tác an ninh,chính trị toàn diện hướng tới mục tiêu xây dựng một trường hòa bình và an ninh.
+C.Xây dựng một ASEAN lấy con người làm trung tâm có trách nhiệm xã hội, xây dựng tình đoàn kết , thống nhất bền lâu.
+D.Nhằm thành lập một cộng đồng thịnh vượng và hòa bình ở Đông Nam Á.
+Câu 27. Một trong các quyền thể hiện điểm tiến bộ của Cộng đồng Văn hóa – Xã hội ASEAN khi coi con người là trung tâm?
+A.Phúc lợi và bảo hiểm xã hội.
+B.Các quyền và bình đẳng kinh tế.
+C.Thu hẹp khoảng cách phát triển.
+/D.ASEAN đẩy mạnh hợp tác bảo vệ các quyền của phụ nữ, trẻ em, người già, người khuyết tật
+Câu 28.Trong các nội dung chính của Cộng đồng văn hóa – Xã hội, nội dung quan trọng nhất?
+/A.Con người làm trung tâm.               B.Phúc lợi và bảo hiểm XH.
+C.Các quyền và bình đẳng xã hội.      D.Bảo đảm bền vững môi trường.
+Câu 29. Điểm kế thừa và phát triển của Cộng đồng Văn hóa – Xã hội ASEAN được rút ra từ bài học trong quá trình đấu tranh giải phóng dân tộc.
+A.Lấy phát triển kinh tế, quân sự làm trung tâm.
+/B.Các quyền của con người và bình đẳng xã hội.
+C.Gìn giữ bản sắc văn hóa dân tộc.
+D.Liên kết chặt chẽ với các cường quốc lớn trên thế giới.
+Câu 1. Một trong những điểm giống nhau giữa Cách mạng tháng Tám (1945) ở Việt Nam và Cách mạng tháng Mười Nga (1917) là ?
+/A. Đưa nhân dân lao động làm chủ đất nước.      B. Đã góp phần đánh bại chủ nghĩa phát xít.
+C. Đã mở ra thời kỳ hiện đại trong lịch sử.           D. Làm xoay chuyển lớn cục diện thế giới.
+Câu 2. Một trong những điểm chung của Cách mạng tháng Tám năm 1945 ở Việt Nam và Cách mạng tháng Mười năm 1917 ở Nga?
+A. Nhiệm vụ chủ yếu là chống chủ nghĩa thực dân.
+B. Diễn ra đồng thời ở cả nông thôn và thành thị.
+C. Đối tượng đấu tranh chủ yếu là giai cấp tư sản.
+/D. Giành chính quyền ở đô thị quyết định thắng lợi.
+Câu 3. Một trong những điểm tương đồng của Cách mạng tháng Tám năm 1945 ở Việt Nam và Cách mạng tháng Mười năm 1917 ở Nga? A.Giành chính quyền ở nông thôn rồi tiến vào thành thị.
+B. Nhiệm vụ chủ yếu của cách mạng là chống phát xít.
+/C. Chịu tác động của cuộc chiến tranh thế giới.
+D. Làm cho chủ nghĩa tư bản không còn là hệ thống hoàn chỉnh.
+Câu 4. Một trong những điểm tương đồng của Cách mạng tháng Tám năm 1945 và hai cuộc kháng chiến chống ngoại xâm (1945-1975) ở Việt Nam là
+/A. có sự kết hợp sức mạnh dân tộc với sức mạnh thời đại.
+B. lực lượng vũ trang giữ vai trò quyết định thắng lợi.
+C. có sự giúp đỡ to lớn của Liên Xô và nhân loại tiến bộ.
+D. kết hợp ba mặt trận quân sự, chính trị và ngoại giao.
+Câu 5. Một trong những điểm giống nhau của Cách mạng tháng Tám năm 1945 và hai cuộc kháng chiến chống ngoại xâm (1945-1975) ở Việt Nam là
+A. lực lượng chính trị giữ vai trò quyết định thắng lợi.
+B. lực lượng vũ trang giữ vai trò quyết định thắng lợi.
+C. có sự giúp đỡ của các nước xã hội chủ nghĩa.
+/D. có sự sáng tạo trong phương thức sử dụng lực lượng.
+Câu 6. Bài học kinh nghiệm nào sau đây được Đảng Cộng sản Đông Dương rút ra về tập hợp, tổ chức lực lượng, phân hóa và cô lập kẻ thù trong Cách mạng tháng Tám năm 1945?
+A. Thành lập mặt trận thống nhất rộng rãi trên cơ sở liên minh công - nông
+B. Giải quyết tốt những yêu cầu và nguyện vọng trước mắt của quần chúng.
+C. Tập trung tất cả các lực lượng để tấn công nhiều kẻ thù cùng một lúc.
+/D. Triệt để tận dụng những điều kiện khách quan và chủ quan thuận lợi.
+Câu 7. Nội dung nào sau đây là bài học kinh nghiệm trong lãnh đạo Tổng khởi giành chính quyền năm 1945 của Đảng Cộng sản Đông Dương?
+A. Phải xây dựng được khối liên minh công - nông, xây dựng đoàn kết quốc tế.
+B. Tổ chức, lãnh đạo quần chúng đấu tranh công khai và hợp pháp, nửa hợp pháp.
+C. Phải chú ý xây dựng lực lượng vũ trang hùng mạnh để quyết định chiến trường.
+/D. Khởi nghĩa từng phần, giành chính quyền từng bộ phận, chớp thời cơ khởi nghĩa.
+Câu 8. Một trong những đặc điểm và ưu điểm lớn của Cách mạng tháng Tám năm 1945 ở Việt Nam là gì?
+/A. Cuộc khởi nghĩa vũ trang nhưng diễn ra khá ôn hòa, tránh xung đột đổ máu.
+B. Cuộc khởi nghĩa vũ trang toàn dân quyết liệt giành chính quyền với mọi giá.
+C. Cuộc cách mạng bạo lực khi phong trào cách mạng thế giới đều tạm ngưng.
+D. Cách mạng vô sản đầu tiên ở nước thuộc địa thành công nhanh, ít đổ máu.
+Câu 9. Khác với Cách mạng tháng Tám năm 1945 ở Việt Nam, Cách mạng tháng Mười ở Nga năm 1917 diễn ra theo hình thái
+/A. bắt đầu từ thành thị, lấy thành thị làm trung tâm.
+B. nổ ra đồng thời trên cả nước, cả nông thôn và thành thị.
+C. két hợp hài hòa giữa nông thôn và thành thị.
+D. bắt đầu từ nông thôn, lấy nông thôn bao vây thành thị.
+
+Câu 10. Nét tương đồng về hình thức đấu tranh của cách mạng Cuba năm 1959 so với Cách mạng tháng Tám năm 1945 ở Việt Nam là
+A. đấu tranh ngoại giao.	  B. đấu tranh chính trị.
+/C. đấu tranh vũ trang.	               D. khởi nghĩa từng phần.
+Câu 11. Trong Cách mạng tháng Tám năm 1945 ở Việt Nam đã có sự kết hợp sức mạnh dân tộc với sức mạnh thời đại. Sức mạnh thời đại được hiểu là sức mạnh của
+A. sự viện trợ từ Liên Xô và Trung Quốc.        /B. chiến thắng phát xít của quân Đồng minh .
+C. các mặt trận đoàn kết của dân tộc.               D. Liên minh nhân dân Việt – Miên – Lào.
+Câu 12. Nhận xét nào sau đây là đúng về vai trò của lực lượng chính trị trong Cách tháng Tám năm 1945 ở Việt Nam?
+A. Lực lượng hỗ trợ cho tổng khởi nghĩa tiến lên chiến tranh cách mạng.
+/B. Là lực lượng chủ yếu và đông đảo nhất để tiến hành tổng khởi nghĩa.
+C. Là lực lượng nòng cốt, xung kích trong tổng công kích, tổng khởi nghĩa.
+D. Lực lượng nòng cốt, hỗ trợ lực lượng vũ trang tiến lên giành chính quyền.
+Câu 13. Về tính chất, Cách mạng tháng Tám năm 1945 ở Việt Nam được đánh giá là cuộc cách mạng giải phóng dân tộc, đồng thời mang tính dân chủ vì lí do nào sau đây?
+/A. Là một bộ phận của các lực lượng hoà bình, tiến bộ chống chủ nghĩa phát xít.
+B. Đã lật đổ chế độ phong kiến và xoá bỏ hoàn toàn các tàn tích của chế độ cũ.
+C. Hoàn thành mục tiêu chiến lược của cách mạng là độc lập và ruộng đất cho dân cày.
+D. Cuộc cách mạng thực hiện thành công khẩu hiệu “Người cày có ruộng” trên cả nước.
+Câu 14. Một trong những nét độc đáo về nghệ thuật giành chính quyền trong cuộc Tổng khởi nghĩa tháng Tám năm 1945 ở Việt Nam là
+A. kết hợp lực lượng chính trị và lực lượng vũ trang ba thứ quân.
+/B. quá trình giành chính quyền diễn ra nhanh chóng và ít đổ máu.
+C. đồng loạt Tổng khởi nghĩa và tổng công kích trên toàn quốc.
+D. tiến hành Tổng khởi nghĩa ngay khi quân Nhật đảo chính Pháp.
+Câu 15. Một trong những bài học được rút ra từ Cách mạng tháng Tám năm 1945 có ý nghĩa quan trọng trong công cuộc xây dựng và phát triển đất nước hiện nay là
+A. tận dụng, phát huy truyền thống đoàn kết của nhân dân ba nước Đông Dương.
+B. kết hợp xây dựng lực lượng vũ trang với sức mạnh của lực lượng quốc tế.
+/C. cần dự đoán chính xác và nhanh chóng nắm bắt thời cơ để giành thắng lợi.
+D. linh hoạt, quyết đoán trong việc kết hợp các hình thức đấu tranh ngoại giao.
+Câu 16. Nhận định “Cách mạng tháng Tám là ăn may, là lấp lỗ trồng quyền lực". Đúng hay sai? Vì sao?
+A. Đúng, vì khi đó trên đất nước chưa hề có một chính quyền nào hợp pháp.
+B. Đúng, vì quân Nhật đã đầu hàng, quân Đồng Minh chưa vào Đông Dương.
+/C. Sai, vì Đảng, nhân dân đã có sự chuẩn bị tốt, chu đáo suốt mười lăm năm.
+D. Sai, vì Cách mạng tháng Tám đã nhận được sự hỗ trợ của phe Đồng minh.
+Câu 17. Nhận định nào sau đây đúng về vai trò của Hồ Chí Minh đối với thắng lợi của Cách mạng tháng Tám 1945?
+/A. Trực tiếp cùng với Đảng lãnh đạo cuộc Cách mạng tháng Tám thắng lợi.
+B. Liên hệ với Trung Quốc, Liên Xô để tranh thủ sự ủng hộ cho cách mạng.
+C. Lập và thông qua danh sách chính phủ lâm thời của nước Việt Nam mới.
+D. Trực tiếp lãnh đạo lực lượng vũ trang đánh chiếm cơ quan đầu não kẻ thủ.
+Câu 18. Từ thực tiễn của cuộc vận động giải phóng dân tộc (1939 - 1945) ở Việt Nam cho thấy, một nội dung quan trọng trong tư tưởng của Hồ Chí Minh về khởi nghĩa vũ trang là
+A. dùng bạo lực để chấn áp mọi kẻ thù của dân tộc.
+B. giành chính quyền từ nông thôn bao vây thành thị.
+/C. khởi nghĩa toàn dân vì mục tiêu giành chính quyền.
+D. xây dựng thế trận chiến tranh nhân dân đánh Nhật.
+Câu 19. Bài học rút ra từ sự thành công của cách mạng tháng Tám năm 1945 ở Việt Nam đối với phong trào giải phóng dân tộc ở Đông Nam Á là gì?
+A. Có sự lãnh đạo của Đảng Cộng sản.
+B. Chớp thời cơ phát lệnh khởi nghĩa.
+C. Vận dụng sáng tạo chủ nghĩa Mác – Lênin.
+/D. Có quá trình chuẩn bị chu đáo, kĩ lưỡng, chớp thời cơ.
+Câu 20. Cách mạng tháng Tám năm 1945 ở Việt Nam được đánh giá là cuộc cách mạng giải phóng dân tộc, đồng thời mang tính dân chủ vì lí do nào sau đây?
+/A. Là một bộ phận của các lực lượng hoà bình, tiến bộ chống chủ nghĩa phát xít.
+B. Đã lật đổ chế độ phong kiến và xoá bỏ hoàn toàn các tàn tích của chế độ cũ.
+C. Hoàn thành mục tiêu chiến lược của cách mạng là độc lập và ruộng đất cho dân cày.
+D. Cuộc cách mạng thực hiện thành công khẩu hiệu “Người cày có ruộng” trên cả nước.
+Câu 1. Miền Nam Việt Nam trong thời gian đầu sau Hiệp định Giơ- ne-vơ (1954)?
+A. Tổng tiến công và nổi dậy.	/B. Đấu tranh chính trị hòa bình.
+C. Dùng bạo lực cách mạng.	D. Đấu tranh cải lương
+Câu 2. Hội nghị Ban Chấp hành Trung ương Đảng Lao Động Việt Nam lần thứ 15 (1-1959) có quyết định quan trọng nào sau đây?
+/A. Đấu tranh chính trị kết hợp đấu tranh vũ trang đề giành chính quyền.
+B. Tiếp tục đấu tranh chính trị yêu cầu Mỹ thi hành Hiệp định Giơ-ne-vơ.
+C. Đấu tranh chính trị chuẩn bị tổ chức tổng tuyển cử thống nhất đất nước.
+D. Chỉ sử dụng bạo lực cách mạng đánh đổ chính quyền Mỹ - Diệm.
+Câu 3. Trong giai đoạn 1954 - 1958 của cuộc kháng chiến chống Mỹ, cứu nước, nhân dân miền Nam Việt Nam tập trung vào thực hiện nhiệm vụ nào sau đây?
+/A. Đấu tranh chống chế độ Mỹ - Diệm, giữ gìn và phát triển lực lượng cách mạng.
+B. Kết hợp đấu tranh chính trị hòa bình và khởi nghĩa vũ trang giành chính quyền
+C. Chuyển từ đấu tranh chính trị tiến lên đồng khởi trên khắp các tỉnh miền Nam.
+D. Đấu tranh chính trị hòa bình để giữ gìn lực lượng, tổ chức tổng tuyển cử tự do.
+Câu 4. Sự kiện nào sau đây trong giai đoạn 1954 - 1960 đánh dấu bước phát triển nhảy vọt của cách mạng miền Nam Việt Nam?
+/A. Phong trào Đồng khởi.	B. Phong trào chống phá bình định.
+C. Phong trào phá ấp chiến lược.	D. Phong trào "Ba sẵn sàng".
+Câu 5. Từ trong phong trào Đồng khởi ở miền Nam Việt Nam, tổ chức đoàn thể chính trị nào sau đây đã ra đời?
+A. Liên minh Nhân dân Việt - Miên - Lào.
+B. Việt Nam Độc lập Đồng minh (Việt Minh).
+C. Mặt trận Thống nhất dân tộc phản đế Đông Dương.
+/D. Mặt trận Dân tộc giải phóng miền Nam Việt Nam.
+Câu 6. Nhiệm vụ trọng tâm của công cuộc xây dựng và phát triển kinh tế - xã hội ở miền Bắc Việt Nam (1958 – 1960) là
+/A. Phát triển thành phần kinh tế quốc doanh
+B. Phát triển thành phần kinh tế tư nhân.
+C. Phát triển thành phần kinh tế hợp tác xã.
+D. Phát triển thành phần kinh tế có vốn nước ngoài.
+Câu 7. Việc cải tạo quan hệ sản xuất ở miền Bắc Việt Nam trong giai đoạn 1958 – 1960 được thực hiện trên các lĩnh vực kinh tế, khâu chính là
+A. Hợp tác hoá công nghiệp.	B. Hợp tác hoá thương nghiệp.
+/C. Hợp tác hoá nông nghiệp.	D. Hợp tác hoá ngân hàng.
+Câu 8. Ý nghĩa lịch sử của phong trào Đồng khởi” ở miền Nam Việt Nam 1959 - 1960?
+A.	Đánh dấu bước phát triển của cách mạng miền Nam, làm thất bại chủ nghĩa thực dân mới của Mỹ ở miền Nam.
+B.	Làm lung lay toàn bộ hệ thống chính quyền Sài Gòn, mở đường cho sự phát triển của cách mạng miền Nam.
+C. Là thắng lợi có ý nghĩa chiến lược đầu tiên mở đường cho sự phát triển của chiến tranh cách mạng miền Nam.
+/D. Đánh dấu bước phát triển nhảy vọt của cách mạng miền Nam từ thế giữ gìn lực lượng sang thế tiến công.
+Câu 9. Đặc điểm nổi bật nhất của Việt Nam sau khi Hiệp định Giơnevơ năm 1954 về Đông Dương được kí kết là
+A. Pháp rút khỏi miền Bắc, miền Bắc nước ta hoàn toàn giải phóng.
+/B. đất nước tạm thời bị chia cắt làm 2 miền với 2 chế độ chính trị khác nhau.
+C. Pháp chấm dứt chiến tranh xâm lược Đông Dương, rút hết quân về nước.
+D. Ngô Đình Diệm lên nắm quyền, Mĩ âm mưu chia cắt lâu dài Việt Nam.
+Câu 10. Hội nghị lần thứ 15 Ban Chấp hành Trung ương Đảng Lao động Việt Nam (tháng 1/1959) quyết định để nhân dân miền Nam sử dụng bạo lực cách mạng đánh đổ chính quyền Mỹ - Diệm vì
+/A. phương pháp đấu tranh hòa bình không còn phù hợp.
+B. quân Giải phóng miền Nam đã được thành lập.
+C. Mĩ thay đổi chiến lược chiến tranh ở miền Nam Việt Nam.
+D. mọi xung đột chỉ có thể được giải quyết bằng vũ lực.
+Câu 11. Hội nghị lần thứ 15 Ban Chấp hành Trung ương Đảng Lao động Việt Nam (tháng 1/1959) quyết định để nhân dân miền Nam sử dụng bạo lực cách mạng vì
+A. thời cơ để nhân dân miền Nam khởi nghĩa giành chính quyền đã chín muồi.
+/B. Mĩ – Diệm sử dụng bạo lực phản cách mạng để đàn áp nhân dân miền Nam.
+C. chính quyền tay sai Ngô Đình Diệm rơi vào tinh trạng khủng hoảng.
+D. Mĩ đã đưa quân vào miền Nam trực tiếp tham chiến.
+Câu 12. Đặc điểm lớn nhất của cách mạng Việt Nam thời kỳ 1954 – 1975 là một Đảng lãnh đạo
+A. cả nước thực hiện cuộc cách mạng tư sản dân quyền.
+B. cả nước thực hiện cuộc cách mạng xã hội chủ nghĩa.
+/C. đồng thời hai nhiệm vụ chiến lược cách mạng ở hai miền đất nước.
+D. cả nước khôi phục kinh tế, hàn gắn vết thương chiến tranh.
+Câu 13. Phong trào “Đồng khởi” (1959 – 1960) ở miền Nam Việt Nam có ý nghĩa nào sau đây?
+/A. Giáng một đòn nặng nề vào chính sách thực dân mới của Mỹ ở miền Nam.
+B. Tiếp tục giữ vững và phát huy thế chủ động tiến công của cách mạng miền Nam.
+C. Bắt đầu chuyển cuộc kháng chiến chống Mỹ sang giai đoạn “vừa đánh vừa đàm”.
+D. Buộc Mĩ phải tuyên bố “Mĩ hóa” trở lại chiến tranh xâm lược Việt Nam.
+Câu 14. Hội nghị 15 Ban Chấp hành Trung ương Đảng Lao động Việt Nam (tháng 1/1959) được triệu tập trong bối cảnh
+A. tương quan lực lượng ở miền Nam thay đổi có lợi cho cách mạng.
+/B. Mỹ và chính quyền Sài Gòn tăng cường khủng bố phong trào cách mạng.
+C. quân đội Mỹ trực tiếp tham chiến tại chiến trường miền Nam Việt Nam.
+D. các nước xã hội chủ nghĩa ủng hộ Việt Nam đấu tranh thống nhất đất nước.
+Câu 15: Sự kiện đánh dấu việc thực dân Pháp chính thức mở đầu cuộc chiến tranh xâm lược Việt Nam lần thứ hai là
+A. Pháp gây hấn ở Sài Gòn – Chợ Lớn khi nhân dân mít tinh.
+B. quân Pháo chiếm đóng những nơi quan trọng ở Sài Gòn.
+/C. quân Pháp đánh úp trụ sở Ủy ban Nhân dân Nam Bộ.
+D. Pháp gửi tối hậu thư đòi quyền giữ gìn trật tự ở Hà Nội.
+Câu 16: Nhiệm vụ cấp bách của Cách mạng Việt Nam sau cách mạng tháng Tám năm 1945 là
+/A.củng cố chính quyền, chống Pháp và nội phản.
+B.chống quân Đồng minh đang có âm mưu xâm lược trở lại.
+C.chống bọn phản động ta sai của quân Đồng minh.
+D.xây dựng đất nước đi lên Chủ nghĩa xã hội.
+Câu 17. Khi Pháp xâm lược Nam Bộ( 9/1945), Đảng và Chính phủ Việt Nam đã có hành động nào để bảo vệ nền độc lập đất nước?
+A.Đã tiến hành đàm phán khẩn cấp với Pháp.
+B.Tố cáo hành vi của Pháp đến Liên hợp quốc.
+C.Đưa toàn bộ quân đội vào Nam chiến đấu.
+/D.Huy động cả nước để chi viện cho Nam Bộ.
+Câu 18. Đảng, Chính phủ và Chủ tịch Hồ Chí Minh quyết định phát động cuộc kháng chiến toàn quốc chống thực dân Pháp xâm lược (19/12/1946) là do
+A.Việt Nam đã tranh thủ được sự ủng hộ của Liên Xô và một số nước khác.
+B.quá trình chuẩn bị lực lượng của Việt Nam cho cuộc kháng chiến đã hoàn tất.
+C.Pháp ráo riết chuẩn bị lực lượng quân sự để tiến hành xâm lược Việt Nam.
+/D.Việt Nam không thể tiếp tục sử dụng biện pháp hòa bình với Pháp được nữa.
+Câu 19. Cuộc chiến đấu chống thực dân Pháp ở các đô thị phía Bắc vĩ tuyến 16 (cuối 1946 – đầu 1947)
+A.đã tiêu diệt hoàn toàn lực lượng chủ lực của địch tại các đô thị.
+B.làm phá sản kế hoạch « đánh nhanh thắng nhanh » của Pháp.
+C.mở ra bước phát triển mới của cuộc kháng chiến toàn quốc.
+/D.củng cố niềm tin của quân dân ta vào thắng lợi kháng chiến.
+Câu 20.  Cuộc chiến đấu của quân dân Việt Nam tại các đô thị phía Bắc vĩ tuyến từ cuối năm 1946 đến đầu năm 1947 có nhiệm vụ trọng tâm là
+A. giữ thế chủ động trên chiến trường chính Bắc Bộ.
+/B.đưa cả nước bước vào kháng chiến lâu dài.
+C.phá hủy toàn bộ phương tiện vật chất của Pháp.
+D.tiêu diệt toàn bộ binh lực Pháp.
+Câu 1(NB): Trong năm đầu sau Cách mạng tháng Tám năm 1945, nước Việt Nam Dân chủ Cộng đến đứng trước khó khăn nào?
+A. Quân Pháp trở lại Đông Dương theo quy định của Hội nghị Pốtxđam.
+B. Các đảng phái trong nước đều câu kết với quân Trung Hoa Dân quốc.
+/C. Nạn đói, nạn dốt, khó khăn về tài chính, giặc ngoại xâm và nội phản.
+D. Khối đoàn kết dân tộc bị chia rẽ sâu sắc, lực lượng chính trị suy yếu
+Câu 2(NB): Một trong những thuận lợi của nước Việt Nam Dân chủ Cộng hòa khi mới thành lập là
+A. được Trung Quốc và Liên Xô giúp đỡ.
+B. được các nước xã hội chủ nghĩa công nhận.
+/C. nhân dân đã giành được quyền làm chủ đất nước.
+D. Phát xít Nhật đã được giải giáp khỏi nước ta.
+Câu 3(NB): Quân đội các nước với danh nghĩa Đồng minh vào nước ta sau năm 1945 là
+/A. quân Anh, quân Trung Hoa Dân quốc.	B. quân Pháp, quân Anh.
+C. quân Pháp, quân Trung Hoa Dân quốc.	D. quân Anh, quân Mĩ.
+Câu 4(TH): Sự kiện đánh dấu việc thực dân Pháp chính thức mở đầu cuộc chiến tranh xâm lược Việt Nam lần thứ hai là
+A. Pháp gây hấn ở Sài Gòn – Chợ Lớn khi nhân dân mít tinh.
+B. quân Pháo chiếm đóng những nơi quan trọng ở Sài Gòn.
+/C. quân Pháp đánh úp trụ sở Ủy ban Nhân dân Nam Bộ.
+D. Pháp gửi tối hậu thư đòi quyền giữ gìn trật tự ở Hà Nội.
+Câu 5(TH): Nhiệm vụ cấp bách của Cách mạng Việt Nam sau cách mạng tháng Tám năm 1945 là
+/A. củng cố chính quyền, chống Pháp và nội phản.
+B. chống quân Đồng minh đang có âm mưu xâm lược trở lại.
+C. chống bọn phản động ta sai của quân Đồng minh.
+D. xây dựng đất nước đi lên Chủ nghĩa xã hội.
+Câu 6( TH). Khi Pháp xâm lược Nam Bộ( 9/1945), Đảng và Chính phủ Việt Nam đã có hành động nào để bảo vệ nền độc lập đất nước?
+A. Đã tiến hành đàm phán khẩn cấp với Pháp.
+B. Tố cáo hành vi của Pháp đến Liên hợp quốc.
+C. Đưa toàn bộ quân đội vào Nam chiến đấu.
+/D. Huy động cả nước để chi viện cho Nam Bộ.
+Câu 7( VDT). Quân Trung Hoa Dân quốc vào nước ta sau Cách mạng tháng Tám năm 1945 thực chất nhằm mục đích
+/A. lật đổ chính quyền cách mạng, tiêu diệt đảng cộng sản.
+B. câu kết với bọn phản động để dựng lên chính phủ tay sai.
+C. làm hậu thuẫn cho quân Mĩ chiếm Đông Dương.
+D. giúp đỡ thực dân Pháp trở lại xâm lược Việt Nam.
+Câu 8( VDT) Âm mưu chủ yếu của các thế lực phản động trong và ngoài nước đối với Việt Nam sau cách mạng tháng Tám năm 1945 là
+A. bảo vệ chính quyền Trần Trọng Kim.
+B. đưa thực dân Pháp quay trở lại xâm lược.
+C. mở đường cho đế quốc Mĩ xâm lược VN.
+/D. chống phá chính quyền cách mạng VN.
+Câu 9( VDC) Cuộc chiến đấu của nhân dân Nam bộ trong những ngày đầu thực dân Pháp quay lại xâm lược Việt Nam đã
+A. ngăn chặn hoàn toàn cuộc chiến với thực dân Pháp.
+B. khắc phục được nhiều khó khăn do chế độ cũ để lại .
+C. bảo vệ vững chắc nền độc lập non trẻ của Việt Nam.
+/D. tạo tiền đề cho cuộc trường kì kháng chiến của dân tộc.
+Câu 10( VDC) Cuộc chiến đấu của nhân dân Nam bộ trong những ngày đầu thực dân Pháp quay lại xâm lược Việt Nam đã chứng minh
+A. sự đúng đắn của đường lối kháng chiến chống Pháp của Đảng.
+B. sự chuẩn bị đầy đủ về lực lượng của ta trước âm mưu mới của kẻ thù .
+/C. quyết tâm của ta trong việc bảo vệ thành quả của cách mạng.
+D. thực dân Pháp đã thất bại hoàn toàn trong âm mưu mới.
+Câu 11 (NB). Cuộc kháng chiến chống thực dân Pháp của nhân dân Việt Nam bùng nổ (1945) trong bối cảnh quốc tế nào sau đây?
+A. Nhân dân Việt Nam đã trở thành người làm chủ đất nước
+B. Lực lượng vũ trang ba thứ quân có sự phát triển vượt bậc
+/C. Phong trào giải phóng dân tộc ở các nước thuộc địa phát triển.
+D. Chế độ xã hội mới, tiến bộ ở Việt Nam đang được củng cố.
+Câu 12 (NB). Cuộc kháng chiến chống Pháp của nhân dân Việt Nam (1945- 1954) diễn ra trong điều kiện
+/A. quan hệ quốc tế bị chi phối bởi trật tự hai cực I-an-ta.
+B. nguy cơ chiến tranh thế giới hai đe dọa toàn nhân loại.
+C. chế độ xã hội chủ nghĩa ở Liên Xô khủng hoảng sâu sắc.
+D. trât tự thế giới đa cực đang trong giai đoạn hình thành.
+Câu 13 (NB). Sau cách mạng tháng Tám năm 1945, thực dân đế quốc nào sau đây đã quay trở lại xâm lược Việt Nam?
+A. Anh	/B. Pháp	C. Mỹ	D. Nhật
+Câu 14 (NB). Sự kiện nào trực tiếp dẫn đến cuộc kháng chiến toàn quốc chống thực dân Pháp của nhân dân Việt Nam bùng nổ vào ngày 19 – 12 – 1946?
+A. Quân Pháp đánh úp trụ sở Uy ban nhân dân Nam Bộ.
+/B. Pháp gửi tối hậu thư cho Chính phủ Việt Nam Dân chủ Cộng hòa.
+C. Chủ tịch Hồ Chí Minh ra “Lời kêu gọi Toàn quốc kháng chiến”.
+D. Quân Pháp mở chiến dịch tấn công quy mô lớn lên Việt Bắc
+Câu 15 (NB). Ngày 18 và 19/12/1946, Hội nghị Ban thường vụ Trung ương Đảng mở rộng đã quyết định
+A. kí hiệp định Sơ bộ với Pháp.	B. phát động toàn quốc kháng chiến.
+C. phản công quân Pháp tại Việt Bắc	/D. ra chỉ thị Toàn dân kháng chiến.
+Câu 16 (TH). Đảng, Chính phủ và Chủ tịch Hồ Chí Minh quyết định phát động cuộc kháng chiến toàn quốc chống thực dân Pháp xâm lược (19/12/1946) là do
+A. Việt Nam đã tranh thủ được sự ủng hộ của Liên Xô và một số nước khác.
+B. quá trình chuẩn bị lực lượng của Việt Nam cho cuộc kháng chiến đã hoàn tất.
+C. Pháp ráo riết chuẩn bị lực lượng quân sự để tiến hành xâm lược Việt Nam.
+/D. Việt Nam không thể tiếp tục sử dụng biện pháp hòa bình với Pháp được nữa.
+Câu 17 (TH). Cuộc chiến đấu chống thực dân Pháp ở các đô thị phía Bắc vĩ tuyến 16 (cuối 1946 – đầu 1947) đã
+A. tiêu diệt hoàn toàn lực lượng chủ lực của địch tại các đô thị.
+B. làm phá sản kế hoạch « đánh nhanh thắng nhanh » của Pháp.
+C. mở ra bước phát triển mới của cuộc kháng chiến toàn quốc.
+/D. củng cố niềm tin của quân dân ta vào thắng lợi kháng chiến.
+Câu 18 (TH). Cuối năm 1946 đến đầu năm 1947 có nhiệm vụ trọng tâm là
+A. giữ thế chủ động trên chiến trường chính Bắc Bộ.
+/B. đưa cả nước bước vào kháng chiến lâu dài.
+C. phá hủy toàn bộ phương tiện vật chất của Pháp.
+D. tiêu diệt toàn bộ binh lực Pháp.
+Câu 19 (NB). Âm mưu “đánh nhanh, thắng nhanh” của Pháp bị thất bại hoàn toàn bởi chiến thắng nào của ta?
+/A. Chiến dịch Việt Bắc thu -đông 1947.
+B. Chiến dịch biên giới thu - đông 1950
+C. Cuộc Tiến công chiến lược đông – xuân 1953-1954
+D. Chiến dịch Điện Biên Phủ 1954
+Câu 20(NB). Tháng 2-1951, tại Vinh Quang (Chiêm Hóa-Tuyên Quang) đã diễn ra sự kiện nào dưới đây?
+A. Đại hội Chiến sĩ thi đua và cán bộ gương mẫu toàn quốc lần I
+B. Đại hội thống nhất Mặt trận Việt Minh và Hội Liên Việt.
+C. Hội nghị đại biểu thành lập Liên minh nhân Việt-Minh-Lào.
+/D. Đại hội đại biểu toàn quốc lần thứ II của Đảng Cộng sản Đông Dương.
+Câu 1. Ý nào sau đây là bối cảnh trong nước của các cuộc đấu tranh bảo vệ Tổ quốc từ sau tháng 4-1975 ở Việt Nam?
+A.Xu thế hoà hoãn Đông - Tây tiếp tục diễn ra.
+B.	Đất nước mới chỉ giải phóng được miền Bắc.
+/C.	Đất nước thống nhất, đi lên chủ nghĩa xã hội.
+D.Quan hệ giữa các nước lớn ẩn chứa nhiều phức tạp.
+Câu 2. Ý nào sau đây là bối cảnh lịch sử của các cuộc đấu tranh bảo vệ Tổ quốc từ sau tháng 4-1975 ở Việt Nam?
+A.Hệ thống xã hội chủ nghĩa đang hình thành.
+B.	Đất nước tiếp tục chia cắt bởi thế lực bên ngoài.
+C.	Mĩ hoàn thành thiết lập trật tự thế giới đơn cực.
+/D.Xu thế hoà hoãn Đông – Tây tiếp tục diễn ra.
+Câu 3. Sau khi lên nắm quyền (4/1975), tập đoàn Pôn Pốt – Iêng Xa-ri – Khiêu Xăm-phon đã có hành động nào sau đây?
+A.Tiến hành công cuộc xây dựng chủ nghĩa xã hội trong cả nước.
+/B.	Tiến hành các hoạt động khiêu khích, lấn chiếm lãnh thổ Việt Nam.
+C.	Ủng hộ, giúp đỡ công cuộc xây dựng đất nước Việt Nam.
+D.Liên kết với các nước Đông Nam Á để chống lại Trung Quốc.
+Câu 4.Trong khoảng thời gian từ năm 1975 đến năm 1979, cuộc chiến đấu ở biên giới Tây Nam của quân dân Việt Nam thực hiện nhiệm vụ nào sau đây?
+A.Đánh đổ phát xít.	B. Đánh đổ phong kiến.
+/C. Bảo vệ Tổ quốc.	D. Giải phóng dân tộc.
+Câu 5. Trong những năm 1976-1986, nhân dân Việt Nam thực hiện một trong những nhiệm vụ nào sau đây?
+A. Kháng chiến chống Mỹ, cứu nước.	     B. Kháng chiến chống Pháp.
+C. Đấu tranh giành chính quyền.	                /D. Đấu tranh bảo vệ Tổ quốc.
+Câu 6 . Một trong những ý nghĩa quốc tế của các cuộc đấu tranh bảo vệ Tổ quốc của nhân dân Việt Nam từ sau tháng 4-1975 là
+/A. làm tròn nghĩa vụ quốc tế đối với nhân dân Cam-pu-chia.
+B. đã hoàn thành thống nhất đất nước về mặt nhà nước.
+C. âm mưu xâm phạm lãnh thổ Việt Nam thất bại.
+D. chấm dứt sự chia cắt đất nước kéo dài hơn hai thập kỷ.
+Câu 7 . Cuộc chiến tranh bảo vệ biên giới phía Bắc của nhân dân Việt Nam trong những năm 1979 - 1989, diễn ra trên những địa bàn nào sau đây?
+A. Trên toàn tuyến biên giới đất liền của lãnh thổ Việt Nam.
+B. Chủ yếu ở các tỉnh thuộc đồng bằng châu thổ sông Hồng.
+C. Các tỉnh Hà Giang, Tuyên Quang, Hà Nội, Hải Phòng, Lai Châu.
+/D. Các tỉnh biên giới từ Móng Cái (Quảng Ninh) đến Phong Thổ (Lai Châu).
+Câu 8. Trong giai đoạn 1984 – 1989, địa bàn nào sau đây tiếp tục là chiến trường ác liệt giữa quân đội Việt Nam và Trung Quốc?
+A. Khu vực biên giới thuộc huyện Đồng Văn, tỉnh Hà Giang.
+B. Một số huyện biên giới ở các tỉnh Cao Bằng, Điện Biên.
+C. Khu vực biên giới thuộc huyện Vị Xuyên, tỉnh Cao Bằng.
+/D. Khu vực biên giới thuộc huyện Vị Xuyên, tỉnh Hà Giang.
+Câu 9. Một trong những hành động thực thi chủ quyền của Chính phủ Việt Nam đối với quần đảo Trường Sa và Hoàng Sa là
+A. quân sự hoá các đảo.	/B. xây dựng bia chủ quyền.
+C. xây dựng các căn cứ quân sự.	D. Làm đồng minh với Mĩ.
+Câu 10. Một trong những hành động thực thi chủ quyền của Chính phủ Việt Nam đối với quần đảo Trường Sa và Hoàng Sa là
+A. thường xuyên tiến hành tập trận quân sự với Mĩ.
+/B. thực hiện các dự án phát triển kinh tế - xã hội.
+C. đã tiến hành quân sự hoá các đảo lớn.
+D. cho Mỹ thuê lại các bến cảng ở Trường Sa.
+Câu 11.	Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam đã khẳng định chủ quyền của Việt Nam đối với quần đảo Hoàng Sa và Trường Sa thông qua việc
+/A. thành lập huyện đảo Hoàng Sa và Trường Sa
+B. thành lập đội Hoàng Sa, Bắc Hải và Trường Đà
+C. cho hoàn thiện tập Đại Nam nhất thống toàn đồ
+D. cử thủy quân ra tuần tra đảo định kì hàng năm
+Câu 12. Chủ trương nhất quán của Việt Nam trong việc giải quyết các tranh chấp trên Biển Đông là gì?
+/A. Biện pháp hòa bình, tuân thủ luật pháp quốc tế.
+B. Xây dựng căn cứ hải quân để khẳng định chủ quyền.
+C. Kiên quyết sử dụng các biện pháp quân sự cứng rắn.
+D. Đàm phán hòa bình, chia sẻ quyền lợi cho các bên.
+Câu 13. Các cuộc chiến đấu anh dũng của lực lượng Hải quân nhân dân Việt Nam để bảo vệ chủ quyền biển, đảo quốc gia trong năm 1988 đã diễn ra ở các đảo
+A. Cô Tô, Cát Bà.	B. Côn Đảo, Phú Quốc.
+/C. Gạc Ma, Cô Lin.	D. An Bang, Hòn Tre.
+Câu 14. Việt Nam đã làm gì khi Trung Quốc đưa giàn khoan Hải Dương-981 đến hoạt động trái phép trong vùng đặc quyền kinh tế của Việt Nam năm 2014?
+A. Kêu gọi Trung Quốc và các nước trong khu vực kiềm chế, tiến đến đàm phán ngoại giao.
+B. Kêu gọi Trung Quốc tôn trọng luật pháp khu vực và quốc tế, đẩy mạnh đấu tranh quân sự.
+C. Tăng cường lực lượng trên toàn Biển Đông, khiến Trung Quốc chịu nhiều thiệt hại.
+/D. Tăng cường lực lượng tại khu vực đặc quyền kinh tế, tích cực đấu tranh ngoại giao.
+Câu 15. Một trong những ý nghĩa lịch sử của các cuộc kháng chiến bảo vệ Tổ quốc từ năm 1945 đến nay là
+A. củng cố sức mạnh của hệ thống các nước xã hội chủ nghĩa trên thế giới.
+/B. bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ quốc gia.
+C. tạo điều kiện cho Việt Nam có đủ điều kiện được gia nhập tổ chức ASEAN.
+D. thể hiện tinh thần đoàn kết chiến đấu của nhân dân 3 nước Đông Dương.
+Câu 16 Một trong những bài học được rút ra từ các cuộc kháng chiến bảo vệ Tổ quốc từ năm 1945 đến nay là
+/A. tăng cường khối đại đoàn kết dân tộc.
+B. kiên quyết đấu tranh bằng biện pháp quân sự.
+C. gia nhập vào các khối liên minh quân sự.
+D. thiết lập quan hệ chiến lược với các nước.
+Câu 17. Nội dung nào sau đây phản ánh không đúng ý nghĩa lịch sử của các cuộc đấu tranh bảo vệ tổ quốc Việt Nam từ sau tháng 4 năm 1975 ?
+A. Làm thất bại ý đồ và hành động xâm lược, chống phá Việt Nam và các thế lực thù địch.
+B. Bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ quốc gia.
+C. Tạo điều kiện thuận lợi cho sự nghiệp xây dựng và bảo vệ Tổ quốc trong tương lai
+/D. Tạo điều kiện thuận lợi mở đầu công cuộc xây dựng chủ nghĩa xã hội ở Châu Á.
+Câu 18. Nội dung nào sau đây phản ánh không đúng ý nghĩa quốc tế của các cuộc đấu tranh bảo vệ Tổ quốc của nhân dân Việt Nam từ sau tháng 4 năm 1975 ?
+/A. Bảo vệ vững chắc độc lập, chủ quyền quốc gia.
+B. Góp phần bảo vệ nền hoà bình ở Đông Dương.
+C. Làm nghĩa vụ quốc tế đối với nhân dân Cam Pu Chia.
+D. Góp phần bảo vệ nền hoà bình ở khu vực Đông Nam Á.
+Câu 19. Nội dung nào sau đây không phải là bài học kinh nghiệm được rút ra từ các cuộc đấu tranh bảo vệ Tổ quốc từ năm 1945 đến nay?
+A. Củng cố, tăng cường khối đại đoàn kết dân tộc.
+B. Phát huy tinh thần yêu nước của nhân dân ta.
+C. Kết hợp sức mạnh dân tộc với sức mạnh thời đại.
+/D. Tận dụng nguồn lực hỗ trợ từ các nước xã hội chủ nghĩa.
+Câu 20.	Đâu không phải là nghệ thuật quân sự nổi bật trong cuộc chiến tranh bảo vệ Tổ quốc của nhân dân Việt Nam từ năm 1945 đến nay?
+A. Kết hợp chiến tranh du kích với chiến tranh chính quy.
+B. Đánh địch bằng ba mũi giáp công (chính trị, quân sự, binh vận).
+C. Phối hợp mặt trận chính diện và sau lưng địch.
+/D. Đánh chớp nhoáng, chinh phục từng gói nhỏ.
+Câu 1. Đảng Cộng sản Việt Nam tiến hành công cuộc đổi mới đất nước từ tháng 12/1986 trong bối cảnh
+A. Hệ thống xã hội chủ nghĩa thế giới hình thành.
+B. Mỹ đã phá thế bao vây, cấm vận với Việt Nam.
+C. Đất nước đang trên đà phát triển rất mạnh mẽ.
+/D. Liên Xô đang tiến hành công cuộc cải tổ.
+Câu 3. Nội dung cơ bản của đường lối đổi mới do Đảng Cộng sản Việt Nam đề ra trong giai đoạn 1986 - 1995 xác định trọng tâm là đổi mới về
+/A. kinh tế.	B. tư tưởng.	C. chính trị.	D. văn hóa.
+Câu 4. Nội dung nào dưới đây phản ánh không đúng về nội dung cơ bản của đường lối đổi mới do Đảng Cộng sản Việt Nam đề ra trong giai đoạn 1986 – 1995?
+A. Đổi mới đất nước không phải là thay đổi mục tiêu xã hội chủ nghĩa.
+B. Phát huy yếu tố con người và lấy phục vụ con người là mục đích cao nhất.
+/C. Chuyển đổi cơ chế quản lí kinh tế, cải cách hệ thống giá, chống lạm phát.
+D. Xây dựng Nhà nước pháp quyền Việt Nam của nhân dân, do nhân dân, vì nhân dân.
+Câu 5. Đại hội toàn quốc lần thứ VI của Đảng Cộng sản Việt Nam (12/1986), đã xác định nhiệm vụ trước mắt của kế hoạch 5 năm 1986 - 1990 là
+A. đổi mới toàn diện, đồng bộ nền kinh tế.        /B. thực hiện Ba chương trình kinh tế lớn.
+C. cơ sở và vật chất của chủ nghĩa xã hội.          D. đẩy mạnh công nghiệp hóa đất nước.
+Câu 6. Đại hội toàn quốc lần thứ VI (12/1986) đề ra đường lối đổi mới với nội dung phải
+A. thực hiện nhanh chóng.	B. bảo đảm chắc thắng lợi.
+C. thần tốc và táo bạo.   	/D. toàn diện và đồng bộ.
+Câu 7. Đại hội toàn quốc lần thứ VI của Đảng Cộng sản Việt Nam (12/1986) chủ trương đổi mới về chính trị là xây dựng Nhà nước
+/A. pháp quyền xã hội chủ nghĩa.	B. nền chuyên chính của tư sản.
+C. đại đoàn kết toàn thể dân tộc.	D. phân chia quyền lực rõ ràng.
+Câu 8. Đại hội đại biểu toàn quốc lần thứ VIII của Đảng Cộng sản Việt Nam đã xác định nội dung nào sau đây là quốc sách hàng đầu?
+A. Khoa học, giáo dục.	/B. Giáo dục và đào tạo.
+C. An ninh, quốc phòng.	D. Kinh tế và chính trị.
+Câu 9. Nhiệm vụ trung tâm của công cuộc Đổi mới ở Việt Nam trong giai đoạn 1996 – 2006 là
+A. tiến hành một cách toàn diện và đồng bộ trên các lĩnh vực kinh tế, chính trị.
+B. gắn tăng trưởng, phát triển kinh tế với thực hiện tiến bộ và công bằng xã hội.
+/C. đẩy mạnh công nghiệp hoá, hiện đại hoá và hội nhập kinh tế quốc tế.
+D. Chú trọng phát triển nền văn hoá tiên tiến, đậm đà bản sắc dân tộc.
+Câu 10. Đổi mới không phải là thay đổi mục tiêu chủ nghĩa xã hội mà phải
+A. làm cho chủ nghĩa xã hội ngày càng tốt đẹp hơn.
+/B. làm cho mục tiêu ấy được thực hiện có hiệu quả.
+C. làm cho mục tiêu đã đề ra nhanh chóng được thực hiện.
+D. làm cho mục tiêu đã đề ra phù hợp với thực tiễn đất nước.
+Câu 11. Một trong những mục tiêu của đường lối đổi mới ở Việt Nam được đề ra từ tháng 12 - 1986 là
+A. bước đầu khắc phục hậu quả chiến tranh.
+B. hoàn thiện cơ chế quản lý đất nước.
+/C. phát triển đất nước, đảm bảo đời sống nhân dân.
+D. hoàn thành công cuộc cải cách ruộng đất.
+Câu 12. Trong đường lối đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương hình thành cơ chế kinh tế
+/A. thị trường.	B. tập trung.	C. bao cấp.	D. kế hoạch hóa.
+Câu 13. Trong đường lối Đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương xóa bỏ cơ chế quản lí kinh tế
+A. thị trường tư bản chủ nghĩa.                      B. hàng hóa có sự quản lí của nhà nước.
+C. thị trường có sự quản lí của nhà nước.        /D. tập trung, quan liêu, bao cấp.
+
+Câu 14. Trong đường lối đổi mới đất nước (từ tháng 12/1986), Đảng Cộng sản Việt Nam chủ trương phát triển nền kinh tế hàng hóa nhiều thành phần theo định hướng
+A. kinh tế tập trung.	B. kinh tế thị trường.
+/C. xã hội chủ nghĩa.	D. phân phối theo lao động.
+Câu 15. Trong đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986), nội dung nào sau đây là một trong những chủ trương đổi mới về kinh tế?
+A. Bảo đảm quyền lực thuộc về nhân dân.
+B. Xây dựng nền dân chủ xã hội chủ nghĩa.
+/C. Phát triển kinh tế hàng hóa xã hội chủ nghĩa.
+D. Thực hiện chính sách đại đoàn kết dân tộc.
+Câu 16. Trong đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986), nội dung nào sau đây là một trong những chủ trương đổi mới về kinh tế?
+A. Xây dựng nền dân chủ xã hội chủ nghĩa.
+B. Bảo đảm quyền lực thuộc về nhân dân.
+/C. Hình thành cơ chế thị trường có sự quản lí của nhà nước.
+D. Thực hiện chính sách đại đoàn kết dân tộc.
+Câu 17. Đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986) có nội dung nào sau đây?
+A. Chỉ tập trung đổi mới về văn hóa.	       B. Chỉ đổi mới về tổ chức và tư tưởng.
+C. Chỉ tập trung đổi mới về chính trị.	       /D. Đổi mới kinh tế là trọng tâm.
+Câu 18. Đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986) có nội dung nào sau đây?
+A. Chỉ tập trung đổi mới về chính trị.            /B. Kiên định mục tiêu chủ nghĩa xã hội.
+C. Chỉ tập trung đổi mới về văn hóa.             D. Chỉ đổi mới về tổ chức và tư tưởng.
+Câu 19. Trong sự nghiệp đổi mới đất nước (từ năm 1986), Việt Nam có chủ trương nào sau đây?
+A. Phát triển kinh tế kế hoạch hóa tập trung.       B. Tập trung cải tạo công thương nghiệp.
+C. Xóa bỏ sự tồn tại của thị trường tự do.          /D. Mở rộng quan hệ kinh tế đối ngoại.
+Câu 20. Trong đường lối đổi mới đất nước (từ tháng 12-1986), về chính trị, Đảng Cộng sản Việt Nam chủ trương
+A. duy trì cơ chế quản lí kinh tế bao cấp.           B. duy trì cơ chế quản lý kinh tế tập trung.
+/C. xây dựng nền dân chủ xã hội chủ nghĩa.        D. chưa mở rộng quan hệ kinh tế đối ngoại.
+
+`
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
