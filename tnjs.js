@@ -91,6 +91,7 @@
       let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
       alert(prompt)
     }
+    var minutes, seconds, milliseconds
     function run() {
       const shuffleQ = document.getElementById("shuffleQ").checked, shuffleA = document.getElementById("shuffleA").checked
       const inputString = "\n"+document.getElementById("text").value
@@ -157,12 +158,13 @@
       var result = document.getElementById('result');
       var timer = document.getElementById('time');
       var startTime = Date.now();
+      
       function updateTime() {
         var currentTime = Date.now();
         var timeDiff = currentTime - startTime;
-        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        var milliseconds = Math.floor((timeDiff % 1000) / 10);
+        minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        milliseconds = Math.floor((timeDiff % 1000) / 10);
         minutes = (minutes < 10) ? "0" + minutes: minutes;
         seconds = (seconds < 10) ? "0" + seconds: seconds;
         milliseconds = (milliseconds < 10) ? "0" + milliseconds: milliseconds;
@@ -220,7 +222,7 @@
       });
       clearInterval(timerInterval);
       result.style.display = 'block';
-      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}`;
+      result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu\nNhận xét: ${feedback((score/amount*10).toFixed(2))}`;
       if ((score/amount)*10 >= 9) {
         result.className = 'correct';
       } else {
@@ -280,7 +282,93 @@
       },
         1000);
     }
+function feedback(score) {
+    if (score < 0 || score > 10) {
+        return "Điểm không hợp lệ. Vui lòng nhập điểm từ 0 đến 10.";
+    }
 
+    const feedbackRanges = [
+        // 10 điểm
+        { min: 10, max: 10, messages: [
+            "Xuất sắc! Nhưng hãy thử nhìn lại bài để kiểm tra xem bạn có thực sự nắm chắc kiến thức không.",
+            "Hoàn hảo! Nhưng đừng quên kiểm tra kỹ để đảm bảo bạn không bỏ sót bất kỳ chi tiết nào.",
+            "Điểm tối đa! Nhưng thử tự đặt câu hỏi và giải lại bài để củng cố kiến thức.",
+            "Thành công lớn, nhưng để duy trì phong độ, hãy ôn luyện bài này thêm một lần nữa.",
+            "Điểm tuyệt đối! Hãy thử thách bản thân với bài tập khó hơn để mở rộng kiến thức."
+        ]},
+        // 9.5 - 9.99 điểm
+        { min: 9.5, max: 9.99, messages: [
+            "Rất tuyệt vời! Nhưng có lẽ bạn bỏ lỡ một vài chi tiết nhỏ. Hãy làm lại bài và tìm ra chúng.",
+            "Điểm này rất cao, nhưng vẫn còn chỗ để cải thiện. Đừng quên xem lại các phần bạn cảm thấy chưa chắc.",
+            "Bạn gần như hoàn hảo, nhưng thử làm lại bài mà không nhìn tài liệu để kiểm tra sự tự tin của mình.",
+            "Rất tốt! Nhưng bạn cần thêm một chút tập trung để đạt điểm tối đa."
+        ]},
+        // 9 - 9.49 điểm
+        { min: 9, max: 9.49, messages: [
+            "Điểm cao! Tuy nhiên, bạn có thể cải thiện hơn bằng cách làm lại bài và xem có gì thiếu sót không.",
+            "Bạn đã làm rất tốt, nhưng hãy tự kiểm tra kiến thức bằng cách giải lại bài một lần nữa.",
+            "Điểm này rất ấn tượng! Hãy thử tìm hiểu thêm các cách giải khác để mở rộng tư duy.",
+            "Rất tốt, nhưng nếu làm bài với thời gian ngắn hơn, bạn có thể đạt kết quả cao hơn nữa."
+        ]},
+        // 8 - 8.99 điểm
+        { min: 8, max: 8.99, messages: [
+            "Điểm khá, nhưng hãy xem lại phần nào khiến bạn mất điểm và cải thiện nó.",
+            "Hãy dành thêm chút thời gian để làm lại bài, chắc chắn bạn sẽ đạt kết quả cao hơn.",
+            "Bạn đang làm tốt, nhưng đừng ngại thử thách bản thân để đạt mục tiêu cao hơn.",
+            "Điểm này tốt, nhưng hãy cố gắng giảm sai sót trong lần tiếp theo."
+        ]},
+        // 6.5 - 7.99 điểm
+        { min: 6.5, max: 7.99, messages: [
+            "Bạn đạt điểm khá, nhưng cần xem xét lại các lỗi dễ gặp để nâng cao thành tích.",
+            "Điểm này ổn, nhưng bạn hoàn toàn có thể làm tốt hơn nếu tập trung hơn.",
+            "Hãy thử làm bài lại lần nữa với cách tiếp cận khác, bạn sẽ thấy sự tiến bộ.",
+            "Bạn đang ở mức tốt, nhưng hãy cố gắng làm lại bài để nâng cao độ chính xác."
+        ]},
+        // 5 - 6.49 điểm
+        { min: 5, max: 6.49, messages: [
+            "Điểm trung bình, bạn cần làm lại bài và tập trung hơn vào các khái niệm chưa rõ.",
+            "Hãy xem đây là cơ hội để học hỏi và làm lại. Bạn chắc chắn sẽ tốt hơn.",
+            "Bạn đã có cố gắng, nhưng hãy dành thêm thời gian ôn lại những phần còn yếu.",
+            "Kết quả này chỉ ở mức tạm được. Cố gắng thêm để đạt mức cao hơn."
+        ]},
+        // 3 - 4.99 điểm
+        { min: 3, max: 4.99, messages: [
+            "Điểm này thấp, bạn cần nghiêm túc xem lại bài và tìm ra những lỗi sai cơ bản.",
+            "Hãy bắt đầu lại từ những phần cơ bản và tập trung hơn vào bài học.",
+            "Bạn đang gặp khó khăn. Hãy thử làm bài lại từ đầu.",
+            "Đừng nản lòng. Làm lại bài tập từ đầu sẽ giúp bạn tiến bộ hơn."
+        ]},
+        // 0 - 2.99 điểm
+        { min: 0, max: 2.99, messages: [
+
+        "Đã ngu còn xui!",
+        "Cười rung CPU",
+        " Điểm cao! Xin chúc mừng",
+        "Kết quả này đủ để gọi cấp cứu.",
+        "Bạn đang đứng dưới đáy đại dương rồi.",
+        "Phải có ý đồ gì đó, con người không thể ngu vậy được!",
+        "Thầy cô từ chối nhìn mặt",
+        "Không thể thấp hơn nữa!",
+        "Điểm số đến mức này là một tài năng hiếm có!",
+        "Gọi mục sư đi!",
+        "Hết cứu",
+        "Hết cứu",
+        "Hết cứu"
+       
+
+        ]}
+    ];
+
+    // Lựa chọn phạm vi phản hồi phù hợp
+    for (const range of feedbackRanges) {
+        if (score >= range.min && score <= range.max) {
+            const messages = range.messages;
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+    }
+
+    return "Điểm không hợp lệ.";
+}
 
 
 
