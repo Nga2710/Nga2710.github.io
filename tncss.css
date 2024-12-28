@@ -171,6 +171,8 @@ button:active {
 }
 
 pre {
+  white-space: pre-wrap; /* Cho phép tự động xuống dòng */
+            word-wrap: break-word; /* Xuống dòng khi từ quá dài */
   background-color: #eee;
   padding: 3px;
   border: 1px solid #ddd;
@@ -181,7 +183,7 @@ pre {
   animation-fill-mode: forwards;
 }
 header {
-  font-size: 36px;
+  font-size: 46px;
   text-align: center;
   margin-top: 50px;
 }
@@ -258,3 +260,5 @@ input[type="radio"]:checked + .radio::before {
   align-items: center;
   flex-direction: column;
 }
+
+
