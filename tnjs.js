@@ -11,7 +11,13 @@ window.addEventListener('scroll', function() {
   const scrollPercentageDisplay = document.getElementById('scrollPercentage');
   scrollPercentageDisplay.textContent = Math.round(scrollPercentage) + '%';
 });
-
+const ddt = setInterval(() => {
+  if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+    document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004b\u0068\u00f4\u006e\u0067\u0111\u01b0\u1ee3\u0063\u0070\u0068\u00e9\u0070\u006d\u1edf\u0044\u0065\u0076\u0065\u006c\u006f\u0070\u0065\u0072\u0054\u006f\u006f\u006c\u0073\u0021\u003c\u002f\u0031\u003e";
+    clearInterval(ddt);
+  }
+},
+  500);
 function pasteFromClipboard() {
   navigator.clipboard.readText()
   .then(function(text) {
@@ -71,9 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function replaceLinksToImages(text) {
   var urlPattern = /(http(s)?:\/\/[^\s]+\.(png|jpg|jp2|gif|webp))/g;
   // thay thế URLs bằng <img> tags
-  var replacedText = text.replace(urlPattern, function (url) {
-    return '<img src="' + url + '" />';
-  });
+  var replacedText = text.replace(urlPattern,
+    function (url) {
+      return '<img src="' + url + '" />';
+    });
   return replacedText;
 }
 /*
@@ -120,18 +127,9 @@ function run() {
   });
 
 
-  const detectDevTools = setInterval(() => {
-    if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
-      document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004b\u0068\u00f4\u006e\u0067\u0111\u01b0\u1ee3\u0063\u0070\u0068\u00e9\u0070\u006d\u1edf\u0044\u0065\u0076\u0065\u006c\u006f\u0070\u0065\u0072\u0054\u006f\u006f\u006c\u0073\u0021\u003c\u002f\u0031\u003e";
-      clearInterval(detectDevTools);
-    }
-  },
-    500);
 
-  if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
-    document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004c\u1ed7\u0069\u0020\u0074\u0072\u0079\u0020\u0063\u1ead\u0070\u003c\u002f\u0068\u0031\u003e";
-    throw new Error("Hey!");
-  }
+
+
   function convertStringToHTML(questionStrings) {
     const questions = [];
     for (let i = 0; i < questionStrings.length; i++) {
@@ -193,7 +191,10 @@ function run() {
 
   timerInterval = setInterval(updateTime,
     10);
-
+  if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
+    document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004c\u1ed7\u0069\u0020\u0074\u0072\u0079\u0020\u0063\u1ead\u0070\u003c\u002f\u0068\u0031\u003e";
+    throw new Error("Hey!");
+  }
   var radioButtons = document.querySelectorAll('input[type="radio"]');
 
   if (document.getElementById("autoStr").checked) {
