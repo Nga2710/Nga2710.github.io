@@ -11,13 +11,7 @@ window.addEventListener('scroll', function() {
   const scrollPercentageDisplay = document.getElementById('scrollPercentage');
   scrollPercentageDisplay.textContent = Math.round(scrollPercentage) + '%';
 });
-const ddt = setInterval(() => {
-  if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
-    document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004b\u0068\u00f4\u006e\u0067\u0111\u01b0\u1ee3\u0063\u0070\u0068\u00e9\u0070\u006d\u1edf\u0044\u0065\u0076\u0065\u006c\u006f\u0070\u0065\u0072\u0054\u006f\u006f\u006c\u0073\u0021\u003c\u002f\u0031\u003e";
-    clearInterval(ddt);
-  }
-},
-  500);
+
 function pasteFromClipboard() {
   navigator.clipboard.readText()
   .then(function(text) {
