@@ -92,11 +92,15 @@ function help() {
   let prompt = "Mẫu:\`\nCâu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4\n\`\n Lưu ý: \n+Nội dung câu hỏi nằm cùng một dòng\n+Các câu trả lời có thể xuống dòng hoặc không\n+Có thể gắn link hình ảnh vào"
   alert(prompt)
 }
+let calculateScore;
 var minutes, seconds, milliseconds
 function run() {
-  const shuffleQ = document.getElementById("shuffleQ").checked,
+
+    document.getElementById("start").classList.remove("hide")
+    document.getElementById("reload").classList.add("hide")
+  var shuffleQ = document.getElementById("shuffleQ").checked,
   shuffleA = document.getElementById("shuffleA").checked
-  const inputString = "\n"+document.getElementById("text").value
+  var inputString = "\n"+document.getElementById("text").value
   if (!inputString) return
   document.getElementById("inputStr").classList.add("hide")
   document.getElementById("main").classList.remove("hide")
@@ -113,7 +117,7 @@ function run() {
     }
     return array;
   }
-  
+
 
 
 
@@ -179,10 +183,11 @@ function run() {
 
   timerInterval = setInterval(updateTime,
     10);
+  /*
   if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
     document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004c\u1ed7\u0069\u0020\u0074\u0072\u0079\u0020\u0063\u1ead\u0070\u003c\u002f\u0068\u0031\u003e";
     throw new Error("Hey!");
-  }
+  }*/
   var radioButtons = document.querySelectorAll('input[type="radio"]');
 
   if (document.getElementById("autoStr").checked) {
@@ -200,83 +205,96 @@ function run() {
       });
     });
   }
+  var timerInterval, amount;
+  calculateScore = function() {
+    document.getElementById("start").classList.add("hide")
+    document.getElementById("reload").classList.remove("hide")
+    var score = 0;
+    var inputs = document.querySelectorAll('input[type="radio"]');
+    var result = document.getElementById('result');
+    var timer = document.getElementById('time');
+    inputs.forEach(function(input) {
+      if (input.checked && input.value === 'correct') {
+        score++;
+      }
+      if (input.value === 'correct') {
+        input.parentNode.style.color = "green"
+      } else
+        if (input.checked) {
+        input.parentNode.style.color = "red"
+      }
+    });
+    clearInterval(timerInterval);
+    result.style.display = 'block';
+    result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu\nNhận xét: ${feedback((score/amount*10).toFixed(2))}`;
+    if ((score/amount)*10 >= 9) {
+      result.className = 'correct';
+    } else {
+      result.className = 'incorrect';
+    }
+    /* var userInput = prompt("Nhập tên của bạn:");
+            if (userInput !== null) {
+                console.log("Bạn đã nhập: " + userInput);
+            } else {
+                console.log("Bạn đã hủy bỏ hộp thoại.");
+            }*/
+    var prevButton = document.getElementById('prevButton');
+    var nextButton = document.getElementById('nextButton');
+    var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
+    // Filter radio inputs without value "correct"
+    var filteredInputs = radioInputs.filter(function(input) {
+      return input.value == 'correct' && !input.checked;
+    });
+
+    var IAR = filteredInputs.map((value)=> "\nCâu "+questionStrings[Number(value.name.slice(1))]).join("")
+         var inputElement = document.getElementById('text');
+  inputElement.value = IAR
+    var maxIndex = filteredInputs.length-1
+    var currentIndex = 0
+    prevButton.addEventListener('click', function() {
+      currentIndex--;
+      if (currentIndex >= 0) {
+        scroll(filteredInputs[currentIndex])
+      } else {
+        scroll(filteredInputs[maxIndex])
+        currentIndex = maxIndex
+      }
+    });
+    nextButton.addEventListener('click',
+      function() {
+        console.log(currentIndex)
+        currentIndex++;
+        if (currentIndex <= maxIndex) {
+          scroll(filteredInputs[currentIndex])
+        } else {
+          scroll(filteredInputs[0])
+          currentIndex = 0
+        }
+      });
+    document.getElementById("floating-buttons").classList.remove("hide")
+    inputs.forEach(function(input) {
+      input.disabled = true
+    })
+  }
 }
 function change(element) {
   element.innerHTML = element.innerHTML == "✦" ? "✧": "✦"
   element.style.color = element.innerHTML == "✦" ? "#ffdd00": "black"
   //  element.style.color = element.innerHTML == "✦" ? "#ffff00": "black"
 }
+var IAR
 function reload() {
-  window.scrollTo(0, 0)
-  window.location.reload()
+  window.scrollTo(0,
+    0)
+    result.textContent = ""
+
+ // window.location.reload()
+   document.getElementById("inputStr").classList.remove("hide")
+  document.getElementById("main").classList.add("hide")
+  
+
 }
-var timerInterval, amount;
-function calculateScore() {
-  document.getElementById("start").classList.add("hide")
-  document.getElementById("reload").classList.remove("hide")
-  var score = 0;
-  var inputs = document.querySelectorAll('input[type="radio"]');
-  var result = document.getElementById('result');
-  var timer = document.getElementById('time');
-  inputs.forEach(function(input) {
-    if (input.checked && input.value === 'correct') {
-      score++;
-    }
-    if (input.value === 'correct') {
-      input.parentNode.style.color = "green"
-    } else
-      if (input.checked) {
-      input.parentNode.style.color = "red"
-    }
-  });
-  clearInterval(timerInterval);
-  result.style.display = 'block';
-  result.textContent = `Điểm của bạn: ${((score/amount)*10).toFixed(2)}/10\nSố câu đúng: ${score}\nSố câu sai: ${amount-score}\nTổng số câu: ${amount}\nThời gian TB: ${((Number(minutes)*60+Number(seconds))/amount).toFixed(2)}s/câu\nNhận xét: ${feedback((score/amount*10).toFixed(2))}`;
-  if ((score/amount)*10 >= 9) {
-    result.className = 'correct';
-  } else {
-    result.className = 'incorrect';
-  }
-  /* var userInput = prompt("Nhập tên của bạn:");
-            if (userInput !== null) {
-                console.log("Bạn đã nhập: " + userInput);
-            } else {
-                console.log("Bạn đã hủy bỏ hộp thoại.");
-            }*/
-  var prevButton = document.getElementById('prevButton');
-  var nextButton = document.getElementById('nextButton');
-  var radioInputs = Array.from(document.querySelectorAll('input[type="radio"]'));
-  // Filter radio inputs without value "correct"
-  var filteredInputs = radioInputs.filter(function(input) {
-    return input.value == 'correct' && !input.checked;
-  });
-  var maxIndex = filteredInputs.length-1
-  var currentIndex = 0
-  prevButton.addEventListener('click', function() {
-    currentIndex--;
-    if (currentIndex >= 0) {
-      scroll(filteredInputs[currentIndex])
-    } else {
-      scroll(filteredInputs[maxIndex])
-      currentIndex = maxIndex
-    }
-  });
-  nextButton.addEventListener('click',
-    function() {
-      console.log(currentIndex)
-      currentIndex++;
-      if (currentIndex <= maxIndex) {
-        scroll(filteredInputs[currentIndex])
-      } else {
-        scroll(filteredInputs[0])
-        currentIndex = 0
-      }
-    });
-  document.getElementById("floating-buttons").classList.remove("hide")
-  inputs.forEach(function(input) {
-    input.disabled = true
-  })
-}
+
 function scroll(element, h = true) {
   (h ? element.parentNode: element).scrollIntoView({
     behavior: "smooth",

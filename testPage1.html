@@ -10,10 +10,10 @@
 <body>
 
   <div id="inputStr" class="">
-
     <header>
       Nạp Trắc Nghiệm
     </header>
+
     <div class="help" onclick="help()">
       ?
     </div>
@@ -27,7 +27,9 @@
       <div>
         <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
         <br>
-        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <input checked id="shuffleA" type="checkbox" style="">
+
+        <label for="shuffleA">Xáo trộn câu trả lời</label>
         <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
         <br>
       </div>
@@ -51,13 +53,15 @@
       </div>
       <pre id="result"></pre>
       <button id="start" onclick="calculateScore()">Nộp bài</button>
-      <button id="reload" style="" class="hide" onclick="reload()">Làm lại</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
       <div class="floating-buttons hide" id="floating-buttons">
         <button id="prevButton">Prev</button><br>
         <button id="nextButton">Next</button>
       </div>
     </div>
   </div>
+  <br>
+      <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
   <script>
     var inputElement = document.getElementById('text');
     inputElement.value = `Câu 1: 1+1=?\nA. 1 /B. 2 C. 3 D. 4\nCâu 2: 1+2=?\nA. 1 B. 2 /C. 3 D. 4
