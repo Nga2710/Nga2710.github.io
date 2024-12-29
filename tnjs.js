@@ -113,13 +113,7 @@ function run() {
     }
     return array;
   }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) || (e.ctrlKey && e.key === 'U')) {
-      e.preventDefault();
-      alert("Không được phép mở Developer Tools!");
-    }
-  });
-
+  
 
 
 
