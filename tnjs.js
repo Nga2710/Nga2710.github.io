@@ -507,8 +507,8 @@ function feedback(score) {
   return "Điểm không hợp lệ.";
 }
 document.addEventListener("DOMContentLoaded", async function () {
-
-    const hashedAccessCode = "b1c2d3b041c13e59fa944a97b65b23dcdfb9f0271d073c3172e3ab5ba91c8331";
+ 
+    const hashedAccessCode = "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5";
 
 
     async function hashCode(input) {
@@ -526,14 +526,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     overlay.style.left = "0";
     overlay.style.width = "100%";
     overlay.style.height = "100%";
-    overlay.style.background = "rgba(0, 0, 0, 0.8)";
+    overlay.style.background = "rgba(0, 128, 0, 0.8)";
     overlay.style.display = "flex";
     overlay.style.justifyContent = "center";
     overlay.style.alignItems = "center";
     overlay.style.zIndex = "1000";
 
     const modal = document.createElement("div");
-    modal.style.background = "#fff";
+    modal.style.background = "#eaffea";
     modal.style.borderRadius = "10px";
     modal.style.padding = "20px";
     modal.style.textAlign = "center";
@@ -543,21 +543,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     const title = document.createElement("h2");
     title.textContent = "Nhập mã truy cập";
     title.style.marginBottom = "20px";
-    title.style.color = "#333";
+    title.style.color = "#006400";
 
     const input = document.createElement("input");
     input.type = "password";
     input.placeholder = "Nhập mã truy cập...";
     input.style.padding = "10px";
-    input.style.border = "1px solid #ccc";
+    input.style.border = "1px solid #008000";
     input.style.borderRadius = "5px";
-    input.style.marginBottom = "20px";
+    input.style.marginBottom = "10px";
     input.style.width = "80%";
+    input.style.outline = "none";
+
+    const message = document.createElement("div");
+    message.textContent = "";
+    message.style.color = "#ff0000";
+    message.style.marginTop = "10px";
+    message.style.height = "20px";
 
     const button = document.createElement("button");
     button.textContent = "Xác nhận";
     button.style.padding = "10px 20px";
-    button.style.background = "#007bff";
+    button.style.background = "#32cd32";
     button.style.color = "#fff";
     button.style.border = "none";
     button.style.borderRadius = "5px";
@@ -565,11 +572,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     button.style.transition = "background 0.3s";
 
     button.addEventListener("mouseenter", function () {
-        button.style.background = "#0056b3";
+        button.style.background = "#228b22";
     });
 
     button.addEventListener("mouseleave", function () {
-        button.style.background = "#007bff";
+        button.style.background = "#32cd32";
     });
 
     button.addEventListener("click", async function () {
@@ -577,19 +584,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (enteredHash === hashedAccessCode) {
             alert("Mã truy cập chính xác. Chào mừng bạn!");
             overlay.remove();
+        } else if (input.value.toLowerCase() === "ngadeptrai") {
+            message.textContent = "Cảm ơn nhưng mã sai rồi 👉👈";
         } else {
-            alert("Mã truy cập không đúng. Vui lòng thử lại.");
-            input.value = "";
+            message.textContent = "Mã truy cập không đúng. Vui lòng thử lại.";
         }
+        input.value = ""; // Xóa input sau khi nhập
     });
 
     modal.appendChild(title);
     modal.appendChild(input);
     modal.appendChild(button);
+    modal.appendChild(message);
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
-
+    // CSS cho hiệu ứng mờ dần
     const style = document.createElement("style");
     style.textContent = `
         @keyframes fadeIn {
