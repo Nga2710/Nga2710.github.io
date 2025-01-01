@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Khu vực có mưa nhiều nhất vào thời kì đầu mùa hạ ở nước ta là
+A. Bắc Trung Bộ và Tây Bắc.
+B. Đồng bằng sông Hồng và Tây Bắc.
+/C. Tây Nguyên và đồng bằng Nam Bộ.
+D. Bắc Trung Bộ và Nam Trung Bộ.
+Câu 2. Khu vực chịu ảnh hưởng mạnh nhất của gió phơn Tây Nam là
+A. Tây Bắc.
+B. Đông Bắc.
+C. Đồng bằng sông Hồng.
+/D. Bắc Trung Bộ.
+Câu 3. Khi hậu miền Nam Trung Bộ và Nam Bộ có đặc điểm nào sau đây?
+A. Nóng, ẩm quanh năm.
+/B. Cận xích đạo gió mùa.
+C. Tính chất ôn hòa.
+D. Khô hạn quanh năm.
+Câu 4. Thành phần loài chiếm ưu thế ở phần lãnh thổ phía Bắc nước ta là
+A. cây lá kim và thủ có lông dày.
+B. cây chịu hạn, rụng lá theo mùal
+C. động thực vật cận nhiệt đới.
+/D. động vật và thực vật nhiệt đới.
+Câu 5. Thiên nhiên vùng núi Đông Bắc nước ta có đặc điểm nào sau đây?
+A. Cảnh quan cận xích đạo gió mùa.
+B. Cảnh quan nhiệt đới nóng quanh năm.
+/C. Mang sắc thái cận nhiệt đới gió mùa.
+D. Cảnh quan giống như vùng ôn đới.
+Cầu 6. Đặc trưng của khí hậu miền Bắc và Đông Bắc Bắc Bộ là
+A. mùa mưa lùi dần về mùa thu - đông.
+B. gió phơn Tây Nam hoạt động mạnh
+/C. chịu ảnh hưởng của gió mùa Đông Bắc.
+D. phân chia hai mùa mưa, khô sâu sắc.
+
+- Câu 7. Quốc gia nào sau đây không có chung đường biên giới với Việt Nam?
+/A. Mi-an-ma
+B. Cam-pu-chia.
+C. Lào
+D. Trung Quốc.
+Câu 8. Người lao động nước ta có nhiều kinh nghiệm sản xuất nhất trong lĩnh vực
+A. công nghiệp
+B. thương mại.
+C. du lịch.
+/D. nông nghiệp.
+Câu 9. Nguyên nhân chủ yếu nào sau đây làm cho thành phần kinh tế Nhà nước giữ vai trò chủ đạo trong nền kinh tế nước ta hiện nay?
+A. Chiếm tỉ trọng cao nhất trong cơ cấu GDP
+B. Chi phối tất cả các thành phần kinh tế khác.
+/C. Nắm giữ các ngành và lĩnh vực kinh tế then chốt.
+D. Số lượng doanh nghiệp thành lập mới nhiều nhất.
+Câu 10. Tỉ trọng giá trị sản xuất cây công nghiệp trong cơ cấu giá trị sản xuất ngành trồng trọt của nước ta có xu hướng tăng do
+/A. mang lại hiệu quả kinh tế cao.
+B. dân cư có truyền thống sản xuất.
+C. cây công nghiệp có tác dụng trong việc bảo vệ môi trường.
+D. có nhiều điều kiện thuận lợi để phát triển cây công nghiệp.
+Câu 11. Vùng nào sau đây có sản lượng thủy sản nuôi trồng lớn nhất nước ta?
+A. Duyên hải Nam Trung Bộ.
+B. Đông Nam Bộ.
+C. Đồng bằng sông Hồng.
+/D. Đồng bằng sông Cửu Long.
+Câu 12. Khó khăn lớn nhất về tự nhiên đối với phát triển ngành thủy sản nước ta là
+/A. bão
+B. lũ lụt.
+C. hạn hán.
+D. sạt lở bờ biển
+Câu 13. Nguyên nhân chủ yếu làm cho diện tích rừng tự nhiên nước ta suy giảm nhanh là
+A. biến đổi khí hậu.
+B. rừng trồng ít.
+/C. khai thác quá mức.
+D. chiến tranh.
+Câu 14. Biểu hiện của sự suy thoái tài nguyên đất ở khu vực đồi núi là
+A. nhiễm mặn.
+B. nhiễm phèn.
+C. glây hóa.
+/D. xói mòn.
+Câu 15. Nguyên nhân về mặt tự nhiên làm suy giảm tài nguyên sinh vật ở nước ta là
+A. phát triển nông nghiệp.
+/B. biến đổi khí hậu
+C. chiến tranh tàn phá.
+D. sân bắt động vật.
+Câu 16. Nguyên nhân chủ yếu dẫn tới sự ô nhiễm môi trường nước là
+/A. chất thải, nước thải chưa được xử lí.
+B. sự phát triển đa dạng của các làng nghề.
+C. sự phát triển nhanh của công nghiệp.
+D. dân số đông và gia tăng nhanh chóng.
+Câu 17. Phát biểu nào sau đây đúng về tài nguyên rừng nước ta hiện nay?
+/A. Trong rừng có nhiều gỗ và lâm sản quý.
+B. Diện tích rừng giàu được phục hồi nhanh.
+C. Tỉ lệ che phủ rừng giảm sút nhanh chóng.
+D. Tài nguyên rừng phân bố đều khắp các vùng.
+Câu 18. Giá trị sản phẩm thủy sản nuôi của nước ta hiện nay còn chưa cao, chủ yếu do
+A. đánh bắt gần bờ vẫn còn là chủ yếu.
+/B. công nghiệp chế biến còn hạn chế.
+C. sử dụng nhiều của thiên tai.
+D. nguồn lợi thủy sản bị suy giảm.
+Câu 19. Sản lượng thủy sản nuôi trồng tăng nhanh hơn sản lượng khai thác chủ yếu là do
+/A. chủ động được về sản lượng và chất lượng để phục vụ thị trường.
+B. khắc phục được dịch bệnh và Nhà nước có nhiều yêu cầu.
+C. diện tích mặt nước nuôi trồng tăng lên và được Nhà nước đầu tư.
+D. cải thiện kỹ thuật nuôi trồng, khắc phục dịch bệnh và môi trường.
+Câu 20. Vùng đồng bằng sông Hồng và đồng bằng sông Cửu Long có nền nông nghiệp phát triển nhất cả nước là do
+A. các giống vật nuôi địa phương có giá trị kinh tế cao.
+/B. nguồn nước ăn phong phú, thị trường tiêu thụ lớn.
+C. lực lượng lao động đông đảo, có nhiều kinh nghiệm.
+D. điều kiện tự nhiên thuận lợi, giống vật nuôi tốt.
+Câu 21. Nhân tố quan trọng nhất thúc đẩy sự hình thành các vùng chuyên canh ở nước ta là
+A. lực lượng lao động.
+B. khoa học - kỹ thuật.
+C. tập quán sản xuất.
+/D. thị trường tiêu thụ.
+Câu 22. Vùng sau đây có tỉ trọng giá trị sản xuất công nghiệp lớn nhất ở nước ta hiện nay?
+A. Đồng bằng sông Hồng.
+B. Duyên hải Nam Trung Bộ.
+/C. Đồng Nam Bộ.
+D. Đồng bằng sông Cửu Long.
+Câu 23. Vùng nông nghiệp nào sau đây có trình độ thâm canh cây công nghiệp cao nhất?
+A. Đồng bằng sông Hồng.
+B. Bắc Trung Bộ.
+/C. Đông Nam Bộ.
+D. Trung du và miền núi Bắc Bộ.
+Câu 24. Khó khăn lớn nhất trong việc sử dụng đất ở cực nam của vùng nông nghiệp Duyên hải Nam Trung Bộ là
+A. rét đậm.
+/B. hạn hán.
+C. ngập lụt.
+D. trượt lở đất.
+Câu 25. Hình thức sản xuất chủ yếu nào sau đây đưa nông nghiệp nước ta lên nền sản xuất hàng hóa?
+A. Hợp tác xã.
+B. Nông trường.
+C. Hộ gia đình.
+/D. Trang trại.
+Câu 26. Đặc điểm nào sau đây không đúng với điều kiện sinh thái nông nghiệp ở vùng Duyên hải Nam Trung Bộ?
+A. Thuận lợi cho nuôi trồng thủy sản.
+/B. Thường có nạn cát bay, gió Lào.
+C. Đồng bằng hẹp, nhiều mỏ sắt.
+D. Bị hạn hán vào mùa khô.
+Câu 27. Vùng nông nghiệp Đông Nam Bộ không có hướng chuyên môn hóa nào sau đây?
+/A. Cây ăn quả ôn đới.
+B. Chăn nuôi bò sữa.
+C. Nuôi trồng thủy sản.
+D. Cây công nghiệp
+Câu 28. Cơ cấu sản xuất công nghiệp của nước ta đang chuyển dịch theo hướng nào sau đây?
+/A. Tăng tỉ trọng công nghiệp chế biến.
+B. Tăng tỉ trọng công nghiệp khai thác.
+C. Tăng tỉ trọng của sản phẩm chất lượng thấp.
+D. Giảm tỉ trọng của các sản phẩm cao cấp.
+Câu 29. Nhà nước chú trọng đánh bắt xa bờ không phải vì
+A. nguồn lợi thủy sản ngày càng cạn kiệt.
+B. ô nhiễm môi trường ngày càng trầm trọng.
+C. nâng cao hiệu quả kinh tế cho ngư dân.
+/D. có nhiều phương tiện đánh bắt hiện đại.
+Câu 30. Nguyên nhân chủ yếu làm cho sản lượng khai thác hải sản ở nước ta tăng nhanh trong thời gian gần đây là
+A. thị trường tiêu thụ không ngừng mở rộng.
+B. phát triển công nghiệp chế biến.
+/C. ngư dân có nhiều kinh nghiệm.
+D. có nhiều chính sách khuyến ngư.
+Câu 31. Khó khăn nào sau đây là lớn nhất làm gián đoạn thời gian khai thác hải sản ở nước ta?
+A. Nguồn lợi thủy sản bị suy giảm.
+B. Địa hình bờ biển rất phức tạp.
+C. Có nhiều bão và gió mùa Đông Bắc.
+/D. Tàu thuyền không trang bị hiện đại.
+Câu 32. Hiện tượng lớn nhất trong cơ cấu sản lượng điện của nước ta hiện nay là
+A. thủy điện.
+B. điện gió.
+C. điện mặt trời.
+/D. nhiệt điện.
+Câu 33. Sản phẩm nào sau đây không thuộc nhóm các nguồn lợi thủy sản?
+/A. Tôm hùm.
+B. Cá ngừ.
+C. Gạo, ngô.
+D. Đường mía.
+Câu 34. Giải pháp nào sau đây có thể đẩy mạnh việc phát triển khai thác dầu khí ở nước ta?
+A. Tăng cường liên doanh với nước ngoài.
+B. Phát triển mạnh công nghiệp hóa dầu.
+/C. Lịch sử nguồn dầu khí trong trầm tích.
+D. Nâng cao đời sống của người lao động.
+Câu 35. Ngành công nghiệp mũi nhọn mang lại hiệu quả cao về mặt xã hội thể hiện qua việc
+A. tích lũy vốn cho sự phát triển công nghiệp hóa, hiện đại hóa.
+B. phục vụ sự nghiệp công nghiệp hóa, hiện đại hóa và phát triển dịch vụ.
+C. góp phần đẩy mạnh tốc độ tăng trưởng các ngành kinh tế trong cả nước.
+/D. phục vụ đời sống nhân dân, nâng cao chất lượng lao động, tạo việc làm.
+Câu 36. Nội dung nào sau đây không phải là kết quả trực tiếp của việc đầu tư theo chiều sâu, đổi mới trang thiết bị vào công nghệ trong công nghiệp?
+A. Hạ giá thành sản phẩm.
+B. Tăng năng suất lao động.
+/C. Đa dạng hóa sản phẩm.
+D. Nâng cao chất lượng.
+Câu 37. Đồng bằng sông Hồng trở thành vùng dẫn đầu cả nước về hoạt động công nghiệp chủ yếu do
+A. Có mức độ tập trung công nghiệp cao nhất nước, thừa dân.
+B. Gần với nước ngoài và nguồn tài nguyên thiên nhiên, vốn lớn.
+C. Khai thác triệt để các lợi thế tài nguyên thiên nhiên, lao động.
+/D. Dân số đông, lao động dồi dào, trình độ tay nghề cao, vốn lớn.
+Câu 38. Yếu tố nào sau đây tác động trực tiếp đến việc nâng cao chất lượng sản phẩm công nghiệp nước ta?
+/A. Đầu tư theo chiều sâu, đổi mới trang thiết bị và công nghệ.
+B. Tập trung vào phát triển nhiều ngành công nghiệp.
+C. Gắn với yêu cầu của thị trường tiêu thụ trong và ngoài nước.
+D. Đào tạo và nâng cao tay nghề cho người lao động.
+Câu 39. Nước ta xây dựng các khu công nghiệp chủ yếu với mục đích
+A. sản xuất để phục vụ tiêu dùng.
+/B. thu hút vốn đầu tư nước ngoài.
+C. đẩy mạnh sự phân hóa lãnh thổ công nghiệp.
+D. tạo sự hợp tác giữa các ngành công nghiệp.
+Câu 40. Biểu hiện nào dưới đây cho thấy Đông Nam Bộ là nơi có mức độ tập trung công nghiệp cao bậc nhất cả nước?
+A. Tỉ trọng giá trị công nghiệp hàng đầu cả nước.
+B. Các trung tâm công nghiệp quy mô lớn nhất.
+/C. Tập trung nhiều trung tâm công nghiệp nhất.
+D. Những trung tâm công nghiệp
+    `
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
