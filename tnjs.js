@@ -506,3 +506,96 @@ function feedback(score) {
 
   return "Điểm không hợp lệ.";
 }
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const hashedAccessCode = "b1c2d3b041c13e59fa944a97b65b23dcdfb9f0271d073c3172e3ab5ba91c8331";
+
+
+    async function hashCode(input) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(input);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0, 0, 0, 0.8)";
+    overlay.style.display = "flex";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.zIndex = "1000";
+
+    const modal = document.createElement("div");
+    modal.style.background = "#fff";
+    modal.style.borderRadius = "10px";
+    modal.style.padding = "20px";
+    modal.style.textAlign = "center";
+    modal.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    modal.style.animation = "fadeIn 0.5s ease";
+
+    const title = document.createElement("h2");
+    title.textContent = "Nhập mã truy cập";
+    title.style.marginBottom = "20px";
+    title.style.color = "#333";
+
+    const input = document.createElement("input");
+    input.type = "password";
+    input.placeholder = "Nhập mã truy cập...";
+    input.style.padding = "10px";
+    input.style.border = "1px solid #ccc";
+    input.style.borderRadius = "5px";
+    input.style.marginBottom = "20px";
+    input.style.width = "80%";
+
+    const button = document.createElement("button");
+    button.textContent = "Xác nhận";
+    button.style.padding = "10px 20px";
+    button.style.background = "#007bff";
+    button.style.color = "#fff";
+    button.style.border = "none";
+    button.style.borderRadius = "5px";
+    button.style.cursor = "pointer";
+    button.style.transition = "background 0.3s";
+
+    button.addEventListener("mouseenter", function () {
+        button.style.background = "#0056b3";
+    });
+
+    button.addEventListener("mouseleave", function () {
+        button.style.background = "#007bff";
+    });
+
+    button.addEventListener("click", async function () {
+        const enteredHash = await hashCode(input.value);
+        if (enteredHash === hashedAccessCode) {
+            alert("Mã truy cập chính xác. Chào mừng bạn!");
+            overlay.remove();
+        } else {
+            alert("Mã truy cập không đúng. Vui lòng thử lại.");
+            input.value = "";
+        }
+    });
+
+    modal.appendChild(title);
+    modal.appendChild(input);
+    modal.appendChild(button);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+
+    const style = document.createElement("style");
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+});
