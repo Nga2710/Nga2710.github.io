@@ -83,7 +83,9 @@ async function findBestMove(cboard, depth, color = false) {
   let validMoves = await glmove(color,
     await s(cboard))
   let workers = []
+  let completedWorker = 0
   // Tạo một worker cho mỗi phần tử trong mảng
+  p("0%")
   for (let i = 0; i < validMoves.length; i++) {
     var worker = new Worker('worker.js');
     workers.push(worker);
@@ -104,6 +106,8 @@ async function findBestMove(cboard, depth, color = false) {
       console.error(e.message, e.lineno)
     }
   }
+
+
   // Xử lý kết quả trả về từ các worker
   let scores = await Promise.all(
     workers.map(function(worker) {
@@ -111,8 +115,10 @@ async function findBestMove(cboard, depth, color = false) {
         worker.onmessage = function(event) {
           var result = event.data;
           cal += result[1]
-
+completedWorker++
+p((completedWorker/workers.length*100).toFixed(1)+"%")
           resolve(result[0]);
+          
         };
       });
     })
@@ -197,7 +203,7 @@ var nboard = {
       AIPiece[0],
       AIPiece[0],
       AIPiece[0],
-      AIPiece[0]],
+    AIPiece[0]],
     [" ",
       " ",
       " ",
@@ -279,6 +285,7 @@ for (let c = 0; c < 4; c++) {
   const cell2 = row.insertCell(c)
   cell2.className = c % 2 == 0 ? "white": "black"
   cell2.innerHTML = playerPiece[c+1]
+  cell2.classList.add("td")
   cell2.addEventListener("click", selectPiecePP)
 }
 async function promotePiece() {
