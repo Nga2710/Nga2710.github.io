@@ -72,7 +72,7 @@ async function updateBoard(cboard) {
     if (!turn) {
       AImove(await s(dboard), false)
     } else {
-   //   AImove(await s(dboard), true)
+      AImove(await s(dboard), true)
     }
   },
     1)
