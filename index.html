@@ -968,17 +968,19 @@
       toastWait = false;
       toastStyle.style.transform = 'translateX(300px)';
     }
-    window.addEventListener('scroll', function() {
+    revealsPost()
+    function revealsPost() {
             const reveals = document.querySelectorAll('.post');
             for (let i = 0; i < reveals.length; i++) {
                 const windowHeight = window.innerHeight;
                 const revealTop = reveals[i].getBoundingClientRect().top;
-                const revealPoint = 100;
+                const revealPoint = -100;
                 if (revealTop < windowHeight - revealPoint) {
                     reveals[i].classList.add('active');
                 }
             }
-        });
+        }
+    window.addEventListener('scroll', revealsPost);
   </script>
 </body>
 </html>
