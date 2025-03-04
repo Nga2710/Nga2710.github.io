@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+
+</head>
+<body>
+
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Trung du và miền núi Bắc Bộ gồm bao nhiêu tỉnh?
+A. 5.	B. 10.	/C. 14.	D. 15
+Câu 2. Cây công nghiệp quan trọng nhất của Trung du và miền núi Bắc Bộ là
+A. Thuốc lá.	B. Cao su.	C. Cà phê.	/D. Chè.
+Câu 3. Vùng có thế mạnh về tài nguyên khoáng sản và thủy điện bậc nhất nước ta là
+A. Tây Nguyên.                                     B. Bắc Trung Bộ.
+/C. Trung du và miền núi Bắc Bộ.              D. Duyên hải Nam Trung Bộ.
+Câu 4. Thế mạnh về nông nghiệp của Trung Du và miền núi Bắc Bộ là
+A. cây lương thực, chăn nuôi gia xúc lớn.                   /B. cây công nghiệp lâu năm, chăn nuôi gia súc lớn.
+C. chăn nuôi gia cầm, cây công nghiệp lâu năm.       D. cây công nghiệp lâu năm, cây lương thực.
+Câu 5. Thế mạnh nào sau đây không phải của Trung du và miền núi Bắc Bộ?
+/A. Phát triển các ngành kinh tế biển và đảo.           B. Phát triển chăn nuôi trâu, bò, ngựa và lợn.
+C. Khai thác chế biến khoáng sản, thủy điện.            D. Trồng cây công nghiệp lâu năm cận nhiệt.
+Câu 6. Trung du và miền núi Bắc Bộ có nguồn thủy năng lớn là do
+A. nhiều sông ngòi, mưa nhiều.	B. đồi núi cao, có mưa phùn.
+C. địa hình dốc, mưa theo mùa.	/D. địa hình dốc và có lưu lượng nước lớn.
+Câu 7. Trung du và miền núi Bắc Bộ có điều kiện thuận lợi phát triển ngành công nghiệp khai khoáng do
+/A. nguồn năng lượng và khoáng sản dồi dào.	B. nguồn thủy sản và lâm sản rất lớn.
+C. nguồn lương thực, thực phẩm phong phú.	D. sản phẩm cây công nghiệp đa dạng.
+Câu 8. Thế mạnh để trồng được cây cận nhiệt và ôn đới của Trung du và miền núi Bắc Bộ là
+A. có mưa phùn cuối mùa đông.                 B. có lao động nhiều kinh nghiệm.
+/C. có khí hậu cận nhiệt đới.                       D. có diện tích đất feralit rộng.
+Câu 9. Khi khai thác thế mạnh về khoáng sản, vùng Trung du và miền núi Bắc Bộ cần phải đặc biệt chú ý tới vấn đề nào sau đây?
+A. Ứng dụng khoa học - công nghệ trong khai thác.        B. Hợp tác thu hút vốn đầu tư trong và ngoài nước.
+/C. Ô nhiểm môi trường và suy giảm diện tích rừng.        D. Nâng cao trình độ chuyên môn cho người lao động.
+Câu 10. Ở vùng Trung du và miền núi Bắc Bộ, trâu được nuôi nhiều hơn bò là do
+/A. khí hậu lạnh và ẩm. 	B. truyền thống chăn nuôi trâu lâu đời.
+C. nhu cầu lấy sức kéo lớn.				D. có các đồng cỏ rộng lớn.
+Câu 11. Thế mạnh nào sau đây không phải của Trung du và miền núi Bắc Bộ?
+A. Trồng cây có nguồn gốc cận nhiệt và ôn đới.      B. Khai thác khoáng sản.
+/C. Phát triển kinh tế biển.         D. Chăn nuôi gia súc lớn
+Câu 12. Sản xuất nông nghiệp hàng hóa ở Trung du và miền núi Bắc Bộ còn gặp nhiều khó khăn chủ yếu do
+A. thời tiết diễn biến thất thường.	B. thiếu nguồn nước tưới nhất là vào mùa khô.
+C. thiếu quy hoạch, chưa mở rộng được thị trường.	/D. thiếu cơ sở chế biến nông sản quy mô lớn.
+Câu 13. Ý nghĩa chủ yếu của phát triển du lịch ở Trung du và miền núi Bắc Bộ là
+A. tăng giá trị tài nguyên, thay đổi phân bố sản xuất, đa dạng hóa kinh tế.
+B. đẩy mạnh thay đổi cơ cấu kinh tế, tăng hội nhập, nâng vị thế của vùng.
+C. khai thác thế mạnh, tạo ra cảnh quan văn hóa mới, giải quyết việc làm.
+/D. phát huy tiềm năng, tăng thu nhập vùng, phát triển bền vững.
+Câu 14. ĐK tự nhiên nào là thế mạnh để phát triển kinh tế  của vùng Trung du và miền núi Bắc Bộ.
+A. khí hậu có mùa đông lạnh phân hóa theo rõ rệt theo đai cao.
+B. có các cao nguyên xếp tầng với bề mặt khá bằng phẳng.
+C. có trữ lượng than lớn nhất cả nước với dây truyền sản xuất hiện đại.
+/D. có diện tích và độ che phủ rừng cao nhất cả nước.
+Câu 15. Giải pháp chủ yếu để mạnh sản xuất cây ăn quả của vùng Trung du và miền núi Bắc Bộ là
+A. thay đổi cơ cấu cây trồng, hình thành vùng chuyên canh.
+B. đào tạo hỗ trợ việc làm, hạn chế nạn du canh du cư.
+/C. tập trung đầu tư, phát triển chế biến, mở rộng thị trường.
+D. tăng cường cơ sở hạ tầng và cơ sở vật chất kỹ thuật.
+Câu 16. Địa hình chủ yếu là đồi núi, khí hậu nhiệt đới ẩm gió mùa có mùa đông lạnh nên Trung du và miền núi Bắc Bộ có thể trồng các cây có nguồn gốc:
+A. Xích đạo.    B. Cận xích đạo.         C. Nhiệt đới.          /D. Cận nhiệt và ôn đới.
+Câu 17. Các sông có độ dốc lớn, nhiều thác, ghềnh nên thuận lợi để Trung du và miền núi Bắc Bộ phát triển:
+A. giao thông đường thủy.	/B. thủy điện       C. nuôi trồng thủy sản.	D. khai thác thủy sản.
+Câu 1. Loại đất nào sau đây có diện tích lớn nhất vùng ĐBSH?
+/A. Đất phù sa màu mỡ.				B. Đất nhiễm phèn.
+C. Đất nhiễm mặn.					D. Đất phù sa pha cát.
+Câu 2. Dân số vùng ĐBSH có đặc điểm nào sau đây?
+/A. Dân số đông, tăng liên tục.			B. Dân số trung bình, biến động mạnh.
+C. Dân số đông, giảm mạnh.			D. Dân số ít, biến động mạnh.
+Câu 3. Đặc điểm nào sau đây đúng với vị trí địa lý của vùng Đồng bằng sông Hồng?
+A. Có biên giới kéo dài với Trung Quốc, Lào.
+B. Giáp với Trung Quốc, Lào, Cam-pu-chia và giáp biển.
+/C. Nằm ở vị trí trung tâm Bắc Bộ, giáp với 2 vùng kinh tế và giáp biển.
+D. Giáp với 3 vùng kinh tế và thông ra Biển Đông.
+Câu 4. Đặc điểm nào sau đây đúng với dân số của vùng Đồng bằng sông Hồng?
+/A. Là vùng đông dân, mật độ dân số cao nhất cả nước.
+B. Là vùng đông dân, mật độ dân số đứng thứ hai cả nước.
+C. Là vùng có mật độ dân số cao gấp hai lần mức trung bình cả nước.
+D. Là vùng chiếm tới trên 30 % dân số cả nước.
+Câu 5. Đồng bằng sông Hồng cần phải chuyển dịch cơ cấu kinh tế theo ngành, nguyên nhân chủ yếu là do
+A. đảm nhận vai trò chủ yếu trong xuất khẩu hàng hóa, nguồn vốn lớn.
+/B. phát huy thế mạnh, khắc phục hạn chế và nâng cao vị thế của vùng.
+C. yêu cầu của công cuộc đổi mới, mật độ dân số cao, vốn đầu tư lớn.
+D. do lực lượng lao động đông đảo và tiếp giáp nhiều vùng kinh tế.
+Câu 6. Đặc điểm nào sau đây đúng với tài nguyên khoáng sản ở vùng Đồng bằng sông Hồng?
+A. Tập trung nhiều loại khoáng sản nhất cả nước.
+B. Có tiềm năng lớn về than, dầu mỏ, khí tự nhiên, a-pa-tit.
+C. Nghèo khoáng sản, chủ yếu chỉ có than nâu.
+/D. Có tiềm năng lớn về than, đá vôi, sét, cao lanh.
+Câu 7. Thế mạnh về tự nhiên nào sau đây tạo cho ĐBSH có khả năng phát triển mạnh cây vụ đông?
+/A. Có một mùa đông lạnh. 			B. Có đất phù sa màu mỡ.
+C. Có nguồn nước dồi dào.			D. Có địa hình bằng phẳng.
+Câu 8. Vùng ĐBSH có mạng lưới sông ngòi dày đặc, điều này đã tạo nên thế mạnh nào sau đây cho vùng?
+A. Phát triển thuỷ điện, công nghiệp sản xuất đồ uống.
+/B. Phát triển thuỷ lợi, giao thông vận tải đường thuỷ, du lịch.
+C. Phát triển du lịch, nghề cá, công nghiệp thuỷ điện.
+D. Phát triển thuỷ lợi, cung cấp phù sa, đánh bắt thuỷ sản.
+Câu 10. Ngành dịch vụ ở ĐBSH tăng trưởng nhanh chủ yếu do những nguyên nhân nào sau đây?
+/A. Dân số đông, hàng hoá phát triển, nhiều trung tâm kinh tế.
+B. Lao động có chuyên môn cao, vốn đầu tư nước ngoài tăng.
+C. Nhập cư nhiều, dân đông, chất lượng cuộc sống nâng cao.
+D. Nền kinh tế hàng hoá sớm phát triển, cơ sở hạ tầng tốt.
+Câu 11. Ở vùng ĐBSH tập trung nhiều di tích, lễ hội, các làng nghề truyền thống là do nguyên nhân chủ yếu nào sau đây?
+/A. Có lịch sử khai thác lâu đời, nền sản xuất phát triển.
+B. Nền kinh tế phát triển nhanh, chuyển dịch mạnh mẽ.
+C. Chính sách đầu tư phát triển của Nhà nước, đông dân.
+D. Có nhiều dân tộc anh em cùng chung sống, phân bố xen
+Câu 12. Thế mạnh chủ yếu để phát triển du lịch ở Đồng bằng Sông Hồng là
+/A.  nhiều tài nguyên du lịch, mức sống dân cư tăng, cơ sở hạ tầng tốt.
+B. lao động có trình độ, giao thông đồng bộ, tài nguyên phong phú.
+C. địa hình đa dạng, khí hậu phân hóa theo mùa, nhiều di tích, lễ hội.
+D. vị trí thuận lợi, dân đông, nhiều đô thị, kinh tế phát triển.
+Câu 1. Tỉnh nào sau đây nằm giữa hai tỉnh Hà Tĩnh và Quảng Trị?
+/A. Quảng Bình.	C. Nghệ An.         B. Thừa Thiên Huế.	D. Thanh Hoá.
+Câu 2. Huyện đảo nào sau đây thuộc Bắc Trung Bộ?
+A. Cô Tô.		B. Hoàng Sa.       C. Phú Quý.		/D. Cồn Cỏ.
+Câu 3. Tất cả các tỉnh ở Bắc Trung Bộ đều có thể mạnh để
+A. trồng rau vụ đông.				B. trồng lúa có năng suất cao.
+/C. phát triển kinh tế biển.			D. nuôi trồng thuỷ sản nước ngọt.
+Câu 4. Bắc Trung Bộ  phát triển cơ cấu kinh tế tổng hợp, bao gồm
+A. nông nghiệp, chăn nuôi và công nghiệp chế biến.
+/B. nông nghiệp, lâm nghiệp và thuỷ sản.
+C. công nghiệp khai thác và chế biến dầu khí.
+D. nông nghiệp, công nghiệp chế biến và du lịch.
+Câu 5. Khu vực đồi núi của Bắc Trung Bộ có thể mạnh trong việc
+A. trồng cây công nghiệp hàng năm, cây dược liệu, trồng rừng và chăn nuôi lợn.
+/B. trồng cây công nghiệp lâu năm, cây ăn quả, chăn nuôi gia súc lớn và trồng rừng,
+C. trồng rừng, trồng rau quả cận nhiệt và chăn nuôi gia súc nhỏ,
+D. trồng cây công nghiệp, cây rau đậu và chăn nuôi lợn.
+Câu 6. Ý nghĩa chủ yếu của việc hình thành cơ cấu nông nghiệp, lâm nghiệp và thủy sản ở Bắc Trung Bộ là
+A. khai thác hợp lý tự nhiên, tạo ra khối lượng sản phẩm hàng hóa.
+B. đa dạng hóa nông nghiệp, bảo vệ tốt tài nguyên và môi trường.
+C. đẩy mạnh tăng trưởng sản xuất, gắn liền các lãnh thổ với nhau.
+/D. khai thác thế mạnh mỗi vùng, tạo sự liên kết sản xuất lãnh thổ.
+Câu 7. Vùng gò đồi trước núi của Bắc Trung Bộ có thế mạnh về
+/A. chăn nuôi đại gia súc.					B. cây công nghiệp hàng năm.
+C. chăn nuôi gia cầm.					D. cây lương thực và nuôi lợn.
+Câu 8. Loại đất chủ yếu ở dải đồng bằng ven biển Bắc Trung Bộ là
+A. đất phèn.		B. đất xám.			/C. đất cát pha.			D. đất mặn.
+Câu 9. Từ Tây sang Đông ở Bắc Trung Bộ thuận lợi để hình thành cơ cấu kinh tế theo không gian là
+A. nông - lâm - ngư nghiệp.				/B. lâm - nông - ngư nghiệp.
+C. ngư - nông - lâm nghiệp.				D. ngư - lâm - nông nghiệp.
+Câu 10. Chuyên môn hóa sản xuất cây công nghiệp lâu năm ở Bắc Trung Bộ chủ yếu dựa vào điều kiện thuận lợi nào sau đây?
+/A. Đất badan màu mỡ ở vùng đồi trước núi.		B. Đất cát pha ở các đồng bằng ven biển.
+C. Dân có kinh nghiệm chinh phục tự nhiên.		D. Có một số cơ sở công nghiệp chế biến.
+Câu 11. Việc nuôi thủy sản nước lợ, nước mặn ở Bắc Trung Bộ nhằm mục đích chủ yếu nào sau đây?
+A. Khai thác thế mạnh nổi bật của vùng ven biển. B. Đảm bảo nguyên liệu cho công nghiệp chế biến.
+C. Tạo thế liên hoàn phát triển kinh tế theo không gian.  /D. Thay đổi cơ cấu kinh tế nông thôn vùng ven biển.
+Câu 12. Để tạo thế liên hoàn trong phát triển cơ cấu kinh tế theo không gian ở vùng Bắc Trung Bộ, biện pháp quan trọng nhất là
+A. phát triển cơ sở hạ tầng giao thông vận tải.
+B. phát triển kinh tế - xã hội ở vùng phía tây.
+C. hình thành các trung tâm công nghiệp gắn với các đô thị lớn.
+/D. gắn các vùng sản xuất nông nghiệp, lâm nghiệp với ngư nghiệp.
+Câu 13. Tất cả các tỉnh ở Bắc Trung Bộ đều có thể mạnh để
+A. trồng rau vụ đông.			/C. phát triển kinh tế biển.
+B. trồng lúa có năng suất cao.		D. nuôi trồng thuỷ sản nước ngọt.
+Câu 14. Bắc Trung Bộ có  phát triển cơ cấu kinh tế tổng hợp, bao gồm:
+A. nông nghiệp, chăn nuôi và công nghiệp chế biến.     /B. nông nghiệp, lâm nghiệp và thuỷ sản.
+C. công nghiệp khai thác và chế biến dầu khí.              D. nông nghiệp, công nghiệp chế biến và du lịch.
+Câu 15. Rừng phân bố ở phía tây của Bắc Trung Bộ phần lớn là rừng tự nhiên, có ý nghĩa quan trọng trong việc
+/A. điều hoà nước, chống lũ lụt, bảo vệ các nguồn gen quý hiếm,...
+B. tạo cảnh quan để phát triển du lịch biển và vùng đồng bằng liền kề,
+C. khai thác nguồn gỗ để xuất khẩu.
+D. chống cát bay, cát chảy, mở rộng diện tích đồng bằng.
+Câu 16. Rừng ven biển ở Bắc Trung Bộ rất được chú trọng trồng và bảo vệ để
+/A. chắn gió, bão; ngăn cát bay, cát chảy...		B. điều hoà nguồn nước.
+C. chống lũ đột ngột trên các sông.		      D. tạo cảnh quan ven biển.
+Câu 1. Duyên hải Nam Trung Bộ giáp với
+/A. Bắc Trung Bộ.         B. Trung du và miền núi Bắc Bộ.
+C. Đồng bằng sông Hồng.        D. Đồng bằng sông Cửu Long.
+Câu 2. Thuận lợi chủ yếu cho việc nuôi trồng thủy sản ở Duyên hải Nam Trung Bộ là
+/A. bờ biển có nhiều vũng, vịnh, đầm phá.       B. vùng biển có nhiều loài tôm, cá, mực.
+C. có các ngư trường trọng điểm rộng lớn.      D. hoạt động chế biến hải sản phát triển.
+Câu 3. Để khai thác hiệu quả đất nông nghiệp ở vùng Duyên hải Nam Trung Bộ, vấn đề đặt ra hàng đầu là
+/A. xây dựng các công trình thủy lợi      .B. tăng cường trồng rừng ven biển.
+C. đẩy mạnh thâm canh và tăng vụ.      D. mở rộng diện tích trồng cây gỗ.
+Câu 4. Thế mạnh chủ yếu của vùng Duyên hải Nam Trung Bộ là
+A. chịu ảnh hưởng của nhiều thiên tai (bão, lũ lụt).    B. ô nhiễm môi trường, suy thoái tài nguyên biển.
+/C. đường bờ biển dải, nhiều vịnh biển sâu kín gió.    D. hệ thống cơ sở hạ tầng, kĩ thuật nhiều hạn chế.
+Câu 5. Vùng Duyên hải Nam Trung Bộ có thuận lợi nào sau đây để phát triển nền kinh tế mở?
+/A. Nhiều vũng, vịnh thuận lợi xây dựng cảng nước sâu.
+B. Vị trí tiếp giáp với Cam-pu-chia, vùng Tây Nguyên.
+C. Giáp với Tây Nguyên rộng và đường bờ biển kéo dài.
+D. Nhiều tuyến quốc lộ quan trọng và kinh tế phát triển.
+Câu 6. Ở vùng Duyên hải Nam Trung Bộ, việc nâng cấp quốc lộ 1 và đường sắt Bắc - Nam có ý nghĩa nào sau đây?
+A. Tăng cường sự trao đổi hàng hóa giữa hai miền Bắc - Nam.
+B. Đẩy mạnh giao lưu giữa các tỉnh trong vùng với nước Lào.
+C. Đẩy mạnh giao lưu giữa các tỉnh trong vùng với Campuchia.
+/D. Thúc đẩy giao lưu giữa các tỉnh trong vùng với Tây Nguyên.
+    `
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('dumacoajs')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+let PasswordCode = "NGADEPTRAI"
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
