@@ -1,185 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat GPT</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #ffcc99, #ff9966);
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc Nghiệm Google Search - Đánh dấu đáp án</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+    body {
+      font-family: 'Segoe UI',sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
+      overflow-x: hidden;
+      padding: 20px
+    }
+@keyframes gradientBG {
+      0% {
+        background-position: 0% 50%
+      }
 
-        #app {
-            text-align: center;
-            width: 80%;
-            max-width: 700px;
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-        }
+      50% {
+        background-position: 100% 50%
+      }
 
-        h1 {
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-            color: #ff6347;
-        }
+      100% {
+        background-position: 0% 50%
+      }}
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      text-align: center
+    }
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s forwards
+    }
+@keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px)
+      }
 
-        #chat-box {
-            height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            margin-bottom: 15px;
-        }
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }}
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      margin-bottom: 15px;
+      animation: fadeIn 2s forwards
+    }
+@keyframes fadeIn {
+      from {
+        opacity: 0
+      }
 
-        .chat {
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 8px;
-        }
+      to {
+        opacity: 1
+      }}
+    .btn-create {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255,255,255,0.8);
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s,box-shadow 0.3s;
+      animation: fadeIn 2s forwards
+    }
+    .btn-create:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3)
+    }
+    .question {
+      background: rgba(0,0,0,0.3);
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 8px;
+      animation: popIn 0.5s forwards
+    }
+@keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8)
+      }
 
-        .user {
-            background: #ffb6b9;
-            align-self: flex-end;
-            color: #333;
-        }
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }}
+    .question h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      cursor: pointer
+    }
+    .answers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px
+    }
+    .answer-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255,255,255,0.9);
+      color: #333;
+      cursor: pointer;
+      transition: background-color 0.3s,transform 0.3s
+    }
+    .answer-btn:hover {
+      background-color: rgba(255,255,255,1);
+      transform: scale(1.05)
+    }
+    .selected {
+      background-color: #ffd700!important;
+      color: #000
+    }
+@media(max-width:600px) {
+      h2 {
+        font-size: 2rem
+      }
 
-        .bot {
-            background: #9ad3bc;
-            align-self: flex-start;
-            color: #333;
-        }
-
-        #input-section {
-            display: flex;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 60px);
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        button {
-            padding: 10px 15px;
-            border: none;
-            background: #ff6347;
-            color: #fff;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease-in-out;
-        }
-
-        button:hover {
-            background: #e55340;
-        }
-
-        .typing-animation {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #ff6347;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-    </style>
+      textarea {
+        height: 120px
+      }}
+  </style>
 </head>
 <body>
-    <div id="app">
-        <h1>Cat GPT</h1>
-        <div id="chat-box"></div>
-        <div id="input-section">
-            <input id="user-input" type="text" placeholder="Type your message...">
-            <button id="send-btn">Send</button>
-        </div>
-    </div>
-
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
-
-        function addMessage(text, sender) {
-            const message = document.createElement('div');
-            message.className = `chat ${sender}`;
-            message.textContent = text;
-            chatBox.appendChild(message);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function botResponse(userMessage) {
-            const responses = [
-                "Meow! How can I help you today?",
-                "Purr... Did you mean to say something about fish?",
-                "I'm just a cat, but I think you're amazing!",
-                "Meow-meow! I love talking to you!"
-            ];
-            return responses[Math.floor(Math.random() * responses.length)];
-        }
-
-        sendBtn.addEventListener('click', () => {
-            const userText = userInput.value.trim();
-            if (userText) {
-                addMessage(userText, 'user');
-                userInput.value = '';
-
-                const typingIndicator = document.createElement('div');
-                typingIndicator.className = 'chat bot typing-animation';
-                typingIndicator.innerHTML = `
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                `;
-                chatBox.appendChild(typingIndicator);
-                chatBox.scrollTop = chatBox.scrollHeight;
-
-                setTimeout(() => {
-                    typingIndicator.remove();
-                    addMessage(botResponse(userText), 'bot');
-                }, 1000);
+  <div class="container">
+    <h2>Nhập Văn Bản Trắc Nghiệm</h2>
+    <textarea id="inputText" placeholder="Nhập văn bản trắc nghiệm tại đây..."></textarea>
+    <button class="btn-create" onclick="processText()">Tạo Câu Hỏi</button>
+    <div id="output"></div>
+  </div>
+  <script>
+    function processText() {
+      const text = document.getElementById("inputText").value;
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "";
+      const questions = text.split(/\n(?=Câu\s*\d+\.)/);
+      questions.forEach(q=> {
+        const trimmed = q.trim();
+        if (!trimmed)return;
+        const regex = /^\s*(Câu\s*\d+\.\s*.*?\n)[\s\S]*?A\.\s*(.*?)\s*B\.\s*(.*?)\s*C\.\s*(.*?)\s*D\.\s*(.*)$/i;
+        const match = trimmed.match(regex);
+        if (match) {
+          const questionText = match[1].trim();
+          const answerA = match[2].trim();
+          const answerB = match[3].trim();
+          const answerC = match[4].trim();
+          const answerD = match[5].trim();
+          const qDiv = document.createElement("div");
+          qDiv.className = "question";
+          const qTitle = document.createElement("h3");
+          qTitle.textContent = questionText;
+          qTitle.onclick = ()=>window.open("https://www.google.com/search?q="+encodeURIComponent(questionText), "_blank");
+          qDiv.appendChild(qTitle);
+          const ansDiv = document.createElement("div");
+          ansDiv.className = "answers";
+          const createAnswer = (label, textAns)=> {
+            const btn = document.createElement("button");
+            btn.className = "answer-btn";
+            btn.textContent = label+". "+textAns;
+            btn.onclick = function(e) {
+              e.stopPropagation();
+              let siblings = this.parentNode.querySelectorAll(".answer-btn");
+              siblings.forEach(b=>b.classList.remove("selected"));
+              this.classList.add("selected");
             }
-        });
-
-        userInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                sendBtn.click();
-            }
-        });
-    </script>
+            return btn;
+          }
+          ansDiv.appendChild(createAnswer("A", answerA));
+          ansDiv.appendChild(createAnswer("B", answerB));
+          ansDiv.appendChild(createAnswer("C", answerC));
+          ansDiv.appendChild(createAnswer("D", answerD));
+          qDiv.appendChild(ansDiv);
+          outputDiv.appendChild(qDiv);
+        } else {
+          const errDiv = document.createElement("div");
+          errDiv.className = "question";
+          const errMsg = document.createElement("h3");
+          errMsg.textContent = "Không thể phân tích: " + trimmed;
+          errDiv.appendChild(errMsg);
+          outputDiv.appendChild(errDiv);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
