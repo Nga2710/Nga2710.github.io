@@ -23,7 +23,10 @@ function pasteFromClipboard() {
   });
 }
 
-
+function search(ag) {
+      window.open("https://www.google.com/search?q="+encodeURIComponent(ag), "_blank");
+        
+      }
 document.addEventListener("DOMContentLoaded", () => {
   const header = document.querySelector("header");
   const lastPathSegment = window.location.pathname.split('/').filter(Boolean).pop().replace('.html', '') || '/';
@@ -147,14 +150,17 @@ function run() {
       }
       const questionHTML = `
       <div class="question" id="qt${i}">
-      <p class="question-text"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
+      <p class="question-text" onclick="search('${question}')"><span style="font-size:26px" onclick="change(this)">✧</span><span style="color: green; font-size:20px"><sub style="font-size: 8px">${i+1}</sub>Câu </span> ${question.replace(/không/g, '<span style="text-decoration: underline;">không</span>')}</p><div style="display: inline-block">
+      
       ${questionAnswers.join('\n')}</div>
       </div>
       `;
+      
       questions.push(questionHTML);
     }
     return questions.join('\n');
   }
+  
   let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
   questionStrings.shift()
   if (shuffleQ) questionStrings = shuffleArray(questionStrings)
@@ -184,10 +190,10 @@ function run() {
   timerInterval = setInterval(updateTime,
     10);
   
-  if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
+ /* if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
     document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004c\u1ed7\u0069\u0020\u0074\u0072\u0079\u0020\u0063\u1ead\u0070\u003c\u002f\u0068\u0031\u003e";
     throw new Error("Hey!");
-  }
+  }*/
   var radioButtons = document.querySelectorAll('input[type="radio"]');
 
   if (document.getElementById("autoStr").checked) {
@@ -396,17 +402,17 @@ function feedback(score) {
         "Cười rung CPU",
 
         "Kết quả này đủ để gọi cấp cứu.",
-        "Bạn đang đứng dưới đáy đại dương rồi.",
+
         "Phải có ý đồ gì đó, con người không thể ngu vậy được!",
         
         "Thầy cô từ chối nhìn mặt",
-        "Không thể thấp hơn nữa!",
-        "Điểm số đến mức này là một tài năng hiếm có!",
+
         "Gọi mục sư đi!",
         "Hết cứu",
 "Khók",
-
-
+        "Không thể thấp hơn nữa!",
+        "Điểm số đến mức này là một tài năng hiếm có!",
+        "Bạn đang đứng dưới đáy đại dương rồi.",
         "Bạn không làm bài à? Hay là điền bừa rồi chạy đi chơi?",
         "Nếu có giải thưởng 'dũng cảm nộp bài', chắc bạn được giải nhất.",
         "Điểm này khiến thầy cô phải tự hỏi: 'Mình có dạy nhầm ngành không?'",
@@ -526,7 +532,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     overlay.style.left = "0";
     overlay.style.width = "100%";
     overlay.style.height = "100%";
-    overlay.style.background = "rgba(0, 128, 0, 0.8)";
+    overlay.style.background = "rgba(0, 128, 0, 0.2)";
     overlay.style.display = "flex";
     overlay.style.justifyContent = "center";
     overlay.style.alignItems = "center";
@@ -582,7 +588,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     button.addEventListener("click", async function () {
         const enteredHash = await hashCode(input.value);
         if (enteredHash === hashedAccessCode) {
-            alert("Mã truy cập chính xác. Chào mừng bạn!");
+        
             overlay.remove();
         } else if (input.value.toLowerCase() === "ngadeptrai") {
             message.textContent = "Cảm ơn nhưng mã sai rồi 👉👈";
@@ -597,7 +603,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     modal.appendChild(button);
     modal.appendChild(message);
     overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+   // tắt khóa document.body.appendChild(overlay);
 
     // CSS cho hiệu ứng mờ dần
     const style = document.createElement("style");
