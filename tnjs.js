@@ -200,7 +200,15 @@ function run() {
     radioButtons.forEach(function(radio) {
       radio.addEventListener('click', function() {
         if (radio.checked) {
+          if (document.getElementById("showAnIn").checked)
+            if (radio.value === 'correct') {
+        radio.parentNode.style.color = "green"
+      } else
+        if (radio.checked) {
+        radio.parentNode.style.color = "red"
+      }
           try {
+            
             scroll(document.getElementById(`qt${Number(radio.name.slice(1))+1}`), false)
           }
           catch {
@@ -603,7 +611,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     modal.appendChild(button);
     modal.appendChild(message);
     overlay.appendChild(modal);
-   // tắt khóa document.body.appendChild(overlay);
+     //  document.body.appendChild(overlay);
 
     // CSS cho hiệu ứng mờ dần
     const style = document.createElement("style");
