@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input checked id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input checked id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `Câu 1. Đảng Cộng sản Việt Nam tiến hành công cuộc đổi mới đất nước từ tháng 12/1986 trong bối cảnh
+A. Hệ thống xã hội chủ nghĩa thế giới hình thành.
+B. Mỹ đã phá thế bao vây, cấm vận với Việt Nam.
+C. Đất nước đang trên đà phát triển rất mạnh mẽ.
+/D. Liên Xô đang tiến hành công cuộc cải tổ.
+Câu 3. Nội dung cơ bản của đường lối đổi mới do Đảng Cộng sản Việt Nam đề ra trong giai đoạn 1986 - 1995 xác định trọng tâm là đổi mới về
+/A. kinh tế.	B. tư tưởng.	C. chính trị.	D. văn hóa.
+Câu 4. Nội dung nào dưới đây phản ánh không đúng về nội dung cơ bản của đường lối đổi mới do Đảng Cộng sản Việt Nam đề ra trong giai đoạn 1986 – 1995?
+A. Đổi mới đất nước không phải là thay đổi mục tiêu xã hội chủ nghĩa.
+B. Phát huy yếu tố con người và lấy phục vụ con người là mục đích cao nhất.
+/C. Chuyển đổi cơ chế quản lí kinh tế, cải cách hệ thống giá, chống lạm phát.
+D. Xây dựng Nhà nước pháp quyền Việt Nam của nhân dân, do nhân dân, vì nhân dân.
+Câu 5. Đại hội toàn quốc lần thứ VI của Đảng Cộng sản Việt Nam (12/1986), đã xác định nhiệm vụ trước mắt của kế hoạch 5 năm 1986 - 1990 là
+A. đổi mới toàn diện, đồng bộ nền kinh tế.       /B. thực hiện Ba chương trình kinh tế lớn.
+C. cơ sở và vật chất của chủ nghĩa xã hội.       D. đẩy mạnh công nghiệp hóa đất nước.
+Câu 6. Đại hội toàn quốc lần thứ VI (12/1986) đề ra đường lối đổi mới với nội dung phải
+A. thực hiện nhanh chóng.	B. bảo đảm chắc thắng lợi.
+C. thần tốc và táo bạo.	/D. toàn diện và đồng bộ.
+Câu 7. Đại hội toàn quốc lần thứ VI của Đảng Cộng sản Việt Nam (12/1986) chủ trương đổi mới về chính trị là xây dựng Nhà nước
+/A. pháp quyền xã hội chủ nghĩa.	B. nền chuyên chính của tư sản.
+C. đại đoàn kết toàn thể dân tộc.	D. phân chia quyền lực rõ ràng.
+Câu 8. Đại hội đại biểu toàn quốc lần thứ VIII của Đảng Cộng sản Việt Nam đã xác định nội dung nào sau đây là quốc sách hàng đầu?
+A. Khoa học, giáo dục.	/B. Giáo dục và đào tạo.
+C. An ninh, quốc phòng.	D. Kinh tế và chính trị.
+Câu 9. Nhiệm vụ trung tâm của công cuộc Đổi mới ở Việt Nam trong giai đoạn 1996 – 2006 là
+A. tiến hành một cách toàn diện và đồng bộ trên các lĩnh vực kinh tế, chính trị.
+B. gắn tăng trưởng, phát triển kinh tế với thực hiện tiến bộ và công bằng xã hội.
+/C. đẩy mạnh công nghiệp hoá, hiện đại hoá và hội nhập kinh tế quốc tế.
+D. Chú trọng phát triển nền văn hoá tiên tiến, đậm đà bản sắc dân tộc.
+Câu 10. Đổi mới không phải là thay đổi mục tiêu chủ nghĩa xã hội mà phải
+A. làm cho chủ nghĩa xã hội ngày càng tốt đẹp hơn.
+/B. làm cho mục tiêu ấy được thực hiện có hiệu quả.
+C. làm cho mục tiêu đã đề ra nhanh chóng được thực hiện.
+D. làm cho mục tiêu đã đề ra phù hợp với thực tiễn đất nước.
+Câu 11. Một trong những mục tiêu của đường lối đổi mới ở Việt Nam được đề ra từ tháng 12 - 1986 là
+A. bước đầu khắc phục hậu quả chiến tranh.             B. hoàn thiện cơ chế quản lý đất nước.
+/C. phát triển đất nước, đảm bảo đời sống nhân dân.  D. hoàn thành công cuộc cải cách ruộng đất.
+Câu 12. Trong đường lối đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương hình thành cơ chế kinh tế
+/A. thị trường.	B. tập trung.	C. bao cấp.	D. kế hoạch hóa.
+Câu 13. Trong đường lối Đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương xóa bỏ cơ chế quản lí kinh tế
+A. thị trường tư bản chủ nghĩa.
+B. hàng hóa có sự quản lí của nhà nước.
+C. thị trường có sự quản lí của nhà nước.
+/D. tập trung, quan liêu, bao cấp.
+Câu 14. Trong đường lối đổi mới đất nước (từ tháng 12/1986), Đảng Cộng sản Việt Nam chủ trương phát triển nền kinh tế hàng hóa nhiều thành phần theo định hướng
+A. kinh tế tập trung.	B. kinh tế thị trường.
+/C. xã hội chủ nghĩa.	D. phân phối theo lao động.
+Câu 15. Trong đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986), nội dung nào sau đây là một trong những chủ trương đổi mới về kinh tế?
+A. Bảo đảm quyền lực thuộc về nhân dân.             B. Xây dựng nền dân chủ xã hội chủ nghĩa.
+/C. Phát triển kinh tế hàng hóa xã hội chủ nghĩa.    D. Thực hiện chính sách đại đoàn kết dân tộc.
+Câu 16. Trong đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986), nội dung nào sau đây là một trong những chủ trương đổi mới về kinh tế?
+A. Xây dựng nền dân chủ xã hội chủ nghĩa.
+B. Bảo đảm quyền lực thuộc về nhân dân.
+/C. Hình thành cơ chế thị trường có sự quản lí của nhà nước.
+D. Thực hiện chính sách đại đoàn kết dân tộc.
+Câu 17. Đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986) có nội dung nào sau đây?
+A. Chỉ tập trung đổi mới về văn hóa.	B. Chỉ đổi mới về tổ chức và tư tưởng.
+C. Chỉ tập trung đổi mới về chính trị.	/D. Đổi mới kinh tế là trọng tâm.
+Câu 18. Đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986) có nội dung nào sau đây?
+A. Chỉ tập trung đổi mới về chính trị.        /B. Kiên định mục tiêu chủ nghĩa xã hội.
+C. Chỉ tập trung đổi mới về văn hóa.         D. Chỉ đổi mới về tổ chức và tư tưởng.
+Câu 19. Trong sự nghiệp đổi mới đất nước (từ năm 1986), Việt Nam có chủ trương nào sau đây?
+A. Phát triển kinh tế kế hoạch hóa tập trung.
+B. Tập trung cải tạo công thương nghiệp.
+C. Xóa bỏ sự tồn tại của thị trường tự do.
+/D. Mở rộng quan hệ kinh tế đối ngoại.
+Câu 20. Trong đường lối đổi mới đất nước (từ tháng 12-1986), về chính trị, Đảng Cộng sản Việt Nam chủ trương
+A. duy trì cơ chế quản lí kinh tế bao cấp.         B. duy trì cơ chế quản lý kinh tế tập trung.
+/C. xây dựng nền dân chủ xã hội chủ nghĩa.      D. chưa mở rộng quan hệ kinh tế đối ngoại.
+Câu 21. Chủ trương xây dựng Nhà nước pháp quyền xã hội chủ nghĩa, Nhà nước của dân, do dân và vì dân là nội dung trong đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12 - 1986) về
+/A. chính trị.	B. văn hóa.	C. pháp luật.	D. đối ngoại.
+Câu 22. Trong đường lối đổi mới đất nước (từ tháng 12 - 1986), Đảng Cộng sản Việt Nam chủ trương thực hiện chính sách đối ngoại
+/A. Hòa bình, hữu nghị, hợp tác.	B. Hòa bình, hữu nghị, trung lập.
+C. Hữu nghị, coi trọng hợp tác kinh tế.	D. Hòa bình, mở rộng hợp tác về văn hóa. Câu 23. Một trong những thành tựu kinh tế - xã hội Việt Nam đạt được sau 10 năm đổi mới (1986-1995) là
+A. hoàn thành công nghiệp hóa đất nước.      B. hoàn thành hiện đại hóa đất nước.
+/C. vượt qua khủng hoảng kinh tế - xã hội.     D. xuất khẩu gạo đứng đầu thế giới.
+Câu 24. Về xã hội, sau Đổi mới Việt Nam đạt được một trong những thành tựu nào sau đây? 
+A.Hoàn thành hiện đại hóa đất nước.
+/B. Công tác xóa đói, giảm nghèo đạt nhiều kết quả.
+C. Xuất khẩu gạo đứng đầu thế giới.
+D. Hoàn thành công nghiệp hóa đất nước.
+Câu 25. Về xã hội, sau Đổi mới Việt Nam đạt được một trong những thành tựu nào sau đây? A.Hoàn thành hiện đại hóa đất nước.
+/B. Đời sống người dân được cải thiện và nâng cao.
+C. Xuất khẩu gạo đứng đầu thế giới.
+D. Hoàn thành công nghiệp hóa đất nước.
+Câu 26. Về văn hóa, sau Đổi mới Việt Nam đạt được một trong những thành tựu nào sau đây?
+/A. Hội nhập quốc tế về văn hóa được mở rộng.
+B. Trở thành nước đang phát triển có thu nhập cao.
+C. Xuất khẩu gạo đứng đầu thế giới.
+D. Hoàn thành công nghiệp hóa, hiện đại hóa đất nước.
+Câu 27. Về hội nhập quốc tế, sau Đổi mới Việt Nam đạt được một trong những thành tựu nào sau đây?
+A. Trở thành nước đang phát triển có thu nhập cao.
+/B. mở rộng quan hệ hợp tác quốc tế, đạt nhiều thành tựu.
+C. khắc phục triệt để nạn đói trong nước.
+D. Hoàn thành công nghiệp hóa, hiện đại hóa đất nước.
+Câu 28. Những thành tựu Việt Nam đạt được trong việc thực hiện kế hoạch 5 năm (1986- 1990) chứng tỏ
+/A. đường lối đổi mới là đúng, bước đi của công cuộc đổi mới cơ bản là phù hợp.
+B. Việt Nam đã thoát khỏi tình trạng khủng hoảng kinh tế - xã hội.
+C. Việt Nam đã giải quyết được sự mất cân đối của nền kinh tế.
+D. đường lối đổi mới về cơ bản là đúng đắn, cần phải có những bước đi phù hợp.
+Câu 29. Đại hội đại biểu toàn quốc lần thứ XI của Đảng đã xác định đẩy mạnh công nghiệp hóa, hiện đại hóa gắn liền với phát triển
+A. an ninh kinh tế.	/B. kinh tế tri thức.
+C. dân chủ nhân dân.	D. dân sinh, dân chủ.
+Câu 30. Đảng Cộng sản Việt Nam phải tiếp tục hoàn thiện, bổ sung đường lối Đổi mới được đề ra từ Đại hội đại biểu toàn quốc lần thứ VI (1986) xuất phát từ
+/A. yêu cầu phù hợp với thực tế.	B. yêu cầu của Trung Quốc.
+C. điểm xuất phát còn quá thấp.	D. đảm bảo an ninh - quốc phòng.
+Câu 31. Trong giai đoạn đầu của thời kỳ đổi mới (1986 - 1990), Đảng Cộng sản Việt Nam chủ trương thực hiện Ba chương trình kinh tế lớn là do
+/A. Giải quyết các nhu cầu thiết yếu cho nhân dân.
+B. Để đáp ứng nhu cầu nhiều xuất khẩu hàng hóa.
+C. Giải quyết nhu cầu việc làm cho người lao động.
+D. Tận dụng các lợi thế nguồn lao động trẻ, giá rẻ.
+Câu 32. Một trong những nguyên nhân khách quan thúc đẩy Đảng và Nhà nước Việt Nam tiến hành công cuộc đổi mới đất nước (12-1986)?
+A. Sự ủng hộ từ phong trào cách mạng thế giới.
+B. Các nước Đông Âu đều đã tiến hành đổi mới.
+/C. Cuộc khủng hoảng rất trầm trọng của Liên Xô.
+D. Cải tổ ở Liên Xô đã đạt được nhiều thành tựu.
+Câu 33. Đặc trưng nền kinh tế Việt Nam trước khi thực hiện đường lối đổi mới (1986) là
+A. tự nhiên.	/B. bao cấp.	C. tự chủ.	D. thị trường.
+Câu 34. Trong đường lối Đổi mới giai đoạn (1986-1995) Đảng Cộng sản Việt Nam xác định trọng tâm là đổi mới kinh tế xuất phát từ
+A. có nhiều quốc gia khác đổi mới từ kinh tế.
+B. nền kinh tế của Việt Nam đang bị Pháp vượt qua.
+C. học hỏi bài học kinh nghiệm của Trung Quốc.
+/D. xu thế của thế giới sau khi Chiến tranh lạnh kết thúc.
+Câu 35. Nhận xét nào sau đây đúng khi nói về công cuộc Đổi mới đất nước được Đảng Cộng sản Việt Nam đề ra từ tháng 12/1986?
+A. Đây là cuộc đổi mới từ dưới lên.	B. Công cuộc cải cách rất triệt để.
+/C. Cuộc đổi mới đất nước toàn diện.	D. Còn nhiều hạn chế khó khắc phục.
+Câu 36. Một trong những điểm giống nhau của công cuộc cải cách - mở cửa ở Trung Quốc (1978) với công cuộc Đổi mới ở Việt Nam (1986) là
+A. chú trọng đổi mới về chính trị.	/B. lấy đổi mới kinh tế là trọng tâm.
+C. cải cách toàn diện trên lĩnh vực.	D. kinh tế kế hoạch hóa tập trung.
+Câu 37. Bài học kinh nghiệm cơ bản được Đảng Cộng sản Việt Nam rút ra từ khi tiến hành công cuộc đổi mới đất nước (12 - 1986) đến nay là gì?
+/A. Huy động cả hệ thống chính trị vào công cuộc đổi mới.
+B. Tranh thủ sự giúp đỡ của các nước trong nhóm ASEAN.
+C. Tập trung khắc phục tình trạng tham nhũng và lãng phí.
+D. Đẩy mạnh các mối quan hệ đối ngoại hòa bình, ổn định.
+Câu 38. Một trong những bài học Đảng Cộng sản Việt Nam rút ra được từ công cuộc Đổi mới đất nước vẫn vẹn nguyên giá trị trong công cuộc xây dựng đất nước hiện nay là
+/A. phải đảm bảo lợi ích cho nhân dân.	B. phải liên kết với các cường quốc.
+C. phát triển nhanh các ngành kinh tế.	D. thực hiện chế độ tam quyền phân lập.
+Câu 39. Một trong những thành tựu về đổi mới Chính trị, An ninh - Quốc phòng là
+A. xây dựng thành công hạm đội tàu sân bay mạnh nhất châu Á.
+/B. xây dựng Nhà nước pháp quyền xã hội chủ nghĩa vững mạnh.
+C. tham gia đầy đủ vào các tổ chức quân sự quốc tế và khu vực.
+D. trở thành ủy viên thường trực hội đồng bảo an Liên hợp quốc.
+Câu 40. Để đưa đất nước thoát khỏi tình trạng khủng hoảng trầm trọng về kinh tế - xã hội, Đảng Cộng sản Việt Nam đã
+A. tiến hành tập thể hóa nông, công nghiệp.    
+B. gia nhập vào hội đồng tương trợ kinh tế.
+/C. tiến hành công cuộc Đổi mới đất nước.
+D. phát động chiến tranh biên giới Tây Nam.
+Câu 41. Một trong những kết quả mà đổi mới về chính trị, an ninh - quốc phòng đem lại cho Việt Nam là
+/A. giữ vững sự ổn định chính trị.	B. trở thành cường quốc quân sự.
+C. giành lại thành công Hoàng Sa.	D. ngân sách quốc phòng tăng lên.
+Câu 42. Đường dây 500kV được xây dựng và đóng điện thành công (1994) ở Việt Nam đã
+/A. giải quyết nạn thiếu điện ở miền Nam, thúc đẩy kinh tế phát triển.
+B. khẳng định chủ quyền, toàn vẹn lãnh thổ của đất nước Việt Nam.
+C. giải quyết xong vấn đề tranh chấp đường biên giới trên bộ với Lào.
+D. biến Sài Gòn trở thành trung tâm kinh tế chính trị lớn nhất đất nước.
+Câu 43. Một trong những tác động tích cực mà quá trình hội nhập kinh tế quốc tế đem đến cho Việt Nam là
+A. nhận chuyển giao công nghệ miễn phí.          B. được miễn thuế khi bán hàng nông sản.
+/C. dễ dàng tiếp cận với nguồn vốn đầu tư.         D. tiếp cận nguồn lao động giá rẻ châu Phi.
+Câu 44. Một trong những khó khăn mà quá trình hội nhập kinh tế quốc tế đem đến cho Việt Nam là
+/A. sự cạnh tranh quyết liệt trên thị trường.      B. bị đánh thuế cao đối với hàng nông sản.
+C. khó khăn trong quá trình vận chuyển.n       D. nguồn vốn được vay với lãi suất quá cao.
+Câu 44. Một trong những nội dung là hạn chế của công cuộc đổi mới kinh tế đất nước ở Việt Nam từ năm 1986 đến nay là
+/A. tình trạng mất cân đối trong ngành kinh tế.    B. lệ thuộc hoàn toàn thị trường Trung Quốc.
+C. chưa tiếp cận được thị trường châu Âu.          D. chưa đưa tiến bộ khoa học vào sản xuất.
+Câu 45. Một trong những nội dung là hạn chế của công cuộc đổi mới văn hóa đất nước từ năm 1986 đến nay là
+A. chịu ảnh hưởng sâu sắc của văn minh Ấn Độ.
+/B. nhiều giá trị văn hóa truyền thống bị mai một.
+C. còn thiếu đi một vài hệ tư tưởng chính thống.
+D. văn hóa không được truyền bá ra bên ngoài.
+Câu 46. Lực lượng nào sau đây giữ vai trò tập hợp, đoàn kết toàn thể dân tộc trong thời kỳ xây dựng và bảo vệ Tổ quốc ngày nay?
+/A. Mặt trận Tổ quốc Việt Nam.	B. Đảng Cộng sản Việt Nam.
+C. Giáo hội Phật giáo Việt Nam.	D. Đội tuyển quốc gia Việt Nam.
+Câu 47. Nhân tố quyết định đến sự thành công của công cuộc Đổi mới đất nước từ 1986 đến nay là
+A. những bài học từ Liên Xô và Trung Quốc.       B. viện trợ to lớn, cần thiết từ Liên Hợp quốc.
+C. Mỹ chủ động xóa bỏ bao vây và cấm vận.       /D. vai trò lãnh đạo của Đảng Cộng sản Việt Nam.
+Câu 48. Những thành tựu trong công cuộc Đổi mới đất nước của Việt Nam và cuộc cải cách - mở cửa của Trung Quốc đều có ý nghĩa nào sau đây?
+/A. Nâng cao vị thế đất nước trên trường quốc tế.
+B. Trở thành ủy viên thường trực hội đồng bảo an.
+C. Thu nhập quốc dân đạt mức trên 1000 tỷ đô la.
+D. Buộc Mỹ rút các căn cứ quân sự gần biên giới.
+Câu 49. Một trong những nội dung là điểm khác biệt của chính sách đối ngoại trước và sau công cuộc đổi mới đất nước ở Việt Nam là
+A. muốn nâng cao vị thế đất nước.	B. coi trọng mối quan hệ với Lào.
+/C. thái độ và chính sách với Mỹ.	D. kiên trì sự lãnh đạo của Đảng.
+Câu 50. Nội dung nào dưới đây là bài học kinh nghiệm xuyên suốt trong lịch sử đã đem lại thành công cho công cuộc đổi mới từ năm 1986 đến nay?
+/A. Đặt lợi ích của nhân dân lên hàng đầu.	B. Kiên trì lãnh đạo tuyệt đối của Đảng.
+C. Tận dụng các cơ hội đến từ bên ngoài.	D. Tiến hành đổi mới toàn diện, đồng bộ.
+Câu 51. Một trong những thành tựu về chính trị trong công cuộc Đổi mới của Việt Nam từ năm 1986 đến nay là gì?
+A. Chính sách ưu đãi người có công và an sinh xã hội đạt nhiều tiến bộ.
+B. Thị trường xuất nhập khẩu mở rộng, nguồn vốn đầu tư của nước ngoài tăng.
+/C. Bảo vệ vững chắc độc lập chủ quyền, thống nhất, toàn vẽn lãnh thổ.
+D. Mở rộng quan hệ hợp tác với các quốc gia và vùng lãnh thổ trên thế giới.
+Câu 52. Một trong những thành tựu về văn hóa - xã hội trong công cuộc Đổi mới của Việt Nam từ năm 1986 đến nay là gì?
+A. Tổ chức bộ máy của hệ thống chính trị tinh gọn, hoạt động hiệu quả.
+B. Hội nhập quốc tế toàn diện, sâu rộng và đạt được nhiều thành tựu.
+C. Bảo vệ vững chắc độc lập chủ quyền, thống nhất, toàn vẽn lãnh thổ.
+/D. Đời sống vật chất và tinh thần của nhân dân được cải thiện.
+Câu 53. Năm 2000, Việt Nam đã đạt được thành tựu tiêu biểu nào trong lĩnh vực văn hóa?
+A. Trở thành nền kinh tế thứ tư trong tổ chức ASEAN.
+B. Là quốc gia đầu tiên ở châu Á áp dụng chuẩn nghèo đa chiều.
+C. Đạt chuẩn phổ cập giáo dục trung học cơ sở.
+/D. Hoàn thành xóa mù chữ, đạt chuẩn phổ cập giáo dục tiểu học.
+Câu 54. Đâu không phải là nội dung của hội nhập kinh tế quốc tế ở Việt Nam trong thời kỳ Đổi mới?
+A. Tham gia các hiệp ước, hiệp định song phương, đa phương.
+B. Mở rộng đầu tư nước ngoài và tăng trưởng xuất khẩu.
+/C. Thị trường xuất khẩu giảm, nguồn vốn đầu tư của nước ngoài chững lại.
+D. Giao lưu văn hóa, thông tin đối ngoại với nhiều quốc gia và khu vực.
+Câu 55. Đâu không phải là thành tựu cơ bản về văn hóa – xã hội trong công cuộc Đổi mới ở Việt Nam?
+A. Tỉ lệ hộ có thu nhập trung bình và thu nhập cao ngày càng tăng.
+B. Tỉ lệ hộ nghèo trên cả nước giảm.
+C. Y tế đạt được nhiều tiến bộ khi mức sống ngày càng cải thiện.
+/D. Tỉ lệ tử vong ở trẻ sơ sinh tăng, tuổi thọ trung bình giảm.
+Câu 56. Thành tựu hội nhập quốc tế về chính trị trong công cuộc Đổi mới ở Việt Nam là gì?
+/A. Tăng cường mối quan hệ với các đối tác chiến lược, đối tác toàn diện.
+B. Triển khai hợp tác, giao lưu văn hóa, thông tin đối ngoại với nhiều quốc gia.
+C. Đóng góp tích cực vào tăng trưởng và chuyển dịch cơ cấu kinh tế.
+D. Mở rộng đầu tư nước ngoài và tăng trưởng xuất khẩu.
+Câu 57. Nội dung nào dưới đây không phải là thành tựu đổi mới về văn hóa từ năm 1986 đến nay?
+/A. Hoạt động văn hóa, nghệ thuật, báo chí còn lạc hậu, chưa phát triển.
+B. Trình độ dân trí và chất lượng nguồn nhân lực được nâng lên.
+C. Nhiều di sản lịch sử, văn hóa được UNESCO ghi danh là di sản văn hóa thế giới.
+D. Chỉ số đổi mới sáng tạo (GII) của Việt Nam liên tục tăng.
+Câu 58. Nội dung nào dưới đây không phải là thành tựu về xã hội trong công cuộc Đổi mới ở Việt Nam?
+A. Công tác chăm sóc sức khỏe nhân dân và bảo hiểm y tế được mở rộng.
+/B. Cơ cấu xuất, nhập khẩu chuyển dịch theo hướng tăng xuất khẩu chế tạo.
+C. Chỉ số phát triển con người (HDI) tăng đều đặn và liên tục.
+D. Nhu cầu thiết yếu về ăn, mặc, ở, đi lại, giải trí được đáp ứng tốt hơn.
+Câu 59. Thành tựu cơ bản của Việt Nam sau 20 năm (1986-2000) tiến hành công cuộc đổi mới là gì?
+A. Việt Nam trở thành một trong những nước xuất khẩu gạo lớn của thế giới.
+B. Hàng hóa trên thị trường dồi dào, đa dạng, lưu thông thuận lợi.
+/C. Đất nước thoát khỏi khủng hoảng kinh tế-xã hội, ngày càng phát triển.
+D. Kinh tế đối ngoại phát triển nhanh, mở rộng về quy mô và hình thức.
+Câu 60. Một trong những thành tựu tiêu biểu về nhận thức lí luận và thực tiễn quá trình đổi mới chính trị ở Việt Nam là gì?
+/A. Hình thành hệ thống quan điểm lí luận về đường lối đổi mới và chủ nghĩa xã hội
+B. Nền dân chủ tư bản chủ nghĩa được phát huy và mở rộng cùng khối đại đoàn kết.
+C. Chính sách xóa đói giảm nghèo được quan tâm và ghi nhận nhiều thành tựu.
+D. Luôn đề cao vai trò lãnh đạo của Mặt trận tổ quốc và các tổ chức chính trị.
+Câu 61. Đâu không phải là thành tựu chủ yếu về hội nhập quốc tế của Việt Nam trong thời kỳ Đổi mới?
+A. Mở rộng quan hệ hợp tác quốc gia và vùng lãnh thổ, các tổ chức khu vực và quốc tế.
+B. Tham gia các hiệp ước, hiệp định song phương và đa phương về thương mại.
+/C. Từ hội nhập kinh tế khu vực đến hội nhập kinh tế quốc tế một cách sâu rộng.
+D. Đề xuất sáng kiến và tham gia giải quyết các vấn đề của khu vực và quốc tế.
+Câu 62. Đâu không phải là bài học kinh nghiệm của công cuộc Đổi mới ở Việt Nam từ năm 1986 đến nay?
+A. Kiên trì mục tiêu độc lập dân tộc và chủ nghĩa xã hội.
+B. Đổi mới toàn diện, đồng bộ, có bước đi, hình thức phù hợp.
+/C. Đổi mới phải vì lợi ích của cá nhân, phát huy vai trò của cá nhân.
+D. Kết hợp nội lực và ngoại lực, kết hơp sức mạnh dân tộc với sức mạnh thời đại.
+Câu 63. Việt Nam đã đạt được thành tựu tiêu biểu nào về chính trị trong thời kỳ đổi mới từ 1986 đến nay?
+/A. Hình thành hệ thống quan điểm lí luận về đường lối đổi mới.
+B. Xây dựng được mô hình Nhà nước cộng hoà công -nông – binh.
+C. Xoá bỏ chế độ phong kiến, xây dựng chế độ mới, dân chủ.
+D. Thay đổi phương hướng tiến lên chủ nghĩa xã hội.
+Câu 64. Một trong những thành tựu chính trị của Việt Nam thời kì Đổi mới (từ năm 1986) là
+A. xây dựng Nhà nước vô sản đầu tiên trên thế giới.
+/B. bảo vệ vững chắc độc lập, chủ quyền dân tộc.
+C. triệt để xoá bỏ thành phần kinh tế tập thể.
+D. hoàn thành phổ cập giáo dục trung học.
+Câu 65. Nội dung nào sau đây là đúng về thành tựu kinh tế Việt Nam trong thời kì Đổi mới?
+/A. Trở thành nước phát triển có thu nhập trung bình (2008).
+B. Hoàn thành công cuộc công nghiệp hoá, hiện đại hoá.
+C. Trở thành một trong ba trung tâm tài chính của thế giới.
+D. Kinh tế Nhà nước đóng vai trò quan trọng nhất của nền kinh tế.
+Câu 66. Một trong những thành tựu mà kinh tế Việt Nam đạt được trong thời kì Đổi mới là
+/A. chuyển dịch cơ cấu kinh tế theo hướng tăng tỉ trọng công nghiệp.
+B. chuyển dịch cơ cấu kinh tế theo hướng tăng tỉ trọng dịch vụ.
+C. trở thành nước công nghiệp hiện đại có thu nhập đầu người cao.
+D. xây dựng nền kinh tế kế hoạch hoá do Nhà nước quản lí hiệu quả.
+Câu 67. Từ khi thực hiện Đổi mới, Việt Nam đạt được thành tựu kinh tế nào sau đây?
+A. Trở thành nước công nghiệp tiên tiến.      B. Thu nhập đầu người cao nhất Đông Nam Á.
+/C. Kinh tế đối ngoại phát triển nhanh.           D. Chi phối nền tài chính châu Á.
+Câu 68. Trong thời kì Đổi mới, Việt Nam đạt được thành tựu văn hoá - xã hội nào sau đây?
+/A. Giải quyết vấn đề lao động và việc làm.           
+B. Không còn hộ nghèo, cận nghèo trên cả nước.
+C. Chỉ số phát triển con người đứng đầu thế giới.
+D. Miễn phí mọi chi phí y tế cho toàn dân.
+Câu 69. Trong thời kì Đổi mới, Việt Nam đạt được thành tựu giáo dục nào sau đây?
+/A. Phổ cập giáo dục trung học phổ thông.       B. Thực hiện giáo dục miễn phí cho toàn dân.
+C. Triển khai phong trào Bình dân học vụ.      D. Phổ cập giáo dục ở cấp trung học cơ sở.
+Câu 70. Nội dung nào sau đây phản ánh không đúng thành tựu hội nhập quốc tế của VN thời kì Đổi mới?
+A. Mở rộng quan hệ với các quốc gia, vùng lãnh thổ.
+B. Tham gia nhiều diễn đàn, tổ chức khu vực và quốc tế.
+/C. Trở thành thành viên thường trực Hội đồng Bảo an.
+D. Giữ gìn hoà bình ở một số các điểm nóng trên thế giới.
+Câu 71. Một trong những bài học rút ra từ công cuộc đổi mới ở Việt Nam (từ năm 1986) là
+/A. đổi mới toàn diện, đồng bộ, có bước đi, hình thức và cách làm phù hợp.
+B. đổi mới chính trị luôn đóng vai trò quan trọng nhất, chi phối kinh tế.
+C. các yếu tố bên ngoài quyết định thành công của công cuộc Đổi mới.
+D. đổi mới văn hoá – giáo dục cần được ưu tiên hơn các lĩnh vực khác.
+Câu 72. Thực tiễn công cuộc Đổi mới ở Việt Nam (từ năm 1986) cho thấy
+A. luôn phải đổi mới, cải cách trong mọi hoàn cảnh.
+B. đổi mới chính trị luôn được quan tâm hàng đầu.
+/C. đổi mới phải hướng đến lợi ích của nhân dân.
+D. phải áp dụng triệt để cải cách của các quốc gia đi trước.
+Câu 73. Nội dung nào sau đây là chủ trương chung trong đường lối đổi mới của Đảng Cộng sản Việt Nam từ năm 2006 đến nay?
+A. Xây dựng thành công cơ chế kinh tế thị trường, đẩy mạnh hợp tác kinh tế quốc tế.
+/B. Tiếp tục đẩy mạnh công nghiệp hoá, hiện đại hoá, hội nhập quốc tế sâu rộng.
+C. Xây dựng thành phần kinh tế tư nhân giữ vai trò then chốt và chủ lực.
+D. Phát triển nền kinh tế kế hoạch hoá, kinh tế tư nhân là động lực cơ bản.
+Câu 74. Nội dung nào sau đây là đường lối đổi mới ở Việt Nam từ năm 2006 đến nay về mặt chính trị?
+A. Đổi mới mô hình tăng trưởng, cơ cấu lại nền kinh tế.
+B. Chuyển từ hội nhập kinh tế sang hội nhập quốc tế sâu rộng.
+/C. Đẩy mạnh xây dựng, chỉnh đốn Đảng.
+D. Xây dựng nhà nước pháp trị.
+Câu 75. Đường lối đổi mới ở Việt Nam từ năm 1986 đến nay chủ yếu được bổ sung, phát triển qua
+A. kết luận của Ban Chấp hành Trung ương Đảng Cộng sản Việt Nam.
+B. thông báo của Ban Chấp hành Trung ương Đảng Cộng sản Việt Nam.
+C. các hội nghị định kì của Ban Chấp hành Trung ương Đảng Cộng sản Việt Nam.
+/D. các kỳ Đại hội đại biểu toàn quốc của Đảng Cộng sản Việt Nam.
+Câu 76. Bài học kinh nghiệm của công cuộc Đổi mới là đổi mới toàn diện, đồng bộ, có bước đi, hình thức và cách làm phù hợp, được thể hiện ở việc
+A. Thực hiện nguyên tắc "dân biết, dân bàn, dân làm, dân kiểm tra”.
+B. Khơi nguồn sáng tạo, chủ động và phát huy các nguồn lực của nhân dân.
+/C. Luôn tôn trọng quy luật khách quan, đổi mới từ tư duy, nhận thức đến thực tiễn.
+D. Kết hợp nội lực, ngoại lực tạo sức mạnh tổng hợp để phát triển nhanh và bền vững.
+Câu 77. Bài học kinh nghiệm của công cuộc Đổi mới là đổi mới vì lợi ích của nhân dân, phát huy vai trò chủ động, sáng tạo của nhân dân, được thể hiện ở quan điểm
+/A. lấy "dân làm gốc".	B. lấy "dân làm bệ phóng".
+C. Đề cao sự lãnh đạo của dân.	D. luôn để nhân dân quyết định.
+Câu 78. Một trong những nguyên tắc hàng đầu được thực hiện trong quá trình đổi mới ở Việt Nam là gì?
+A. Kết hợp nội lực và ngoại lực, coi nội lực là nhân tố quyết định.
+/B. Đảm bảo độc lập dân tộc và kiên định con đường xã hội chủ nghĩa.
+C. Tiến hành đồng bộ toàn diện trên tất cả các lĩnh vực.
+D. Đảm bảo giữ vững ổn định chính trị, xã hội và quốc phòng an ninh.
+Câu 79. Nội dung nào sau đây không phản ánh đúng về thành tựu của công cuộc Đổi mới ở Việt Nam hiện nay?
+A. Lạm phát được kiểm soát khá tốt.
+B. Cơ cấu kinh tế chuyển biến theo hướng tích cực.
+/C. Mức sống của dân cư đều và rất cao.
+D. Tăng trưởng kinh tế khá cao và tương đối bền vững.
+Câu 80. Đường lối Đổi mới từ năm 2006 đến nay của Đảng Cộng sản Việt Nam không được thể hiện những nội dung nào dưới đây?
+A. Phát triển nhận thức về công nghiệp hoá, hiện đại hóa đất nước.
+/B. Đổi mới mô hình tăng trưởng, cơ cấu lại nền kinh tế nông nghiệp.
+C. Tiếp tục phát triển nền văn hóa tiên tiến, đậm đà bản sắc dân tộc.
+D. Đẩy mạnh xây dựng, chỉnh đốn Đảng, tăng cường quốc phòng và an ninh.
+Câu 81. Một trong những nhiệm vụ trung tâm của công cuộc Đổi mới ở Việt Nam giai đoạn 1996-2006 là
+A. đổi mới cơ chế quản lí kinh tế, cải cách hệ thống giá, chống lạm phát.
+B. đổi mới chính sách văn hoá - xã hội, ưu tiên phát triển y tế, giáo dục.
+C. đổi mới hệ thống chính trị, đẩy mạnh xây dựng và chỉnh đốn Đảng.
+/D. đẩy mạnh công nghiệp hoá, hiện đại hoá và hội nhập kinh tế quốc tế.
+Câu 82. Một trong những công trình được khởi công trong thời kỳ công nghiệp hoá, hiện đại hoá, hội nhập kinh tế quốc tế (1996-2006) là
+/A. Nhà máy thuỷ điện Sơn La.                   B. Nhà máy thuỷ điện Hoà Bình.
+C. Khu gang thép Thái Nguyên.                D. Nhà máy diêm cưa Bến Thuỷ.
+Câu 83: Về kinh tế, giai đoạn 1986 – 1995, Đảng cộng sản Việt Nam chủ trương
+A. Xây dựng kinh tế tập trung quan liêu, bao cấp.
+B. Đổi mới kinh tế gắn liền với đổi mới chính trị.
+C. Phát triển kinh tế hàng hóa tư bản chủ nghĩa.
+/D. Phát triển kinh tế hàng hóa nhiều thành phần.
+Câu 84: Về chính trị, giai đoạn 1986 – 1995, một trong những chủ trương của Đảng cộng sản Việt Nam xác định
+A. Nâng cao hiệu quả của nền kinh tế - xã hội.
+B. Xây dựng con người hiện đại mới.
+/C. phát huy quyền làm chủ của nhân dân.
+D. phát huy quyền lực của nền kinh tế cá thể.
+Câu 85: Ba chương trình kinh tế được đề ra trong đường lối đổi mới của Đảng Cộng sản Việt Nam giai đoạn 1986-1995 là
+A. Lương thực - Thực phẩm, Công nghiệp nhẹ và Thủy hải sản.
+B. Lương thực - Thực phẩm, Công nghiệp nặng và Thủy hải sản.
+/C. Lương thực- Thực phẩm, Hàng tiêu dùng và Hàng xuất khẩu.
+D. Lương thực - Thực phẩm, Hàng tiêu dùng và sản xuất dày da.
+Câu 86: Thực hiện đa phương hóa, đa dạng hóa quan hệ đối ngoại được Đảng Cộng sản Việt Nam đề ra đầu tiên trong
+/A. Giai đoạn 1986 - 1995.	               B. Giai đoạn 1996 - 2006.
+C. Giai đoạn 1975 - 1986.	               D. Giai đoạn 2006 đến nay.
+Câu 87: Đại hội nào của Đảng Cộng sản Việt Nam xác định Việt Nam chuyển sang thời kỳ đẩy mạnh công nghiệp hóa, hiện đại hóa đất nước?
+A. Đại hội V (1982)  .	B. Đại hội VI (1986).
+C. Đại hội VII (1991).	/D. Đại hội VIII (1996).
+Câu 88: Về kinh tế giai đoạn 1996 - 2006 , đường lối đổi mới của Đảng Cộng sản Việt Nam xác định
+/A. Xây dựng nền kinh tế mở, hội nhập với khu vực và thế giới.
+B. Đổi mới chính trị phải được tiến hành tích cực và vững chắc.
+C. Xây dựng và tổ chức thực hiện Ba chương trình kinh tế lớn.
+D. Chủ trương kết hợp sức mạnh dân tộc và sức mạnh thời đại.
+Câu 89. Đường lối công nghiệp hoá, hiện đại hoá ở Việt Nam giai đoạn 1996-2006 có nội dung nào sau đây?
+A. Ưu tiên phát triển nông, lâm, ngư nghiệp.
+/B. Coi trọng công nghiệp hoá, hiện đại hoá nông nghiệp, nông thôn.
+C. Đẩy mạnh Chương trình mục tiêu quốc gia về xây dựng nông thôn mới.
+D. Phát triển các làng nghề thủ công truyền thống và trung tâm công nghiệp.
+Câu 90: Lần đầu tiên trong Nghị quyết số 04-NQ/TW Hội nghị lần thứ tư BCHTW Đảng (khoá VII, 1993) nhấn mạnh giáo dục và đào tạo là
+/A.quốc sách hàng đầu.	B. quan trọng hàng đầu.
+C. quyết định hàng đầu.	D. mặt trận hàng đầu.
+Câu 91: Về văn hóa, giai đoạn 1996 – 2006, Đảng cộng sản Việt Nam xác định
+A. Đẩy mạnh cải cách các tổ chức và hoạt động của Nhà nước
+B. Giải quyết các vấn đề xã hội như tạo thêm việc làm, xóa đói, giảm nghèo.
+/C. Xây dựng và phát triển nền văn hóa tiên tiến, đậm đà bản sắc dân tộc.
+D. Đặt trọng tâm chủ trương “hội nhập kinh tế quốc tế và khu vực”.
+Câu 92: Về chính trị giai đoạn 1996 – 2006, Đảng cộng sản Việt Nam chủ trương /A.Cải cách các tổ chức và hoạt động của Nhà nước pháp quyền xã hội chủ nghĩa.
+B. Mở rộng giải quyết các vấn đề xã hội như tạo thêm việc làm, xóa đói, giảm nghèo.
+B. Xây dựng và phát triển nền văn hóa tiên tiến, đậm đà bản sắc dân tộc.
+D. Đặt trọng tâm chủ trương “hội nhập kinh tế quốc tế và khu vực” .
+Câu 93: Chủ trương đẩy mạnh toàn diện công cuộc Đổi mới, sớm đưa nước ta ra khỏi tình trạng kém phát triển là nội dung của
+A. Đại hội V (1982).	/B. Đại hội X (2006).
+C. Đại hội VII (1991).	D. Đại hội VIII (1996).
+Câu 94: Chủ trương đổi mới về kinh tế giai đoạn 2006 đến nay của Đảng Cộng sản Việt Namlà
+/A. Đẩy mạnh công nghiệp hóa, hiện đại hóa gắn liền với phát triển kinh tế tri thức.
+B. Tăng cường xây dựng hệ thống chính trị trong sạch, vững mạnh.
+C. Thực hiện chiến lược hội nhập quốc tế toàn diện trên các lĩnh vực.
+D. Xây dựng và bảo vệ vững chắc Tổ quốc, giữ vững môi trường hòa bình, ổn định.
+Câu 95: Chủ trương đổi mới về chính trị giai đoạn 2006 đến nay của Đảng Cộng sản Việt Nam là
+A. Đẩy mạnh công nghiệp hóa, hiện đại hóa gắn liền với phát triển kinh tế tri thức.
+/B. Tăng cường xây dựng hệ thống chính trị trong sạch, vững mạnh.
+C. Thực hiện chiến lược hội nhập quốc tế toàn diện trên các lĩnh vực.
+D. Xây dựng và bảo vệ vững chắc Tổ quốc, giữ vững môi trường hòa bình, ổn định.
+Câu 96: Về đối ngoại giai đoạn 2006 đến nay của Đảng Cộng sản Việt Nam chủ trương
+A. Đẩy mạnh công nghiệp hóa, hiện đại hóa gắn liền với phát triển kinh tế tri thức.
+B. Tăng cường xây dựng hệ thống chính trị trong sạch, vững mạnh.
+/C. Thực hiện chiến lược hội nhập quốc tế toàn diện trên các lĩnh vực.
+D. Xây dựng và bảo vệ vững chắc Tổ quốc, giữ vững môi trường hòa bình, ổn định.
+Câu 97: Chủ trương đổi mới về văn hóa- xã hội giai đoạn 2006 đến nay của Đảng cộng sản Việt Nam nhằm
+A. Đẩy mạnh công nghiệp hóa, hiện đại hóa gắn liền với phát triển kinh tế tri thức.
+B. Tăng cường xây dựng hệ thống chính trị trong sạch, vững mạnh.
+C. Thực hiện chiến lược hội nhập quốc tế toàn diện trên các lĩnh vực.
+/D.Phát triển con người toàn diện và xây dựng nền văn hóa Việt Nam tiên tiến.
+Câu 98: Công cuộc đổi mới trong giai đoạn đầu (1986 - 1995 ) của Đảng cộng sản VN có ý nghĩa
+/A. tạo cơ sở để đất nước bước vào giai đoạn tiếp theo của sự nghiệp đổi mới toàn diện.
+B. tạo cơ sở để đất nước bước vào giai đoạn tiếp theo của sự nghiệp đổi mới bền vững.
+C. tạo nền tảng cho Việt Nam đẩy mạnh công nghiệp hóa - hiện đại hóa và hội nhập quốc tế.
+D. tạo nền tảng cho Việt Nam đẩy mạnh công nghiệp hóa - hiện đại hóa và hội nhập khu vực. Câu 99: Công cuộc Đổi mới của Đảng Cộng sản Việt Nam trong giai đoạn 1996 - 2006 có ý nghĩa
+A. tạo cơ sở để đất nước bước vào giai đoạn tiếp theo của sự nghiệp đổi mới toàn diện.
+B. tạo cơ sở để đất nước bước vào giai đoạn tiếp theo của sự nghiệp đổi mới bền vững.
+/C. tạo nền tảng cho Việt Nam đẩy mạnh công nghiệp hóa - hiện đại hóa và hội nhập quốc tế.
+D. tạo nền tảng cho Việt Nam đẩy mạnh công nghiệp hóa - hiện đại hóa và hội nhập khu vực.
+Câu 100: Tại sao Đảng cộng sản VN tiến hành công cuộc đổi mới đất nước từ năm 1986?
+A. Đất nước lâm vào khủng hoảng toàn diện, tình hình thế giới có nhiều thuận lợi.
+B. Tình hình trong nước có nhiều thuận lợi, Đảng đổi mới để nắm bắt thời cơ.
+C. Đất nước đang trên đà phát triển và được sự ủng hộ của các nước xã hội chủ nghĩa.
+/D.Yêu cầu sống còn của sự nghiệp xây dựng CNXH, phù hợp với xu thế thời đại
+Câu 101: Trong giai đoạn đầu của thời kì đổi mới (1986 - 1995), Đảng Cộng sản Việt Nam chủ trương thực hiện Ba chương trình kinh tế lớn: lương thực - thực phẩm, Hàng tiêu dùng và Hàng xuất khẩu nhằm mục tiêu nào sau đây?
+/A.Để giải quyết nhu cầu về lương thực-thực phẩm, Hàng tiêu dùng cho nhân dân.
+B.Để đáp ứng nhu cầu xuất khẩu lương thực- thực phẩm-hàng tiêu dùng.
+C.Để giải quyết nhu cầu về thu nhập và việc làm cho người lao động.
+D.Để tận dụng lợi thế cạnh tranh trên thị trường trong nước và khu vực.
+Câu 102: Nền kinh tế Việt Nam trước và sau thời điểm đổi mới từ năm 1986 có điểm khác biệt cơ bản là
+/A. chuyển từ nền kinh tế tập trung bao cấp sang nền kinh tế thị trường.
+B. chuyển từ nền kinh tế thị trường sang nền kinh tế tập trung bao cấp.
+C. xóa bỏ nền kinh tế tập trung bao cấp hình thành nền kinh tế mới.
+D. xóa bỏ nền kinh tế thị trường hình thành nền kinh tế mới.
+Câu 103: Một trong những điểm mới của Đại hội Đảng lần thứ VI (1986) so với Đại hội Đảng lần thứ V (1982) là gì?
+A. Đảng nhận thức được thời kì quá độ lên chủ nghĩa xã hội là thời kì lâu dài nhưng gặp nhiều thuận lợi.
+/B. Đảng nhận thức được thời kì quá độ lên chủ nghĩa xã hội là thời kì lâu dài, khó khăn và trải qua nhiều giai đoạn.
+C. Đảng nhận thức được thời kì quá độ lên chủ nghĩa xã hội là yêu cầu cấp thiết và quyết tâm thực hiện.
+D. Đảng nhận thức được phải đổi mới để nhanh chóng đưa đất nước tiến lên chủ nghĩa xã hội. Câu 104: Một trong những bài học kinh nghiệm cơ bản được Đảng Cộng sản Việt Nam rút ra trong thời kì đầu đổi mới từ 1986 – 1995 là
+/A. huy động cả hệ thống chính trị vào công cuộc đổi mới.
+B. tranh thủ sự giúp đỡ của các nước trong khu vực.
+C. duy trì môi trường hòa bình để xây dựng đất nước.
+D. đẩy mạnh quan hệ đối ngoại hòa bình.
+Câu 105: Một trong những biểu tượng nổi bật thể hiện thành công bước đầu của công cuộc đổi mới đất nước ở Việt Nam (từ năm 1986) là
+/A. xây dựng được đường dây điện 500 kV Bắc - Nam.
+B. khánh thành cầu Long Biên nối 2 bờ sông Hồng.
+C. nhà máy thủy điện Hòa Bình được xây dựng.
+D. xây dựng được nhà máy gang thép Thái Nguyên.
+Câu 106: Nội dung nào sau đây là thành tựu của đổi mới về chính trị ở Việt Nam (từ năm 1986)?
+A. Thị trường xuất nhập khẩu được mở rộng.
+/B. Nhà nước pháp quyền xã hội chủ nghĩa được xây dựng.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Quy mô nền kinh tế không ngừng được mở rộng.
+Câu 107. Trong đường lối đổi mới đề ra từ năm 1986, Đảng Cộng sản Việt Nam chủ trương xây dựng nền kinh tế hàng hóa nhiều thành phần nhằm
+A. phục vụ cho công cuộc cải tạo xã hội chủ nghĩa.
+B. thực hiện chủ trương chung của hệ thống xã hội chủ nghĩa.
+C. tập trung sức mạnh để phát triển công nghiệp nặng và xuất khẩu.
+/D. khơi xây dậy được tiềm năng và sức sáng tạo của quần chúng.
+Câu 108: Nội dung nào sau đây là thành tựu của đổi mới về chính trị ở Việt Nam (từ năm 1986)?
+A. Thị trường xuất nhập khẩu được mở rộng.
+/B. Nền dân chủ xã hội chủ nghĩa ngày càng mở rộng.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Quy mô nền kinh tế không ngừng được mở rộng.
+Câu 109: Nội dung nào sau đây là thành tựu của đổi mới về chính trị ở Việt Nam (từ năm 1986)?
+A. Thị trường xuất nhập khẩu được mở rộng.
+/B. Tổ chức bộ máy của hệ thống chính trị tinh gọn.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Quy mô nền kinh tế không ngừng được mở rộng.
+Câu 110: Nội dung nào sau đây là thành tựu của đổi mới về chính trị ở Việt Nam (từ năm 1986)?
+A. Thị trường xuất nhập khẩu được mở rộng.
+/B. Tổ chức bộ máy của hệ thống chính trị hoạt động hiệu quả.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Quy mô nền kinh tế không ngừng được mở rộng.
+Câu 111. Nội dung nào sau đây là thành tựu của đổi mới về kinh tế ở Việt Nam (từ năm 1986)?
+/A. Thị trường xuất nhập khẩu được mở rộng.
+B. Nhà nước pháp quyền xã hội chủ nghĩa được xây dựng.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Nền dân chủ xã hội chủ nghĩa được phát huy.
+Câu 112: Nội dung nào sau đây là thành tựu của đổi mới về kinh tế ở Việt Nam (từ năm 1986)?
+/A. Quy mô nền kinh tế không ngừng được mở rộng.
+B. Nhà nước pháp quyền xã hội chủ nghĩa được xây dựng.
+C. Mở rộng quan hệ quốc phòng với nhiều nước.
+D. Nền dân chủ xã hội chủ nghĩa được phát huy.
+Câu 113: Nội dung nào sau đây là thành tựu của đổi mới về kinh tế ở Việt Nam (từ năm 1986)?
+/A. Cơ cấu thành phần kinh tế có sự thay đổi theo hướng đa dạng hóa.
+B. Xây dựng nhà nước pháp quyền xã hội chủ nghĩa vững mạnh.
+C. Đời sống vật chất và tinh thần của nhân dân được cải thiện.
+D. Xây dựng quan hệ đối tác chiến lược, đối tác toàn diện với nhiều quốc gia.
+Câu 114: Nội dung nào sau đây là thành tựu của đổi mới về xã hội ở Việt Nam (từ năm 1986)?
+A. Cơ cấu thành phần kinh tế có sự thay đổi theo hướng đa dạng hóa.
+B. Xây dựng nhà nước pháp quyền xã hội chủ nghĩa vững mạnh.
+/C. Đời sống vật chất và tinh thần của nhân dân được cải thiện.
+D. Xây dựng quan hệ đối tác chiến lược, đối tác toàn diện với nhiều quốc gia.
+Câu 115: Hai công trình có quy mô lớn và quan trọng ở nước ta, được xây dựng trong hai thế kỉ khác nhau nhưng cùng mang một tên gọi. Đó là
+A. đường sắt Bắc - Nam.	B. đường Trường Sơn.
+C. đường Hồ Chí Minh trên biển.	/D. đường Hồ Chí Minh.
+Câu 116: Ngày 11-7-1995 diễn ra sự kiện gì gắn với chính sách đối ngoại của Đảng ta trong thời kì đổi mới?
+/A. Việt Nam và Mĩ bình thường hóa quan hệ ngoại giao.
+B. Việt Nam chính thức gia nhập Hiệp hội các nước Đông Nam Á.
+C. Việt Nam trở thành thành viên của tổ chức Liên hợp quốc.
+D. Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mĩ.
+Câu 117: Thành công lớn của ngoại giao Việt Nam trong năm 1995 là gì?
+/A. Việt Nam gia nhập tổ chức ASEAN.      B. Việt Nam gia nhập Liên hợp quốc.
+C. Việt Nam gia nhập WTO.                       D. Việt Nam gia nhập diễn đàn kinh tế Á - Âu.
+Câu 118: Bước tiến của Việt Nam trong lĩnh vực ngoại giao năm 1995 là gì?
+A. Bình thường hóa quan hệ ngoại giao với Trung Quốc.
+/B. Thiết lập quan hệ ngoại giao với Mĩ.
+C. Bình thường hóa quan hệ ngoại giao với Nhật Bản.
+D. Bình thường hóa quan hệ ngoại giao với Pháp.
+Câu 119: Nội dung nào sau đây là thành tựu về kinh tế đối ngoại của Việt Nam từ sau năm 1986?
+A. tốc độ tăng trưởng kinh tế tương đối bền vững.
+B. cơ cấu ngành chuyển dịch theo hướng hiện đại hóa.
+/C. nguồn vốn đầu tư của nước ngoài tăng nhanh chóng.
+D. hệ thống chính trị tinh gọn, hoạt động hiệu quả.
+Câu 120: Nội dung nào sau đây là đặc điểm của kinh tế Việt Nam trong thời kì quá độ lên chủ nghĩa xã hội (từ 1986 đến nay)?
+/A. Kinh tế thị trường định hướng xã hội chủ nghĩa.
+B. Quản lí kinh tế tập trung, quan liêu bao cấp.
+C. Phát triển một nền kinh tế tự cung, tự cấp.
+D. Kinh tế nông nghiệp lạc hậu, nhỏ lẻ, phân tán.
+Câu 121: Mặt hàng có giá trị xuất khẩu lớn của nước ta giai đoạn đầu khi tiến hành công cuộc đổi mới là
+A. gạo, dầu thô, cà phê.	/B. gạo, dầu thô, thủy sản.
+C. gạo, dầu thô, than đá.	D. gạo, than đá, cà phê.
+Câu 122: Việc Việt Nam gia nhập tổ chức ASEAN (1995) có ý nghĩa gì?
+A. Đánh dấu việc ASEAN đã trở thành một liên minh kinh tế - chính trị.
+B. Mở ra quá trình liên kết của ASEAN với các nước ngoài khu vực.
+C. Nâng cao vị thế của ASEAN trên trường quốc tế.
+/D. Góp phần nâng cao vị thế của Việt Nam trong khu vực và thế giới.
+Câu 123: Việc Việt Nam gia nhập ASEAN (1995) chứng tỏ
+A. ASEAN đã trở thành một liên minh kinh tế - chính trị.
+B. ASEAN kết nạp cả các nước ngoài khu vực Đông Nam Á.
+C. vị thế quốc tế của ASEAN được nâng cao hơn trước.
+/D. với công cuộc đổi mới, Việt Nam đã hội nhập quốc tế sâu rộng.
+Câu 124: Ngày 28-7-1995 đã diễn ra sự kiện ngoại giao gì nổi bật đối với Việt Nam?
+/A. Việt Nam gia nhập tổ chức ASEAN.
+B. Việt Nam gia nhập tổ chức Liên hợp quốc.
+C. Việt Nam bình thường hóa quan hệ với Mĩ.
+D. Việt Nam tổ chức thành công hội nghị APEC.
+Câu 125. Những thành tựu đạt được của Việt Nam giai đoạn 1986 - 1995 chứng tỏ
+A. đường lối đổi mới của Đảng là đúng, bước đi của công cuộc đổi mới đã hoàn thành.
+B. kế hoạch xây dựng bước đầu cơ sở vật chất - kĩ thuật của chủ nghĩa xã hội đã thành công.
+/C. đường lối đổi mới của Đảng là đúng, bước đi của công cuộc đổi mới về cơ bản là phù hợp.
+D. bước đi của công cuộc đổi mới là phù hợp, Việt Nam đã thoát khỏi tình trạng lạm phát.
+Câu 126: Yếu tố nào sau đây quyết định thành công của công cuộc đổi mới đất nước ở Việt Nam từ năm 1986 đến nay?
+A. Đổi mới kinh tế, chính trị.     B. Đổi mới văn hóa xã hội.
+/C. Đổi mới tư duy kinh tế.         D. Đổi mới về ngoại giao.
+Câu 127: Đâu không phải là những khó khăn và tồn tại của Việt Nam khi thực hiện công cuộc đổi mới đất nước (1986 - 2000)?
+A. Kinh tế phát triển chưa bền vững
+B. Một số vấn đề văn hóa, xã hội bức xúc chưa được giải quyết
+C. Tình trạng quan liêu, tham nhũng
+/D. Sự chia rẽ khối đoàn kết dân tộc
+Câu 128: Thành tựu lớn nhất của Việt Nam trong lĩnh vực nông nghiệp khi tiến hành công cuộc đổi mới đất nước (từ năm 1986) là
+A. tự túc được một phần lương thực, thực phẩm.
+/B. trở thành nước xuất khẩu nông sản hàng đầu thế giới.
+C. trở thành nước xuất khẩu gạo lớn nhất Đông Nam Á.
+D. đa dạng hóa các sản phẩm nông nghiệp xuất khẩu.
+Câu 129: Nhân tố quyết định thắng lợi công cuộc đổi mới đất nước (từ năm 1986) là
+A. biết nắm bắt thời cơ, vượt qua thách thức đưa đất nước tiến lên.
+B. coi giáo dục và đào tạo, khoa học kĩ thuật là quốc sách hàng đầu.
+/C. đường lối lãnh đạo đúng đắn của Đảng Cộng sản Việt Nam.
+D. nắm bắt xu thế phát triển của thế giới và phát huy nội lực trong nước.
+D. không ngừng củng cố khối đại đoàn kết dân tộc.
+Câu 133: Yếu tố quyết định nhất dẫn đến sự thành công trong giai đoạn đầu của công cuộc đổi mới ở Việt Nam (từ năm 1986) là
+A. đổi mới kinh tế - chính trị.
+B. đổi mới về văn hóa - xã hội.
+/C. đổi mới tư duy, nhất là tư duy kinh tế.
+D. đổi mới về chính sách đối ngoại.
+Câu 134: Ý nghĩa quan trọng nhất của những thành tựu Việt Nam đạt được trong công cuộc đổi mới đất nước (từ năm 1986 đến nay) là gì?
+/A. Đất nước thoát khỏi khủng hoảng, từng bước quá độ lên chủ nghĩa xã hội.
+B. Vị thế, uy tín của Việt Nam không ngừng được nâng cao trên trường quốc tế.
+C. Việt Nam trở thành quốc gia đang phát triển của thế giới.
+D. Củng cố vững chắc nền độc lập dân tộc và chế độ xã hội chủ nghĩa.
+Câu 135. Bài học kinh nghiệm cơ bản nào được rút ra cho Đảng Cộng sản Việt Nam trong quá trình tổ chức và lãnh đạo cách mạng từ công cuộc đổi mới đất nước (từ tháng 12-1986)?
+A. Nhạy bén trước sự chuyển biến của tình hình thế giới.
+/B. Bám sát tình hình thực tiễn để đề ra chủ trương phù hợp.
+C. Quan tâm đến nguyện vọng của quần chúng nhân dân.
+D. Tăng cường sự lãnh đạo của Đảng đối với cách mạng Việt Nam.
+Câu 136: Thực tiễn của công cuộc đổi mới đất nước (từ năm 1986) đã để lại bài học kinh nghiệm gì cho công cuộc xây dựng và bảo vệ tổ quốc hiện nay?
+/A. Kiên trì mục tiêu độc lập dân tộc và chủ nghĩa xã hội.
+B. Dựa hoàn toàn vào nội lực để phát triển đất nước.
+C. Đổi mới phải toàn diện nhưng trọng tâm là đổi mới chính trị.
+D. Phát huy vai trò chủ động, sáng tạo của giai cấp công nhân.
+Câu 137: Thực tiễn của công cuộc đổi mới đất nước (từ năm 1986) đã để lại bài học kinh nghiệm gì cho công cuộc xây dựng và bảo vệ tổ quốc hiện nay?
+/A. Đổi mới phải vì lợi ích nhân dân, phát huy vai trò chủ động, sáng tạo của nhân dân.
+B. Dựa hoàn toàn vào nội lực để phát triển đất nước nhanh và bền vững.
+C. Đổi mới phải toàn diện và đồng bộ nhưng trọng tâm là đổi mới chính trị.
+D. Phát huy vai trò chủ động, sáng tạo của giai cấp công nhân và giai cấp nông dân.
+Câu 138: Thực tiễn của công cuộc đổi mới đất nước (từ năm 1986) đã để lại bài học kinh nghiệm gì cho công cuộc xây dựng và bảo vệ tổ quốc hiện nay?
+/A. Kết hợp sức mạnh dân tộc với sức mạnh thời đại trong điều kiện mới.
+B. Dựa hoàn toàn vào nội lực để phát triển đất nước nhanh và bền vững.
+C. Đổi mới phải toàn diện và đồng bộ nhưng trọng tâm là đổi mới chính trị.
+D. Phát huy vai trò chủ động, sáng tạo của giai cấp công nhân và giai cấp nông dân.
+Câu 139: Thực tiễn của công cuộc đổi mới đất nước (từ năm 1986) đã để lại bài học kinh nghiệm gì cho công cuộc xây dựng và bảo vệ tổ quốc hiện nay?
+/A. Muốn đổi mới hiệu quả cần có bước đi, hình thức và cách làm phù hợp.
+B. Dựa hoàn toàn vào nội lực để phát triển đất nước nhanh và bền vững.
+C. Đổi mới phải toàn diện và đồng bộ nhưng trọng tâm là đổi mới chính trị.
+D. Phát huy vai trò chủ động, sáng tạo của giai cấp công nhân và giai cấp nông dân.
+Câu 140: Ý nghĩa quan trọng nhất của những thành tựu Việt Nam đạt được trong công cuộc đổi mới đất nước (từ năm 1986 đến nay) là
+A. củng cố vững chắc nền độc lập dân tộc.
+B. nâng cao vị thế của Việt Nam trên trường quốc tế.
+/C. khẳng định đường lối đổi mới của Đảng là đúng đắn.
+D. Việt Nam trở thành một quốc gia đang phát triển.
+Câu 141. Trong đường lối Đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương
+/A. kiên định mục tiêu xã hội chủ nghĩa                  B. thực hiện đa nguyên đa đảng.
+C. đẩy mạnh công nghiệp hoá, hiện đại hoá.          D. ưu tiên phát triển công nghiệp nặng.
+Câu 142. Đường lối đổi mới của Đảng Cộng sản Việt Nam (từ tháng 12-1986) có nội dung nào sau đây?
+/A. Thay đổi quan niệm về chủ nghĩa xã hội.
+B. Chỉ tập trung đổi mới về chính trị.
+C. Chỉ tập trung đổi mới về văn hóa.
+D. Phát triển khoa học là mục đích cao nhất.
+Câu 143. Trong đường lối đổi mới đất nước (từ tháng 12/1986), Đảng cộng sản Việt Nam chủ trương hình thành cơ chế kinh tế nào?
+A. Bao cấp.	B. Kế hoạch hóa.	C. Tập trung.	/D. Thị trường.
+Câu 144. Một trong những xu hướng quốc tế ảnh hưởng đến Việt Nam trong thời gian khởi đầu đổi mới là gì?
+/A. Sự kết thúc của chiến tranh lạnh                        B. Sự gia tăng của chiến tranh lạnh
+C. Sự suy yếu của các nước tư bản chủ nghĩa        D. Sự sụp đổ hoàn toàn của Liên Xô
+Câu 145. Một trong những yếu tố quan trọng tạo ra động lực cho công cuộc đổi mới ở Việt Nam là gì?
+/A. Xu thế toàn cầu hóa
+B. Khủng hoảng kinh tế tại Mỹ
+C. Sự phát triển mạnh mẽ của các nước Đông Âu
+D. Cuộc chiến tranh giữa hai miền nước Đức
+Câu 146. Những thay đổi nào trên thế giới đã tác động mạnh đến Việt Nam trong giai đoạn đầu đổi mới?
+A. Cuộc gặp gỡ thương lượng giữa hai miền Triều Tiên
+/B. Xu thế cải cách, mở cửa và hội nhập quốc tế
+C. Cuộc xung đột tại khu vực Trung Đông
+D. Sự bùng nổ của chiến tranh Việt Nam
+Câu 148. Một trong những khó khăn trong quan hệ quốc tế mà Việt Nam phải đối mặt khi bắt đầu công cuộc đổi mới là gì?
+/A. Mỹ cấm vận kinh tế                                      B. Cuộc xung đột tại Trung Đông
+C. Sự phát triển của các nước Đông Âu            D. Chiến tranh lạnh tái bùng phát
+Câu 149. Công cuộc đổi mới ở Việt Nam được khởi đầu trong bối cảnh quốc tế như thế nào?
+A. Sự phát triển mạnh mẽ của các nước xã hội chủ nghĩa
+B. Sự kết thúc của xu thế hòa hoãn Đông Tây
+/C. Cuộc cách mạng khoa học kĩ thuật và xu thế toàn cầu hóa
+D. Sự gia tăng mâu thuẫn giữa các nước lớn
+Câu 151. Việc đổi mới toàn diện đất nước ở Việt Nam từ năm 1986 đã có tác động như thế nào đến vị thế của Việt Nam trên trường quốc tế?
+A. Tăng cường quan hệ với các nước tư bản chủ nghĩa
+/B. Việt Nam trở thành thành viên của các tổ chức quốc tế quan trọng như ASEAN và WTO
+C. Việt Nam giảm sự phụ thuộc vào các nước xã hội chủ nghĩa
+D. Việt Nam không thay đổi vị thế trên trường quốc tế
+Câu 152. Trong quá trình đổi mới, Việt Nam đã áp dụng những biện pháp nào để giải quyết tình trạng khủng hoảng kinh tế - xã hội trong nước?
+A. Tập trung phát triển nông nghiệp và xuất khẩu hàng hóa
+B. Đóng cửa các doanh nghiệp nhà nước không hiệu quả
+/C. Mở rộng quan hệ hợp tác quốc tế và thu hút đầu tư nước ngoài
+D. Thực hiện chính sách cô lập kinh tế với thế giới bên ngoài
+Câu 153. Sự thành công của công cuộc đổi mới ở Việt Nam có thể rút ra bài học gì về việc thích ứng với những thay đổi của thế giới?
+A. Chỉ cần cải cách kinh tế là đủ để phát triển
+/B. Việc mở cửa và hội nhập quốc tế là yếu tố quan trọng để phát triển bền vững
+C. Phát triển kinh tế chỉ cần dựa vào nguồn lực trong nước
+D. Sự thay đổi chính trị là yếu tố quyết định tất cả
+Câu 154. Thực tế trong quá trình đổi mới, Việt Nam đã phải đối mặt với những thách thức nào từ các chính sách cấm vận kinh tế của Mỹ?
+/A. Khó khăn trong việc tiếp cận các nguồn vốn và công nghệ từ nước ngoài
+B. Sự gia tăng mâu thuẫn nội bộ
+C. Sự giảm sút lòng tin của nhân dân vào Đảng
+D. Sự phát triển quá mức của các doanh nghiệp tư nhân
+Câu 155. Việc Việt Nam tham gia vào xu thế toàn cầu hóa trong thời kỳ đổi mới đã mang lại những cơ hội và thách thức nào cho nền kinh tế nước ta?
+/A. Cơ hội tiếp cận thị trường thế giới nhưng cũng đối mặt với sự cạnh tranh gay gắt từ các doanh nghiệp nước ngoài
+B. Gia tăng cơ hội việc làm trong nước nhưng giảm xuất khẩu hàng hóa
+C. Phát triển kinh tế mạnh mẽ nhưng làm tăng khoảng cách giàu nghèo giữa các vùng miền
+D. Tăng cường quan hệ ngoại giao nhưng giảm đầu tư trong nước
+Câu 156. Trong quá trình đổi mới, mục tiêu chính trị mà Việt Nam luôn giữ vững là gì?
+A. Độc lập dân tộc	/B. Chủ nghĩa xã hội
+C. Kinh tế thị trường	D. Dân chủ xã hội chủ nghĩa
+Câu 157. Việt Nam đã chuyển đổi từ nền kinh tế kế hoạch hóa tập trung sang nền kinh tế nào?
+A. Kinh tế tư bản chủ nghĩa
+B. Kinh tế tự cung tự cấp
+/C. Kinh tế thị trường định hướng xã hội chủ nghĩa
+D. Kinh tế hàng hóa tư nhân
+Câu 158. Sau 10 năm đổi mới (1986-1995), Việt Nam đã đạt được thành tựu gì nổi bật về kinh tế?
+A. Trở thành nước công nghiệp hiện đại
+/B. Vượt qua khủng hoảng kinh tế – xã hội
+C. Trở thành nền kinh tế lớn thứ tư trong ASEAN
+D. Gia nhập WTO
+Câu 159. Một trong những kết quả quan trọng về mặt chính trị sau quá trình Đổi mới ở Việt Nam là gì?
+/A. Đẩy mạnh công tác xây dựng Đảng
+B. Chuyển đổi sang chế độ tư bản chủ nghĩa
+C. Tăng cường nhập khẩu vũ khí
+D. Xây dựng nền kinh tế quốc phòng vững mạnh
+Câu 160. Quá trình công nghiệp hóa, hiện đại hóa ở Việt Nam đã tạo ra sự chuyển dịch trong cơ cấu kinh tế như thế nào?
+A. Từ nền kinh tế công nghiệp sang kinh tế nông nghiệp
+/B. Từ nền kinh tế nông nghiệp sang công nghiệp - dịch vụ
+C. Từ kinh tế thị trường sang kinh tế bao cấp
+D. Từ nền kinh tế tư bản chủ nghĩa sang nền kinh tế tự cung tự cấp
+Câu 161. Việt Nam đã ra khỏi nhóm nước có thu nhập thấp và trở thành nước đang phát triển có thu nhập trung bình vào năm nào?
+A. 1995	B. 2000	/C. 2008	D. 2015
+Câu 162. Tỉ lệ hộ nghèo ở Việt Nam giảm nhanh nhờ vào chính sách gì?
+A. Tăng cường nhập khẩu                       B. Đẩy mạnh xuất khẩu lao động
+/C. Chính sách xoá đói giảm nghèo          D. Chính sách ưu đãi người có công
+Câu 164. Nền văn hóa tiên tiến, đậm đà bản sắc dân tộc trong thời kỳ Đổi mới ở Việt Nam chú trọng điều gì?
+/A. Bảo tồn và phát huy giá trị văn hóa truyền thống
+B. Xây dựng nhiều trung tâm thương mại
+C. Tăng cường nhập khẩu sản phẩm văn hóa từ nước ngoài
+D. Đẩy mạnh giao lưu văn hóa với các nước tư bản
+Câu 165. Việt Nam đã thiết lập quan hệ ngoại giao với bao nhiêu quốc gia và vùng lãnh thổ trên thế giới sau quá trình hội nhập quốc tế?
+A. 150	B. 189	/C. 193	D. 247
+Câu 166. Việc chuyển đổi sang nền kinh tế thị trường định hướng xã hội chủ nghĩa đã tạo ra những cơ hội nào cho Việt Nam trong quá trình hội nhập quốc tế?
+/A.Dễ dàng hơn trong việc thu hút đầu tư nước ngoài và mở rộng thị trường xuất khẩu
+B.Tăng cường sự phụ thuộc vào viện trợ nước ngoài
+C.Phát triển kinh tế một cách độc lập, không cần liên kết quốc tế
+D.Giảm bớt sự can thiệp của Nhà nước vào kinh tế
+Câu 167. Thành tựu về giảm nghèo và cải thiện đời sống xã hội trong thời kỳ Đổi mới có thể đem lại bài học gì cho các quốc gia đang phát triển khác?
+A.Tập trung vào phát triển nông nghiệp
+/B.Tăng cường hợp tác quốc tế và áp dụng các chính sách an sinh xã hội phù hợp
+C.Đẩy mạnh công nghiệp hóa một cách đồng bộ
+D.Giảm sự chú trọng vào giáo dục và y tế
+Câu 168. Việc Việt Nam tham gia sâu rộng vào các tổ chức quốc tế và khu vực đã giúp ích gì cho việc bảo vệ chủ quyền và an ninh quốc gia?
+A.Giảm sự đầu tư vào quốc phòng
+/B.Tăng cường khả năng đối phó với các thách thức an ninh và giữ vững chủ quyền
+C.Mở rộng thị trường nhập khẩu vũ khí
+D.Hạn chế sự hợp tác quốc tế trong lĩnh vực quốc phòng
+Câu 169. Sự phát triển kinh tế đối ngoại của Việt Nam trong thời kỳ Đổi mới cho thấy tầm quan trọng của việc gì đối với các nước đang phát triển?
+A.Phát triển thị trường nội địa
+/B.Mở rộng quan hệ thương mại quốc tế và đa dạng hóa thị trường xuất khẩu
+C.Tăng cường thuế xuất khẩu
+D.Giảm sự phụ thuộc vào các đối tác thương mại quốc tế
+Câu 170. Việc Việt Nam đạt được nhiều tiến bộ trong giáo dục và khoa học công nghệ sau quá trình Đổi mới có thể liên hệ như thế nào đến vai trò của giáo dục đối với sự phát triển quốc gia?
+/A.Giáo dục là yếu tố then chốt trong việc thúc đẩy phát triển kinh tế và hội nhập quốc tế
+B.Giáo dục chỉ là yếu tố phụ trong quá trình phát triển
+C.Sự phát triển kinh tế không liên quan đến giáo dục
+D.Chỉ cần đầu tư vào giáo dục đại học để phát triển đất nước
+Câu 171. Một trong những nguyên tắc hàng đầu trong quá trình đổi mới ở Việt Nam là gì?
+A.Phát triển kinh tế tư nhân
+/B.Đảm bảo độc lập dân tộc và kiên định con đường xã hội chủ nghĩa
+C.Mở rộng quan hệ với các nước tư bản
+D.Thúc đẩy kinh tế thị trường tự do
+Câu 172. Trong quá trình đổi mới, Việt Nam đã kiên trì theo đuổi mục tiêu nào?
+A.Công nghiệp hóa toàn diện                          B.Chủ nghĩa tư bản
+/C.Độc lập dân tộc và chủ nghĩa xã hội            D.Kinh tế thị trường tự do
+Câu 173. Đổi mới toàn diện, đồng bộ nghĩa là gì trong quá trình Đổi mới ở Việt Nam?
+A.Tập trung cải cách kinh tế
+B.Thay đổi toàn bộ hệ thống giáo dục
+/C.Tiến hành đổi mới trên tất cả các lĩnh vực và cấp độ
+D.Chuyển đổi hệ thống chính trị
+Câu 174. Vì sao việc phát huy vai trò chủ động, sáng tạo của nhân dân là cần thiết trong quá trình đổi mới?
+A.Để tăng cường quyền lực của Đảng
+/B.Để khơi dậy tiềm năng trong nhân dân
+C.Để giảm thiểu vai trò của Nhà nước
+D.Để tạo ra sự phân biệt giữa các tầng lớp xã hội
+Câu 175. Nguyên tắc "dân biết, dân bàn, dân làm, dân kiểm tra, dân giám sát, dân thụ hưởng" được áp dụng nhằm mục đích gì?
+A.Tăng cường sự giám sát của chính quyền địa phương
+/B.Đảm bảo quyền lợi và phát huy vai trò của nhân dân trong quá trình đổi mới
+C.Giảm thiểu sự can thiệp của Đảng vào các quyết định kinh tế
+D.Thúc đẩy việc áp dụng công nghệ mới
+Câu 176. Trong điều kiện mới, Việt Nam đã kết hợp sức mạnh nào để phát triển đất nước?
+A.Sức mạnh của Đảng và Nhà nước
+/B.Sức mạnh nội lực và ngoại lực, sức mạnh dân tộc và sức mạnh thời đại
+C.Sức mạnh của công nghệ và khoa học
+D.Sức mạnh quân sự và kinh tế
+Câu 177. Việc kết hợp sức mạnh dân tộc với sức mạnh thời đại trong quá trình đổi mới nhằm mục đích gì?
+/A.Phát triển kinh tế một cách bền vững và toàn diện
+B.Đẩy mạnh quân sự để bảo vệ đất nước
+C.Mở rộng hệ thống giáo dục và y tế
+D.Thúc đẩy mối quan hệ ngoại giao với các nước láng giềng
+Câu 178. Đổi mới vì lợi ích của nhân dân có nghĩa là gì?
+A.Tập trung phát triển kinh tế tư nhân
+/B.Đảm bảo mọi chính sách đều hướng đến cải thiện đời sống nhân dân
+C.Mở rộng hợp tác với các nước tư bản
+D.Giảm thiểu vai trò của Nhà nước trong đời sống xã hội
+Câu 179. Việc kết hợp sức mạnh trong nước và quốc tế có ý nghĩa gì đối với Việt Nam trong thời kỳ Đổi mới?
+A.Tạo ra sự cạnh tranh trong nội bộ
+/B.Đảm bảo sự phát triển nhanh và bền vững của đất nước
+C.Hạn chế sự phụ thuộc vào nước ngoài
+D.Tăng cường sức mạnh quân sự của Việt Nam
+Câu 180. Việc phát huy vai trò chủ động, sáng tạo của nhân dân trong quá trình đổi mới thể hiện rõ ở nguyên tắc nào?
+A.Đổi mới kinh tế trước chính trị
+/B.Dân biết, dân bàn, dân làm, dân kiểm tra, dân giám sát, dân thụ hưởng
+C.Kết hợp sức mạnh nội lực và ngoại lực
+D.Tập trung vào phát triển giáo dục
+Câu 181. Việc kết hợp sức mạnh nội lực và ngoại lực trong quá trình đổi mới của Việt Nam có thể rút ra bài học gì cho các nước đang phát triển?
+A.Chỉ tập trung vào phát triển kinh tế nội địa
+/B.Phải tận dụng cả nguồn lực trong nước và quốc tế để phát triển
+C.Hạn chế sự can thiệp của nước ngoài vào kinh tế trong nước
+D.Phát triển kinh tế một cách độc lập, không cần liên kết quốc tế
+Câu 182. Làm thế nào để đảm bảo lợi ích của nhân dân trong quá trình đổi mới được thực hiện một cách hiệu quả?
+A.Tăng cường các biện pháp kiểm soát chặt chẽ từ trên xuống dưới
+/B.Tạo điều kiện để nhân dân tham gia vào quá trình ra quyết định và giám sát các chính sách
+C.Giảm thiểu vai trò của nhân dân trong quá trình quản lý kinh tế
+D.Chỉ tập trung vào các chính sách kinh tế mà bỏ qua các chính sách xã hội
+Câu 183. Việc kiên trì mục tiêu độc lập dân tộc và chủ nghĩa xã hội trong quá trình đổi mới có ý nghĩa gì đối với Việt Nam trong bối cảnh toàn cầu hóa hiện nay?
+/A.Đảm bảo sự phát triển bền vững và độc lập trong bối cảnh hội nhập quốc tế
+B.Tăng cường sự phụ thuộc vào các cường quốc kinh tế
+C.Giảm bớt sự cần thiết của việc hội nhập quốc tế
+D.Tập trung vào phát triển kinh tế tư nhân và giảm sự can thiệp của Nhà nước
+Câu 184. Việc đổi mới toàn diện và đồng bộ cần phải có bước đi, hình thức và cách làm phù hợp có thể được liên hệ như thế nào với các chính sách phát triển kinh tế hiện nay?
+A.Các chính sách phát triển kinh tế cần được thử nghiệm trước khi áp dụng đại trà
+B.Tất cả các chính sách phát triển kinh tế phải được thực hiện một cách đồng loạt và không cần thử nghiệm
+/C.Mỗi lĩnh vực cần có một cách tiếp cận riêng, phù hợp với đặc thù của nó để đảm bảo hiệu quả
+D.Tập trung vào phát triển công nghiệp và bỏ qua các lĩnh vực khác
+Câu 185. Trong bối cảnh hội nhập quốc tế ngày càng sâu rộng, bài học về việc phát huy sức mạnh dân tộc kết hợp với sức mạnh thời đại có thể được áp dụng như thế nào trong quản lý kinh tế và xã hội hiện nay?
+/A.Tăng cường hợp tác quốc tế, đồng thời khai thác tối đa tiềm năng nội lực của đất nước
+B.Chỉ tập trung vào phát triển các mối quan hệ quốc tế mà bỏ qua việc phát triển nội lực
+C.Hạn chế hợp tác quốc tế để bảo vệ lợi ích quốc gia
+D.Tập trung phát triển các lĩnh vực công nghiệp nặng mà bỏ qua lĩnh vực khác.
+Câu 186. Vì sao trong đường lối Đổi mới giai đoạn (1986-1995) Đảng Cộng sản Việt Nam xác định trọng tâm là đổi mới kinh tế?
+/A.Kinh tế là tiêu chí đánh giá sức mạnh mỗi quốc gia.
+B.Nền kinh tế của Việt Nam đang bị Pháp vượt qua.
+C.Đang học hỏi bài học kinh nghiệm của Trung Quốc.
+D.Kinh tế tự chủ mới quyết định được các vấn đề khác.
+Câu 187. Vì sao Đảng Cộng sản Việt Nam phải tiếp tục hoàn thiện, bổ sung đường lối Đổi mới được đề ra từ Đại hội đại biểu toàn quốc lần thứ VI (1986)?
+/A.Phù hợp với tình hình thực tế.	B. Do yêu cầu của Trung Quốc.
+C. Điểm xuất phát còn quá thấp.	D. Đảm bảo an ninh - quốc phòng.
+Câu 189. Quan điểm của Đảng trong Đại hội toàn quốc lần VI (12/1986) là đổi mới kinh tế phải gắn liền với đổi mới về
+A. quân sự.	B. tư tưởng.	/C. chính trị.	D. văn hóa.
+Câu 190. Thực tiễn lịch sử nào là yếu tố quyết định Việt Nam phải tiến hành sự nghiệp đổi mới đất nước (từ năm 1986)?
+A. Đất nước đã thống nhất về mặt lãnh thổ và Nhà nước.
+B. Xu thế quốc tế hóa diễn ra ngày càng mạnh mẽ trên thế giới.
+C. Các nước công nghiệp mới đạt nhiều thành tựu sau cải cách.
+/D. Cuộc khủng hoảng kinh tế-xã hội ở Việt Nam diễn ra trầm trọng.
+Câu 191. Nội dung nào sau đây không phải là nội dung cơ bản của đường lối đổi mới do Đảng Cộngsản Việt Nam đề ra trong giai đoạn 1986 – 1995?
+A. Đổi mới cơ chế quản lí kinh tế.
+B. Xây dựng nền kinh tế hàng hoá nhiều thành phần
+/C. Phát triển kinh tế tư nhân đóng vai trò chủ lực.
+D. Điều chỉnh cơ cấu đầu tư.
+Câu 192. Nền dân chủ xã hội chủ nghĩa được phát huy và ngày càng mở rộng, đó là thành tựu trên lĩnh vực gì của công cuộc Đổi mới ở Việt Nam?
+/A. Chính trị.	B. Kinh tế.	C. Văn hoá – xã hội.	D. Đối ngoại.
+Câu 193. Thành phần kinh tế nào sau đây giữ vai trò chủ đạo trong nền kinh tế Việt Nam
+A. tư nhân	/B. Nhà nước	C. Cá thể	D. Nước ngoài
+Câu 1: Sau chiến tranh thế giới thứ nhất, Pháp đã đẩy mạnh thực hiện chương trình gì ở nước ta?
+A. Khai thác thuộc địa lần thứ nhất	/B. Khai thác thuộc địa lần thứ hai
+C. Khai thác thuộc địa lần thứ ba	D. Khai thác thuộc địa lần thứ ba
+Câu 2: Học sinh, sinh viên, trí thức, viên chức nhà nước thuộc giai cấp nào sau đây:
+/A. Tiểu tư sản	 B. Tư sản	  C. Công nhân	      D. Nông dân
+Câu 3: Năm 1919 Nguyễn Tất Thành đã gia nhập tổ chức gì ở Pháp?
+A. Đảng Cộng Sản Pháp		B. Đảng Cộng hòa Pháp
+C. Đảng Công nhân Pháp	            /D. Đảng Xã hội Pháp
+Câu 4: Sự kiện nào đánh dấu Nguyễn Ái Quốc đã tìm ra được con đường cứu nước đúng đắn cho dân tộc?
+A.Người gửi Bản yêu sách của nhân dân An Nam đến Hội nghị Véc-xai (6/1919).
+/B.Người bỏ phiếu tán thành việc gia nhập Quốc tế Cộng sản tại Đại hội Tua (12/1920).
+C.Người thành lập tổ chức Hội liên hiệp thuộc địa ở Pari (1921).
+D.Người đọc được bản Sơ thảo lần thứ nhất những luận cương về vấn đề dân tộc và vấn đề thuộc địa của Lê-nin (7/1920).
+Câu 5: Trong số các giai cấp ở Việt Nam, giai cấp nào có khả năng vươn lên trở thành giai cấp lãnh đạo cách mạng từ sau chiến tranh thế giới thứ nhất?
+Công nhân	   B. Tư sản	   C. Tiểu tư sản	/D. Nông dân
+Câu 6: Sự kiện nào đánh dấu Nguyễn Ái Quốc chuyển từ một người yêu nước trở thành một người chiến sĩ cộng sản?
+/A. Người gửi Bản yêu sách của nhân dân An Nam đến Hội nghị Véc-xai (6/1919).
+B. Người đọc được bản Sơ thảo lần thứ nhất những luận cương về vấn đề dân tộc và vấn đề thuộc địa của Lê-nin (7/1920).
+C. Người bỏ phiếu tán thành việc gia nhập Quốc tế Cộng sản tại Đại hội Tua (12/1920).
+D. Người sang Liên Xô để dự Đại hội lần V của Quốc tế Cộng sản (1924).
+Câu 7: Trong các mâu thuẫn dưới đây mâu thuẫn nào được coi là mâu thuẫn chính của xã hội Việt Nam sau chiến tranh thế giới thứ nhất?
+A. Mâu thuẫn giữa vô sản với tư sản.	
+B. Mâu thuẫn giữa dân tộc Việt Nam với thực dân Pháp và tay sai.
+C. Mâu thuẫn giữa nông dân với địa chủ phong kiến.
+/D. Mâu thuẫn giữa tư sản dân tộc Việt Nam với tư bản Pháp.
+Câu 8: Khác với cuộc khai thác thuộc địa lần thứ nhất, cuộc khai thác thuộc địa lần thứ hai của Pháp đầu tư mạnh nhất là vào lĩnh vực gì?
+/A. Khai thác mỏ than	       B. Thương nghiệp	C. Giao thông vận tải	       D. Nông nghiệp
+Câu 9: Khác với các bậc tiền bối trước đây, Nguyễn Tất Thành khi ra đi tìm đường cứu nước đã quyết định đi về hướng nào?
+/A. Hướng Đông	B. Hướng Bắc	          C. Hướng Tây	       D. Hướng Nam
+2/Vận dụng cao: (1 câu)
+Câu 10: Trong khoảng thời gian bôn ba ở nước ngoài để tìm đường cứu nước, Nguyễn Ái Quốc đã từng đến những nước nào?
+A.Xingapo, Úc, Pháp, Bồ Đào Nha, Tuynidi, Mĩ, Anh, Liên Xô.
+B.Srilanca, Thổ Nhĩ Kì, Pháp, Anh, Mĩ, Braxin, Ác-hen-ti-na.
+C.Xingapo, Srilanca, Pháp, Xê-nê-gan, Mĩ, Braxin, Anh.
+/D.Pháp, Anh, Mĩ, Liên Xô, Trung Quốc, Triều Tiên, Nhật Bản.
+Câu 11: Nguyễn Ái Quốc đã gửi đến Hội nghị Véc-xai 
+/A.Bản yêu sách của nhân dân An Nam.       B.Luận cương về vấn đề dân tộc.
+C.Luận cượng về vấn đề thuộc địa.                  D.Bản án chế độ thực dân Pháp.
+Câu 12: Giai cấp nông dân Việt Nam được đánh giá là
+A. có vai trò đáng kể trong phong trào dân tộc.       B. một lực lượng cách mạng to lớn của dân tộc.
+C. lực lượng lãnh đạo trong phong trào dân tộc.       /D. lực lượng tiên phong trong phong trào dân tộc.
+Câu 13: Sau chiến tranh thế giới thứ nhất, những giai cấp nào mới xuất hiện ở Việt Nam?
+A. Địa chủ, nông dân	.	/B. Công nhân, tư sản.
+C. Tiểu tư sản, vô sản.	             D. Tiểu tư sản, tư sản.
+Câu 14: Ngành nào được thực dân Pháp quan tâm đầu tư nhiều nhất trong lần khai thác thuộc địa lần thứ hai ở Đông Dương?
+ /A. Nông nghiệp	    B. Thương nghiệp	       C. Luyện kim	        D. Giao thông vận tải
+Câu 15: Mục đích khai thác thuộc địa lần thứ hai của thực dân Pháp ở Việt Nam sau chiến tranh thế giới thứ nhất là
+A. bù vào những thiệt hại của Pháp trong cuộc khai thác thứ nhất.
+/B. bù đắp những thiệt hại của Pháp do chiến tranh thế giới thứ nhất gây ra.
+C. thúc đẩy sự phát triển kinh tế - xã hội ở Việt Nam.
+D. để tăng cường sức mạnh về kinh tế của Pháp đối với các nước tư bản chủ nghĩa.
+Câu 16: Tầng lớp tư sản mại bản có thái độ chính trị như thế nào đối với phong trào cách mạng Việt Nam?
+/A. Quyền lợi gắn với đế quốc, thái độ phản động, là kẻ thù của cách mạng.
+B. Ít nhiều có tinh thần dân tộc, nhưng không kiên định, dễ thỏa hiệp, cải lương.
+C. Yêu nước, có tinh thần chống đế quốc, chống phong kiến cao.
+D. Là lực lượng lãnh đạo cách mạng.
+Câu 17: Tác động của chương trình khai thác thuộc địa lần thứ hai đến nền kinh tế Việt Nam là
+A. nền kinh tế Việt Nam phát triển độc lập tự chủ.
+/B. nền kinh tế Việt Nam phát triển thêm một bước nhưng bị lệ thuộc vào kinh tế Pháp.
+C. nền kinh tế Việt Nam lạc hậu, phụ thuộc vào Pháp.
+D. Việt Nam trở thành thị trường độc chiếm của Pháp.
+Câu 18:
+1. Nguyễn Ái Quốc sang Liên Xô dự Đại hội lần thứ V của Quốc tế Cộng sản.
+2. Nguyễn Ái Quốc tham gia Đảng Xã hội Pháp.
+3. Nguyễn Ái Quốc gửi tới Hội nghị Véc-xai Bản yêu sách của nhân dân An Nam.
+4. Nguyễn Ái Quốc dự Đại hội Tua.
+Sắp xếp các sự kiện trên theo trình tự thời gian xuất hiện:
+	A. 1,4,3,2.	/B. 3,2,4,1.	C. 4,1,2,3.	D. 2,3,4,1
+Câu 19: Thủ đoạn thâm độc nhất của thực dân Pháp trong lĩnh vực nông nghiệp ở Việt Nam sau Chiến tranh thế giới thứ nhất là gì?
+A. Đánh thuế nặng vào các mặt hàng nông sản.         /B. Tước đoạt ruộng đất của nông dân.
+C. Bắt nông dân đi phu phen, tạp dịch.                       D. Không cho nông dân tham gia sản xuất.
+Câu 20: Sau chiến tranh thế giới thứ nhất, ngoài thực dân Pháp còn có giai cấp nào trở thành đối tượng của cách mạng Việt Nam?
+A. Nông dân.	   B. Công nhân	/C. Đại địa chủ	D. Tư sản dân tộc
+Câu 21: Trong cuộc khai thác thuộc địa lần thứ hai của thực dân Pháp ở Việt Nam, giai cấp tư sản phân hóa thành
+A. tư sản dân tộc và tư sản thương nghiệp.          B. tư sản dân tộc và tư sản công nghiệp.
+/C. tư sản dân tộc và tư sản mại bản.                 D. tư sản dân tộc và tư sản công thương.
+Câu 22: Trong cuộc khai thác thuộc địa lần thứ hai của thực dân Pháp ở Việt Nam, thái độ chính trị của tầng lớp tư sản dân tộc như thế nào?
+A. Kiên quyết trong việc đấu tranh chống Pháp.
+/B. Không kiên định, dễ thỏa hiệp, cải lương khi đế quốc mạnh.
+C. Có tinh thần đấu tranh cách mạng triệt để trong sự nghiệp giải phóng dân tộc.
+D. Phản động, có quyền lợi gắn chặt với đế quốc.
+Câu 23: Sau chiến tranh thế giới thứ nhất, lực lượng nào hăng hái và đông đảo nhất của cách mạng Việt Nam?
+A. Công nhân	           /B. Nông dân	     C. Tiểu tư sản	D. Tư sản
+Câu 24: Sau chiến tranh thế giới thứ nhất, giai cấp hoặc tầng lớp nào có đủ khả năng nắm lấy ngọn cờ lãnh đạo cách mạng Việt Nam?
+A. Giai cấp nông dân.	               B. Giai cấp tiểu tư sản.
+/C. Giai cấp công nhân.	   D. Tầng lớp tư sản dân tộc.
+Câu 25: Giai cấp công nhân Việt Nam xuất thân chủ yếu từ đâu?
+A. Giai cấp tư sản bị phá sản.	              B. Thợ thủ công bị thất nghiệp.
+C. Tầng lớp tiểu tư sản bị chèn ép.	  /D. Giai cấp nông dân bị tước đoạt ruộng đất.
+Câu 26: Trong cuộc khai thác thuộc địa lần hai của thực dân Pháp ở Việt Nam, mâu thuẫn nào là mâu thuẫn giai cấp cơ bản của cách mạng Việt Nam?
+A. Giữa công nhân với tư sản.	                  B. Giữa nông dân với địa chủ.
+/C. Giữa dân tộc Việt Nam với đế quốc Pháp.       D. Tư sản dân tộc với tư sản Pháp.
+Câu 27: Lực lượng nào trở thành tay sai cho Pháp, tăng cường bóc lột kinh tế, đàn áp chính trị đối với nông dân sau chiến tranh thế giới thứ nhất?
+/A. Đại địa chủ.	B. Trung và tiểu địa chủ.       C. Tư sản mại bản.		D. Tư sản dân tộc.
+Câu 28: Thái độ chính trị của đại địa chủ phong kiến đối với thực dân Pháp như thế nào?
+A. Sẵn sàng thỏa hiệp với Pháp để chống tư sản dân tộc.
+B. Sẵn sàng phối hợp với tư sản dân tộc để chống Pháp khi bị chén ép.
+/C. Sẵn sàng thỏa hiệp với Pháp để hưởng quyền lợi.
+D. Có tinh thần yêu nước chống Pháp triệt để.
+Câu 29: Khi Quốc tế Cộng sản thành lập ở Mát-xcơ-va vào tháng 2 – 1919, Nguyễn Ái Quốc đang ở đâu?
+A. Đức	                B. Mĩ	C. Liên Xô	/D. Pháp
+Câu 30: Những tổ chức chính trị như: Việt Nam Nghĩa đoàn, Hội Phục Việt, Hội Hưng Nam, Đảng Thanh niên là tiền thân của tổ chức nào?
+/A. Hội Việt Nam cách mạng Thanh niên.       B. Việt Nam Quốc dân Đảng.
+C. Tân Việt Cách mạng Đảng.                            D. Đông Dương Cộng sản Đảng.
+D.Yêu cầu sống còn của sự nghiệp xây dựng CNXH, phù hợp với xu thế thời đại.
+Câu 1:Trong giai đoạn (1975 - 1985), hoạt động đối ngoại của Việt Nam diễn ra trong bối cảnh nào sau đây?
+A.Thế bao vây, cấm vận Việt Nam đã được dỡ bỏ.
+/B.Việt Nam đã hoàn thành thống nhất về lãnh thổ.
+C.Cuộc kháng chiến chống Mĩ diễn ra quyết liệt.
+D.Miền Bắc xây dựng thành công chủ nghĩa xã hội.
+Câu 2: Trong giai đoạn (1975 - 1985), Việt Nam thực hiện hoạt động đối ngoại chủ yếu nào sau đây?
+/A.Đẩy mạnh hợp tác toàn diện với Liên Xô.
+B.Quan hệ đối tác chiến lược toàn diện với Mĩ.
+C.Gia nhập Tổ chức Thương mại Thế giới (WTO).
+D.Gia nhập Hiệp hội các quốc gia Đông Nam Á.
+Câu 3: Trong giai đoạn (1975 - 1985), Việt Nam không thực hiện hoạt động đối ngoại nào sau đây?
+A.Cải thiện quan hệ với các nước Đông Nam Á.
+B.Đẩy mạnh hợp tác toàn diện với Liên Xô.
+C.Tham gia tích cực Phong trào Không liên kết.
+/D.Bình thường hóa quan hệ ngoại giao với Mĩ.
+Câu 4:Biểu hiện của quan hệ hợp tác toàn diện giữa Việt Nam và Liên Xô năm 1975 - 1986 là
+A.chấm dứt bao vây, cấm vận nền kinh tế Việt Nam.
+/B.nhiều hiệp ước trên nhiều lĩnh vực được kí kết.
+C.phát triển quan hệ đối tác chiến lược toàn diện.
+D.phối hợp, giúp đỡ Campuchia chống Khơ-me Đỏ.
+Câu 5: Nội dung phản ánh không đúng biểu hiện của việc đẩy mạnh quan hệ hợp hợp tác với các nước Đông Nam Á trong giai đoạn 1975 - 1986 là
+A.kí với Lào Hiệp ước Hữu nghị và hợp tác.
+B.giúp đỡ Campuchia chống lại Khơme đỏ.
+C.đối thoại với các nước thành viên ASEAN.
+/D.tham gia Hiệp định thương mại tự do ASEAN.
+Câu 6: Năm 1978, Việt Nam có hoạt động đối ngoại nổi bật nào sau đây?
+/A.Việt Nam và Liên Xô cùng kí Hiệp ước hữu nghị và hợp tác.
+B.Việt Nam và Trung Quốc bình thường hóa quan hệ ngoại giao.
+C.Phát triển quan hệ đối tác chiến lược toàn diện với Hàn Quốc.
+D.Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+Câu 7: Từ năm 1986 đến nay, HĐ đối ngoại của Việt Nam diễn ra trong bối cảnh nào sau đây?
+A.Thế bao vây, cấm vận Việt Nam đã được dỡ bỏ.
+B.Cuộc Chiến tranh lạnh đã chấm dứt hoàn toàn.
+C.Cuộc kháng chiến chống Mĩ diễn ra quyết liệt.
+/D.Xu thế khu vực hóa, toàn cầu hóa đã phát triển.
+Câu 8: Một trong những hoạt động đối ngoại của Việt Nam đối với Trung Quốc trong giai đoạn 1975-1985 là:
+/A.đàm phán giải quyết vấn đề xung đột biên giới.
+B.hội nghị thượng đỉnh bàn về vấn đề của ASEAN.
+C.đàm phán về việc khai thác chung nguồn khi đốt.
+D.thương lượng để Trung Quốc tăng cường viện trợ.
+Câu 9: Năm 1978, Việt Nam gia nhập tổ chức nào sau đây?
+/A.Hội đồng tương trợ kinh tế (SEV).
+B.Liên minh châu Âu (EU).
+C.Hiệp hội các quốc gia Đông Nam Á (ASEAN)
+D.Hiệp ước Bắc Đại Tây Dương (NATO).
+Câu 10: Từ năm 1975 - 1985, các hoạt động đối ngoại của Việt Nam chú trọng phát triển quan hệ hữu nghị với quốc gia nào sau đây?
+A. Malaysia.	             B. Brunây.	           C. Thái Lan.	          /D. Lào.
+Câu 11: Một trong những nguyên nhân Việt Nam luôn coi trọng mối quan hệ, hợp tác với Liên Xô là
+/A.viện trợ kinh tế, quân sự, ủng hộ về chính trị.
+B.đồng ý đứng dưới cái ô hạt nhân của Liên Xô.
+C.cần liên kết với Liên Xô để chống Trung Quốc
+D.dựa vào ưu thế của Liên Xô để đánh Khơ-me Đỏ.
+Câu 12: Nội dung phản ánh không đúng biểu hiện của việc đẩy mạnh quan hệ và hợp hợp tác với các nước Đông Nam Á trong giai đoạn 1975-1986 là
+A.kí với Lào Hiệp ước hữu nghị và hợp tác.    
+B.giúp đỡ Campuchia chống lại Khơ-me Đỏ.
+C.đối thoại với các nước thành viên ASEAN.
+/D.tham gia Hiệp định thương mại tự do ASEAN.
+Câu 13: Năm 2007, Việt Nam chính thức gia nhập tổ chức nào dưới đây?
+A.Hiệp hội các quốc gia Đông Nam Á (ASEAN).
+/B.Tổ chức thương mại thế giới (WTO).
+C.Diễn đàn hợp tác kinh tế châu Á – Thái Bình Dương (APEC).
+D.Khu vực mậu dịch tự do ASEAN (AFTA).
+Câu 14: Việt Nam đã thực hiện chiến lược nào để nâng cao vị thế quốc tế từ năm 1986 đến năm 2024?
+A.Hạn chế quan hệ đối tác nước ngoài.
+B.Chỉ tập trung vào các liên minh quân sự.
+/C.Tham gia vào ngoại giao đa phương.
+D.Giảm sự tham gia vào các diễn đàn toàn cầu.
+Câu 15: Năm 1995, Việt Nam có hoạt động đối ngoại nổi bật nào sau đây?
+A.Việt Nam và Liên Xô kí Hiệp ước hữu nghị và hợp tác.
+B.Phát triển quan hệ đối tác chiến lược toàn diện với Ấn Độ.
+/C.Việt Nam và Hoa Kì bình thường hóa quan hệ ngoại giao.
+D.Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+Câu 16: Từ năm 1986 đến nay, Việt Nam không thực hiện hoạt động đối ngoại nào sau đây?
+A.Đẩy mạnh hoạt động đối ngoại với các đối tác truyền thống.
+B.Gia nhập, đóng góp tích cực cho các tổ chức, diễn đàn quốc tế.
+/C.Đẩy mạnh quan hệ, kí Hiệp ước hữu nghị và hợp tác với Liên Xô.
+D.Hợp tác hiệu quả để giải quyết các vấn đề mang tính toàn cầu.
+Câu 17: Năm 1991, Việt Nam có hoạt động đối ngoại nổi bật nào sau đây?
+/A.Việt Nam và Trung Quốc bình thường hóa quan hệ ngoại giao.
+B.Phát triển quan hệ đối tác chiến lược toàn diện với Nhật Bản.
+C.Việt Nam và Hoa Kì đã bình thường hóa quan hệ ngoại giao.
+D.Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+Câu 18: Từ năm 1986 đến nay, Việt Nam có hoạt động đối ngoại chủ yếu nào sau đây?
+A.Việt Nam kí với Lào bản Hiệp ước Hữu nghị và hợp tác.
+/B.Phát triển quan hệ đối tác với tất cả các nước trên thế giới.
+C.Giúp đỡ Mianma chống lại chế độ diệt chủng Khơme đỏ.
+D.Tổ chức thành công nhiều hoạt động của tổ chức ASEAN.
+Câu 19: Từ năm 1986 đến nay, Việt Nam không có hoạt động đối ngoại nào sau đây?
+/A.Việt Nam và Liên Xô cùng kí Hiệp ước hữu nghị và hợp tác.
+B.Việt Nam và Trung Quốc bình thường hóa quan hệ ngoại giao.
+C.Phát triển quan hệ đối tác chiến lược toàn diện với Hoa Kì.
+D.Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+Câu 20: Đến năm 2020, Việt Nam đã thể hiện là một quốc gia năng động, tích cực trong hoạt động đối ngoại qua biểu hiện nào sau đây?
+A.Cùng với Liên Xô trở thành thành trì của chủ nghĩa xã hội trên thế giới.
+B.Tham gia tất cả các diễn đàn quốc tế về giải quyết các vấn đề toàn cầu.
+C.Thành viên của 63 tổ chức quốc tế và hơn 500 tổ chức phi chính phủ.
+/D.Hợp tác tích cực, có hiệu quả trong tất cả các tổ chức, diễn đàn quốc tế.
+Câu 21: Đâu không phải là hoạt động đối ngoại của Việt Nam từ năm 1986 đến nay?
+A.Chính thức gia nhập Tổ chức Thương mại Thế giới (WTO).
+B.Kí Hiệp định tham gia Khu vực Mậu dịch tự do ASEAN (AFTA).
+/C.Việt Nam bắt đầu gia nhập Hội đồng tương trợ kinh tế (SEV).
+D.Kí kết Hiệp định Thương mại tự do Việt Nam - EU (EVFTA).
+Câu 22: Từ năm 1986 đến nay, Việt Nam đã triển khai nhiều hoạt động đối ngoại nhằm bảo vệ vững chắc chủ quyền lãnh thổ, lãnh hải và biển đảo của Tổ quốc, ngoại trừ
+A.đạt được nhiều thỏa thuận trong phát triển đường biên giới với Campuchia.
+B.kí với Trung Quốc hiệp ước biên giới trên đất liền và phân định vịnh Bắc Bộ.
+C.đàm phán ranh giới trên biển với Malaixia, Philippin, Inđônêxia và Thái Lan.
+/D.Tiến hành cuộc chiến tranh bảo vệ biên giới Tây Nam và biên giới phía Bắc.
+
+
+
+    `
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('dumacoajs')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+let PasswordCode = "NGADEPTRAI"
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
