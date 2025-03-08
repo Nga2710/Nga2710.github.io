@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100 Thông Tin Khi Truy Cập Web</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d1b2a, #1b263b);
+      color: #e0e1dd;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: #1b263b;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    h1 {
+      text-align: center;
+      color: #00d8ff;
+      text-shadow: 0 0 10px #00d8ff;
+      margin-bottom: 20px;
+    }
+    .info {
+      background: rgba(0,0,0,0.3);
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+    .info:hover {
+      transform: scale(1.01);
+    }
+    .button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #00d8ff;
+      border: none;
+      border-radius: 5px;
+      color: #1b263b;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .button:hover {
+      background: #00b0c7;
+    }
+    #animationCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #infoList {
+      position: relative;
+      z-index: 1;
+    }
+@keyframes pulse {
+
+      50% {
+        opacity: 1;
+      }
+
+}
+    .loading {
+      animation: pulse 1.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="animationCanvas"></canvas>
+    <h1>100 Thông Tin Khi Truy Cập Web</h1>
+    <div id="infoList"></div>
+    <button id="refreshButton" class="button">Làm Mới</button>
+  </div>
+  <script>
+    (function() {
+      "use strict";
+      // Array chứa 100 thông tin
+      var infoItems = [{
+        id: "info1", label: "IP Address", value: function() {
+          return window._ip || "Đang tải...";
+        }},
+        {
+          id: "info2", label: "Hostname", value: function() {
+            return window.location.hostname;
+          }},
+        {
+          id: "info3", label: "City", value: function() {
+            return window._city || "Đang tải...";
+          }},
+        {
+          id: "info4", label: "Region", value: function() {
+            return window._region || "Đang tải...";
+          }},
+        {
+          id: "info5", label: "Country", value: function() {
+            return window._country || "Đang tải...";
+          }},
+        {
+          id: "info6", label: "Location Coordinates", value: function() {
+            return window._loc || "Đang tải...";
+          }},
+        {
+          id: "info7", label: "Organization", value: function() {
+            return window._org || "Đang tải...";
+          }},
+        {
+          id: "info8", label: "Postal Code", value: function() {
+            return window._postal || "Đang tải...";
+          }},
+        {
+          id: "info9", label: "Timezone (IP)", value: function() {
+            return window._ipTimezone || "Đang tải...";
+          }},
+        {
+          id: "info10", label: "Browser Name", value: function() {
+            return getBrowserInfo().name;
+          }},
+        {
+          id: "info11", label: "Browser Version", value: function() {
+            return getBrowserInfo().version;
+          }},
+        {
+          id: "info12", label: "User Agent", value: function() {
+            return navigator.userAgent;
+          }},
+        {
+          id: "info13", label: "Operating System", value: function() {
+            return getOS();
+          }},
+        {
+          id: "info14", label: "Platform", value: function() {
+            return navigator.platform;
+          }},
+        {
+          id: "info15", label: "Language", value: function() {
+            return navigator.language;
+          }},
+        {
+          id: "info16", label: "Languages", value: function() {
+            return navigator.languages ? navigator.languages.join(", "): "Không xác định";
+          }},
+        {
+          id: "info17", label: "Screen Width", value: function() {
+            return screen.width;
+          }},
+        {
+          id: "info18", label: "Screen Height", value: function() {
+            return screen.height;
+          }},
+        {
+          id: "info19", label: "Available Screen Width", value: function() {
+            return screen.availWidth;
+          }},
+        {
+          id: "info20", label: "Available Screen Height", value: function() {
+            return screen.availHeight;
+          }},
+        {
+          id: "info21", label: "Color Depth", value: function() {
+            return screen.colorDepth;
+          }},
+        {
+          id: "info22", label: "Pixel Depth", value: function() {
+            return screen.pixelDepth;
+          }},
+        {
+          id: "info23", label: "Window Inner Width", value: function() {
+            return window.innerWidth;
+          }},
+        {
+          id: "info24", label: "Window Inner Height", value: function() {
+            return window.innerHeight;
+          }},
+        {
+          id: "info25", label: "Document Title", value: function() {
+            return document.title;
+          }},
+        {
+          id: "info26", label: "Document URL", value: function() {
+            return window.location.href;
+          }},
+        {
+          id: "info27", label: "Document Referrer", value: function() {
+            return document.referrer || "Không có";
+          }},
+        {
+          id: "info28", label: "History Length", value: function() {
+            return window.history.length;
+          }},
+        {
+          id: "info29", label: "Cookies Enabled", value: function() {
+            return navigator.cookieEnabled;
+          }},
+        {
+          id: "info30", label: "JavaScript Enabled", value: function() {
+            return "Yes";
+          }},
+        {
+          id: "info31", label: "Hardware Concurrency", value: function() {
+            return navigator.hardwareConcurrency || "Không xác định";
+          }},
+        {
+          id: "info32", label: "Device Memory (GB)", value: function() {
+            return navigator.deviceMemory || "Không xác định";
+          }},
+        {
+          id: "info33", label: "Do Not Track", value: function() {
+            return navigator.doNotTrack;
+          }},
+        {
+          id: "info34", label: "Online Status", value: function() {
+            return navigator.onLine;
+          }},
+        {
+          id: "info35", label: "WebGL Vendor", value: function() {
+            return getWebGLInfo().vendor;
+          }},
+        {
+          id: "info36", label: "WebGL Renderer", value: function() {
+            return getWebGLInfo().renderer;
+          }},
+        {
+          id: "info37", label: "Canvas Support", value: function() {
+            return "Yes";
+          }},
+        {
+          id: "info38", label: "Service Worker Support", value: function() {
+            return ('serviceWorker' in navigator) ? "Yes": "No";
+          }},
+        {
+          id: "info39", label: "WebAssembly Support", value: function() {
+            return (typeof WebAssembly === "object") ? "Yes": "No";
+          }},
+        {
+          id: "info40", label: "IndexedDB Support", value: function() {
+            return ('indexedDB' in window) ? "Yes": "No";
+          }},
+        {
+          id: "info41", label: "LocalStorage Support", value: function() {
+            return ('localStorage' in window) ? "Yes": "No";
+          }},
+        {
+          id: "info42", label: "SessionStorage Support", value: function() {
+            return ('sessionStorage' in window) ? "Yes": "No";
+          }},
+        {
+          id: "info43", label: "Battery API Support", value: function() {
+            return (navigator.getBattery) ? "Yes": "No";
+          }},
+        {
+          id: "info44", label: "Connection Effective Type", value: function() {
+            return (navigator.connection && navigator.connection.effectiveType) || "Không xác định";
+          }},
+        {
+          id: "info45", label: "Connection Downlink", value: function() {
+            return (navigator.connection && navigator.connection.downlink) || "Không xác định";
+          }},
+        {
+          id: "info46", label: "Connection RTT", value: function() {
+            return (navigator.connection && navigator.connection.rtt) || "Không xác định";
+          }},
+        {
+          id: "info47", label: "Connection Save Data", value: function() {
+            return (navigator.connection && navigator.connection.saveData) || "Không xác định";
+          }},
+        {
+          id: "info48", label: "Screen Orientation Type", value: function() {
+            return (screen.orientation && screen.orientation.type) || "Không xác định";
+          }},
+        {
+          id: "info49", label: "Screen Orientation Angle", value: function() {
+            return (screen.orientation && screen.orientation.angle) || "Không xác định";
+          }},
+        {
+          id: "info50", label: "Touch Points", value: function() {
+            return navigator.maxTouchPoints || 0;
+          }},
+        {
+          id: "info51", label: "Media Devices Count", value: function() {
+            return window._mediaCount || "Đang tải...";
+          }},
+        {
+          id: "info52", label: "Geolocation Permission", value: function() {
+            return window._geoPermission || "Đang tải...";
+          }},
+        {
+          id: "info53", label: "Geolocation Coordinates", value: function() {
+            return window._geoCoords || "Đang tải...";
+          }},
+        {
+          id: "info54", label: "Battery Level & Charging", value: function() {
+            return window._batteryInfo || "Đang tải...";
+          }},
+        {
+          id: "info55", label: "Document Character Set", value: function() {
+            return document.characterSet;
+          }},
+        {
+          id: "info56", label: "Document Content Type", value: function() {
+            return document.contentType || "Không xác định";
+          }},
+        {
+          id: "info57", label: "Location Protocol", value: function() {
+            return window.location.protocol;
+          }},
+        {
+          id: "info58", label: "Location Hostname", value: function() {
+            return window.location.hostname;
+          }},
+        {
+          id: "info59", label: "Location Port", value: function() {
+            return window.location.port || "Không xác định";
+          }},
+        {
+          id: "info60", label: "Location Pathname", value: function() {
+            return window.location.pathname;
+          }},
+        {
+          id: "info61", label: "Location Search", value: function() {
+            return window.location.search || "Không có";
+          }},
+        {
+          id: "info62", label: "Location Hash", value: function() {
+            return window.location.hash || "Không có";
+          }},
+        {
+          id: "info63", label: "Current Timestamp", value: function() {
+            return Date.now();
+          }},
+        {
+          id: "info64", label: "Current Date", value: function() {
+            return new Date().toString();
+          }},
+        {
+          id: "info65", label: "Timezone Offset", value: function() {
+            return new Date().getTimezoneOffset();
+          }},
+        {
+          id: "info66", label: "Prefers Dark Mode", value: function() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+          }},
+        {
+          id: "info67", label: "Prefers Reduced Motion", value: function() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          }},
+        {
+          id: "info68", label: "Plugin Count", value: function() {
+            return navigator.plugins ? navigator.plugins.length: "Không xác định";
+          }},
+        {
+          id: "info69", label: "MIME Types Count", value: function() {
+            return navigator.mimeTypes ? navigator.mimeTypes.length: "Không xác định";
+          }},
+        {
+          id: "info70", label: "Fullscreen Enabled", value: function() {
+            return document.fullscreenEnabled;
+          }},
+        {
+          id: "info71", label: "Fullscreen Element", value: function() {
+            return document.fullscreenElement ? "Yes": "No";
+          }},
+        {
+          id: "info72", label: "Vibration Supported", value: function() {
+            return (navigator.vibrate) ? "Yes": "No";
+          }},
+        {
+          id: "info73", label: "Geolocation Supported", value: function() {
+            return ("geolocation" in navigator) ? "Yes": "No";
+          }},
+        {
+          id: "info74", label: "Audio Support", value: function() {
+            return (window.Audio) ? "Yes": "No";
+          }},
+        {
+          id: "info75", label: "Video Support", value: function() {
+            return (document.createElement('video').canPlayType) ? "Yes": "No";
+          }},
+        {
+          id: "info76", label: "Device Pixel Ratio", value: function() {
+            return window.devicePixelRatio;
+          }},
+        {
+          id: "info77", label: "Window Outer Width", value: function() {
+            return window.outerWidth;
+          }},
+        {
+          id: "info78", label: "Window Outer Height", value: function() {
+            return window.outerHeight;
+          }},
+        {
+          id: "info79", label: "Is Mobile", value: function() {
+            return (/Mobi|Android/i.test(navigator.userAgent)) ? "Yes": "No";
+          }},
+        {
+          id: "info80", label: "Is iOS", value: function() {
+            return (/iPhone|iPad|iPod/i.test(navigator.userAgent)) ? "Yes": "No";
+          }},
+        {
+          id: "info81", label: "Is Android", value: function() {
+            return (/Android/i.test(navigator.userAgent)) ? "Yes": "No";
+          }},
+        {
+          id: "info82", label: "Dark Mode Preference", value: function() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? "Dark": "Light";
+          }},
+        {
+          id: "info83", label: "Reduced Motion Preference", value: function() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? "Reduce": "No Preference";
+          }},
+        {
+          id: "info84", label: "LocalStorage Keys Count", value: function() {
+            return (localStorage && Object.keys(localStorage).length) || 0;
+          }},
+        {
+          id: "info85", label: "SessionStorage Keys Count", value: function() {
+            return (sessionStorage && Object.keys(sessionStorage).length) || 0;
+          }},
+        {
+          id: "info86", label: "Performance Navigation Start", value: function() {
+            return performance.timing.navigationStart;
+          }},
+        {
+          id: "info87", label: "Performance Load Event End", value: function() {
+            return performance.timing.loadEventEnd;
+          }},
+        {
+          id: "info88", label: "Performance DOMContentLoaded Event End", value: function() {
+            return performance.timing.domContentLoadedEventEnd;
+          }},
+        {
+          id: "info89", label: "Performance Navigation Type", value: function() {
+            return performance.navigation ? performance.navigation.type: "Không xác định";
+          }},
+        {
+          id: "info90", label: "Time Since Page Load (ms)", value: function() {
+            return performance.now().toFixed(2);
+          }},
+        {
+          id: "info91", label: "Scroll Position X", value: function() {
+            return window.scrollX;
+          }},
+        {
+          id: "info92", label: "Scroll Position Y", value: function() {
+            return window.scrollY;
+          }},
+        {
+          id: "info93", label: "Document Ready State", value: function() {
+            return document.readyState;
+          }},
+        {
+          id: "info94", label: "Number of Frames", value: function() {
+            return window.frames.length;
+          }},
+        {
+          id: "info95", label: "Screen Orientation Angle (Alternate)", value: function() {
+            return (screen.orientation && screen.orientation.angle) || "N/A";
+          }},
+        {
+          id: "info96", label: "Media Query Dark Mode (Text)", value: function() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? "Dark Mode": "Light Mode";
+          }},
+        {
+          id: "info97", label: "Media Query Reduced Motion (Text)", value: function() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? "Reduced Motion": "Normal Motion";
+          }},
+        {
+          id: "info98", label: "Battery Charging Time", value: function() {
+            return window._batteryChargingTime || "Đang tải...";
+          }},
+        {
+          id: "info99", label: "Battery Discharging Time", value: function() {
+            return window._batteryDischargingTime || "Đang tải...";
+          }},
+        {
+          id: "info100", label: "Extra Info", value: function() {
+            return window._extraInfo || "Extra data not available";
+          }}];
+      function createInfoElements() {
+        var container = document.getElementById("infoList");
+        container.innerHTML = "";
+        infoItems.forEach(function(item) {
+          var div = document.createElement("div");
+          div.className = "info loading";
+          div.id = item.id;
+          div.innerHTML = "<strong>" + item.label + ":</strong> <span>" + item.value() + "</span>";
+          container.appendChild(div);
+        });
+      }
+      function updateInfoElements() {
+        infoItems.forEach(function(item) {
+          var el = document.getElementById(item.id);
+          if (el) el.querySelector("span").textContent = item.value();
+        });
+      }
+      function getBrowserInfo() {
+        var ua = navigator.userAgent, name = "Không xác định", version = "Không rõ";
+        if (ua.indexOf("Chrome") > -1 && ua.indexOf("Edge")===-1 && ua.indexOf("OPR")===-1) {
+          name = "Google Chrome";
+          var m = ua.match(/Chrome\/([\d.]+)/);
+          version = m ? m[1]: "Không rõ";
+        } else if (ua.indexOf("Firefox") > -1) {
+          name = "Mozilla Firefox";
+          var m = ua.match(/Firefox\/([\d.]+)/);
+          version = m ? m[1]: "Không rõ";
+        } else if (ua.indexOf("Safari") > -1 && ua.indexOf("Chrome")===-1) {
+          name = "Safari";
+          var m = ua.match(/Version\/([\d.]+)/);
+          version = m ? m[1]: "Không rõ";
+        } else if (ua.indexOf("Edge") > -1 || ua.indexOf("Edg") > -1) {
+          name = "Microsoft Edge";
+          var m = ua.match(/(Edge|Edg)\/([\d.]+)/);
+          version = m ? m[2]: "Không rõ";
+        } else if (ua.indexOf("OPR") > -1) {
+          name = "Opera";
+          var m = ua.match(/OPR\/([\d.]+)/);
+          version = m ? m[1]: "Không rõ";
+        } else if (ua.indexOf("Trident") > -1) {
+          name = "Internet Explorer";
+          var m = ua.match(/rv:([\d.]+)/);
+          version = m ? m[1]: "Không rõ";
+        }
+        return {
+          name: name,
+          version: version
+        };
+      }
+      function getOS() {
+        var os = "Không xác định",
+        ua = navigator.userAgent;
+        if (ua.indexOf("Win")!==-1) os = "Windows";
+        else if (ua.indexOf("Mac")!==-1) os = "MacOS";
+        else if (ua.indexOf("Linux")!==-1) os = "Linux";
+        else if (/Android/.test(ua)) os = "Android";
+        else if (/iPhone|iPad|iPod/.test(ua)) os = "iOS";
+        return os;
+      }
+      function getWebGLInfo() {
+        var canvas = document.createElement("canvas"),
+        gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        var info = {
+          vendor: "Không xác định",
+          renderer: "Không xác định"
+        };
+        if (gl) {
+          var ext = gl.getExtension("WEBGL_debug_renderer_info");
+          if (ext) {
+            info.vendor = gl.getParameter(ext.UNMASKED_VENDOR_WEBGL);
+            info.renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
+          }
+        }
+        return info;
+      }
+      function fetchIPData() {
+        fetch("https://api.ipify.org?format=json")
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          window._ip = data.ip;
+          updateInfoElements();
+          fetchIPExtra();
+        })
+        .catch(function() {
+          window._ip = "Lỗi"; updateInfoElements();
+        });
+      }
+      function fetchIPExtra() {
+        fetch("https://ipinfo.io/json?token=YOUR_TOKEN_HERE")
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          window._city = data.city;
+          window._region = data.region;
+          window._country = data.country;
+          window._loc = data.loc;
+          window._org = data.org;
+          window._postal = data.postal;
+          window._ipTimezone = data.timezone;
+          updateInfoElements();
+        })
+        .catch(function() {});
+      }
+      function updateMediaDevicesCount() {
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+          navigator.mediaDevices.enumerateDevices().then(function(devices) {
+            window._mediaCount = devices.length;
+            updateInfoElements();
+          }).catch(function() {
+            window._mediaCount = "Lỗi"; updateInfoElements();
+          });
+        } else {
+          window._mediaCount = "Không hỗ trợ"; updateInfoElements();
+        }
+      }
+      function updateGeolocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(pos) {
+            window._geoCoords = "Lat: " + pos.coords.latitude.toFixed(4) + ", Lon: " + pos.coords.longitude.toFixed(4);
+            updateInfoElements();
+          }, function() {
+            window._geoCoords = "Không cho phép"; updateInfoElements();
+          });
+        } else {
+          window._geoCoords = "Không hỗ trợ"; updateInfoElements();
+        }
+      }
+      function updateGeolocationPermission() {
+        if (navigator.permissions) {
+          navigator.permissions.query({
+            name: "geolocation"
+          }).then(function(result) {
+            window._geoPermission = result.state;
+            updateInfoElements();
+          }).catch(function() {
+            window._geoPermission = "Không xác định"; updateInfoElements();
+          });
+        } else {
+          window._geoPermission = "Không hỗ trợ"; updateInfoElements();
+        }
+      }
+      function updateBatteryInfo() {
+        if (navigator.getBattery) {
+          navigator.getBattery().then(function(battery) {
+            window._batteryInfo = "Level: " + Math.round(battery.level*100) + "%, Charging: " + (battery.charging ? "Yes": "No");
+            window._batteryChargingTime = battery.chargingTime;
+            window._batteryDischargingTime = battery.dischargingTime;
+            updateInfoElements();
+          }).catch(function() {
+            window._batteryInfo = "Lỗi"; updateInfoElements();
+          });
+        } else {
+          window._batteryInfo = "Không hỗ trợ"; updateInfoElements();
+        }
+      }
+      function updateExtraInfo() {
+        window._extraInfo = "Extra dummy data " + Math.random();
+        updateInfoElements();
+      }
+      function initAnimation() {
+        var canvas = document.getElementById("animationCanvas"),
+        ctx = canvas.getContext("2d"),
+        particles = [],
+        particleCount = 100;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        function Particle() {
+          this.x = Math.random()*canvas.width;
+          this.y = Math.random()*canvas.height;
+          this.radius = Math.random()*3+1;
+          this.speedX = Math.random()*1-0.5;
+          this.speedY = Math.random()*1-0.5;
+          this.color = "rgba(0,216,255,"+(Math.random()*0.5+0.5)+")";
+        }
+        Particle.prototype.update = function() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x < 0 || this.x > canvas.width) this.speedX*=-1;
+          if (this.y < 0 || this.y > canvas.height) this.speedY*=-1;
+        };
+        Particle.prototype.draw = function() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        };
+        for (var i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach(function(p) {
+            p.update(); p.draw();
+          });
+          requestAnimationFrame(animate);
+        }
+        animate();
+      }
+      
+      function updateAll() {
+        createInfoElements();
+        updateInfoElements();
+        fetchIPData();
+        updateMediaDevicesCount();
+        updateGeolocation();
+        updateGeolocationPermission();
+        updateBatteryInfo();
+        updateExtraInfo();
+      }
+      document.getElementById("refreshButton").addEventListener("click", function() {
+        updateAll();
+      });
+          setTimeout(updateAll(), 100);
+      updateAll()
+      initAnimation();
+      function dummyFunctionA() {
+        for (var i = 0; i < 50; i++) {
+          console.log("A"+i);
+        }}
+      function dummyFunctionB() {
+        for (var i = 0; i < 50; i++) {
+          console.log("B"+i);
+        }}
+      function dummyFunctionC() {
+        for (var i = 0; i < 50; i++) {
+          console.log("C"+i);
+        }}
+      dummyFunctionA(); dummyFunctionB(); dummyFunctionC();
+      function fillerFunction1() {
+        var s = ""; for (var i = 0; i < 100; i++) {
+          s += "filler"+i+" ";
+        } return s;
+      }
+      console.log(fillerFunction1());
+      function extraFiller() {
+        for (var i = 0; i < 200; i++) {
+          console.log("Extra line " + i);
+        }
+      }
+      extraFiller();
+      function moreDummy() {
+        var sum = 0; for (var i = 0; i < 300; i++) {
+          sum += i;
+        } return sum;
+      }
+      console.log("Sum: " + moreDummy());
+      function dummyLoop() {
+        for (var i = 0; i < 100; i++) {
+          console.log("Loop " + i);
+        }
+      }
+      dummyLoop();
+      function longDummy() {
+        var str = "";
+        for (var i = 0; i < 150; i++) {
+          str += "Line " + i + " - dummy info;\n";
+        }
+        return str;
+      }
+      console.log(longDummy());
+      function extraDummy() {
+        for (var i = 0; i < 100; i++) {
+          console.log("Extra dummy line " + i);
+        }
+      }
+      extraDummy();
+      function moreExtraDummy() {
+        var arr = [];
+        for (var i = 0; i < 50; i++) {
+          arr.push("Extra " + i);
+        }
+        console.log(arr.join(", "));
+      }
+      moreExtraDummy();
+      for (var i = 0; i < 100; i++) {
+        console.log("Final filler line " + i);
+      }
+    })();
+
+  </script>
+</body>
+</html>
