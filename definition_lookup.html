@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Responsive Definition Lookup</title>
+<style>
+body {margin:0;padding:0;font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;background: linear-gradient(135deg,#f8f9fa,#e9ecef);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+#container {width:90%;max-width:800px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1);overflow:hidden;position:relative;}
+#header {background:#343a40;color:#fff;padding:15px;text-align:center;font-size:22px;font-weight:600;}
+#inputWrapper, #outputWrapper {padding:20px;display:flex;flex-direction:column;align-items:center;transition:all 0.3s ease;}
+#inputArea {width:100%;min-height:120px;font-size:16px;padding:10px;border:1px solid #ced4da;border-radius:4px;resize:vertical;outline:none;}
+#submitBtn {margin-top:10px;padding:10px 20px;font-size:16px;border:none;border-radius:4px;background:#28a745;color:#fff;cursor:pointer;transition:background 0.3s ease;}
+#submitBtn:hover {background:#218838;}
+#outputArea {width:100%;font-size:18px;line-height:1.6;word-wrap:break-word;animation: fadeIn 0.5s;overflow-wrap: break-word;}
+#reloadBtn {margin-top:15px;padding:8px 16px;font-size:15px;border:none;border-radius:4px;background:#dc3545;color:#fff;cursor:pointer;transition:background 0.3s ease;}
+#reloadBtn:hover {background:#c82333;}
+.word {cursor:pointer;transition: transform 0.2s, color 0.2s;display:inline-block;}
+.word:hover {transform:scale(1.2);color:#d63384;}
+@keyframes fadeIn {from {opacity:0;} to {opacity:1;}}
+@media (max-width:600px){#header {font-size:20px;} #inputArea {font-size:14px;} #submitBtn, #reloadBtn {font-size:14px;}}
+</style>
+</head>
+<body>
+<div id="container">
+  <div id="header">Definition Lookup</div>
+  <div id="inputWrapper">
+    <textarea id="inputArea" placeholder="Paste your English text here and press Enter..."></textarea>
+    <button id="submitBtn">Submit</button>
+  </div>
+  <div id="outputWrapper" style="display:none;">
+    <div id="outputArea"></div>
+    <button id="reloadBtn" onclick="clearStorageAndReload()">Reload</button>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var inputWrapper = document.getElementById("inputWrapper"),
+      outputWrapper = document.getElementById("outputWrapper"),
+      inputArea = document.getElementById("inputArea"),
+      outputArea = document.getElementById("outputArea"),
+      submitBtn = document.getElementById("submitBtn");
+
+  function processText(text){
+    var lines = text.split("\n");
+    outputArea.innerHTML = "";
+    lines.forEach(function(line, idx){
+      var words = line.split(/(\s+)/);
+      words.forEach(function(token){
+        if(token.trim().length > 0){
+          var span = document.createElement("span");
+          span.className = "word";
+          span.innerText = token;
+          span.addEventListener("click", function(){
+            window.open("https://www.google.com/search?q=define+"+encodeURIComponent(token));
+          });
+          outputArea.appendChild(span);
+        } else {
+          outputArea.appendChild(document.createTextNode(token));
+        }
+      });
+      if(idx < lines.length - 1) outputArea.appendChild(document.createElement("br"));
+    });
+    inputWrapper.style.display = "none";
+    outputWrapper.style.display = "flex";
+  }
+
+  function submitText(){
+    var text = inputArea.value.trim();
+    if(text==="") return;
+    localStorage.setItem("savedText", text);
+    processText(text);
+  }
+
+  submitBtn.addEventListener("click", submitText);
+  inputArea.addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); submitText(); }
+  });
+
+  // Load saved text if exists
+  var saved = localStorage.getItem("savedText");
+  if(saved && saved.trim()!==""){
+    processText(saved);
+  }
+
+  window.clearStorageAndReload = function(){
+    localStorage.removeItem("savedText");
+    location.reload();
+  };
+
+  // Info box at bottom right
+  var infoBox = document.createElement("div");
+  infoBox.style.position = "fixed";
+  infoBox.style.bottom = "10px";
+  infoBox.style.right = "10px";
+  infoBox.style.background = "rgba(0,0,0,0.6)";
+  infoBox.style.color = "#fff";
+  infoBox.style.padding = "8px 12px";
+  infoBox.style.borderRadius = "4px";
+  infoBox.style.fontSize = "14px";
+  infoBox.innerText = "Tap any word to lookup its definition on Google.";
+  document.body.appendChild(infoBox);
+
+  // Dynamic background
+  function dynamicBackground(){
+    var colors = ["#f8f9fa","#e9ecef","#dee2e6","#ced4da"], idx = 0;
+    setInterval(function(){
+      document.body.style.background = "linear-gradient(135deg,"+colors[idx]+","+colors[(idx+1)%colors.length]+")";
+      idx = (idx+1)%colors.length;
+    },4000);
+  }
+  dynamicBackground();
+
+  // Animation for clicked word
+  function animateElement(el){
+    el.style.transition = "transform 0.3s ease";
+    el.style.transform = "rotate(5deg)";
+    setTimeout(function(){ el.style.transform = "rotate(0deg)"; },300);
+  }
+  outputArea.addEventListener("click", function(e){
+    if(e.target && e.target.classList.contains("word")){
+      animateElement(e.target);
+    }
+  });
+})();
+</script>
+</body>
+</html>
