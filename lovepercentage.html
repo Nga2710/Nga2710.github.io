@@ -1,0 +1,120 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Percentage Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif}
+body {
+  background: linear-gradient(135deg, #ffc0cb, #ffe4e1);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bgMove 10s infinite alternate;
+}
+@keyframes bgMove {
+  0% {background-position: 0% 50%;}
+  100% {background-position: 100% 50%;}
+}
+.container {
+  background: #fff0f5;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255,105,180,0.3);
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+  animation: fadeIn 1s ease-in-out;
+}
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+h1 {
+  color: #ff69b4;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+input {
+  padding: 12px 20px;
+  width: 80%;
+  margin: 10px auto;
+  border: 2px solid #ffb6c1;
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+input:focus {
+  border-color: #ff1493;
+  box-shadow: 0 0 8px #ff69b4;
+}
+button {
+  background: #ff69b4;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  margin-top: 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+button:hover {
+  background: #ff1493;
+}
+.result {
+  margin-top: 30px;
+  font-size: 1.8rem;
+  color: #d63384;
+  animation: pop 0.5s ease;
+}
+@keyframes pop {
+  from {transform: scale(0);}
+  to {transform: scale(1);}
+}
+.heart {
+  font-size: 2rem;
+  animation: pulse 1s infinite;
+  color: #ff1493;
+  margin-top: 10px;
+}
+@keyframes pulse {
+  0%, 100% {transform: scale(1);}
+  50% {transform: scale(1.2);}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Love Percentage Calculator</h1>
+  <input type="text" id="name1" placeholder="Enter your name">
+  <input type="text" id="name2" placeholder="Enter their name">
+  <button onclick="calculateLove()">Calculate</button>
+  <div class="result" id="result"></div>
+  <div class="heart" id="heart">♥</div>
+</div>
+<script>
+function calculateLove() {
+  const name1 = document.getElementById('name1').value.trim().toLowerCase()
+  const name2 = document.getElementById('name2').value.trim().toLowerCase()
+  if (!name1 || !name2) {
+    document.getElementById('result').innerText = "Please enter both names!"
+    document.getElementById('heart').style.visibility = 'hidden'
+    return
+  }
+  let total = 0
+  for (let i = 0; i < name1.length; i++) total += name1.charCodeAt(i)
+  for (let i = 0; i < name2.length; i++) total += name2.charCodeAt(i)
+  let percentage = ((Math.sin(total) + 1) / 2 * 100).toFixed(2)
+  document.getElementById('result').innerText = `Love Percentage: ${percentage}%`
+  document.getElementById('heart').style.visibility = 'visible'
+}
+</script>
+</body>
+</html>
+
