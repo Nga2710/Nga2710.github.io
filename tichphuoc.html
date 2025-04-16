@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tích Phước Online</title>
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 250px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tích Phước Online 🌿</h1>
+  <input type="text" id="nameInput" placeholder="Nhập tên của bạn..." />
+  <button onclick="calculateBlessing()">Tích Phước</button>
+  <div id="result"></div>
+
+  <script>
+  function hashStringToSeed(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return hash >>> 0;
+}
+
+function random(seedStr) {
+    let seed = hashStringToSeed(seedStr);
+    return Math.abs(Math.sin(seed))
+}
+
+
+    function calculateBlessing() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        alert("Hãy nhập tên trước khi tích phước nha!");
+        return;
+      }
+      const blessing = Math.floor(random(name)* 100) + 1;
+      document.getElementById('result').innerText = `${name} có ${blessing} điểm phước 🌟`;
+    }
+  </script>
+</body>
+</html>
