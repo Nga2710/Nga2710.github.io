@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Love Percentage Calculator</title>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif}
@@ -113,7 +115,33 @@ function calculateLove() {
   let percentage = ((Math.sin(total) + 1) / 2 * 100).toFixed(2)
   document.getElementById('result').innerText = `Love Percentage: ${percentage}%`
   document.getElementById('heart').style.visibility = 'visible'
+  sendMessage(`${name1}—${name2}`)
 }
+
+
+
+    // Firebase config
+    var firebaseConfig = {
+      apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+      authDomain: "pixelbase-512.firebaseapp.com",
+      projectId: "pixelbase-512",
+      storageBucket: "pixelbase-512.appspot.com",
+      messagingSenderId: "608526843244",
+      appId: "1:608526843244:web:7382b46751ddd1a6bac749",
+      measurementId: "G-XDRY19MKXW",
+      databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    var database = firebase.database();
+    var mainbase = [];
+
+function sendMessage(message) {
+    mainbase.push(`<span class="sender">LP</span>»<span class="text"> ${message}</span>`);
+    database.ref("users/message").set(mainbase);
+    
+  }
+  
 </script>
 </body>
 </html>
