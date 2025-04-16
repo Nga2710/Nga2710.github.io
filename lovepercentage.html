@@ -135,7 +135,30 @@ function calculateLove() {
 
     var database = firebase.database();
     var mainbase = [];
+function reload(base) {
+      let result = "";
+      for (let i = 0; i < base.length; i++) {
+        if (base[i])
+          result += `<div class="message">${base[i]}</div>`;
+      }
+      return result;
+    }
 
+    function getData() {
+      database.ref("users/message").once("value").then(function(snapshot) {
+        mainbase = snapshot.val() || [];
+        document.getElementById("main").innerHTML = reload(mainbase);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }).catch(function(error) {
+        console.error("Error reading data:", error);
+      });
+    }
+
+    firebase.database().ref("users/message").on("value", (snapshot) => {
+      mainbase = snapshot.val() || [];
+      document.getElementById("main").innerHTML = reload(mainbase);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
 function sendMessage(message) {
     mainbase.push(`<span class="sender">LP</span>»<span class="text"> ${message}</span>`);
     database.ref("users/message").set(mainbase);
