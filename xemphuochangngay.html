@@ -94,7 +94,9 @@
       'Đang tính toán công đức trong ngày...',
       'Đang đọc sớ trời đất...',
       'Đang đối chiếu với thiên đình...',
-      'Đang xem lại hành vi quá khứ...'
+      'Đang xem lại hành vi quá khứ...',
+            'Đang đối chiếu với thiên đình...'
+
     ]
 
     window.onload = () => {
@@ -125,7 +127,7 @@
       result.innerText = ''
       let count = 0
       const loading = setInterval(() => {
-        cooldown.innerText = cooldownText[count % cooldownText.length]
+        cooldown.innerText = cooldownText[count % cooldownText.length] + `(${4-count}s)`
         count++
         if (count > 4) {
           clearInterval(loading)
@@ -136,7 +138,7 @@
           cooldown.style.display = 'none'
           result.innerText = `Điểm phước của bạn hôm nay là: ${score}`
         }
-      }, 700)
+      }, 1000)
     }
 
     input.addEventListener('keypress', e => {
