@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Xem Phước Hôm Nay</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(120deg, #ffe9e3, #fff3d1);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      animation: slideDown 1s ease;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 12px 15px;
+      width: 80%;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #f29f05;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #d68700;
+    }
+    .cooldown {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+      height: 20px;
+      animation: flicker 1.5s infinite;
+      display: none;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #008000;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Xem Phước Hôm Nay</h1>
+    <div class="cooldown" id="cooldown"></div>
+    <input type="text" id="nameInput" placeholder="Nhập tên của bạn...">
+    <button onclick="checkPhuoc()">Xem Phước</button>
+    <div class="result" id="result"></div>
+  </div>  <script>
+    const input = document.getElementById('nameInput')
+    const result = document.getElementById('result')
+    const cooldown = document.getElementById('cooldown')
+    const cooldownText = [
+      'Đang truy cập sổ công đức...',
+      'Đang tính toán công đức trong ngày...',
+      'Đang đọc sớ trời đất...',
+      'Đang đối chiếu với thiên đình...',
+      'Đang xem lại hành vi quá khứ...'
+    ]
+
+    window.onload = () => {
+      const savedName = localStorage.getItem('userName')
+      if (savedName) {
+        input.value = savedName
+      }
+    }
+
+    function getSeededRandom(seed) {
+      let x = Math.sin(seed) * 10000
+      return x - Math.floor(x)
+    }
+
+    function hashString(str) {
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      return hash
+    }
+
+    function checkPhuoc() {
+      const name = input.value.trim()
+      if (!name) return
+      localStorage.setItem('userName', name)
+      cooldown.style.display = 'block'
+      result.innerText = ''
+      let count = 0
+      const loading = setInterval(() => {
+        cooldown.innerText = cooldownText[count % cooldownText.length]
+        count++
+        if (count > 4) {
+          clearInterval(loading)
+          const today = new Date().toISOString().split('T')[0]
+          const seed = hashString(name + today)
+          const rand = getSeededRandom(seed)
+          const score = Math.floor(rand * 101)
+          cooldown.style.display = 'none'
+          result.innerText = `Điểm phước của bạn hôm nay là: ${score}`
+        }
+      }, 700)
+    }
+
+    input.addEventListener('keypress', e => {
+      if (e.key === 'Enter') checkPhuoc()
+    })
+  </script></body>
+</html>
