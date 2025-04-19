@@ -44,7 +44,8 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      min-width: 250px;
+      min-width: 40px;
+      min-height: 30px;
       transition: transform 0.3s;
       z-index: 2;
     }
@@ -107,6 +108,29 @@
   <div class="hearts" id="heartsContainer"></div>
 
   <script>
+  function shrinkElement(selector, n) {
+  const el = selector
+  if (!el) return
+
+  const rect = el.getBoundingClientRect()
+  const style = window.getComputedStyle(el)
+  const fontSize = parseFloat(style.fontSize)
+
+  const newWidth = rect.width / n
+  const newHeight = rect.height / n
+  const newFontSize = fontSize / n
+
+  // Padding
+  const paddingTop = parseFloat(style.paddingTop) / n
+  const paddingRight = parseFloat(style.paddingRight) / n
+  const paddingBottom = parseFloat(style.paddingBottom) / n
+  const paddingLeft = parseFloat(style.paddingLeft) / n
+
+  el.style.width = newWidth + "px"
+  el.style.height = newHeight + "px"
+  el.style.fontSize = newFontSize + "px"
+  el.style.padding = `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`
+}
     var yesBtn = document.getElementById('yesBtn');
     var noBtn = document.getElementById('noBtn');
     const message = document.getElementById('message');
@@ -114,6 +138,7 @@
     const body = document.body;
 
     yesBtn.addEventListener('click', () => {
+      document.querySelector('h1').style.display = "none"
       message.style.display = 'block';
       body.style.background = "url('HeyYu2.png') center/cover no-repeat fixed";
       yesBtn.style.display = "none"
@@ -135,8 +160,10 @@
       }
       flyheart()
     });
-
+var moved = Math.E
     function moveNoBtn() {
+      moved++
+      shrinkElement(noBtn, Math.sqrt(Math.log(moved)))
       const yesRect = yesBtn.getBoundingClientRect();
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
