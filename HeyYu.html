@@ -118,7 +118,9 @@
       body.style.background = "url('HeyYu2.png') center/cover no-repeat fixed";
       yesBtn.style.display = "none"
             noBtn.style.display = "none"
-      for (let i = 0; i < 30; i++) {
+            
+      function flyheart() {
+        for (let i = 0; i<30; i++) {
         const heart = document.createElement('div');
         heart.classList.add('heart');
         heart.textContent = ['💗','💖','💕','💞','💘','💝'][Math.floor(Math.random() * 6)];
@@ -127,8 +129,11 @@
         heart.style.fontSize = (20 + Math.random() * 20) + 'px';
         heart.style.animationDuration = (2 + Math.random() * 3) + 's';
         heartsContainer.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
+        
+        }
+        setTimeout(() => {heart.remove() ;flyheart()} , 5000);
       }
+      flyheart()
     });
 
     function moveNoBtn() {
