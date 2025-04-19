@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeyYu!</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0 }
@@ -136,14 +137,17 @@
       const btnHeight = noBtn.offsetHeight;
       let x, y, overlaps;
 
-      do {
-        x = Math.random() * (window.innerWidth - btnWidth);
-        y = Math.random() * (window.innerHeight - btnHeight);
-        overlaps = !(x + btnWidth < yesRect.left ||
-                     x > yesRect.right ||
-                     y + btnHeight < yesRect.top ||
-                     y > yesRect.bottom);
-      } while (overlaps);
+      
+do {
+  x = Math.random() * (window.innerWidth - btnWidth);
+  y = Math.random() * (window.innerHeight-btnWidth)-window.innerHeight/2;
+  console.log(x,y)
+  console.log(window.innerWidth,window.innerHeight)
+  overlaps = !(x + btnWidth < yesRect.left ||
+               x > yesRect.right ||
+               y + btnHeight < yesRect.top ||
+               y > yesRect.bottom);
+} while (overlaps);
 
       noBtn.style.transition = 'top 0.4s ease, left 0.4s ease';
       noBtn.style.left = `${x}px`;
