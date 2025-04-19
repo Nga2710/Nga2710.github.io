@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>HeyYu!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: url('HeyYu1.png') center/cover no-repeat fixed;
+      font-family: 'Comic Sans MS', cursive;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 0.5s ease-in-out;
+      position: relative;
+    }
+    h1 {
+      font-size: 40px;
+      color: #ff4d6d;
+      margin-bottom: 50px;
+      text-shadow: 2px 2px #fff0f5;
+      animation: pulse 1.5s infinite;
+      text-align: center;
+      z-index: 2;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .btn {
+      padding: 18px 40px;
+      font-size: 22px;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 250px;
+      transition: transform 0.3s;
+      z-index: 2;
+    }
+    #yesBtn {
+      background: linear-gradient(135deg, #ff90b3, #ff5e9c);
+      color: white;
+      margin-bottom: 20px;
+    }
+    #noBtn {
+      background: linear-gradient(135deg, #c8b6ff, #b39ddb);
+      color: white;
+      position: absolute;
+      top: 75%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #message {
+      margin-top: 30px;
+      font-size: 34px;
+      color: #ff3e6c;
+      display: none;
+      background: rgba(255,255,255,0.8);
+      padding: 20px 35px;
+      border-radius: 30px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      z-index: 2;
+    }
+    .hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      animation: float 4s linear infinite;
+      opacity: 0.9;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Cậu có thích<br> tớ hông? 🥺</h1>
+
+  <button class="btn" id="yesBtn">❤️ Tất nhiên là có</button>
+  <button class="btn" id="noBtn">🚫 Không</button>
+
+  <div id="message">💖 Tớ cũng<br>thích cậu á! 😊</div>
+  <div class="hearts" id="heartsContainer"></div>
+
+  <script>
+    var yesBtn = document.getElementById('yesBtn');
+    var noBtn = document.getElementById('noBtn');
+    const message = document.getElementById('message');
+    const heartsContainer = document.getElementById('heartsContainer');
+    const body = document.body;
+
+    yesBtn.addEventListener('click', () => {
+      message.style.display = 'block';
+      body.style.background = "url('HeyYu2.png') center/cover no-repeat fixed";
+      yesBtn.style.display = "none"
+            noBtn.style.display = "none"
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.textContent = ['💗','💖','💕','💞','💘','💝'][Math.floor(Math.random() * 6)];
+        heart.style.left = Math.random() * (window.innerWidth - 30) + 'px';
+        heart.style.top = window.innerHeight + 'px';
+        heart.style.fontSize = (20 + Math.random() * 20) + 'px';
+        heart.style.animationDuration = (2 + Math.random() * 3) + 's';
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }
+    });
+
+    function moveNoBtn() {
+      const yesRect = yesBtn.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      let x, y, overlaps;
+
+      do {
+        x = Math.random() * (window.innerWidth - btnWidth);
+        y = Math.random() * (window.innerHeight - btnHeight);
+        overlaps = !(x + btnWidth < yesRect.left ||
+                     x > yesRect.right ||
+                     y + btnHeight < yesRect.top ||
+                     y > yesRect.bottom);
+      } while (overlaps);
+
+      noBtn.style.transition = 'top 0.4s ease, left 0.4s ease';
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    noBtn.addEventListener('mouseover', moveNoBtn);
+    noBtn.addEventListener('click', moveNoBtn);
+  </script>
+</body>
+</html>
