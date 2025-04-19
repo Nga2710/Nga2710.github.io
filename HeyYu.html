@@ -44,8 +44,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      min-width: 40px;
-      min-height: 30px;
+
       transition: transform 0.3s;
       z-index: 2;
     }
@@ -164,6 +163,7 @@ var moved = Math.E
     function moveNoBtn() {
       moved++
       shrinkElement(noBtn, Math.sqrt(Math.log(moved)))
+      if (moved > 10) noBtn.style.display = "none"
       const yesRect = yesBtn.getBoundingClientRect();
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
