@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #111 }
+    canvas {
+      display: block; margin: auto; background: #fff;
+      border: 3px solid #444; border-radius: 10px; touch-action: none
+    }
+    #clearBtn {
+      position: fixed; top: 20px; right: 20px; z-index: 10;
+      background: #d32f2f; color: white; border: none; border-radius: 6px;
+      padding: 10px 16px; font-weight: bold; cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3)
+    }
+    #clearBtn:hover { background: #b71c1c }
+  </style>
+</head>
+<body>
+  <button id="clearBtn" onclick="clearCanvas()">Clear</button>
+  <canvas id="canvas"></canvas>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+      authDomain: "pixelbase-512.firebaseapp.com",
+      databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "pixelbase-512",
+      storageBucket: "pixelbase-512.appspot.com",
+      messagingSenderId: "608526843244",
+      appId: "1:608526843244:web:7382b46751ddd1a6bac749"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const drawRef = firebase.database().ref("users/draw");
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#000";
+
+    let drawing = false;
+    let last = { x: 0, y: 0 };
+
+    function getXY(e) {
+      const rect = canvas.getBoundingClientRect();
+      if (e.touches) {
+        const t = e.touches[0];
+        return {
+          x: (t.clientX - rect.left) * canvas.width / rect.width,
+          y: (t.clientY - rect.top) * canvas.height / rect.height
+        };
+      } else {
+        return {
+          x: (e.clientX - rect.left) * canvas.width / rect.width,
+          y: (e.clientY - rect.top) * canvas.height / rect.height
+        };
+      }
+    }
+
+    function isValidPoint(p) {
+      return p && typeof p.x === "number" && typeof p.y === "number" && !isNaN(p.x) && !isNaN(p.y);
+    }
+
+    function drawLine(from, to, emit) {
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+      ctx.closePath();
+      if (emit && isValidPoint(from) && isValidPoint(to)) {
+        drawRef.push({
+          from: { x: Math.round(from.x), y: Math.round(from.y) },
+          to: { x: Math.round(to.x), y: Math.round(to.y) },
+          timestamp: Date.now()
+        });
+      }
+    }
+
+    function start(e) {
+      drawing = true;
+      last = getXY(e);
+    }
+
+    function move(e) {
+      if (!drawing) return;
+      const curr = getXY(e);
+      drawLine(last, curr, true);
+      last = curr;
+    }
+
+    function end() {
+      drawing = false;
+    }
+
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", move);
+    canvas.addEventListener("mouseup", end);
+    canvas.addEventListener("mouseout", end);
+    canvas.addEventListener("touchstart", start);
+    canvas.addEventListener("touchmove", e => { move(e); e.preventDefault(); }, { passive: false });
+    canvas.addEventListener("touchend", end);
+
+    function clearCanvas() {
+      drawRef.set(null);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    drawRef.on("child_added", snap => {
+      const data = snap.val();
+      if (data && isValidPoint(data.from) && isValidPoint(data.to)) {
+        drawLine(data.from, data.to, false);
+      }
+    });
+
+    drawRef.on("value", snap => {
+      if (!snap.exists()) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  </script>
+</body>
+</html>
