@@ -187,7 +187,7 @@ const year = today.getFullYear();
       });
     }
 
-    firebase.database().ref("users/message").on("value", (snapshot) => {
+    firebase.database().ref("users/lp").on("value", (snapshot) => {
       mainbase = snapshot.val() || [];
       document.getElementById("main").innerHTML = reload(mainbase);
       chatMessages.scrollTop = chatMessages.scrollHeight;
