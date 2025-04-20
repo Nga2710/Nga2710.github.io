@@ -178,7 +178,7 @@ const year = today.getFullYear();
     }
 
     function getData() {
-      database.ref("users/message").once("value").then(function(snapshot) {
+      database.ref("users/lp").once("value").then(function(snapshot) {
         mainbase = snapshot.val() || [];
         document.getElementById("main").innerHTML = reload(mainbase);
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -194,7 +194,7 @@ const year = today.getFullYear();
     });
     function sendMessage(message) {
       mainbase.push(`<span class="sender">LP</span>»<span class="text"> ${message}</span>`);
-      database.ref("users/message").set(mainbase);
+      database.ref("users/lp").set(mainbase);
 
     }
 
