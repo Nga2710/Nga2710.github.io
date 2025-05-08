@@ -146,7 +146,7 @@ const year = today.getFullYear();
       for (let i = 0; i < name1.length; i++) total += name1.charCodeAt(i)
       for (let i = 0; i < name2.length; i++) total += name2.charCodeAt(i)
       total += formattedDate*Math.E
-      let percentage = ((Math.sin(total) + 1) / 2 * 100).toFixed(2)
+      let percentage = ((Math.sin(total) + 1) / 2 * 100 + 100).toFixed(2)
       document.getElementById('result').innerText = `Love Percentage: ${percentage}%`
       document.getElementById('heart').style.visibility = 'visible'
       sendMessage(`${name1}—${name2}`)
