@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+<div id="elem">
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input id="showAnIn" type="checkbox" style=""><label for="showAnIn">Hiển thị câu trả lời ngay khi chọn</label>
+        <br>
+        <input id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1: Trong thời gian hoạt động tại Trung Quốc (1912), Phan Bội Châu tham gia thành lập tổ chức nào sau đây?
+/A. Việt Nam Quang phục hội.		B. Việt Nam Quốc Dân Đảng.
+C. Đông Á đồng minh.			D. Hội Liên hiệp thuộc địa.
+Câu 2: Hoạt động đối ngoại của Phan Châu Trinh (đầu thế kỉ XX) diễn ra ở quốc gia nào sau đây?
+A. Liên Xô.	/B. Pháp.	C. Nhật Bản.		D. Trung Quốc.
+Câu 3: Trong những năm 1911-1922, hoạt động đối ngoại của Nguyễn Ái Quốc ở quốc gia nào sau đây?
+A. Nhật Bản.		B. Liên Xô.		C. Trung Quốc.	/D. Pháp.
+Câu 4: Trong thời gian hoạt động tại Pháp (1920), Nguyễn Ái Quốc tham gia sáng lập tổ chức nào sau đây?
+/A. Đảng Cộng sản Pháp.			B. Đảng Cộng sản Liên Xô.
+C. Việt Nam Quang phục hội.			D. Tân Việt Cách mạng đảng.
+Câu 5: Năm 1924, Nguyễn Ái Quốc đến Quảng Châu (Trung Quốc) đã liên lạc với lực lượng cách mạng ở khu vực nào sau đây?
+A. Tây Nam Á.	B. Mĩ La-tinh.		C. Bắc Phi.		/D. Đông Nam Á.
+Câu 6: Hoạt động đối ngoại của Đảng Cộng sản Đông Dương trong những năm 1930-1945 chủ yếu 
+A. phục vụ cho mối quan hệ ngoại giao với các nước lớn.
+B. tìm kiếm liên minh quân sự với các cường quốc lớn.
+C. liên kết với các nước phương Tây chống đế quốc, thực dân.
+/D. phục vụ đấu tranh chống thực dân, phát xít giành độc lập.
+Câu 7: Nội dung nào sau đây phản ánh không đúng hoạt động đối ngoại của Đảng Cộng sản Đông Dương trong những năm 1930-1945?
+/A. Tham gia các khối quân sự chống phát xít.	
+B. Củng cố quan hệ với Đảng Cộng sản Trung Quốc
+C. Tổ chức nhiều hoạt động để ủng hộ Liên Xô.	D. Liên lạc với phong trào chống quân phiệt Nhật Bản.
+Câu 8: Trong những năm Chiến tranh thế giới thứ hai (1939-1945) hoạt động đối ngoại của Đảng Cộng sản Đông Dương đã đưa ra chủ trương nào sau đây?
+/A. Đứng về phía phe đồng minh chống phát xít.	
+B. Liên minh quân sự với các quốc gia Đông Nam Á.
+C. hoạt động giúp đỡ các nước bại trận.	
+D. Thành lập liên minh chống chiến tranh ở Đông Dương.
+Câu 9: Trong thời gian hoạt động ở Trung Quốc, Phan Bội Châu thành lập tổ chức Việt Nam Quang phục hội (1912) nhằm mục đích nào sau đây?
+A. Tiến hành cải cách đất nước, lập ra nhà nước Việt Nam Dân chủ Cộng hòa.
+B. Đánh Mĩ giành độc lập, thành lập nước Cộng hòa Dân quốc Việt Nam.
+C. Đánh Pháp giành độc lập, thành lập nước Việt Nam Dân chủ Cộng hòa.
+/D. Đánh Pháp giành độc lập, thành lập nước Cộng hòa Dân quốc Việt Nam.
+Câu 10: Hoạt động của Phan Châu Trinh trong thời gian ở Pháp (những năm đầu thế kỉ XX) nhằm mục đích nào sau đây?
+/A. Vận động cải cách cho Việt Nam.		B. Thiết lập quan hệ với nước Pháp.
+C. Nhờ Pháp để đánh đuổi Nhật Bản.		D. Vận động trao trả độc lập cho Việt Nam.
+Câu 11: Nội dung nào sau đây phản ánh đúng mục đích hoạt động của Hội Liên hiệp thuộc địa được Nguyễn Ái Quốc tham gia sáng lập tại Pháp (1921)?
+A. Liên minh với các nước tư bản để chống chủ nghĩa thực dân.
+B. Lãnh đạo phong trào công nhân ở các nước tư bản phương Tây.
+/C. Đoàn kết các lực lượng cách mạng chống chủ nghĩa thực dân.
+D. Đào tạo thanh niên ở các nước thuộc địa đưa về nước hoạt động.
+Câu 12: Những hoạt động đối ngoại của Nguyễn Ái Quốc ở Liên Xô (1923-1924) đã xác lập mối quan hệ giữa cách mạng Việt Nam với
+/A. Quốc tế Cộng sản và cách mạng thế giới.		B. phong trào cách mạng ở Mỹ La-tinh.
+C. cách mạng Lào và các nước Đông Âu.		D. hệ thống các nước xã hội chủ nghĩa.
+Câu 13: Liên hiệp các dân tộc bị áp bức và giai cấp vô sản toàn thế giới để xóa bỏ sự áp bức là mục đích hoạt động của tổ chức nào sau đây do Nguyễn Ái Quốc tham gia sáng lập tại Trung Quốc (7-1925)? 
+A. Liên hiệp các quốc gia Đồng minh. 		B. Hội Việt Nam Cách mạng Thanh niên.
+C. Hiệp hội các quốc gia Đông Nam Á.		/D. Hội Liên hiệp các dân tộc bị áp bức Á Đông.	
+Câu 14: Nội dung nào sau đây phản ánh đúng chủ trương trong hoạt động đối ngoại của Đảng Cộng sản Đông Dương (1930-1945)?
+A. Liên minh các nước phương Tây chống chủ nghĩa thực dân
+/B. Tranh thủ sự ủng hộ quốc tế cho cách mạng Việt Nam.
+C. Liên kết chặt chẽ với khu vực Đông Âu chống thù chung. 
+D. Thiết lập quan hệ ngoại giao với các nước tư bản phương Tây.
+Câu 15: Phong trào Đông Du (1905-1908) do Phan Bội Châu khởi xướng đã để lại bài học nào sau đây cho nhân dân Việt Nam hiện nay?
+/A. Tranh thủ ngoại lực, phát huy sức mạnh nội lực.	B. Nói đi đôi với làm, không ngừng rèn luyện bản thân.
+C. Vừa học, vừa làm phụng sự gia đình và xã hội.	D. Dám nói, dám làm và dám chịu trách nhiệm.
+Câu 16: Những hoạt động đối ngoại của Nguyễn Ái Quốc trong những năm 1911 đến 1930 đã để lại bài học quý giá nào sau đây cho thế hệ trẻ ở Việt Nam hiện nay?
+A. Coi ngoại lực là động lực chủ yếu để phát triển cuộc sống bản thân.
+B. Kết hợp tiến bộ của nhân loại với những giá trị của bản thân mình.
+C. Đề cao cá nhân và vươn tầm ảnh hưởng của bản thân ra thế giới.
+/D. Nghị lực và bản lĩnh, rèn luyện ý chí quyết tâm, không ngừng phấn đấu.
+Câu 1: Năm 1950, Chính phủ Việt Nam Dân chủ Cộng hòa thiết lập quan hệ ngoại giao với quốc gia nào?
+A. Hàn Quốc.	B. Nhật Bản.		C. Cam-pu-chia.		/D. Trung Quốc.	
+Câu 2: Một trong những hoạt động đối ngoại của Chính phủ Việt Nam Dân chủ Cộng hòa ngay sau Cách mạng tháng Tám năm 1945 là
+/A. gửi công hàm đến Liên hợp quốc.			B. gửi yêu cầu ngừng bắn đến nước Pháp.
+C. yêu cầu nước Pháp trao trả độc lập.		D. thành lập Liên minh Việt-Miên-Lào.
+Câu 3: Tháng 3 năm 1946, Chính phủ Việt Nam Dân chủ Cộng hòa có hoạt động đối ngoại nổi bật nào sau đây với Pháp?
+A. Ký Hiệp ước Pa-tơ-nốt.				B. Ký Hiệp ước Hác-măng.
+C. Ký Định ước Hen-xin-ki.				/D. Ký Hiệp định Sơ bộ.
+Câu 4: Tháng 9 năm 1946, Chính phủ Việt Nam Dân chủ Cộng hòa có hoạt động đối ngoại nổi bật nào sau đây với Pháp?
+A. Ký Hiệp ước Hác-măng.				/B. Ký Bản Tạm ước Việt-Pháp.
+C. Ký Định ước Hen-xin-ki.				D. Ký Hiệp ước Pa-tơ-nốt.
+Câu 5: Năm 1951, Chính phủ Việt Nam Dân chủ Cộng hòa có hoạt động đối ngoại nào sau đây?
+/A. Thành lập liên minh nhân dân Việt - Miên - Lào. 	B. Thành lập liên minh các quốc gia Đông Nam Á.
+C. Trở thành đối tác chiến lược của Trung Quốc.      D. Tham gia thành lập Hội đồng tương trợ kinh tế (SEV).
+Câu 6: Trong giai đoạn 1947-1949, Chính phủ Việt Nam Dân chủ Cộng hòa thực hiện hoạt động đối ngoại nào sau đây?
+/A. Mở cơ quan đại diện ở một số nước châu Á.	B. Thành lập liên minh với Lào và Cam-pu-chia.
+C. Thiết lập quan hệ ngoại giao với Trung Quốc.	D. Ký với đại diện Pháp Hiệp định Giơ-ne-vơ.
+Câu 7: Trong giai đoạn 1950-1954, Chính phủ Việt Nam Dân chủ Cộng hòa thực hiện hoạt động đối ngoại nào sau đây?
+A. Thiết lập quan hệ ngoại giao với tất cả các nước trên thế giới.
+B. Đàm phán và kí kết Hiệp định Pa-ri về chấm dứt chiến tranh.
+C. Chuyển sang giai đoạn vừa đánh, vừa đàm với thực dân Pháp.
+/D. Thiết lập quan hệ ngoại giao với Trung Quốc và Liên Xô.
+Câu 8: Một trong những chính sách đối ngoại của Đảng và Chính phủ Việt Nam Dân chủ Cộng hòa trong cuộc kháng chiến chống Mỹ, cứu nước (1954-1975) là
+/A. củng cố, phát triển quan hệ với các nước xã hội chủ nghĩa.
+B. bình thường hóa quan hệ với Trung Quốc và Ấn Độ.
+C. hợp tác toàn diện với Nhật Bản, Hàn Quốc và Pháp.
+D. củng cố, phát triển quan hệ với các nước tư bản chủ nghĩa.
+Câu 9: Nội dung nào sau đây phản ánh không đúng bối cảnh hoạt động đối ngoại của Chính phủ nước Việt Nam Dân chủ Cộng hòa sau ngày 2-9-1945?
+A. Hệ thống xã hội chủ nghĩa dần hình thành trên thế giới.
+B. Việt Nam chưa thoát khỏi tình thế bị bao vây, cô lập.
+/C. Xu thế hòa hoãn Đông-Tây trên thế giới đã xuất hiện.
+D. Việt Nam chưa được quốc gia nào đặt quan hệ ngoại giao.
+Câu 10: Hoạt động đối ngoại của của Chính phủ nước Việt Nam Dân chủ Cộng hòa từ sau ngày 2-9-1945 đến trước ngày 19-12-1946 có tác dụng nào sau đây?
+/A. Tránh được cùng lúc phải đối phó với nhiều kẻ thù.	
+B. Nhận được viện trợ của Trung Quốc và Liên Xô.
+C. Giúp Việt Nam thoát khỏi tình thế bị bao vây, cô lập.
+D. Giúp Việt Nam xây dựng thành công chủ nghĩa xã hội.
+Câu 11: Nội dung nào sau đây phản ánh đúng bối cảnh hoạt động đối ngoại của nước Việt Nam Dân chủ Cộng hòa trong cuộc kháng chiến chống Mỹ, cứu nước (1954-1975)?
+A. Thực dân Pháp tiến hành xâm lược Việt Nam lần thứ hai.
+B. Tình trạng Chiến tranh lạnh đã chấm dứt trên thế giới.
+C. Trật tự thế giới theo xu thế đa cực đang dần hình thành.
+/D. Việt Nam đã thoát ra khỏi tình thế bị bao vây và cô lập
+Câu 12: Chính phủ Việt Nam Dân chủ Cộng hòa kí với Pháp Hiệp định Giơ-ne-vơ (1954) có ý nghĩa nào sau đây?
+A. Hợp tác đa phương giữa Việt Nam với các cường quốc lớn được thiết lập.
+B. Quan hệ ngoại giao giữa hai nước Việt Nam và Pháp nâng lên tầm cao mới.
+/C. Lần đầu tiên ngoại giao Việt Nam đàm phán đa phương với các nước lớn.
+D. Việt Nam trở thành thành viên của Hiệp hội các quốc gia Đông Nam Á.
+Câu 13: Sự kiện nào sau đây được đánh giá là đỉnh cao thắng lợi trên mặt trận ngoại giao của Việt Nam trong cuộc kháng chiến chống Mĩ cứu nước (1954-1975)?
+/A. Hiệp đinh Pa-ri được kí kết (1973).		B. Hiệp đinh Giơ-ne-vơ được kí kết (1954).
+C. Mĩ xoá bỏ cấm vận với Việt Nam (1995)		D. Việt Nam gia nhập Liên Hợp quốc (1977)
+Câu 14: Trong cuộc kháng chiến chống Mỹ, cứu nước (1954-1975), hoạt động ngoại giao của Chính phủ Việt Nam Dân chủ Cộng hòa đã đạt được thành tựu nào sau đây?
+A. Trở thành thành viên chính thức của tổ chức Liên hợp quốc.
+B. Thành lập được liên minh chiến đấu với các nước Đông Nam Á.
+C. Được Trung Quốc, Liên Xô công nhận và đặt quan hệ ngoại giao.
+/D. Hình thành mặt trận nhân dân thế giới ủng hộ cuộc kháng chiến.
+Câu 15: Nội dung nào sau đây phản ánh đúng điểm tương đồng của đấu tranh ngoại giao trong cuộc kháng chiến chống thực dân Pháp (1945-1954) và đế quốc Mỹ (1954-1975) ở Việt Nam?
+/A. Đấu tranh ngoại giao có quan hệ chặt chẽ với đấu tranh chính trị.
+B. Đấu tranh ngoại giao luôn đi trước mở đường cho đấu tranh quân sự.
+C. Mặt trận ngoại giao được hình thành ngay từ đầu cuộc kháng chiến.
+D. Hoạt động ngoại giao chịu sự chi phối hoàn toàn của hoạt động quân sự. 
+Câu 16: Nội dung nào sau đây phản ánh đúng điểm tương đồng giữa Hiệp định Giơ-ne-vơ (1954) về Đông Dương và Hiệp định Pa-ri (1973) về Việt Nam?
+A. Việt Nam thể hiện tính tự chủ và tự quyết trong đấu tranh ngoại giao.
+B. Là kết quả của các cuộc đàm phán diễn ra nhanh chóng, hài hòa.
+C. Là mốc đánh dấu kết thúc các cuộc chiến tranh xâm lược của kẻ thù.
+/D. Các nước đế quốc phải công nhận tính thống nhất của Việt Nam.
+Câu 17: Trong giai đoạn 1975-1985, Việt Nam thực hiện chính sách đối ngoại nào sau đây?
+A. Bình thường hóa quan hệ ngoại giao với Mỹ.
+/B. Hợp tác toàn diện với các nước xã hội chủ nghĩa.		
+C. Hợp tác toàn diện với các nước tư bản chủ nghĩa.	     
+D. Bình thường hóa quan hệ ngoại giao với Trung Quốc.
+Câu 18: Một trong những chính sách đối ngoại của Việt Nam giai đoạn 1975-1985 là
+/A. cải thiện quan hệ với các nước Đông Nam Á.	B. tăng cường quan hệ toàn diện với Trung Quốc.
+C. đàm phán kết thúc chiến tranh với Mỹ.		D. nâng quan hệ với Nga lên đối tác chiến lược.
+Câu 19: Trong giai đoạn 1975-1985, Việt Nam coi trọng phát triển quan hệ ngoại giao toàn diện với quốc gia nào sau đây?
+A. Pháp.		B. Anh.		C. Mỹ.			/D. Liên Xô.	
+Câu 20: Năm 1991, Việt Nam có hoạt động đối ngoại nổi bật nào sau đây?
+A. Phát triển quan hệ đối tác chiến lược toàn diện với Nhật Bản.
+B. Việt Nam và Hoa Kỳ đã bình thường hóa quan hệ ngoại giao.
+C. Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+/D. Việt Nam và Trung Quốc bình thường hóa quan hệ ngoại giao.
+Câu 21: Năm 1995, Việt Nam có hoạt động đối ngoại nổi bật nào sau đây?
+/A. Việt Nam và Hoa Kỳ bình thường hóa quan hệ ngoại giao.
+B. Phát triển quan hệ đối tác chiến lược toàn diện với Ấn Độ.
+C. Việt Nam và Liên Xô ký Hiệp ước hữu ngị và hợp tác.
+D. Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO).
+Câu 22: Năm 1995, Việt Nam trở thành thành viên của tổ chức nào sau đây?
+/A. Hiệp hội các quốc gia Đông Nam Á (ASEAN).	B. Liên minh chính trị - quân sự Vác-sa-va.
+C. Hội đồng tương trợ kinh tế (SEV).			D. Tổ chức Thương mai Thế giới (WTO).
+Câu 23: Trong thời kỳ Đổi mới (tháng 12-1986 đến nay), Việt Nam không ngừng củng cố, phát triển mối quan hệ hữu nghị, đặc biệt là với một trong những quốc gia nào sau đây?
+A. Thái Lan 		/B. Cu-ba.				C. In-đô-nê-xi-a.		D. Ma-lai-xi-a.
+Câu 24: Quốc gia nào sau đây có quan hệ đối tác chiến lược toàn diện với Việt Nam trong thời kì Đổi mới (từ tháng 12-1986 đến nay)?
+/A. Ấn Độ.		B. Anh.		C. Pháp.	D. Ma-lai-xi-a.
+Câu 25: Trong thời kì 1975-1985, hoạt động đối ngoại của Việt Nam diễn ra trong bối cảnh nào sau đây?
+/A. Việt Nam đã hoàn toàn thống nhất về lãnh thổ.	B. Thế bao vây, cấm vận Việt Nam đã được dỡ bỏ.
+C. Cuộc kháng chiến chống Mỹ diễn ra quyết liệt.	D. Miền Bắc xây dựng thành công chủ nghĩa xã hội.
+Câu 26: Từ năm 1986 đến nay, hoạt động đối ngoại của Việt Nam diễn ra trong bối cảnh nào sau đây?
+A. Thế bao vây, cấm vận Việt Nam đã được dỡ bỏ. 	/B. Xu thế khu vực hóa, toàn cầu hóa đã phát triển.
+C. Cuộc Chiến tranh lạnh đã chấm dứt hoàn toàn.	D. Cuộc kháng chiến chống Mỹ diễn ra quyết liệt.
+Câu 27: Nội dung nào sau đây là một trong những căn cứ để Đảng Cộng sản Việt Nam điều chỉnh đường lối đối ngoại trong thời kì Đổi mới (từ năm 1986)?
+/A. Việt Nam đang gặp bất lợi trong quan hệ quốc tế.	   B. Chủ nghĩa xã hội ở Liên Xô đang phát triển mạnh.
+C. Hiệp hội các quốc gia Đông Nam Á vừa thành lập.  D. Đất nước đang bị lực lượng Khrme đỏ chống phá.
+Câu 28: Các hoạt động đối ngoại của Việt Nam thời kì Đổi mới (từ năm 1986 đến nay) không có tác động nào sau đây?
+/A. Bước đầu thiết lập quan hệ với cách mạng thế giới.  	B. Nâng cao vị thế của Việt Nam 
+C. Bảo vệ vững chắc chủ quyền lãnh thổ của Tổ quốc.	D. Thúc đẩy sự phát triển của kinh tế, văn hóa 
+Câu 29: Việt Nam có đóng góp nào sau đây đối với cộng đồng quốc tế từ sau năm 1986?
+/A. Tham gia hỗ trợ nhận đạo, giúp đỡ các quốc gia khó khăn.
+B. Gửi quân đội trực tiếp tham chiến chống Mỹ ở châu Phi.
+C. Đảm nhận vị trí thường trực Hội đồng Bảo an Liên hợp quốc.
+D. Viện trợ vũ khí cho phong trào đấu tranh giải phóng dân tộc.
+Câu 30: Nội dung nào sau đây phản ánh đúng chủ trương đường lối động đối ngoại của Việt Nam trong thời kỳ Đổi mới (từ 1986 đến nay)?
+A. Liên minh quân sự với các nước trong khu vực.	B. Kết hợp sức mạnh thời đại với sức mạnh khu vực
+C. Liên minh chính trị với các nước Đông Nam Á. 	/D. Kết hợp sức mạnh dân tộc với sức mạnh thời đại.
+Câu 31: Tại Đại hội đại biểu toàn quốc lần thứ VII (1991), định hướng ngoại giao của Đảng Cộng sản Việt Nam đã nhấn mạnh nguyên tắc nào sau đây trong quan hệ quốc tế để đảm bảo lợi ích và phát triển bền vững của đất nước?
+A. Hợp tác quốc tế chỉ với các nước xã hội chủ nghĩa và các nước có cùng hệ thống chính trị.
+/B. Cùng tồn tại hòa bình, hợp tác trên cơ sở bình đẳng và cùng có lợi không phân biệt chế độ.
+C. Ưu tiên thiết lập quan hệ đối tác chiến lược với các nước có hệ thống chính trị tương đồng.
+D. Chỉ hợp tác với các nước phát triển kinh tế mạnh, không quan tâm đến hệ thống chính trị.
+Câu 32: Nội dung nào sau đây phản ánh đúng quan điểm, lập trường về đường lối hoạt động đối ngoại của Việt Nam trong xu thế hội nhập quốc tế hiện nay?
+/A. Không chọn bên, mà chọn công lý và lẽ phải.	B. Chọn đối tác, không chọn đối tượng hợp tác.
+C. Không láng giềng gần, mà chọn bạn ở xa.		D. Chọn bên, chọn đối tác và công lý, lẽ phải.	
+Câu 1: Một trong những phẩm chất tốt đẹp của xứ Nghệ đã được Chủ tịch Hồ Chí Minh tiếp thu và thể hiện rõ nét trong cuộc đời hoạt động các mạng là 
+/A. ý chí trong học tập.			B. trọng nghĩa khinh tài.
+C. giỏi nghề thủ công.			D. kinh nghiệm đi biển.
+Câu 2: Một trong những ngôi trường mà Chủ tịch Hồ Chí Minh từng theo học thuở nhỏ là
+A. Đồng Khánh.	B. Hoàng Phố.		C. Quốc Tử giám.			/D. Quốc học Huế.
+Câu 3: Tháng 6-1925, Nguyễn Ái Quốc thành lập Hội Việt Nam Cách mạng Thanh niên khi đang hoạt động ở quốc gia nào sau đây?
+/A. Trung Quốc.		B. Pháp.	C. Liên Xô.		D. Việt Nam.
+Câu 4: Trong thời gian ở Pháp (1917-1923), Nguyễn Ái Quốc có hoạt động nào sau đây?
+/A. Ra báo Người cùng khổ		B. Tham dự Đại hội V của Quốc tế Cộng sản.
+C. Ra báo Thanh niên.			D. Chủ trì hội nghị hợp nhất các tổ chức cộng sản.
+Câu 5: Đầu năm 1930, Nguyễn Ái Quốc đã có hoạt động nào sau đây?
+A. Trở về nước lãnh đạo cách mạng.		B. Thành lập Mặt trận Việt Minh.
+C. Soạn thảo Luận cương chính trị.		/D. Hợp nhất các tổ chức cộng sản.
+Câu 6: Tổ chức nào sau đây được thành lập theo quyết định của Hội nghị lần thứ 8 Ban Chấp hành Trung ương Đảng Cộng sản Đông Dương (5-1941) do Nguyễn Ái Quốc chủ trì?
+A. Tân Việt Cách mạng đảng.				B. Đảng Lao động Việt Nam.
+/C. Việt Nam Độc lập Đồng minh.			D. Mặt trận Dân chủ Đông Dương.
+Câu 7: Ngày 22-12-1944, lực lượng vũ trang nào sau đây được thành lập theo Chỉ thị của Hồ Chí Minh?
+A. Quân đội nhân dân Việt Nam. 		B. Mặt trận Dân tộc Giải phóng miền Nam Việt Nam.
+C. Đội Việt Nam Giải phóng quân. 		/D. Đội Việt Nam Tuyên truyền Giải phóng quân.
+Câu 8: Năm 1945, Nguyễn Ái Quốc có hoạt động nào sau đây?
+A. Lãnh đạo nhân dân Việt Nam tiến hành kháng chiến chống Pháp và Mỹ.
+/B. Phát động và lãnh đạo nhân dân Tổng khởi nghĩa giành chính quyền.
+C. Xây dựng và hoàn thiện đường lối giải phóng dân tộc ở Việt Nam.
+D. Triệu tập và chủ trì hội nghị hợp nhất các tổ chức cộng sản ở Việt Nam.
+Câu 9: Cuối thế kỉ XIX, hoàn cảnh nào sau đây của đất nước Việt Nam đã ảnh hưởng đến cuộc đời và sự nghiệp của Hồ Chí Minh?
+A. Thực dân Pháp hoàn thành cuộc khai thác thuộc địa lần thứ nhất.
+B. Phong trào đấu tranh theo khuynh hướng vô sản diễn ra rộng khắp. 
+C. Cách mạng Việt Nam đi theo con đường cách mạng vô sản. 
+/D. Thực dân Pháp đã đặt được ách cai trị trên toàn lãnh thổ Việt Nam.
+Câu 10: Nội dung nào sau đây đúng về hoàn cảnh gia đình đã ảnh hưởng đến cuộc đời và sự nghiệp của Hồ Chí Minh?
+A. Thân mẫu từng thi đỗ cử nhân tại trường thi Nghệ An.
+B. Thân phụ là người tham gia khởi xướng phong trào Đông Du.
+/C. Thân phụ là một tấm gương sáng về ý chí vượt khó.
+D. Thân phụ đã từng tích cực tham gia cuộc vận động Duy tân.
+Câu 11: Năm 1920, khi đang hoạt động ở Pháp, Nguyễn Ái Quốc đã có đóng góp nào sau đây đối với lịch sử dân tộc Việt Nam?
+/A. Tìm ra con đường cứu nước theo khuynh hướng vô sản.
+B.  Chủ trì hội nghị hợp nhất các tổ chức cộng sản.
+C. Thành lập Hội Việt Nam cách mạng thanh niên.
+D. Lãnh đạo cuộc khởi nghĩa vũ trang giành chính quyền.
+Câu 12: Tháng 2 - 1925, tại Quảng Châu (Trung Quốc), Nguyễn Ái Quốc đã lựa chọn một số thanh niên ưu tú trong tổ chức Tâm tâm xã để thành lập Cộng sản đoàn. Những thanh niên được lựa chọn đều
+A. từng tham gia vào vụ ám sát Toàn quyền Đông Dương - Méclanh.
+/B. có tinh thần yêu nước, có chí hướng quyết tâm giải phóng dân tộc.
+C. đã tham gia vào tổ chức Việt Nam Quang phục hội tại Quảng Châu.
+D. thấm nhuần lí luận về chủ nghĩa Mác – Lênin và cách mạng vô sản.
+Câu 13: Trong thời gian ở Quảng Châu (Trung Quốc) từ năm 1924 đến năm 1927, Nguyễn Ái Quốc có                          hoạt động nào sau đây nhằm chuẩn bị cho bước chuyển biến về chất của phong trào giải phóng dân tộc                Việt Nam?
+A. Khởi đầu tạo dựng các mối quan hệ với cách mạng thế giới.
+B. Trực tiếp tạo ra sự phân hóa trong các tổ chức tiền cộng sản.
+/C. Trang bị lí luận cách mạng cho đội ngũ cán bộ nòng cốt.	
+D. Bắt đầu xây dựng đường lối kháng chiến, giải phóng dân tộc.
+Câu 14: Sự kiện Nguyễn Ái Quốc bỏ phiếu tán thành Quốc tế Cộng sản và tham gia thành lập Đảng Cộng sản Pháp có ý nghĩa nào sau đây đối với cách mạng Việt Nam?
+/A. Đánh dấu bước ngoặt trong quá trình tìm đường cứu nước của Nguyễn Ái Quốc.
+B. Khẳng định vai trò lãnh đạo của Đảng Cộng sản Pháp trong cách mạng Việt Nam.
+C. Đặt nền móng cho việc thành lập Đảng Cộng sản Đông Dương sau này.
+D. Khẳng định sự ủng hộ của Quốc tế Cộng sản đối với cách mạng Việt Nam.
+Câu 15: Hoạt động của Nguyễn Tất Thành từ 1911 - 1920 để lại bài học nào sau đây cho thế hệ trẻ Việt Nam hiện nay?
+/A. Tinh thần vượt khó, vượt khổ.			B. Tinh thần đoàn kết quốc tế vô sản.
+C. Đấu tranh vũ trang giữ chính quyền.		D. Hướng ngoại để lao động, học tập.
+Câu 16: Một trong những yếu tố nào sau đây đã góp phần tạo nên “đạo đức, trí tuệ, nhân cách” và sự nghiệp của Chủ tịch Hồ Chí Minh?
+A. Kinh nghiệm lãnh đạo và chiến đấu cách mạng.
+B. Sự tham gia vào các phong trào cách mạng quốc tế.
+C. Những năm tháng trải qua khó khăn trong cuộc sống.
+/D. Quá trình học tập và sự tiếp thu tri thức không ngừng.
+Câu 1: Trong quá trình ra đi tìm đường cứu nước từ 1911 đến 1930, Nguyễn Tất Thành không đặt chân đến quốc gia nào sau đây?
+A. Thái Lan.		B. Trung Quốc.	C. Liên Xô.			/D. Nhật Bản.
+Câu 2: Năm 1941, sau khi về nước, Nguyễn Ái Quốc đã chọn nơi nào sau đây để xây dựng thành căn cứ địa cách mạng?
+A. Tuyên Quang. 		/B. Cao Bằng.		C. Tân Trào.		D. Lạng Sơn.
+Câu 3: Tháng 6-1945, theo Chỉ thị của Hồ Chí Minh, căn cứ địa cách mạng nào sau đây được thành lập?
+/A. Khu Giải phóng Việt Bắc.			B. Căn cứ Bắc Sơn-Võ Nhai.
+C. Trung ương Cục miền Nam.		            D. Chiến khu D-Tây Ninh.
+Câu 4: Trong những năm 1941 đến năm 1945, Chủ tịch Hồ Chí Minh có hoạt động nào sau đây?
+A. Ra lời kêu gọi toàn quốc kháng chiến chống thực dân Pháp.
+/B. Chủ trì Đại hội Quốc dân họp ở Tân Trào (Tuyên Quang).
+C. Ký với đại diện Chính phủ Pháp bản Hiệp định Sơ bộ.
+D. Chủ tịch Hồ Chí Minh sang Pháp vận động ngoại giao.
+Câu 5: Sau Cách mạng tháng Tám năm 1945 ở Việt Nam, để giải quyết nạn đói, Chủ tịch Hồ Chí Minh đã
+/A. Kêu gọi nhân dân “nhường cơm sẻ áo”.	B. Ký sắc lệnh thành lập Nha bình dân học vụ.
+C. Kêu gọi nhân dân ủng hộ Tuần lễ vàng.	            D. Gửi lời kêu gọi quốc dân đi bỏ phiếu.
+Câu 6: Sau Cách mạng tháng Tám năm 1945 ở Việt Nam, để giải quyết khó khăn về tài chính, Chủ tịch Hồ Chí Minh đã
+A. Kêu gọi nhân dân “Nhường cơm sẻ áo”. 		/B. Kêu gọi nhân dân ủng hộ Tuần lễ vàng.
+C. Ký sắc lệnh thành lập Nha bình dân học vụ.	D. Gửi lời kêu gọi quốc dân đi bỏ phiếu.
+Câu 7: Sau Cách mạng tháng Tám năm 1945 ở Việt Nam, để giải quyết nạn dốt, Chủ tịch Hồ Chí Minh đã
+A. Gửi lời kêu gọi quốc dân đi bỏ phiếu.		B. Kêu gọi nhân dân ủng hộ Tuần lễ vàng.
+C. Kêu gọi nhân dân “Nhường cơm sẻ áo”.		/D. Ký sắc lệnh thành lập Nha bình dân học vụ. 
+Câu 8: Tháng 12-1946, khi mọi nhân nhượng của Việt Nam đối với thực dân Pháp đã đi đến giới hạn cuối cùng, Chủ tịch Hồ Chí Minh thay mặt Trung ương Đảng và Chính phủ đã
+/A. ra Lời kêu gọi toàn quốc kháng chiến.		B. Ký với thực dân Pháp Hiệp định Sơ bộ.
+C. phát động nhân dân Nam bộ kháng chiến.	          D. trực tiếp sang Pháp để vận động ngoại giao.
+Câu 9: Nội dung nào sau đây là ý nghĩa của sự kiện Nguyễn Ái Quốc tìm ra con đường cứu nước năm 1920?
+A. Đưa cách mạng Việt Nam đi theo khuynh hướng tư sản.
+B. Mở ra con đường cứu nước theo khuynh hướng dân chủ vô sản.
+C. Chuẩn bị đủ các điều kiện cho việc thành lập Đảng Cộng sản Đông Dương 
+/D. Bước đầu giải quyết khủng hoảng về đường lối giải phóng dân tộc. 
+Câu 10: Một trong những vai trò của Nguyễn Ái Quốc đối với công cuộc chuẩn bị cho giải phóng dân tộc Việt Nam (1941-1945) là
+A. xác định nhiệm vụ duy nhất của cách mạng tư sản dân quyền.
+/B. thành lập mặt trận dân tộc thống nhất của riêng Việt Nam.
+C. thống nhất các tổ chức cộng sản thành một đảng duy nhất.
+D. hoàn chỉnh lí luận cách mạng giải phóng dân tộc Việt Nam.
+Câu 11: Những hoạt động tích cực của Chủ tịch Hồ Chí Minh trong kháng chiến chống thực dân Pháp (1945 - 1954) đã đưa đến kết quả nào sau đây?
+A. Việt Nam nhận được sự giúp đỡ to lớn của các nước xã hội chủ nghĩa Tây Âu.
+B. Việt Nam giành thắng lợi trên bản đảm phán tại Hội nghị Pa-ri.
+C. Việt Nam đàm phán độc lập với các nước trong Hội nghị Giơ-ne-vơ.
+/D. Việt Nam nhận được sự ủng hộ, giúp đỡ to lớn của Trung Quốc, Liên Xô.
+Câu 12: Nội dung nào sau đây thể hiện việc Nguyễn Ái Quốc chuẩn bị về tư tưởng, chính trị cho sự ra đời của Đảng Cộng sản Việt Nam?
+/A. Mở các lớp huấn luyện, đào tạo cán bộ cách mạng tại Trung Quốc.
+B. Chủ nhiệm kiêm chủ bút báo Nhân đạo, Đời sống công nhân.
+C. Xây dựng lí luận về đi lên chủ nghĩa xã hội ở miền Bắc.
+D. Đào tạo cán bộ thực hiện các cuộc khởi nghĩa vũ trang.
+Câu 13: Nội dung nào sau đây phản ánh đúng về vai trò của Nguyễn Ái Quốc trong việc thành lập Đảng Cộng sản Việt Nam (1930)?
+A. Triệu tập hội nghị thống nhất các tổ chức cộng sản tại Cao Bằng.
+/B. Triệu tập và chủ trì Hội nghị thành lập Đảng Cộng sản Việt Nam.
+C. Soạn thảo Đường Kách mệnh- Cương lĩnh của Đảng Cộng sản Việt Nam. 
+D. Triệu tập và chủ trì Đại hội thành lập Đảng tại Ma Cao (Trung Quốc). 
+Câu 14: Nội dung nào sau đây phản ánh đúng vai trò của Chủ tịch Hồ Chí Minh trong cuộc kháng chiến chống Mỹ, cứu nước (1954-1975)?
+/A. Là biểu tượng đoàn kết và có vai trò to lớn trong đấu tranh ngoại giao.
+B. Trực tiếp lãnh đạo cuộc kháng chiến chống Mỹ đi đến thắng lợi cuối cùng.
+C. Đề ra đường lối kháng chiến toàn dân, toàn diện, lâu dài và tự lực cánh sinh.
+D. Trực tiếp ra mặt trận theo dõi diễn biến chiến dịch Xuân Mậu Thân 1968.
+Câu 15: Nội dung nào sau đây là một trong những điểm sáng tạo của Nguyễn Ái Quốc trong quá trình chuẩn bị thành lập Đảng Cộng sản Việt Nam vào những năm 20 của thế kỉ XX?
+A. Xác định công nhân là lực lượng lãnh đạo giải phóng dân tộc.
+B. Khẳng định sự cần thiết phải xây dựng đảng vô sản thống nhất.
+C. Xây dựng lí luận giải phóng giai cấp, tiến lên xã hội cộng sản.
+/D. Xác định lực lượng cách mạng không chỉ có công - nông dân.
+Câu 16: Cho đoạn tư liệu: “Kể từ khi thực dân Pháp xâm lược, các phong trào yêu nước của nhân dân Việt Nam đã diễn ra liên tục và anh dũng, sử dụng nhiều con đường cứu nước khác nhau, nhưng không giành được thắng lợi. Sự nghiệp giải phóng dân tộc “lâm vào một tình hình đen tối tưởng như không có đường ra”.  (Vũ Quang Hiển (Chủ biên), Tuyên ngôn Độc lập: Những khát vọng về về quyền dân tộc và quyền con người, NXB Đại học Quốc gia Hà Nội, Hà Nội, 2013, tr.108) Đoạn tư liệu trên phản ánh thực tiễn nào của sự nghiệp giải phóng dân tộc ở Việt Nam?
+/A. Cách mạng Việt Nam đang lâm vào khủng hoảng về đường lối và giai cấp lãnh đạo.
+B. Cách mạng Việt Nam chưa tìm thấy con đường cứu nước và chưa có giai cấp lãnh đạo.
+C. Con đường cứu nước theo khuynh hướng dân chủ tư sản chưa được du nhập vào Việt Nam.
+D. Nhân dân Việt Nam thiếu quyết tâm chống Pháp để giành độc lập tự do cho dân tộc.
+Câu 1: Chủ nghĩa Mác - Lê-nin và yếu tố nào sau đây đóng vai trò nền tảng tư tưởng, kim chỉ nam cho hành động của Đảng Cộng sản Việt Nam?
+/A. Tư tưởng Hồ Chí Minh.				B. Phong cách Hồ Chí Minh.
+C. Quan điểm Hồ Chí Minh.				D. Đường lối Hồ Chí Minh.
+Câu 2: Năm 1987, tổ chức Giáo dục, Khoa học và Văn hóa của Liên hợp quốc (UNESCO) đã vinh danh Chủ tịch Hồ Chí Minh là
+A. Nhà khoa học xuất sắc.				/B. Anh hùng giải phóng dân tộc
+C. Nhà hoạt động môi trường nổi tiếng.		D. Nhà kinh tế học lỗi lạc.
+Câu 3: Việc học tập và làm theo tư tưởng, đạo đức, phong cách Hồ Chí Minh được Đảng và Nhà nước Việt Nam xác định gắn với quá trình
+A. mở rộng quan hệ ngoại giao với các nước trên thế giới.
+/B. xây dựng và phát triển văn hóa, con người
+C. phát triển các khu công nghiệp và khu chế xuất hiện đại.
+D. xây dựng và phát triển cơ sở hạ tầng giao thông hiện đại.
+Câu 4: Việc học tập và làm theo tư tưởng, đạo đức, phong cách Hồ Chí Minh được Đảng và Nhà nước Việt Nam xác định gắn với quá trình
+A. mở rộng quan hệ ngoại giao với các nước trên thế giới.
+B. phát triển các khu công nghiệp và khu chế xuất hiện đại.
+C. xây dựng và phát triển cơ sở hạ tầng giao thông hiện đại.
+/D. nâng cao chất lượng giáo dục và đào tạo nguồn nhân lực.
+Câu 5: Tháng 11-2006, Bộ Chính trị Ban Chấp hành Trung ương Đảng Cộng sản Việt Nam đã ban hành Chỉ thị số 06-CT/TW, tổ chức cuộc vận động “Học tập và làm theo tấm gương đạo đức Hồ Chí Minh” nhằm
+/A. phát huy giá trị to lớn của tư tưởng, đạo đức Hồ Chí Minh.
+B. thúc đẩy sự phát triển nhanh chóng của nền kinh tế thị trường.
+C. xây dựng cơ sở hạ tầng giao thông đồng bộ và hiện đại.
+D. cải thiện hệ thống giáo dục và đào tạo, nâng cao dân trí.
+Câu 6: Tháng 11-2006, Bộ Chính trị Ban Chấp hành Trung ương Đảng Cộng sản Việt Nam đã ban hành Chỉ thị số 06-CT/TW, tổ chức cuộc vận động “Học tập và làm theo tấm gương đạo đức Hồ Chí Minh” nhằm
+A. thúc đẩy sự phát triển nhanh chóng của nền kinh tế thị trường.
+B. xây dựng cơ sở hạ tầng giao thông đồng bộ và hiện đại.
+/C. nâng cao chất lượng và hiệu quả công tác xây dựng chính quyền.
+D. cải thiện hệ thống giáo dục và đào tạo, nâng cao dân trí.
+Câu 7: Thành phố nào sau đây là địa danh đầu tiên trên thế giới có đường phố mang tên Hồ Chí Minh và dựng tượng đồng Hồ Chí Minh?
+/A. Côn-ca-ta (Ấn Độ).			B. Quảng Châu (Trung Quốc).
+C. Mê-hi-cô (Mê-hi-cô).			D. U-li-a-nốp-xcơ (Liên bang Nga).
+Câu 8: Quốc gia nào sau đây ở châu Á có xây dựng tượng đài tưởng niệm Chủ tịch Hồ Chí Minh?
+A. Cu-ba.		B. Anh.		C. Pháp.			/D. Mông Cổ.	
+Câu 9: Chủ tịch Hồ Chí Minh “sống mãi” trong lòng nhân dân Việt Nam vì lí do nào sau đây?
+A. Ông là người duy nhất lãnh đạo Việt Nam trong suốt thế kỷ 20. 
+B. Hồ Chí Minh đã thực hiện nhiều chuyến thăm nước ngoài nhất. 
+C. Hồ Chí Minh đã sáng tác nhiều tác phẩm văn học nổi tiếng toàn cầu.
+/D. Tư tưởng Hồ Chí Minh đã trở thành tài sản vô giá của toàn dân tộc. 
+Câu 10: Nội dung nào sau đây phản ánh đúng về vai trò của Hồ Chí Minh đối với Đảng Cộng sản Việt Nam?
+/A. Sáng lập, lãnh đạo và rèn luyện.			B. Xác định mô hình giải phóng giai cấp.
+C. Xác định con đường phát triển xã hội.		D. Kế thừa, tổ chức và phát triển.
+Câu 11: Thế giới vinh danh Chủ tịch Hồ Chí Minh xuất phát từ một trong những nguyên nhân chủ yếu nào sau đây?
+/A. Những đóng góp to lớn của Người trong cuộc đấu tranh chung của nhân dân thế giới.
+B. Những thành tựu cá nhân của Hồ Chí Minh trong lĩnh vực khoa học và công nghệ.
+C. Hồ Chí Minh đã có những tác phẩm văn học nổi tiếng toàn cầu và nhiều đạt giải cao.
+D. Hồ Chí Minh là người sáng lập nhiều tổ chức liên kết khu vực và quốc tế lớn.
+Câu 12: Thế giới vinh danh Chủ tịch Hồ Chí Minh xuất phát từ một trong những nguyên nhân chủ yếu nào sau đây?
+A. Những thành tựu cá nhân của Hồ Chí Minh trong lĩnh vực khoa học và công nghệ.
+B. Hồ Chí Minh đã có những tác phẩm văn học nổi tiếng toàn cầu và nhiều đạt giải cao.
+C. Hồ Chí Minh là người sáng lập nhiều tổ chức liên kết khu vực và quốc tế lớn.
+/D. Người đã cống hiến trọn đời cho sự nghiệp giải phóng dân tộc của Việt Nam.
+Câu 13: “Trong giọng nói trầm ấm của Nguyễn Ái Quốc, chúng ta như nghe thấy ngày mai, như thấy sự yên tĩnh mênh mông của tình hữu ái toàn thế giới...Nguyễn Ái Quốc cũng đang tỏa ra một cái gì thật lịch thiệp và tế nhị...Từ Nguyễn Ái Quốc đã tỏa ra một thứ văn hóa, không phải văn hóa châu Âu, mà có lẽ là một nền văn hóa tương lai”.  (Ô-xíp-Man-đen-xtam, Thăm một chiến sĩ cộng sản quốc tế, Tạp chí Ngọn lửa nhỏ, 1923). Đoạn tư liệu cho thấy sự ngưỡng mộ của tác giả đối với Nguyễn Ái Quốc, tôn vinh ông như một người lãnh đạo có tầm nhìn, phong thái và văn hóa độc đáo, góp phần
+/A. tạo nên một tương lai tốt đẹp cho toàn thế giới.		
+B. thúc đẩy sự phát triển của văn hóa châu Âu.
+C. duy trì các giá trị truyền thống của phương Đông.	
+D. đóng góp vào sự phát triển của khoa học 
+Câu 14: Nhiều nước trên thế giới đã xây dựng công trình tưởng niệm Chủ tịch Hồ Chí Minh với những hình thức khác nhau: Thủ đô Mát-xcơ-va, các thành phố U-li-a-nốp-xcơ, Xanh Pê-téc-bua và nhiều nơi khác ở Liên bang Nga có quảng trường, tượng đài, nhà lưu niệm,…mang tên Hồ Chí Minh; thành phố Quảng Châu (Trung Quốc) có Di tích lưu niệm Nguyễn Ái Quốc-Hồ Chí Minh; Thủ đô Mê-hi-cô có tượng đài Hồ Chí Minh cùng dòng chữ “Tự do cho các dân tộc”; thủ đô của các nước (Cu-ba, Mô-dăm-bích, Ăng-gô-la) và nhiều nơi khác có tượng đại hoặc đường phố mang tên Hồ Chí Minh. Điều đó chứng tỏ
+/A. Chủ tịch Hồ Chí Minh được nhiều quốc gia trên thế giới tôn vinh và kính trọng.
+B. Chủ tịch Hồ Chí Minh chỉ được tôn vinh ở các quốc gia châu Á cùng chế độ.
+C. Các công trình tưởng niệm Hồ Chí Minh chỉ tồn tại ở các nước xã hội chủ nghĩa.
+D. Các công trình tưởng niệm Hồ Chí Minh chỉ nhằm mục đích thu hút khách du lịch.
+Câu 15: Năm 1987, cuộc họp của Đại hội đồng UNESCO lần thứ 24 ở Pa-ri (Pháp) đã ra Nghị quyết số 24C/18.65, ghi nhận: “Năm 1990 sẽ đánh dấu 100 năm kỉ niệm Ngày sinh của Chủ tịch Hồ Chí Minh, Anh hùng giải phóng dân tộc và Nhà văn hóa kiệt xuất của Việt Nam”.
+Nghị quyết của UNESCO phản ánh nội dung nào sau đây?
+A. Chủ tịch Hồ Chí Minh là anh hùng giải phóng dân tộc của nhân loại.
+/B. Chủ tịch Hồ Chí Minh là một danh nhân văn hóa của nhân loại.
+C. UNESCO tổ chức kỷ niệm 100 năm Ngày sinh Chủ tịch Hồ Chí Minh.
+D. Hồ Chí Minh là danh nhân đầu tiên của Việt Nam được UNESCO công nhận.
+Câu 16: Nhận định nào sau đây phản ánh đúng về những đóng góp to lớn của Chủ tịch Hồ Chí Minh đối với Việt Nam và thế giới?
+A. Hồ Chí Minh là nhà khoa học lỗi lạc được cả thế giới ghi nhận và tôn vinh.
+B. Hồ Chí Minh là nhà hoạt động chính trị xuất sắc thế giới trong thế kỉ XX.
+C. Hồ Chí Minh là nhà sáng lập nhiều tổ chức liên kết quốc tế và khu vực.
+/D. Sự kết tinh của truyền thống văn hóa Việt Nam và tinh hoa văn hóa nhân loại.
+
+
+
+
+
+
+
+
+
+
+    `
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('dumacoajs')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+let PasswordCode = "NGADEPTRAI"
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>

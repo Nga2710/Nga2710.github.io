@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+<div id="elem">
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input id="showAnIn" type="checkbox" style=""><label for="showAnIn">Hiển thị câu trả lời ngay khi chọn</label>
+        <br>
+        <input id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1. Vùng gò đồi trước núi của Bắc Trung Bộ có thế mạnh về
+/A. chăn nuôi đại gia súc.					B. cây công nghiệp hàng năm.
+C. chăn nuôi gia cầm.					D. cây lương thực và nuôi lợn.
+Câu 2. Loại đất chủ yếu ở dải đồng bằng ven biển Bắc Trung Bộ là
+A. đất phèn.		B. đất xám.			/C. đất cát pha.			D. đất mặn. 
+Câu 3. Từ Tây sang Đông ở Bắc Trung Bộ thuận lợi để hình thành cơ cấu kinh tế theo không gian là
+A. nông - lâm - ngư nghiệp.				/B. lâm - nông - ngư nghiệp.
+C. ngư - nông - lâm nghiệp.				D. ngư - lâm - nông nghiệp.
+Câu 4. Thế mạnh để Bắc Trung Bộ phát triển khai thác hải sản là
+A. có mật độ sông ngòi khá cao.	B. có một số nguồn nước khoáng.
+C. rừng tự nhiên có diện tích lớn.	/D. vùng biển rộng, giàu nguồn lợi.
+Câu 5. Chuyên môn hóa sản xuất cây công nghiệp lâu năm ở Bắc Trung Bộ chủ yếu dựa vào điều kiện thuận lợi nào sau đây?
+/A. Đất badan màu mỡ ở vùng đồi trước núi.		B. Đất cát pha ở các đồng bằng ven biển.
+C. Dân có kinh nghiệm chinh phục tự nhiên.		D. Có một số cơ sở công nghiệp chế biến.
+Câu 6. Việc nuôi thủy sản nước lợ, nước mặn ở Bắc Trung Bộ nhằm mục đích chủ yếu nào sau đây?
+A. Khai thác thế mạnh nổi bật của vùng ven biển.B. Đảm bảo nguyên liệu cho công nghiệp chế biến.
+C. Tạo thế liên hoàn phát triển kinh tế theo không gian./D. Thay đổi cơ cấu kinh tế nông thôn vùng ven biển.
+Câu 7. Để tạo thế liên hoàn trong phát triển cơ cấu kinh tế theo không gian ở vùng Bắc Trung Bộ, biện pháp quan trọng nhất là
+A. phát triển cơ sở hạ tầng giao thông vận tải.
+B. phát triển kinh tế - xã hội ở vùng phía tây.
+C. hình thành các trung tâm công nghiệp gắn với các đô thị lớn.
+/D. gắn các vùng sản xuất nông nghiệp, lâm nghiệp với ngư nghiệp.
+Câu 8. Hạn chế lớn nhất về tự nhiên trong phát triển nông nghiệp, lâm nghiệp, thủy sản của Bắc Trung Bộ là
+/A. bão, lũ lụt, hạn hán.	B. gió Lào khô nóng, bão cát.
+C. xâm nhập mặn, ngập úng.	D. ngập mặn, sạt lở bờ biển.
+Câu 9. Nguyên nhân chủ yếu để Duyên hải Nam Trung Bộ có ưu thế hơn Bắc Trung Bộ trong khai thác hải sản là
+/A. có các ngư trường rộng lớn.	B. tất cả các tỉnh đều giáp biển.
+C. có nhiều vũng, vịnh, đầm phá.	D. điều kiện hải văn thuận lợi.
+Câu 10. Thuận lợi chủ yếu của việc nuôi trồng thủy sản ở Duyên hải Nam Trung Bộ là
+/A. bờ biển có nhiều vũng vịnh, đầm phá.	B. có nhiều loài cá quý, loài tôm mực.
+C. liền kề với các ngư trường rộng lớn.	D. hoạt động chế biến hải sản đa dạng.
+Câu 11. Mục đích chủ yếu của việc phát triển giao thông vận tải biển ở Duyên hải Nam Trung Bộ là
+A. tăng vai trò trung chuyển, phân bố lại dân cư.	/B. mở rộng giao lưu, phát triển kinh tế - xã hội.
+C. tạo thế mở cửa, thúc đẩy phân công lao động.         D. thúc đẩy phát triển công nghiệp và đô thị hoá.
+Câu 12. Duyên hải Nam Trung Bộ có tiềm năng nổi bật nhất trong phát triển hoạt động kinh tế nào sau đây?
+/A. Kinh tế biển.	B. Sản xuất lương thực.	    C. Thủy điện.          D. Khai thác khoáng sản.
+Câu 13. Biện pháp chủ yếu để phát triển bền vững ngành thuỷ sản ở Duyên hải Nam Trung Bộ là
+A. hiện đại hoá phương tiện, thiết bị đánh bắt.	/B. khai thác hợp lí đi đôi với bảo vệ nguồn lợi.
+C. tăng cường đầu tư nuôi trồng nước mặn, lợ.          D. chú trọng phòng chống dịch bệnh, thiên tai.
+Câu 14. Thế mạnh chủ yếu để phát triển đánh bắt xa bờ ở Duyên hải Nam Trung Bộ là
+A. bờ biển dài, biển nóng ẩm quanh năm; nhiều lao động.
+B. khí hậu ổn định, ít ảnh hưởng của bão; phương tiện tốt.
+/C. vùng biển rộng, nhiều ngư trường lớn; phương tiện tốt.
+D. nhiều vũng, vịnh, thuỷ sản phong phú; nhiều lao động.
+Câu 15. Hoạt động du lịch biển ở Duyên hải Nam Trung Bộ có thể diễn ra thuận lợi quanh năm chủ yếu là do
+A. sản phẩm du lịch đa dạng, ít chịu ảnh hưởng của gió mùa Đông Bắc.
+B. cơ sở vật chất kỹ thuật được đầu tư, mạng lưới giao thông phát triển.
+C. nhu cầu thị trường tăng nhanh và chất lượng lao động được nâng lên.
+/D. có nhiều bãi biển đẹp, nhiều quần đảo, ít chịu ảnh hưởng của thiên tai.
+Câu 16. Biện pháp chủ yếu để nâng cao giá trị sản xuất thủy sản ở Duyên hải Nam Trung Bộ là
+/A. đẩy mạnh chế biến, phát triển xuất khẩu.	B. hiện đại hóa ngư cụ, đầu tư đánh bắt xa bờ.
+C. mở rộng dịch vụ, xây dựng các cảng cá.	D. tăng cường thu hút các nguồn vốn đầu tư.
+Câu 17. Cây công nghiệp quan trọng số một của Tây Nguyên là:
+A. cao su.		B. chè.			/C. cà phê.		D. điều.
+Câu 18. Cây chè được trồng nhiều ở Tây Nguyên nhờ vào
+A. đất badan màu mỡ ở các cao nguyên.	B. khí hậu nhiệt đới gió mùa ở các cao nguyên 
+/C. khí hậu mát mẻ ở các cao nguyên.		D. có một mùa mưa nhiều và một mùa khô.
+Câu 19. Phát biểu nào sau đây đúng với Tây Nguyên?  
+A. Các vùng đất badan và đất phù sa sông rất rộng lớn.  
+/B. Các cao nguyên badan rộng lớn ở độ cao khác nhau.  
+C. Sản xuất hoàn toàn thâm canh, sử dụng nhiều vật tư.  
+D. Có các đô thị quy mô lớn với công nghiệp chế biến.
+Câu 20. Giải pháp nào sau đây là quan trọng nhất để nâng cao giá trị sản xuất của cây công nghiệp ở Tây Nguyên?
+A. Mở rộng thêm diện tích trồng trọt.			/B. Đẩy mạnh chế biến sản phẩm.
+C. Đa dạng hóa cơ cấu cây trồng.			D. Quy hoạch các vùng chuyên canh.
+Câu 21.  Tại sao Tây Nguyên có vị trí đặc biệt quan trọng về an ninh quốc phòng của nước ta.
+A. Là cửa ngõ cho duyên hải Nam Trung Bộ mở rộng quan hệ với Lào và Campuchia.
+B. Vị trí nằm tiếp giáp với vùng Đông Nam Bộ.
+/C. Ngã ba biên giới tiếp giáp với Lào và Campuchia.
+D. Đây là vùng duy ở nước ta không giáp biển.
+Câu 22. Biện pháp chủ yếu để bảo vệ rừng ở Tây Nguyên là
+A. mở rộng hình thức sản xuất trang trại.  	/B. đẩy mạnh công tác giao đất giao rừng.  
+C. ngăn chặn tình trạng du canh du cư.  	D. trồng nhiều cây công nghiệp lâu năm.
+Câu 23. Giải pháp chủ yếu để nâng cao hiệu quả kinh tế và phát triển bền vững đối với hoạt động lâm nghiệp ở Tây Nguyên là
+/A. khoanh nuôi, tái sinh và đẩy mạnhtrồng rừng.	B. thực hiện chính sách giao rừng cho nhân dân.
+C. triển khai đồng bộ mô hình nông, lâm kết hợp.	D. đóng cửa vĩnh viễn đối với khu rừng tựnhiên.
+Câu 24. Ý nghĩa chủ yếu của việc phát triển các vùng chuyên canh cây công nghiệp ở Tây Nguyên là
+/A. sử dụng hợp lý tài nguyên, tạo sản phẩm hàng hóa.B. nâng cao trình độ của người lao động, bảo vệ môi trường.
+C. tạo ra mô hình sản xuất mới, giải quyết việc làm.D. hạn chế nạn du canh, góp phần phân bố lại dân cư.
+Câu 25: Vùng Đông Nam Bộ tiếp giáp với quốc gia nào sau đây?
+/A. Cam-pu-chia.		B. Lào.		C. Trung Quốc.		D. Thái Lan.
+Câu 26. Mục đích chủ yếu của việc hình thành vùng chuyên canh nông nghiệp qui mô lớn ở Tây Nguyên là
+/A. tạo ra khối lượng nông sản lớn và có giá trị cao.      B. giải quyết việc làm, nâng cao đời sống nhân dân.
+C. đa dạng hóa các sản phẩm, phù hợp với địa hình.    D. tận dụng tốt tài nguyên thiên nhiên, thu hút vốn.
+Câu 27: Ở vùng Đông Nam Bộ, trung tâm công nghiệp nào sau đây có quy mô giá trị sản xuất công nghiệp lớn nhất?
+/A. Thành phố Hồ Chí Minh.		B. Thuận An.       C. Vũng Tàu.		D. Biên Hòa.
+Câu 28. Để phát triển bền vững công nghiệp ở Đông Nam Bộ cần quan tâm đến vấn đề
+/A. môi trường.	B. nguyên liệu.	C. nhiên liệu.	D. lao động.
+Câu 29: Tỷ lệ gia tăng dân số của vùng Đông Nam Bộ cao nhất cả nước chủ yếu do có
+A. tỷ lệ gia tăng tự nhiên cao.			/B. tỷ lệ gia tăng cơ học cao.
+C. tỷ lệ sinh luôn ở mức cao.			D. tỷ lệ trẻ em tử vong thấp.
+Câu 30: Về tự nhiên, khó khăn nào sau đây là lớn nhất đối với phát triển kinh tế - xã hội của vùng Đông Nam Bộ?
+A. Ít khoáng sản năng lượng.			B. Tài nguyên rừng nghèo nàn.
+C. Đất đai bị xâm nhập mặn.			/D. Mùa khô kéo dài và sâu sắc.
+Câu 31. Phát biểu nào sau đây đúng với Đông Nam Bộ?
+/A. Các vùng đất badan và đất xám phù sa cổ rộng lớn.B. Các cao nguyên badan xếp tầng ở độ cao khác nhau.
+C. Sản xuất theo kiểu quảng canh và đầu tư ít lao động.D. Nông nghiệp sử dụng nhiều lao động, ít thâm canh.
+Câu 32: Nhận định nào sau đây đúng với ngành nông nghiệp của vùng Đông Nam Bộ?
+A. Chè và cà phê là cây trồng chủ lực của vùng.
+B. Chăn nuôi gia súc lớn đang được chú trọng phát triển.
+/C. Vùng chuyên canh cây công nghiệp lâu năm lớn nhất nước ta.
+D. Trồng và phát triển các nông sản cận nhiệt.
+Câu 33: Nguyên nhân chính để Đông Nam Bộ trở thành vùng công nghiệp phát triển nhất cả nước là do
+A. có lịch sử phát triển công nghiệp lâu đời.
+B. giàu tài nguyên khoáng sản và nguồn lao động có chất lượng cao nhất nước ta.
+C. khai thác có hiệu quả các thế mạnh để phát triển công nghiệp.
+/D. có lợi thế đặc biệt về vị trí địa lý, nguồn lao động, cơ sở hạ tầng và khả năng thu hút vốn đầu tư.
+Câu 34. Những nhân tố nào sau đây là chủ yếu làm cho các ngành công nghệ cao phát triển ở Đông Nam Bộ?
+/A. Chính sách hợp lí, lao động chuyên môn cao, nguồn đầu tư lớn.
+B. Nguyên liệu phong phú, cơ sở kĩ thuật tốt, năng lượng đảm bảo.
+C. Thị trường được mở rộng, nền kinh tế hàng hoá sớm phát triển.
+D. Cơ sở hạ tầng hoàn thiện, thu hút được nhiều đầu tư nước ngoài.
+Câu 35. Đồng bằng sông Cửu Long không tiếp giáp với
+A. Đông Nam Bộ.		B. Vịnh Thái Lan.		/C. Tây Nguyên.		D. Cam-pu-chia.
+Câu 36. Thảm thực vật nào sau đây tiêu biểu ở vùng Đồng bằng sông Cửu Long?
+/A. Rừng ngập mặn và rừng tràm.			B. Rừng tràm và xavan.
+C. Xavan và rừng ngập mặn.				D. Rừng tràm và rừng tre nứa.
+Câu 37. Khó khăn lớn nhất đối với việc phát triển nông nghiệp ở Đồng bằng sông Cửu Long vào mùa khô là
+/A. thiếu nước ngọt.		B. xâm nhập mặn.		C. cháy rừng nhiều.		D. sạt lở bờ biển.
+Câu 38. Khoáng sản chủ yếu ở Đồng bằng sông Cửu Long hiện đang được khai thác là
+/A. đá vôi.	B. dầu khí.	C. vàng.	D. ti tan.
+Câu 39. Phát biểu nào sau đây không đúng với Đồng bằng sông Cửu Long?
+/A. giáp Lào, Biển Đông, Đông Nam Bộ.	B. giáp Cam-pu-chia và Đông Nam Bộ.
+C. điều kiện đa dạng hoá kinh tế biển.	D. có điều kiện mở rộng giao lưu quốc tế.
+Câu 40. Phát biểu nào sau đây đúng với sông ngòi ở Đồng bằng sông Cửu Long?
+A. Sông ngòi có giá trị về thủy điện, thủy lợi.		B. Hệ thống sông chỉ có sông Tiền, sông Hậu.
+/C. Mạng lưới sông ngòi và kênh rạch dày đặc.		D. Lượng nước hạn chế, ven biển ít cửa sông.
+Câu 41. Biến đổi khí hậu thể hiện rõ nhất ở khía cạnh nào trong tự nhiên vùng Đồng bằng sông Cửu Long?
+A. Nhiệt độ trung bình năm đã giảm.				/B. Xâm nhập mặn vào sâu trong đất liền.
+C. Mùa khô không rõ rệt.					D. Nguồn nước ngầm hạ thấp hơn.
+Câu 42. Khó khăn chủ yếu về tự nhiên của đồng bằng sông Cửu Long là
+/A. xâm nhập mặn vào sâu trong đất liền. 	B. bão và áp thấp nhiệt đới.
+C. cát bay, cát chảy lấn chiếm ruộng vườn. 	D. đất bị bạc màu.
+Câu 43. Ngành nuôi trồng thuỷ sản ở vùng Đồng bằng sông Cửu Long phát triển thuận lợi hơn vùng Đồng bằng sông Hồng chủ yếu do nhân tố nào sau đây? 
+/A. Diện tích mặt nước nuôi trồng lớn. 			B. Có một mùa lũ trong năm. 
+C. Người dân có nhiều kinh nghiệm. 				D. Công nghiệp chế biến phát triển hơn.
+Câu 44. Đồng bằng sông Cửu Long chú trọng trồng lúa chất lượng cao chủ yếu nhằm
+A. thích ứng biến đổi khí hậu, tạo năng suất cao.       B. phát huy các lợi thế, mở rộng hàng xuất khẩu.
+/C. tăng hiệu quả kinh tế, thay đổi cơ cấu sản xuất.    D. đảm bảo an ninh lương thực, ổn định đời sống.
+Câu 45. Khó khăn lớn nhất ảnh hưởng đến sản xuất công nghiệp của Vùng kinh tế trọng điểm Bắc Bộ là
+A. cơ sở hạ tầng còn hạn chế. 				B. vốn đầu tư hạn chế.
+/C. ít chủng loại khoáng sản.					D. có mật độ dân số cao.
+Câu 46. Giải pháp nào sau đây là chủ yếu để thích ứng với biến đổi khí hậu ở Đồng bằng sông Cửu Long? 
+A. Duy trì, bảo vệ tài nguyên rừng trong phát triển; cải tạo đất.
+B. Bảo vệ rừng; thau chua, rửa mặn đất bằng nguồn nước ngọt.
+C. Kết hợp khai thác biển với đất liền, đẩy mạnh nuôi thủy sản.
+/D. Chuyển đổi cơ cấu kinh tế hợp lý, sống chung cùng thiên tai.
+Câu 47. Tài nguyên khoáng sản nổi bật của Vùng kinh tế trọng điểm phía Nam là 
+A. than đá. 			B. ti-tan. 			C. đất hiếm. 			/D. dầu khí.
+Câu 48. Đặc điểm nào sau đây đúng về thế mạnh của vùng kinh tế trọng điểm Vùng đồng bằng sông Cửu Long?
+A. Lịch sử khai thác lãnh thổ lâu đời nhất.			B. Có nguồn lao động dồi dào, chất lượng cao. 
+/C. Hệ sinh thái phong phú đa dạng, quỹ đất lớn. 		D. Cơ sở vật chất kỹ thuật hiện đại và đồng bộ.
+Câu 49. Thế mạnh hàng đầu của vùng kinh tế trọng điểm miền Trung nước ta là
+A. vị trí chuyển tiếp giữa các vùng phía Bắc và phía Nam. 
+/B. khai thác tổng hợp tài nguyên biển, khoáng sản và rừng.
+C. lao động dồi dào, chất lượng ngày càng được nâng cao. 
+D. cơ sở vật chất, cơ sở hạ tầng đang được đầu tư phát triển.
+Câu 50. Vùng kinh tế trọng điểm phía Nam tập trung nhiều khu công nghiệp nhất do
+A. giàu nguồn tài nguyên thiên nhiên, lao động giá rẻ.   /B. có vị trí địa lý thuận lợi, thu hút được nguồn đầu tư.
+C. vùng có diện tích rộng, có cơ sở hạ tầng rất hiện đại. D. mật độ dân số cao, kinh tế hàng hóa phát triển mạnh.
+Câu 51. Vùng kinh tế trọng điểm Bắc Bộ có ngành dịch vụ đa dạng do
+A. mật độ dân số cao, có thế mạnh về du lịch.		B. có đô thị lớn, khoa học kỹ thuật phát triển.
+/C. dân số đông, các ngành sản xuất phát triển.		D. vị trí thuận lợi, nhiều lao động trình độ cao.
+Câu 52. Phát biểu nào sau đây không đúng với vùng kinh tế trọng điểm ở nước ta?
+A. Hội tụ được khá nhiều thế mạnh.	B. Có tỉ trọng lớn trong GDP của cả nước.
+/C. Đã được hình thành từ rất lâu đời.	D. Bao gồm phạm vi nhiều tỉnh, thành phố.
+Câu 53. Vùng kinh tế trọng điểm Đồng bằng sông Cửu Long là trung tâm hàng đầu cả nước về
+/A. diện tích và sản lượng lúa, khai thác và chế biến thuỷ sản.
+B. khai thác và chế biến thuỷ sản, sản xuất hàng điện tử, ô tô.
+C. sản xuất sản phẩm điện tử, chế biến thực phẩm và đồ uống.
+D. chế biến thực phẩm và đồ uống, khai thác, chế biến dầu khí.
+
+    `
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('dumacoajs')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+let PasswordCode = "NGADEPTRAI"
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
