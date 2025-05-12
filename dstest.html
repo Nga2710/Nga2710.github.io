@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc Nghiệm Đúng Sai</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+    }
+    .container {
+      margin: auto;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+    }
+    .question.correct {
+      background-color: #d4edda;
+    }
+    .question.incorrect {
+      background-color: #f8d7da;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 8px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #efe;
+      padding: 4px;
+
+    }
+    .answer {
+      margin-bottom: 8px;
+    }
+    .answer input[type="radio"] {
+      display: none;
+    }
+    .answer label {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: #e0e0e0;
+    }
+    .answer input[type="radio"]:checked + label[tc="true"] {
+      background-color: #d4edda;
+      color: green;
+      font-weight: bold;
+    }
+    .answer input[type="radio"]:checked + label[tc="false"] {
+      background-color: #f8d7da;
+      color: red;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      display: block;
+      margin: 10px auto;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Trắc Nghiệm Đúng Sai</h2>
+    <textarea disabled id="questionInput" placeholder="Nhập câu hỏi (Dùng dấu / trước đáp án đúng)">Câu 1. Người làm nghề sửa chữa và bảo trì máy tính có nhiều công việc liên quan đến phần cứng, phần mềm và hỗ trợ người dùng. Họ phải kiểm soát và duy trì hoạt động của máy tính, xác định và khắc phục lỗi phần cứng, nâng cấp hoặc bổ sung linh kiện. Ngoài ra, họ còn cài đặt, cập nhật, cấu hình phần mềm, thiết lập kết nối mạng, bảo vệ hệ thống khỏi virus. Một phần công việc khác là hướng dẫn người dùng sử dụng phần mềm đúng cách để người dùng thuận lợi hơn. Dựa vào mô tả trên, hãy xác định các phát biểu sau là đúng hay sai?
+      /a) Một chuyên viên sửa chữa máy tính cần hiểu về mạng máy tính để thiết lập và khắc phục các sự cố kết nối
+      /b) Một kỹ thuật viên sửa chữa máy tính cần phải có kiến thức sâu rộng không chỉ về phần cứng mà còn về phần mềm, các hệ thống mạng và khả năng chẩn đoán các lỗi phức tạp, giải quyết các vấn đề phần mềm, bảo mật và hệ điều hành
+      /c) An là một kỹ thuật viên sửa chữa và bảo trì máy tính trong công ty, An thực hiện triển khai, bảo trì và tối ưu hóa hệ thống mạng nội bộ (LAN, WAN), cấu hình router, switch, bảo mật mạng và phân phối IP, quản lý hệ thống SQL, tối ưu hóa truy vấn, sao lưu dữ liệu
+      d) Người làm bảo trì máy tính chỉ cần thay thế linh kiện hỏng, không cần tìm hiểu nguyên nhân gây lỗi
+
+      Câu 2. Nhóm nghề quản trị trong ngành công nghệ thông tin đóng vai trò quan trọng trong việc duy trì và tối ưu hóa các hệ thống mạng, máy chủ, cơ sở dữ liệu và bảo mật. Các chuyên gia quản trị đảm bảo rằng hệ thống công nghệ của công ty luôn hoạt động ổn định, bảo vệ dữ liệu, ngăn ngừa sự cố và nâng cao hiệu suất làm việc. Các phát biểu sau đây về nhóm nghề này đúng hay sai?
+      /a) Nhu cầu về chuyên gia bảo mật tăng do các phương thức tấn công mạng ngày càng phức tạp
+      /b) Chuyên gia bảo mật hệ thống thông tin tập trung vào phát hiện các mối đe dọa và bảo vệ dữ liệu
+      c) Việc sử dụng các công cụ hiện đại như AI không cần thiết trong quản trị và bảo trì hệ thống
+      /d) An là một người quản trị và bảo trì hệ thống trong công ty kinh doanh trực tuyến, anh ấy thường xuyên cập nhật phần mềm, hệ điều hành và các bản vá bảo mật cho các máy chủ và thiết bị mạng giúp ngăn ngừa các lỗ hổng bảo mật và đảm bảo hệ thống luôn được bảo vệ trước các mối đe dọa từ hacker
+
+      Câu 1. Chọn đúng hoặc sai cho các ý sau đây về thiết bị số và kết nối thiết bị số:
+      /a) Các thiết bị hiển thị như TV và máy chiếu cho phép hiển thị hình ảnh và văn bản, và chúng thường kết nối qua cổng VGA hoặc HDMI
+      b) Công nghệ Bluetooth chỉ truyền dữ liệu âm thanh, không truyền dữ liệu hình ảnh
+      /c) Nhà thông minh (Smart Home) có thể điều khiển các thiết bị từ xa qua Wi-Fi hoặc Bluetooth
+      /d) Để kết nối thiết bị thông minh với Internet, cần thực hiện việc đăng ký thiết bị lên đám mây và cập nhật trạng thái của thiết bị vào cơ sở dữ liệu
+
+      Câu 2. Trong buổi tổng kết cuối năm học, một bạn học sinh là lớp trưởng cần kết nối máy tính với tivi thông minh có các cổng kết nối và có hỗ trợ kết nối Bluetooth để trình bày báo cáo về lớp trong năm học qua. Sau đây là một số nhận xét về việc thực hiện kết nối giữa máy tính và tivi thông minh của bạn học sinh trên:
+      /a) Tivi có hỗ trợ kết nối với máy tính qua cổng HDMI
+      b) Tivi cho phép chiếu hình ảnh từ máy tính thông qua cổng USB
+      c) Khi thực hiện kết nối hai thiết bị trên bằng Bluetooth, cần phải có dây cáp kết nối giữa hai thiết bị thông qua cổng USB
+      /d) Thực hiện bật Bluetooth; chọn Settings → Bluetooth & Other devices → Add a device → Bluetooth → chọn thiết bị kết nối
+
+      Câu 1. Đánh giá các câu sau về các phần của trang web. Đánh dấu Đúng hoặc Sai.
+      /a) Phần đầu trang (header) thường chứa thông tin như hình nền, logo, tên trang, và thanh điều hướng, và có vai trò giống như trang bìa thu gọn của cuốn sách
+      b) Phần thân trang (body) chỉ chứa thông tin về thương hiệu và bản quyền
+      /c) Phần chân trang (footer) có thể bao gồm thông tin về thương hiệu, bản quyền, bảo mật, và liên kết tới các trang mạng xã hội
+      d) Favicon thường là phiên bản thu gọn của logo trang và hiển thị trên tiêu đề của tab trình duyệt
+
+      Câu 2. Đánh giá các câu sau về các bước chuẩn bị để xây dựng trang web. Đánh dấu Đúng hoặc Sai.
+      /a) Định hình ý tưởng bao gồm việc xác định mục đích, đối tượng, và các yêu cầu của trang web
+      b) Thiết kế mỹ thuật chỉ bao gồm việc chọn màu sắc và phông chữ cho trang web
+      /c) Lựa chọn phần mềm để làm trang web có thể bao gồm việc sử dụng các phần mềm miễn phí như Google cung cấp, không nhất thiết phải là phần mềm thương mại
+      d) Chuẩn bị tư liệu chỉ bao gồm việc thiết kế favicon và logo, không cần phải chuẩn bị nội dung khác
+
+      Câu 1. Phát biểu sau đúng hay sai về các phần trong giao diện đầu tiên của Google Sites?
+      /a) Phần trên cùng chứa ô tìm kiếm và biểu tượng truy cập các ứng dụng Google
+      b) Phần thứ hai chứa danh sách các trang mà người dùng đã mở trước đó
+      /c) Phần thứ ba cung cấp các tùy chọn để tạo một trang web mới, bao gồm trang web trắng hoặc mẫu có sẵn
+      d) Phần thứ ba chứa các chức năng thiết lập phần đầu trang
+
+      Câu 2. Phát biểu sau đúng hay sai về các chức năng trong giao diện tạo phần đầu trang trên Google Sites?
+      /a) Dòng "Nhập tên trang web" cho phép nhập/hiển thị logo, favicon và tên trang web
+      /b) Dòng "Thay đổi hình ảnh" cung cấp các kích thước phần đầu trang, bao gồm Bìa, Biểu ngữ lớn, Biểu ngữ và Chỉ có tiêu đề
+      c) Dòng "Tiêu đề trang" dùng để nhập/hiển thị tên tệp lưu trữ trang web
+      d) Dòng "Trang web không có tiêu đề" cho phép nhập tiêu đề trang và nội dung tóm tắt trang
+
+      Câu 1. Hãy xác định đúng hoặc sai cho các phát biểu sau:
+      a) Bảng chọn Chèn chỉ chứa các lệnh để chèn văn bản vào trang web
+      /b) Lệnh "Drive" cho phép chèn thông tin từ Google Drive vào trang web
+      c) Bảng chọn Trang được sử dụng để thêm các khối nội dung vào trang web
+      /d) Lệnh "Nhúng" trong bảng chọn Chèn có thể chèn dữ liệu từ các ứng dụng Internet khác như thời tiết, âm nhạc
+
+      Câu 2. Hãy xác định đúng hoặc sai cho các phát biểu sau:
+      /a) Nhóm lệnh đầu tiên trong bảng chọn Chèn bao gồm Hộp văn bản, Hình ảnh, Drive, và Nhúng
+      /b) Để thiết lập phần thân trang với cấu trúc hai khối, cần chọn biểu tượng trong nhóm Thành phần nội dung của bảng chọn Chèn
+      c) Nhóm lệnh thứ ba trong bảng chọn Chèn không chứa lệnh để chèn video từ YouTube
+      /d) Có thể chỉnh sửa kích thước và di chuyển các đối tượng trên trang web bằng cách chọn khối và kéo thả chuột
+
+      Câu 1. Hãy xác định đúng hoặc sai cho các phát biểu sau:
+      /a) Cấu trúc hình cây của trang web giúp người dùng dễ dàng điều hướng
+      b) Trang con là trang chủ của một website
+      /c) Cụm từ "Đọc tiếp" thường dẫn đến trang web chứa thông tin chi tiết
+      d) Thanh điều hướng chỉ chứa nội dung chính của trang web
+
+      Câu 2. Hãy xác định đúng hoặc sai cho các phát biểu sau:
+      /a) Mỗi trang con có thể có các trang con của nó
+      b) Trang web có thể tổ chức theo cấu trúc hình tròn để tối ưu hóa điều hướng
+      /c) Liên kết trong bài giới thiệu giúp người dùng truy cập nhanh đến trang có thông tin chi tiết
+      d) Trang con không thể thêm nội dung riêng, chỉ hiển thị nội dung của trang chủ
+
+      Câu 1. Chọn đúng hoặc sai cho các phát biểu sau:
+      /a) Google Forms là công cụ được sử dụng để tạo biểu mẫu cho trang web
+      b) Chỉ có thể tạo biểu mẫu bằng cách nhúng biểu mẫu từ Google Docs
+      c) Sau khi tạo biểu mẫu, không thể chỉnh sửa câu hỏi trong Forms
+      /d) Biểu mẫu có thể được nhúng vào trang web thiết kế bằng Google Sites để thu thập ý kiến phản hồi
+
+      Câu 2. Chọn đúng hoặc sai cho các phát biểu sau:
+      /a) Để tạo biểu mẫu trong Google Forms, trước tiên cần phải chuẩn bị biểu mẫu
+      b) Google Forms không hỗ trợ tùy chỉnh giao diện của biểu mẫu
+      /c) Biểu mẫu trong Google Forms có thể chứa các câu hỏi dạng trắc nghiệm
+      /d) Dữ liệu phản hồi từ biểu mẫu có thể được hiển thị dưới dạng biểu đồ</textarea>
+    <button onclick="generateQuiz()">Tạo bài trắc nghiệm</button><div id="quiz"></div>
+
+    <button onclick="calculateScore()" style="display:none" id="submitBtn">Nộp bài</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function generateQuiz() {
+      const inputText = document.getElementById('questionInput').value.trim();
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+
+      const questions = inputText.split('\n\n');
+      questions.forEach((qText, index) => {
+        const lines = qText.split('\n');
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+        questionDiv.innerHTML = `<div class='question-text'>${lines[0]}</div>`;
+
+        lines.slice(1).forEach((line, i) => {
+          const isCorrect = line.trim().startsWith('/');
+          const cleanText = line.replace('/', '');
+
+          const answerDiv = document.createElement('div');
+          answerDiv.className = 'answer';
+          answerDiv.innerHTML =
+          `<div>${cleanText}</div>
+          <input type='radio' id='q${index}_${i}_true' name='q${index}_${i}' value='true'>
+          <label for='q${index}_${i}_true' data-correct='${isCorrect}' tc = "true">Đúng</label>
+          <input type='radio' id='q${index}_${i}_false' name='q${index}_${i}' value='false'>
+          <label for='q${index}_${i}_false' data-correct='${!isCorrect}' tc = "false">Sai</label>`;
+
+          questionDiv.appendChild(answerDiv);
+        });
+
+        quizDiv.appendChild(questionDiv);
+      });
+
+      document.getElementById('submitBtn').style.display = 'block';
+    }
+
+    function calculateScore() {
+      const questions = document.querySelectorAll('.question');
+      let totalScore = 0,
+      correctItems = 0,
+      wrongItems = 0,
+      totalItems = 0;
+
+      questions.forEach(question => {
+        const answers = question.querySelectorAll('.answer');
+
+        answers.forEach(answer => {
+          const correct = answer.querySelector('label[data-correct="true"]');
+          const userChoice = answer.querySelector('input[type="radio"]:checked + label');
+if (correct != userChoice) answer.style.color = "red"
+          totalItems++;
+          if (userChoice) {
+            if (userChoice.getAttribute('data-correct') === 'true') {
+              correctItems++;
+            } else {
+              wrongItems++;
+            }
+          }
+        });
+      });
+
+      const score = correctItems
+
+      document.getElementById('result').innerHTML =
+      `Số ý đúng: ${correctItems}<br>Số ý sai: ${wrongItems}<br>Tổng số câu: ${questions.length}<br>Điểm của bạn: ${score.toFixed(2)}`;
+    }
+  </script>
+
+</body>
+</html>
