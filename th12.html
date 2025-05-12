@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+<div id="elem">
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input id="showAnIn" type="checkbox" style=""><label for="showAnIn">Hiển thị câu trả lời ngay khi chọn</label>
+        <br>
+        <input id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+
+Câu 1: Công việc nào sau đây liên quan tới phần mềm?
+/A. Kiểm soát và duy trì hoạt động của máy tính.
+B. Thay màn hình có độ phân giải cao hơn.
+C. Phát hiện nguyên nhân hỏng thiết bị để biết liệu có thể sửa, thay thế hay cấu hình lại.
+D. Đảm bảo kết nối máy tính vào mạng.
+
+Câu 2: Người làm nghề sửa chữa và bảo trì máy tính cần thực hiện một số công việc chính liên quan đến yếu tố nào sau đây?
+/A. Phần cứng, phần mềm, hỗ trợ người dùng.
+B. Phần cứng, hệ điều hành Microsoft Windows, hỗ trợ người dùng.
+C. Phần cứng, phần mềm, người dùng.
+D. Ổ đĩa cứng, phần mềm, hỗ trợ người dùng.
+
+Câu 3: Người làm nghề sửa chữa, bảo trì máy tính cần phải có kiến thức nào sau đây?
+/A. Kiến thức về hệ điều hành.
+B. Kiến thức về lập trình.
+C. Kiến thức về cơ sở dữ liệu.
+D. Kiến thức marketing.
+
+Câu 4: Ngành học nào sau đây KHÔNG liên quan tới nhóm nghề sửa chữa và bảo trì máy tính?
+/A. Thiết kế đồ họa.
+B. Công nghệ kĩ thuật phần cứng máy tính.
+C. Công nghệ kĩ thuật phần mềm máy tính.
+D. Công nghệ thông tin.
+
+Câu 5: Ngành đào tạo nào sau đây KHÔNG liên quan đến ngành nghề sửa chữa và bảo trì máy tính?
+/A. Thương mại điện tử.
+B. Kĩ thuật sửa chữa, lắp ráp máy tính.
+C. Công nghệ kĩ thuật phần cứng máy tính.
+D. Công nghệ kĩ thuật phần mềm máy tính.
+
+Câu 6: Công việc nào sau đây liên quan tới hỗ trợ người dùng của người sửa chữa và bảo trì máy tính?
+A. Rà soát an toàn của hệ thống bằng cách quét mã độc và cấu hình phần mềm phòng chống virus.
+B. Nâng cấp hoặc bổ sung thiết bị như thay ổ cứng hoặc RAM có dung lượng lớn hơn, hoặc lắp thêm thiết bị mạng.
+/C. Hướng dẫn người dùng sử dụng các phần mềm thông dụng.
+D. Cài đặt, cấu hình các phần mềm thông dụng như hệ điều hành, cấu hình mạng và các ứng dụng văn phòng.
+
+Câu 7: Để làm nghề sửa chữa, bảo trì máy tính cần những kiến thức chung nào?
+A. Kiến thức về phần cứng; kiến thức về phần mềm; kiến thức về giải quyết vấn đề.
+B. Kiến thức về phần cứng; kiến thức về phần mềm; kiến thức về giao tiếp.
+/C. Kiến thức về phần cứng; kiến thức về phần mềm; kiến thức về mạng.
+D. Kiến thức về giao tiếp; kiến thức về giải quyết vấn đề; kiến thức về quản lí thời gian.
+
+Câu 8: Công việc nào sau đây liên quan tới phần cứng?
+A.	Cài đặt hệ điều hành, cấu hình mạng và các ứng dụng văn phòng.
+/B. Lắp đặt, sửa chữa hoặc thay thế các linh kiện máy tính bị hỏng.
+C. Rà soát an toàn của hệ thống bằng cách quét mã độc và cấu hình phần mềm phòng chống virus.
+D. Hướng dẫn người dùng sử dụng máy tính và thiết bị công nghệ thông tin đúng cách và hiệu quả.
+
+Câu 9: Để nâng cao hiệu quả và năng suất làm việc, người làm nghề sửa chữa và bảo trì máy tính cần có những kĩ năng mềm nào?
+A. Kĩ năng học hỏi, cập nhật kiến thức; kĩ năng giải quyết vấn đề; kĩ năng về mạng; kĩ năng quản lí thời gian.
+B. Kĩ năng học hỏi, cập nhật kiến thức; kĩ năng phần mềm; kĩ năng giao tiếp; kĩ năng quản lí thời gian.
+C. Kĩ năng phần cứng; kĩ năng giải quyết vấn đề; kĩ năng giao tiếp; kĩ năng quản lí thời gian.
+/D. Kĩ năng học hỏi, cập nhật kiến thức; kĩ năng giải quyết vấn đề; kĩ năng giao tiếp; kĩ năng quản lí thời gian.
+
+Câu 10: Người làm việc trong nhóm nghề quản trị trong ngành Công nghệ thông tin cần phải có những kiến thức nào?
+/A. Kiến thức về Mạng máy tính; Kiến thức về Bảo mật thông tin; Kiến thức về Quản trị hệ thống; Kiến thức về Luật pháp và tuân thủ quy định.
+B. Kiến thức về phần mềm; Kiến thức về Bảo mật thông tin; Kiến thức về Quản trị hệ thống; Kiến thức về Luật pháp và tuân thủ quy định.
+C. Kiến thức về phần cứng; Kiến thức về Bảo mật thông tin; Kiến thức về Quản trị hệ thống; Kiến thức về Luật pháp và tuân thủ quy định.
+D. Kiến thức về hỗ trợ người dùng; Kiến thức về Bảo mật thông tin; Kiến thức về Quản trị hệ thống; Kiến thức về Luật pháp và tuân thủ quy định.
+
+Câu 11: Người làm việc trong nhóm nghề quản trị trong ngành Công nghệ thông tin cần phải có kiến thức về Quản lí hệ thống, đó là những kiến thức nào sau đây?
+A.	Nắm được các phương thức tấn công mạng như DoS, Vulnerability scanning và quản lí IDS, firewall.
+/B. Có kiến thức sâu về quản lí hệ điều hành, bao gồm cài đặt, cấu hình, bảo trì, xử lí sự cố phần mềm và phần cứng.
+C. Nắm được cấu trúc và hoạt động của mạng máy tính, giao thức, thiết bị mạng và bảo mật mạng.
+D. Có hiểu biết về tuân thủ luật pháp, các quy định và tiêu chuẩn quốc tế về bảo mật thông tin.
+
+Câu 12: Điều gì làm tăng nhu cầu về chuyên gia trong lĩnh vực nào?
+A. Quản trị mạng; Bảo mật hệ thống phần cứng; Quản trị và bảo trì hệ thống.
+B. Quản trị mạng; Bảo mật hệ thống thông tin; Quản trị và bảo trì phần mềm.
+/C. Quản trị mạng; Bảo mật hệ thống thông tin; Quản trị và bảo trì hệ thống.
+D. Quản lí phần cứng; Bảo mật hệ thống thông tin; Quản trị và bảo trì hệ thống.
+
+Câu 13: Những người làm việc trong lĩnh vực quản trị của ngành Công nghệ thông tin làm những công việc chính nào sau đây?
+/A. Quản trị mạng; Bảo mật hệ thống thông tin; Quản trị và bảo trì hệ thống.
+B. Hỗ trợ người dùng; Bảo mật hệ thống thông tin; Quản trị và bảo trì hệ thống.
+C. Quản trị mạng; Bảo mật hệ thống phần cứng; Quản trị và bảo trì hệ thống.
+D. Quản trị mạng; Bảo mật hệ thống thông tin; Quản trị và bảo trì phần mềm.
+
+Câu 14: Những ngành học nào sau đây có liên quan tới nhóm nghề quản trị trong ngành Công nghệ thông tin?
+A. Quản trị mạng máy tính; Quản trị hệ thống; An ninh mạng; Hệ thống thông tin; Mạng máy tính và cài đặt phần mềm.
+B. Quản trị mạng máy tính; Quản lí phần cứng; An ninh mạng; Hệ thống thông tin; Mạng máy tính và truyền thông dữ liệu.
+C. Quản trị máy tính; Quản trị hệ thống; An ninh mạng; Hệ thống thông tin; Mạng máy tính và truyền thông dữ liệu.
+/D. Quản trị mạng máy tính; Quản trị hệ thống; An ninh mạng; Hệ thống thông tin; Mạng máy tính và truyền thông dữ liệu.
+
+Câu 15: Người làm nghề quản trị thuộc ngành Công nghệ thông tin cần các kĩ năng mềm nào?
+A. Kĩ năng về Mạng máy tính; Kĩ năng quản lí thời gian; Kĩ năng tự nghiên cứu, học hỏi, cập nhật kiến thức.
+B. Kĩ năng về Luật pháp và tuân thủ quy định; Kĩ năng quản lí thời gian; Kĩ năng tự nghiên cứu, học hỏi, cập nhật kiến thức.
+C. Kĩ năng giao tiếp; Kĩ năng về Bảo mật thông tin; Kĩ năng tự nghiên cứu, học hỏi, cập nhật kiến thức.
+/D. Kĩ năng giao tiếp; Kĩ năng quản lí thời gian; Kĩ năng tự nghiên cứu, học hỏi, cập nhật kiến thức.
+
+
+
+Câu 1: Thiết bị nào sau đây KHÔNG phải là thiết bị hiển thị?
+/A. Tai nghe
+B. Ti Vi
+C. Máy chiếu
+D. Bảng cảm ứng
+Câu 2: Cổng kết nối nào sau đây thường được sử dụng để kết nối thiết bị hiển thị với máy tính?
+A. USB
+B. Ethernet
+C. Bluetooth
+/D. HDMI
+Câu 3: Chế độ "Extend" trên màn hình mở rộng cho phép:
+A. Chỉ sử dụng màn hình máy tính
+B. Hiển thị cùng một hình ảnh trên cả hai màn hình
+C. Tắt màn hình máy tính và chỉ sử dụng màn hình mở rộng
+/D. Mở rộng không gian làm việc bằng cách sử dụng màn hình bổ sung
+Câu 4: Để kết nối máy tính với điện thoại qua Bluetooth, bạn cần làm gì đầu tiên?
+A. Truyền tệp từ máy tính
+/B. Bật Bluetooth trên cả hai thiết bị
+C. Xác nhận kết nối trên điện thoại
+D. Ghép đôi thiết bị
+Câu 5: Khi truyền tệp từ máy tính sang điện thoại qua Bluetooth, bước nào là cần thiết?
+/A. Mở bảng chọn Bluetooth và chọn "Send a file"
+B. Xác nhận kết nối trên máy tính
+C. Đăng ký thiết bị lên đám mây
+D. Bật Bluetooth trên máy tính
+Câu 6: Nhà thông minh (Smart Home) có thể điều khiển các thiết bị qua:
+A. Wi-Fi
+/B. Bluetooth và Wi-Fi
+C. Bluetooth
+D. Cáp tín hiệu
+Câu 7: Khi nào bạn nên sử dụng chế độ "Duplicate" trên màn hình mở rộng?
+/A. Khi trình bày nội dung cho nhiều người
+B. Khi chỉ cần làm việc với màn hình máy tính
+C. Khi muốn sử dụng màn hình mở rộng thay cho màn hình máy tính chính
+D. Khi làm việc đa nhiệm
+Câu 8: Để kết nối điện thoại với một bộ công tắc thông minh qua Internet, bạn cần thực hiện bước nào trước tiên?
+A. Thiết lập chế độ làm việc của công tắc
+B. Đăng ký thiết bị lên đám mây
+/C. Cài đặt phần mềm điều khiển
+D. Kết nối thiết bị với mạng cục bộ
+
+Câu 1: Phần nào của trang web chứa thông tin về thương hiệu, bản quyền và liên kết mạng xã hội?
+A. Phần đầu trang		B. Phần thân trang	
+C. /Phần chân trang		D. Phần thông báo
+Câu 2: Phần nào của trang web có vai trò như trang bìa thu gọn của cuốn sách?
+A. Phần thân trang	B. /Phần đầu trang	C. Phần chân trang	D. Phần thông báo
+Câu 3: Để bắt đầu xây dựng trang web, bước đầu tiên cần thực hiện là gì?
+A. Thiết kế giao diện 	B. /Định hình ý tưởng 
+C. Lựa chọn phần mềm	D. Chuẩn bị tư liệu
+Câu 4: Cái gì thường được sử dụng để xác định địa chỉ truy cập của trang web?
+A. IP Address	B. /URL	C. Favicon	D. Domain Nam
+Câu 5: Khi thiết kế mỹ thuật cho trang web, việc chọn bảng màu cần chú ý điều gì?
+A. Sử dụng màu sắc tương phản mạnh	
+B. Sử dụng một màu duy nhất
+C. /Chọn màu có độ tương phản nhẹ nhàng và hài hòa	
+D. Chọn màu ngẫu nhiên
+Câu 6:Phần nào trong phần mềm hỗ trợ làm trang web của Google cho phép lưu trữ và xuất bản trang web?
+A. Google Docs		B. /Google Drive	
+C. Google Sheets		D. Google Maps
+Câu 7: Khi thiết kế dàn ý tổng thể của trang web, điều quan trọng là gì?
+A. Chọn hình nền cho phần đầu trang
+B. /Xây dựng cấu trúc và bố cục sao cho ấn tượng và dễ tiếp cận
+C. Lựa chọn phông chữ
+D. Xác định phần mềm sử dụng
+Câu 8: Để kết nối với các phần mềm khác của Google như Docs, Sheets, và Slides, người dùng nên sử dụng phần mềm nào?
+A. Microsoft Word		B. /Google Drive	
+C. Adobe Photoshop 	D. Notepad
+Câu 9: Yếu tố nào không cần thiết khi thiết kế phần thân trang của trang web?
+A. /Hình nền		B. Tiêu đề	
+C. Nội dung văn bản 	D. Biểu mẫu nhập dữ liệu
+Câu 10: Một trong những yếu tố quan trọng khi thiết kế phần đầu trang là gì?
+A. Xác định cấu trúc nội dung	B. /Tạo favicon
+C. Lựa chọn phông chữ	D. Chọn màu nền cho phần chân trang
+Câu 1: Để truy cập vào giao diện tạo trang web mới của Google, bạn cần truy cập vào địa chỉ nào?
+A. sites.google.com|create	B. /sites.google.com|new
+C. drive.google.com|new	D. sites.google.com|start
+Câu 2: Trong giao diện đầu tiên của Google Sites, phần nào chứa ô tìm kiếm và biểu tượng để truy cập các ứng dụng khác của Google?
+A. /Phần trên cùng	B. Phần thứ hai	C. Phần thứ ba	D. Phần dưới cùng
+Câu 3: Khi tạo một trang web mới trong Google Sites, bạn có thể chọn từ các tùy chọn nào?
+A. /Trang web trắng hoặc mẫu có sẵn	B. Trang web động hoặc tĩnh
+C. Trang web cá nhân hoặc doanh nghiệp	D. Trang web mở hoặc bảo mật
+Câu 4: Để nhập hoặc hiển thị tên tệp lưu trữ trang web trên Google Sites, bạn cần sử dụng dòng nào trong giao diện tạo phần đầu trang?
+A. Dòng Nhập tên trang web	B. Dòng Tiêu đề trang
+C. /Dòng Trang web không có tiêu đề	D. Dòng Thay đổi hình ảnh
+Câu 5: Tùy chọn nào không có trong phần chọn kích thước phần đầu trang của Google Sites?
+A. Bìa	B. Biểu ngữ lớn	C. Biểu ngữ	D. /Tiêu đề nhỏ
+Câu 6: Để thiết lập tiêu đề trang trên Google Sites, bạn cần sử dụng dòng nào trong giao diện tạo phần đầu trang?
+A. Dòng Nhập tên trang web	B. /Dòng Tiêu đề trang
+C. Dòng Thay đổi hình ảnh	D. Dòng Trang web không có tiêu đề
+Câu 7: Khi thiết lập phần đầu trang, bạn có thể làm gì với hình ảnh nền?
+A. /Thay đổi hình ảnh nền	B. Xóa hoàn toàn hình ảnh nền
+C. Thay đổi kích thước của hình ảnh nền	D. Thay đổi màu sắc của hình ảnh nền
+Câu 8: Để xuất bản trang web trên Google Sites, bước nào là cần thiết?
+A. /Xem trước và chỉnh sửa	B. Đăng nhập vào tài khoản Google
+C. Chọn mẫu cho trang web	D. Nhập tên trang web
+Câu 9: Trong giao diện tạo phần đầu trang, bạn có thể thiết lập kích thước nào cho phần đầu trang?
+A. /Bìa	B. Chân trang	C. Biểu ngữ nhỏ	D. Nội dung chính
+Câu 10: Để thiết lập favicon cho trang web, bạn cần sử dụng chức năng nào trong giao diện tạo phần đầu trang?
+A. Dòng Nhập tên trang web 
+B. Dòng Tiêu đề trang
+C. Dòng Thay đổi hình ảnh
+D. /Dòng logo và favicon
+Câu 1: Trong giao diện tạo phần thân trang web, bảng chọn nào được sử dụng để chèn các đối tượng như hộp văn bản, hình ảnh, và nhúng?
+A. /Chèn	B. Trang	C. Giao diện	D. Cấu trúc
+Câu 2: Lệnh "Nhúng" trong bảng chọn Chèn có chức năng gì?
+A. Chèn văn bản từ Google Drive	
+B. Chèn hình ảnh từ máy tính
+C. /Chèn dữ liệu từ các ứng dụng Internet khác	
+D. Chèn liên kết đến các trang web khác
+Câu 3: Trong nhiệm vụ tạo phần thân trang web, bước đầu tiên là gì?
+A. Thêm ảnh vào trang web	B. /Thiết lập cấu trúc nội dung với hai khối
+C. Chèn bản đồ vào trang web	D. Thêm chân trang
+Câu 4: Để chèn bản đồ vào trang web, ta sử dụng lệnh nào trong bảng chọn Chèn?
+A. Hộp văn bản	B. Hình ảnh	C. Nhúng	D. /Bản đồ
+Câu 5: Khi chỉnh sửa các đối tượng trên trang web, thao tác nào sau đây có thể thực hiện?
+A. /Thay đổi kích thước và di chuyển đối tượng
+B. Sao chép đối tượng nhưng không xoá được
+C. Chỉ xoá đối tượng mà không thể sao chép
+D. Không thể thay đổi kích thước đối tượng
+Câu 6: Khi muốn thêm thông tin liên lạc vào phần chân trang, bạn nên làm gì?
+A. Sử dụng lệnh Chèn →Hộp văn bản
+B. /Di chuyển xuống cuối trang và thêm chân trang
+C. Sử dụng lệnh Chèn → Bản đồ
+D. Nhúng thông tin từ ứng dụng khác
+Câu 7: Bảng chọn Chèn gồm những nhóm lệnh chính nào?
+A. Hộp văn bản, Hình ảnh, Drive, Nhúng
+B. Các thành phần nội dung, Các đối tượng khác
+C. /Cả hai lựa chọn trên đều đúng
+D. Cả hai lựa chọn trên đều sai
+Câu 8: Trong việc tạo phần thân trang web, làm thế nào để thêm tiêu đề và văn bản vào mỗi khối?
+A. Sử dụng lệnh Chèn → Nhúng
+B. /Sử dụng lệnh Chèn → Hộp văn bản
+C. Nhấn vào biểu tượng → Thêm ảnh
+D. Sử dụng lệnh Chèn → Drive
+Câu 9: Khi muốn nhúng Google Maps vào trang web, ta có thể chọn lệnh nào?
+A. Hình ảnh	B. Nhúng	C. /Bản đồ	D. Drive
+Câu 10: Lệnh nào trong bảng chọn Chèn được sử dụng để chèn thông tin từ Google Drive?
+A. Hộp văn bản	B. Hình ảnh	C. /Drive	D. Nhúng
+Câu 1: Cấu trúc của một trang web thường được tổ chức theo dạng nào?
+A. Đường thẳng	B. Hình tròn	C. /Hình cây	D. Hình lưới
+Câu 2: Cụm từ "Đọc tiếp" thường được sử dụng để:
+A. Kết thúc bài viết	B. Chuyển hướng người dùng đến trang web khác
+C. /Liên kết đến trang web chứa thông tin chi tiết	D. Hiển thị hình ảnh
+Câu 3: Trang con là:
+A. Trang chủ của một website        B. /Trang web mở từ bảng chọn của trang chủ
+C. Một phần của trang chủ             D. Trang web không liên kết với trang chủ
+Câu 4: Thanh điều hướng thường chứa:
+A. Nội dung chính của trang web	B. /Liên kết đến các trang con
+C. Hình ảnh và video	D. Chỉ dẫn về cách sử dụng trang web
+Câu 5: Để không làm mất cân đối trang web khi trình bày văn bản đầy đủ, ta nên:
+A. Sử dụng ít văn bản hơn
+B. /Chia thành các trang độc lập và sử dụng liên kết
+C. Sử dụng phông chữ nhỏ hơn
+D. Chỉ hiển thị tóm tắt ngắn gọn
+Câu 6: Trang web tổ chức theo cấu trúc giống như cây thư mục nghĩa là:
+A. Mỗi trang đều độc lập
+B. Các trang được xếp chồng lên nhau
+C. /Có một trang gốc và các trang con liên kết với nhau
+D. Mọi trang đều liên kết với nhau một cách ngẫu nhiên
+Câu 7: Một trang web có thể có bao nhiêu cấp độ trang con?
+A. Chỉ có một cấp độ	B. Hai cấp độ	C. /Nhiều cấp độ	D. Không thể có trang con
+Câu 8: Mục đích chính của thanh điều hướng là gì?
+A. Trang trí trang web	B. /Cung cấp liên kết đến các phần khác nhau của trang web
+C. Hiển thị quảng cáo	D. Lưu trữ thông tin cá nhân
+Câu 9: Khi người dùng nhấp vào "Đọc tiếp", họ sẽ:
+A. Được chuyển hướng đến một trang không liên quan	
+B. Ở lại trang hiện tại
+C. /Được chuyển hướng đến một trang chứa thông tin chi tiết	
+D. Được chuyển hướng đến trang chủ
+Câu 10: Tại sao cần tổ chức trang web theo cấu trúc hình cây?
+A. Để giảm chi phí lưu trữ	
+B. Để tối ưu hóa tốc độ tải trang
+C. /Để giúp người dùng dễ dàng điều hướng và tìm kiếm thông tin 
+D. Để tăng lượng quảng cáo trên trang web 
+Câu 1: Khi tạo biểu mẫu (form) trên trang web bằng Google Sites, ứng dụng nào được sử dụng để tạo biểu mẫu?
+A. Google Docs	B. Google Sheets	
+C. Google Slides	D. /Google Forms
+Câu 2: Bước đầu tiên khi tạo biểu mẫu bằng Google Forms là gì?
+A. Tạo câu hỏi	B. /Chuẩn bị biểu mẫu
+C. Nhúng biểu mẫu vào trang web	D. Xem dữ liệu thống kê phản hồi
+Câu 3: Trong giao diện Google Forms, bạn có thể tạo được bao nhiêu loại câu hỏi khác nhau?
+A. 3	B. 5	C. 7	D. /10
+Câu 4: Cách nhúng biểu mẫu từ Google Forms vào trang web được thực hiện bằng cách nào?
+A. Sao chép và dán liên kết
+B. /Sử dụng công cụ Nhúng của Google Sites
+C. Tạo biểu mẫu trực tiếp trên trang web
+D. Tải biểu mẫu lên từ máy tính
+Câu 5: Để xem dữ liệu thống kê phản hồi từ biểu mẫu, người dùng cần truy cập vào đâu?
+A. Google Sheets	B. Google Docs	
+C. Google Slides	D. /Google Forms
+Câu 6: Lệnh nào trong Google Forms cho phép thêm các câu hỏi mới vào biểu mẫu?
+A. /Tạo câu hỏi mới	B. Thêm trang mới	
+C. Thêm tiêu đề	D. Tạo phần mới
+Câu 7: Google Forms cho phép tạo loại câu hỏi nào sau đây?
+A. Hộp kiểm	B. Hộp văn bản dài	
+C. Hộp văn bản ngắn	D. /Cả 3 đều đúng
+Câu 8: Để tùy chỉnh giao diện biểu mẫu trong Google Forms, bạn có thể làm gì?
+A. Thay đổi màu sắc	B. Thêm hình nền	
+C. Chọn kiểu phông chữ	D. /Tất cả đều đúng
+Câu 9: Tính năng nào trong Google Forms cho phép thu thập thông tin phản hồi chi tiết hơn?
+A. Câu hỏi trắc nghiệm	B. /Câu hỏi hộp văn bản dài
+C. Câu hỏi lưới lựa chọn	D. Câu hỏi thả xuống
+Câu 10: Google Forms có thể tự động tổng hợp dữ liệu phản hồi và hiển thị dưới dạng nào?
+A. Biểu đồ	B. Bảng	
+C. Danh sách	D. /Cả 3 đều đúng
+
+    `
+    
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('code')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
