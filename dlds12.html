@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc Nghiệm Đúng Sai</title>
+  <style>
+  table {
+  border-collapse: collapse;
+  
+}
+table th,table td {
+  border: 1px solid black;
+  padding: 2px;
+}
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .container {
+      margin: auto;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+    }
+    .question.correct {
+      background-color: #d4edda;
+    }
+    .question.incorrect {
+      background-color: #f8d7da;
+    }
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 8px;
+overflow-x: auto;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #efe;
+      padding: 4px;
+
+    }
+    .answer {
+      margin-bottom: 8px;
+    }
+    .answer input[type="radio"] {
+      display: none;
+    }
+    .answer label {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: #e0e0e0;
+    }
+    .answer input[type="radio"]:checked + label[tc="true"] {
+      background-color: #d4edda;
+      color: green;
+      font-weight: bold;
+    }
+    .answer input[type="radio"]:checked + label[tc="false"] {
+      background-color: #f8d7da;
+      color: red;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      display: block;
+      margin: 10px auto;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+        <h2>Trắc Nghiệm Đúng Sai</h2>
+    <textarea disabled id="questionInput" placeholder="Nhập câu hỏi (Dùng dấu / trước đáp án đúng)">
+Câu 1. Cho thông tin sau:<br>Duyên hải Nam Trung Bộ là một bộ phận lãnh thổ của vùng Bắc Trung Bộ và Duyên hải miền Trung; giáp với vùng Đông Nam Bộ, Tây Nguyên; giáp với nước láng giềng Lào và Biển Đông rộng lớn. Lãnh thổ nằm gần tuyến hàng hải quốc tế, tạo cho Duyên hải Nam Trung Bộ nhiều tiềm năng, thế mạnh trong phát triển các ngành kinh tế biển.
+/a) Kinh tế biển là tiềm năng nổi bật nhất trong phát triển của vùng Duyên hải Nam Trung Bộ.
+/b) Duyên hải Nam Trung Bộ có ưu thế hơn Bắc Trung Bộ trong khai thác hải sản do có nhiều ngư trường lớn.
+c) Điều kiện chủ yếu giúp Duyên hải Nam Trung Bộ phát triển khai thác hải sản là vùng biển rất ít khi có bão.
+d) Khó khăn chủ yếu tác động đến ngành kinh tế biển của Duyên hải Nam Trung Bộ là chịu ảnh hưởng lớn của áp thấp nhiệt đới, gió mùa Đông Bắc.
+
+Câu 2. Cho bảng số liệu: <br>Sản lượng thủy sản khai thác và nuôi trồng ở Duyên hải Nam Trung Bộ, giai đoạn 2010 - 2023 (Đơn vị: nghìn tấn)<table><tr><th>Năm</th><th>Khai thác</th><th>Nuôi trồng</th></tr><tr><td>2010</td><td>707,1</td><td>80,8</td></tr><tr><td>2021</td><td>1167,9</td><td>101,3</td></tr><tr><td>2023</td><td>1219,5</td><td>109,6</td></tr></table> (Nguồn: Niên giám Thống kê Việt Nam 2023, NXB Thống kê 2024)
+a) Sản lượng thủy sản nuôi trồng giảm.
+/b) Sản lượng thủy sản khai thác tăng và cao hơn sản lượng hải sản nuôi trồng
+c) Sự thay đổi sản lượng thủy sản nuôi trồng là do có nhiều ngư trường trọng điểm lớn, nguồn lợi hải sản phong phú.
+/d) Sự thay đổi sản lượng thủy sản khai thác chủ yếu là do đẩy mạnh khai thác xa bờ, đầu tư tàu công suất lớn với trang thiết bị hiện đại.
+
+Câu 3. Cho thông tin sau: <br>Khí hậu của Tây Nguyên có tính chất cận xích đạo, có sự phân hóa theo mùa rõ rệt. Do ảnh hưởng của độ cao nên các khu vực địa hình trên 1 000 m có khí hậu mát mẻ. Vì thế, vùng có thể đa dạng hóa cây trồng có nguồn gốc nhiệt đới (cà phê, cao su, hồ tiêu,...), cây có nguồn gốc cận nhiệt (chè, cây dược liệu...) và phát triển du lịch.
+/a) Cây công nghiệp lâu năm của Tây Nguyên chủ yếu là cây ưa nhiệt.
+/b) Mùa khô sâu sắc kéo dài là nhân tố khó khăn chủ yếu cho sản xuất nông sản ở Tây Nguyên.
+c) Do có mưa vào thu đông nên Tây Nguyên cần phát triển thủy lợi hợp lí nhằm phát triển nông nghiệp hiệu quả.
+/d) Nguyên nhân đe dọa xói mòn đất nếu mất thực vật ở Tây Nguyên chủ yếu là do sự phân hóa mạnh giữa mùa khô kéo dài và mùa mưa.
+
+Câu 4. Cho thông tin sau: <br>Tây Nguyên có nhiều điều kiện thuận lợi để phát triển cây công nghiệp lâu năm. Việc khai thác các thế mạnh phát triển cây công nghiệp với nhiều sản phẩm xuất khẩu có giá trị kinh tế cao, giúp cho vùng trở thành một trong những vùng chuyên canh cây công nghiệp lớn nhất nước ta.
+/a) Cơ cấu cây công nghiệp đa dạng, bao gồm các cây công nghiệp có giá trị kinh tế cao như cà phê, cao su, hồ tiêu, chè.
+b) Người dân chưa có  kinh nghiệm sản xuất cây công nghiệp, trình độ người lao động chưa được nâng cao.
+/c) Vùng có địa hình cao nguyên xếp tầng với diện tích đất badan lớn, khí hậu mang tính chất cận xích đạo.
+/d) Việc đẩy mạnh ứng dụng khoa học - công nghệ trong phát triển cây công nghiệp đem lại hiệu quả kinh tế cao.
+
+Câu 5. Cho bảng số liệu: <br>Diện tích rừng và sản lượng gỗ khai thác của Tây Nguyên, giai đoạn 2015-2021. <table><tr><th>Năm</th><th>2015</th><th>2016</th><th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th></tr><tr><td>Rừng tự nhiên (nghìn ha)</td><td>2246,0</td><td>2234,5</td><td>2223,6</td><td>2207,0</td><td>2191,2</td><td>2179,8</td><td>2104,1</td></tr><tr><td>Rừng trồng (nghìn ha)</td><td>315,9</td><td>324,2</td><td>330,1</td><td>350,4</td><td>368,7</td><td>382,2</td><td>468,6</td></tr><tr><td>Sản lượng gỗ khai thác (nghìn m3)</td><td>601,9</td><td>590,2</td><td>679,8</td><td>685,7</td><td>699,3</td><td>712,0</td><td>753,7</td></tr></table>(Nguồn: Tổng cục thống kê, 2016-2021)
+a) Diện tích rừng tự nhiên của Tây Nguyên giảm liên tục giai đoạn 2015-2021.
+b) Dạng biểu đồ thích nhất để thể hiện diện tích rừng và sản lượng gỗ khai thác của Tây Nguyên  là biểu đồ kết hợp.
+c) Năm 2015 Tổng DT rừng là 2561,9 nghìn ha; Năm 2021 Tổng DT rừng là 2572,7 nghìn ha. Tăng.
+d) Biện pháp cấp bách nhất hiện nay để bảo vệ rừng tự nhiên ở Tây Nguyên là đẩy mạnh việc khoanh nuôi, trồng rừng mới.
+
+Câu 6. Cho thông tin sau: <br>Tuy diện tích và trữ lượng rừng của vùng Đông Nam Bộ không lớn, song có giá trị cung cấp gỗ dân dụng, nguyên liệu giấy. Hệ thống rừng của vùng có giá trị bảo tồn tài nguyên sinh vật như: Khu dự trữ sinh quyển rừng ngập mặn Cẩn Giờ và các vườn quốc gia Nam Cát Tiên, Bù Gia Mập, Lò Gò - Xa Mát, Côn Đảo.
+/a) Rừng ở Đông Nam Bộ phần lớn là rừng đặc dụng và rừng phòng hộ.
+b) Rừng sản xuất có vai trò chủ yếu cung cấp gỗ cho công nghiệp chế biến trong nước.
+c) Rừng ngập mặn được trồng ven biển có vai trò chủ yếu là hạn chế tác động của gió Lào.
+/d) Giải pháp quan trọng để giữ mực nước ngầm và nước ở các hồ chứa của Đông Nam Bộ là bảo vệ và phát triển vốn rừng.
+
+Câu 7. Dựa vào bảng số liệu sau: <br>Doanh thu du lịch lữ hành của vùng Đồng bằng sông Cửu Long, giai đoạn 2015-2022 <table><tr><th>Năm</th><th>2015</th><th>2019</th><th>2022</th></tr><tr><td>Doanh thu du lịch lữ hành (tỷ đồng)</td><td>512,4</td><td>1000,8</td><td>957,2</td></tr></table>
+/a) Giai đoạn 2015-2022, doanh thu du lịch lữ hành có biến động.
+b). Giai đoạn 2019-2022, doanh thu du lịch lữ hành giảm mạnh.
+/c). Giai đoạn 2015-2022, doanh thu du lịch lữ hành tăng gần 1,9 lần.
+/d). Giai đoạn 2019-2022, doanh thu du lịch giảm do dịch bệnh.
+
+Câu 8. Nhờ có điều kiện tự nhiên thuận lợi, vùng Đồng bằng sông Cửu Long là vựa lúa lớn nhất của nước ta.
+/a). Đất phù sa với diện tích lớn, thuận lợi để hình thành vùng chuyên canh lúa quy mô lớn.
+b). Khí hậu cận xích đạo, lượng nhiệt, ẩm cao và ổn định, lượng mưa lớn, thích hợp trống lúa nước.
+/c). Dân cư đông, lao động dồi dào, có nhiều kinh nghiệm trong canh tác.
+/d). Khắp đồng bằng đều có thể canh tác 3 – 4 vụ lúa mỗi năm.
+
+Câu 9. Cho thông tin sau: <br>Đông Nam Bộ là vùng bán bình nguyên, có địa hình tương đối bằng phẳng, đất đỏ badan, đất xám phù sa cổ chiếm phần lớn diện tích,  khí hậu cận xích đạo gió mùa, có ngư trường và diện tích mặt nước lớn,... là những những điều kiện thuận lợi giúp Đông Nam Bộ phát triển kinh tế - xã hội.
+/a) Đông Nam Bộ có vùng biển rộng thuộc Biển Đông.
+b) Khí hậu cận xích đạo gió mùa thuận lợi để vùng Đông Nam Bộ phát triển các giống cây trồng có nguồn gốc ôn đới.
+/c) Đất badan màu mỡ, đất xám phù sa cổ chiếm phần lớn diện tích là điều kiện thuận lợi giúp Đông Nam Bộ phát triển các vùng chuyên canh cây công nghiệp quy mô lớn.
+/d) Có địa hình bằng phẳng nên Đông Nam Bộ thuận lợi phát triển công nghiệp, xây dựng đô thị và hệ thống giao thông vận tải.
+
+Câu 10. Cho thông tin sau: <br>Đồng bằng sông Cửu Long là đồng bằng châu thổ lớn nhất nước ta, địa hình thấp, bằng phẳng, thuận lợi cho canh tác nông nghiệp và các hoạt động kinh tế khác. Vùng có ba loại đất chính: Đất phù sa sông có diện tích khoảng hơn 1 triệu ha, phân bố dọc sông Tiền, sông Hậu, là loại đất tốt, màu mỡ, thích hợp trồng lúa và các loại cây trồng khác. Đất phèn có hơn 1,6 triệu ha, đất mặn có gần 1 triệu ha.
+a) Loại đất chiếm diện tích lớn nhất ở Đồng bằng sông Cửu Long là đất mặn.
+/b) Diện tích đất phèn, đất mặn lớn gây khó khăn cho sản xuất nông nghiệp ở Đồng bằng sông Cửu Long.
+/c) Để đáp ứng nhu cầu sản xuất của ngành trồng trọt, giải pháp quan trọng nhất là cải tạo đất cho Đồng bằng sông Cửu Long.
+d) Giải pháp quan trọng nhất để cải tạo đất ở Đồng bằng sông Cửu Long là sử dụng các loại phân bón thích hợp, bổ sung dinh dưỡng cho đất.
+
+Câu 11. Cho bảng số liệu:<br>Cơ cấu GRDP (theo giá hiện hành) của vùng Đông Nam Bộ, giai đoạn 2010 – 2021<table><tr><th>Năm</th><th>2010</th><th>2015</th><th>2021</th></tr><tr><td>Nông nghiệp, lâm nghiệp, thuỷ sản</td><td>4,8</td><td>4,7</td><td>4,7</td></tr><tr><td>Công nghiệp, xây dựng</td><td>46,0</td><td>43,9</td><td>42,6</td></tr><tr><td>Dịch vụ</td><td>38,5</td><td>41,7</td><td>42,2</td></tr><tr><td>Thuế sản phẩm trừ trợ cấp sản phẩm</td><td>10,7</td><td>9,7</td><td>10,5</td></tr></table>(Nguồn: Cục thống kê các tỉnh,thành phố của vùng Đông Nam Bộ, 2011,2016 và 2022)
+/a) Ngành nông nghiệp, lâm nghiệp, thuỷ sản có cơ cấu giảm.
+b) Ngành công nghiệp, xây dựng có cơ cấu giảm do không có điều kiện thuận lợi để phát triển.
+/c) Ngành dịch vụ phát triển do tăng cường ứng dụng các thành tựu khoa học – công nghệ.
+d) Biểu đồ miền là biểu đồ thích hợp nhất thể hiện cơ cấu GRDP của vùng Đông Nam Bộ, giai đoạn 2010 – 2021.
+
+Câu 12. Cho thông tin sau: <br>Đồng bằng sông Cửu Long là vùng châu thổ rộng lớn, điều kiện  thuận lợi phát triển đa dạng các ngành kinh tế.
+/a) Lúa là cây lương thực chủ yếu của vùng.
+b) Cây ăn quả là lợi thế của vùng với nhiều loại trái cây cận nhiệt.
+/c) Chăn nuôi gia cầm phát triển nhờ nguồn thức ăn dồi dào.
+/d) Một số địa phương trong vùng phát triển ngành công nghiệp sản xuất vật liệu xây dựng nhờ nguồn khoáng sản từ đá vôi.
+
+Câu 13. Cho bảng số liệu: <br>Sản lượng thuỷ sản ở Đồng bằng sông Cửu Long, giai đoạn 2010 – 2021 (Đơn vị: triệu tấn)<table><tr><th>Năm</th><th>2010</th><th>2015</th><th>2021</th></tr><tr><td>Nuôi trồng</td><td>1,98</td><td>2,47</td><td>3,41</td></tr><tr><td>Khai thác</td><td>1,01</td><td>1,23</td><td>1,51</td></tr></table>(Nguồn: Tổng cụcThống kê 2011, 2016 và 2022)
+/a) Sản lượng thuỷ sản khai thác ít hơn nuôi trồng.
+/b) Tổng sản lượng thuỷ sản tăng qua các năm.
+/c) Ngành nuôi trồng thuỷ sản giữ vai trò ngày càng quan trọng nhờ công nghệ nuôi trồng của vùng ngày càng được nâng cao.
+d) Sản lượng thuỷ sản nuôi trồng chiếm gần 50% trong tổng sản lượng thuỷ sản của vùng năm 2021
+
+Câu 14. Cho bảng số liệu:<br>Cơ cấu GRDP phân theo ngành kinh tế của vùng kinh tế trọng điểm Bắc Bộ,năm 2010 và 2021 <table><tr><th>Năm</th><th>2010</th><th>2021</th></tr><tr><td>Nông nghiệp, lâm nghiệp và thuỷ sản</td><td>6,5</td><td>3,9</td></tr><tr><td>Công nghiệp và xây dựng</td><td>29,4</td><td>42,3</td></tr><tr><td>Dịch vụ</td><td>50,1</td><td>43,8</td></tr><tr><td>Thuế sản phẩm trừ trợ cấp sản phẩm</td><td>14,0</td><td>10,0</td></tr></table>(Đơn vị: %)
+/a) Cơ cấu GRDP của vùng kinh tế trọng điểm Bắc Bộ đang có sự chuyển dịch theo hướng công nghiệp hoá, hiện đại hoá.
+b) So với năm 2010, tỉ trọng công nghiệp và xây dựng năm 2021 có xu hướng tăng chiếm cao nhất trong cơ cấu GRDP của vùng kinh tế trọng điểm Bắc Bộ.
+/c) Năm 2010 và 2021, tỉ trọng nông nghiệp, lâm nghiệp và thuỷ sản luôn chiếm nhỏ nhất trong cơ cấu GRDP của vùng kinh tế trọng điểm Bắc Bộ.
+/d) Biểu đồ tròn là dạng biểu đồ thích hợp nhất để thể hiện cơ cấu GRDP của vùng kinh tế trọng điểm Bắc Bộ năm 2010 và 2021.
+</textarea>
+</div>
+    <button onclick="generateQuiz()">Tạo bài trắc nghiệm</button><div id="quiz"></div>
+
+    <button onclick="calculateScore()" style="display:none" id="submitBtn">Nộp bài</button>
+    <div id="result"></div>
+  
+
+  <script>
+    function generateQuiz() {
+      const inputText = document.getElementById('questionInput').value.trim();
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+
+      const questions = inputText.split('\n\n');
+      questions.forEach((qText, index) => {
+        const lines = qText.split('\n');
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+        questionDiv.innerHTML = `<div class='question-text'>${lines[0]}</div>`;
+
+        lines.slice(1).forEach((line, i) => {
+          const isCorrect = line.trim().startsWith('/');
+          const cleanText = line.replace('/', '');
+
+          const answerDiv = document.createElement('div');
+          answerDiv.className = 'answer';
+          answerDiv.innerHTML =
+          `<div>${cleanText}</div>
+          
+          <input type='radio' id='q${index}_${i}_true' name='q${index}_${i}' value='true'>
+          <label for='q${index}_${i}_true' data-correct='${isCorrect}' tc = "true">Đúng</label>
+          <input type='radio' id='q${index}_${i}_false' name='q${index}_${i}' value='false'>
+          <label for='q${index}_${i}_false' data-correct='${!isCorrect}' tc = "false">Sai</label>`;
+
+          questionDiv.appendChild(answerDiv);
+          
+        });
+
+        quizDiv.appendChild(questionDiv);
+      });
+
+      document.getElementById('submitBtn').style.display = 'block';
+    }
+
+    function calculateScore() {
+      const questions = document.querySelectorAll('.question');
+      let totalScore = 0,
+      correctItems = 0,
+      wrongItems = 0,
+      totalItems = 0;
+
+      questions.forEach(question => {
+        const answers = question.querySelectorAll('.answer');
+
+        answers.forEach(answer => {
+          const correct = answer.querySelector('label[data-correct="true"]');
+          const userChoice = answer.querySelector('input[type="radio"]:checked + label');
+if (correct != userChoice) answer.style.color = "red"
+          totalItems++;
+          if (userChoice) {
+            if (userChoice.getAttribute('data-correct') === 'true') {
+              correctItems++;
+            } else {
+              wrongItems++;
+            }
+          }
+        });
+      });
+
+      const score = correctItems
+
+      document.getElementById('result').innerHTML =
+      `Số ý đúng: ${correctItems}<br>Số ý sai: ${wrongItems}<br>Tổng số câu: ${questions.length}<br>Điểm của bạn: ${score.toFixed(2)}/${questions.length*4}`;
+    }
+  </script>
+
+</body>
+</html>
