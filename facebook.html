@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Facebook – Log in or Sign up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f0f2f5;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .left {
+      flex: 1;
+      padding-right: 40px;
+    }
+
+    .left h1 {
+      color: #1877f2;
+      font-size: 60px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .left p {
+      font-size: 24px;
+      color: #1c1e21;
+    }
+
+    .right {
+      flex: 1;
+      max-width: 396px;
+    }
+
+    .login-box {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      font-size: 17px;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+    }
+
+    .login-box input:focus {
+      outline: none;
+      border-color: #1877f2;
+    }
+
+    .login-box #login-btn {
+      width: 100%;
+      background-color: #1877f2;
+      color: #fff;
+      padding: 14px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .login-box login-btn:hover {
+      background-color: #166fe5;
+    }
+
+    .login-box .forgot {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: #1877f2;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .login-box .forgot:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #dadde1;
+      margin: 20px 0;
+    }
+
+    .create-account {
+      background-color: #42b72a;
+      color: #fff;
+      padding: 14px 20px;
+      font-size: 17px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .create-account:hover {
+      background-color: #36a420;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+
+    .bottom-text a {
+      color: #1c1e21;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .bottom-text a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .left {
+        padding: 0;
+        margin-bottom: 40px;
+      }
+
+      .left h1 {
+        font-size: 48px;
+      }
+
+      .left p {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <div class="left">
+        <h1>facebook</h1>
+        <p id="desc-text">Facebook helps you connect and share<br>with the people in your life.</p>
+      </div>
+      <div class="right">
+        <div class="login-box">
+          <form action="#">
+            <input type="text" id="email" placeholder="Email address or phone number" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button type="submit" id="login-btn">Log In</button>
+            <a href="#" class="forgot" id="forgot-link">Forgotten password?</a>
+            <div class="divider"></div>
+            <button type="button" class="create-account" id="create-btn">Create new account</button>
+          </form>
+        </div>
+        <div class="bottom-text">
+          <p><a href="#" id="page-link">Create a Page</a> for a celebrity, brand or business.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const langData = {
+      en: {
+        desc: "Facebook helps you connect and share with the people in your life.",
+        email: "Email address or phone number",
+        password: "Password",
+        login: "Log In",
+        forgot: "Forgotten password?",
+        create: "Create new account",
+        page: "Create a Page for a celebrity, brand or business."
+      },
+      vi: {
+        desc: "Facebook giúp bạn kết nối và chia sẻ với mọi người trong cuộc sống của bạn.",
+        email: "Địa chỉ email hoặc số điện thoại",
+        password: "Mật khẩu",
+        login: "Đăng nhập",
+        forgot: "Quên mật khẩu?",
+        create: "Tạo tài khoản mới",
+        page: "Tạo Trang dành cho người nổi tiếng, thương hiệu hoặc doanh nghiệp."
+      }
+    };
+
+    function detectLanguage() {
+      const lang = navigator.language.startsWith('vi') ? 'vi' : 'en';
+      const l = langData[lang];
+      document.getElementById("desc-text").innerHTML = l.desc;
+      document.getElementById("email").placeholder = l.email;
+      document.getElementById("password").placeholder = l.password;
+      document.getElementById("login-btn").textContent = l.login;
+      document.getElementById("forgot-link").textContent = l.forgot;
+      document.getElementById("create-btn").textContent = l.create;
+      document.getElementById("page-link").textContent = l.page.split(" ")[0] + " " + l.page.split(" ").slice(1).join(" ");
+    }
+
+    detectLanguage();
+  </script>
+</body>
+</html>
