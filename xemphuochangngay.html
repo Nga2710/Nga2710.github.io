@@ -28,7 +28,7 @@ canvas {
 .main-box {
   z-index: 1;
   background: #fff5f5;
-  border: 1px solid #e57373;
+  border: 5px solid #e57373;
   padding: 40px;
   margin: 20px;
   width: 500px;
@@ -39,7 +39,7 @@ canvas {
 }
 .title-box {
     background: #fff;
-  border: 1px solid #e57373;
+  border: 5px solid #e57373;
 color: red;
   border-radius: 16px;
   text-align: center;
@@ -133,7 +133,7 @@ button:hover {
     function draw() {
       ctx.fillStyle = 'rgba(255,255,255,0.2)';
       ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = '#000';
+      ctx.fillStyle = '#f22';
       ctx.font = '16px monospace';
       for (let i = 0; i < drops.length; i++) {
         const char = getRandomChar();
