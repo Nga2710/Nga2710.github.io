@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>PixelBase - Đăng nhập để truy cập</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+    }
+    input, button {
+      padding: 0.8rem;
+      width: 100%;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #output {
+      margin-top: 1rem;
+      background: #333;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>PixelBase Realtime Database</h2>
+    <p>Chỉ cho phép truy cập từ <code>nga2710.github.io</code>. Yêu cầu đăng nhập Google để tiếp tục.</p>
+
+    <button id="login">Đăng nhập với Google</button>
+    <button id="logout" class="hidden">Đăng xuất</button>
+
+    <div id="form" class="hidden">
+      <input type="text" id="keyInput" placeholder="Nhập key (VD: ten)">
+      <input type="text" id="valueInput" placeholder="Nhập giá trị (VD: Chiến)">
+      <button id="write">Ghi dữ liệu</button>
+      <button id="read">Đọc dữ liệu</button>
+    </div>
+
+    <div id="output" class="hidden"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+    // Kiểm tra domain hợp lệ
+    if (window.location.hostname !== "nga2710.github.io") {
+      alert("Truy cập bị từ chối: chỉ cho phép từ https://nga2710.github.io");
+      document.body.innerHTML = "<h1 style='color:red;'>403 - Truy cập bị chặn</h1>";
+      throw new Error("Sai domain");
+    }
+
+    // Firebase config của bạn
+    const firebaseConfig = {
+      apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+      authDomain: "pixelbase-512.firebaseapp.com",
+      projectId: "pixelbase-512",
+      storageBucket: "pixelbase-512.appspot.com",
+      messagingSenderId: "608526843244",
+      appId: "1:608526843244:web:7382b46751ddd1a6bac749",
+      measurementId: "G-XDRY19MKXW",
+      databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const db = getDatabase(app);
+
+    const loginBtn = document.getElementById("login");
+    const logoutBtn = document.getElementById("logout");
+    const form = document.getElementById("form");
+    const output = document.getElementById("output");
+
+    loginBtn.onclick = () => {
+      signInWithPopup(auth, provider)
+        .catch(error => alert("Đăng nhập thất bại: " + error.message));
+    };
+
+    logoutBtn.onclick = () => {
+      signOut(auth);
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginBtn.classList.add("hidden");
+        logoutBtn.classList.remove("hidden");
+        form.classList.remove("hidden");
+        output.classList.remove("hidden");
+        output.innerText = `Đã đăng nhập: ${user.displayName} (${user.email})`;
+      } else {
+        loginBtn.classList.remove("hidden");
+        logoutBtn.classList.add("hidden");
+        form.classList.add("hidden");
+        output.classList.add("hidden");
+        output.innerText = "";
+      }
+    });
+
+    document.getElementById("write").onclick = () => {
+      const key = document.getElementById("keyInput").value.trim();
+      const value = document.getElementById("valueInput").value.trim();
+      if (key && value) {
+        set(ref(db, key), value)
+          .then(() => output.innerText = `Đã ghi: ${key} = ${value}`)
+          .catch(err => output.innerText = `Lỗi ghi: ${err.message}`);
+      }
+    };
+
+    document.getElementById("read").onclick = () => {
+      const key = document.getElementById("keyInput").value.trim();
+      if (key) {
+        get(child(ref(db), key))
+          .then(snapshot => {
+            if (snapshot.exists()) {
+              output.innerText = `Giá trị: ${key} = ${snapshot.val()}`;
+            } else {
+              output.innerText = `Không tìm thấy key: ${key}`;
+            }
+          })
+          .catch(err => output.innerText = `Lỗi đọc: ${err.message}`);
+      }
+    };
+  </script>
+</body>
+</html>
