@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Encrypted Dead Man's Switch</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap');
+body {
+  font-family: 'Fredoka', sans-serif;
+  background: linear-gradient(135deg, #1a203d, #3c176d);
+  color: white;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.container {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 40px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  animation: fadeIn 1s ease;
+  width: 90%;
+  max-width: 420px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+input[type="password"] {
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 1.1em;
+  margin-top: 20px;
+  width: 80%;
+  transition: transform 0.2s;
+}
+input[type="password"]:focus {
+  transform: scale(1.05);
+}
+button {
+  margin-top: 20px;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1em;
+  background: #ff5e57;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+  background: #ff3b30;
+  transform: scale(1.05);
+}
+.secret {
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 2px dashed #ff3b30;
+  display: none;
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+  from {transform: scale(1);}
+  to {transform: scale(1.02);}
+}
+.timer {
+  font-size: 1.2em;
+  margin-top: 15px;
+  color: #ffcc00;
+}
+.leaked-data {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.2);
+  font-size: 0.95em;
+  max-height: 150px;
+  overflow-y: auto;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔐 Dead Man's Switch</h1>
+  <p>Nếu t có mệnh hệ gì mà không nhập lại mật khẩu quá 12 giờ thì toàn bộ thông tin crush của MC sẽ hiện lên đây</p>
+  <input type="password" id="password" placeholder="Nhập mật khẩu">
+  <button onclick="verify()">Xác nhận</button>
+  <div class="timer" id="timer">Đang kiểm tra...</div>
+  <div class="secret" id="secret">
+    <h3>⚠️ DỮ LIỆU BỊ LỘ</h3>
+    <div class="leaked-data" id="leakedData">Đang tải dữ liệu đã giải mã...</div>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD32FWHgd7aJsY3BPdFIYj-I992lmAd6bI",
+  databaseURL: "https://pixelbase-512-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "pixelbase-512"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const authPath = "users/leak/lastAuth";
+const leakPath = "users/leak/data";
+const maxDelay = 12 * 60 * 60 * 1000;
+
+function now() { return new Date().getTime(); }
+
+function decode(uStr) {
+  return uStr.replace(/\\u([\dA-F]{4})/gi, (_, g1) => String.fromCharCode(parseInt(g1, 16)));
+}
+
+const encodedPassword = "\u006d\u0079\u006d\u0061\u0073\u0074\u0065\u0072\u006b\u0065\u0079\u0031\u0032\u0033";
+const secretData = {
+  leakedAt: "\u0041\u0075\u0074\u006f",
+  secret: "\u0054\u00e0\u0069\u0020\u006b\u0068\u006f\u0061\u006e\u003a\u0020\u0030\u0039\u0038\u0037\u0036\u0035\u0034\u0033\u0032\u0031\u0020\u002d\u0020\u004d\u1ead\u0074\u0020\u006b\u0068\u1ea9\u0075\u003a\u0020\u0073\u0075\u0070\u0065\u0072\u0070\u0061\u0073\u0073",
+  note: "\u0044\u1eef\u0020\u006c\u0069\u1ec7\u0075\u0020\u006c\u1ed9\u0020\u006b\u0068\u0069\u0020\u0071\u0075\u00e1\u0020\u0068\u1ea1\u006e\u0020\u0078\u00e1\u0063\u0020\u006e\u0068\u1ead\u0070\u002e"
+};
+
+function verify() {
+  const input = document.getElementById("password").value;
+  if (input === decode(encodedPassword)) {
+    db.ref(authPath).set(now());
+    alert("✅ Mật khẩu đúng. Đã cập nhật thời gian xác thực.");
+  } else {
+    alert("❌ Mật khẩu sai!");
+  }
+}
+
+function checkAndLeak(lastTime) {
+  const delta = now() - lastTime;
+  if (delta > maxDelay) {
+    db.ref(authPath).set(now()-9238000);
+   // document.getElementById("timer").textContent = "⛔ Đã quá 12 tiếng!";
+   // leak();
+  } else {
+    const remain = maxDelay - delta;
+    const h = Math.floor(remain / (1000 * 60 * 60));
+    const m = Math.floor((remain % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((remain % (1000 * 60)) / 1000);
+    document.getElementById("timer").textContent = `⏳ Còn lại: ${h}h ${m}m ${s}s`;
+    hideLeak();
+  }
+}
+
+function leak() {
+  db.ref(leakPath).set({
+    leakedAt: new Date().toISOString(),
+    secret: decode(secretData.secret),
+    note: decode(secretData.note)
+  });
+}
+
+function fetchLeak() {
+  db.ref(leakPath).on("value", snap => {
+    const val = snap.val();
+    const box = document.getElementById("leakedData");
+    if (val) {
+      box.innerText = JSON.stringify(val, null, 2);
+      document.getElementById("secret").style.display = "block";
+    } else hideLeak();
+  });
+}
+
+function hideLeak() {
+  document.getElementById("secret").style.display = "none";
+}
+
+function startMonitor() {
+  db.ref(authPath).on("value", snap => {
+    const t = snap.val();
+    if (typeof t === "number") checkAndLeak(t);
+    else document.getElementById("timer").textContent = "⚠️ Chưa xác nhận lần nào.";
+  });
+}
+
+fetchLeak();
+startMonitor();
+setInterval(() => {
+  db.ref(authPath).once("value").then(snap => {
+    const t = snap.val();
+    if (typeof t === "number") checkAndLeak(t);
+  });
+}, 1000);
+</script>
+</body>
+</html>
