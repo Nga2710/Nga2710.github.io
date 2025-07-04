@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khoảng Cách Tọa Độ</title>
+<style>
+* {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Arial Rounded MT Bold','Nunito',sans-serif}
+body {min-height:100vh;background:linear-gradient(135deg,#89f7fe,#66a6ff);display:flex;justify-content:center;align-items:center;padding:20px}
+.container {background:white;border-radius:30px;box-shadow:0 20px 40px rgba(0,0,0,0.2);padding:40px;max-width:400px;width:100%;animation:slideIn 0.7s ease-out}
+h1 {text-align:center;font-size:2rem;color:#333;margin-bottom:20px}
+label {font-weight:600;color:#555;display:block;margin:10px 0 5px}
+input {width:100%;padding:12px 15px;border:none;border-radius:12px;background:#f0f0f0;font-size:16px;outline:none;transition:0.2s}
+input:focus {background:#e6f0ff}
+button {margin-top:20px;width:100%;padding:15px;border:none;border-radius:15px;background:#0077ff;color:white;font-weight:bold;font-size:18px;cursor:pointer;transition:0.3s}
+button:hover {background:#005fe0}
+.result {margin-top:25px;text-align:center;font-size:18px;padding:15px;border-radius:15px;font-weight:bold;animation:fadeIn 0.5s ease-out}
+.result.ok {background:#caffbf;color:#2d6a4f}
+.result.medium {background:#fffa9e;color:#b08500}
+.result.bad {background:#ffb3c1;color:#a4002d}
+@keyframes slideIn {
+  0%{transform:translateY(100px);opacity:0}
+  100%{transform:translateY(0);opacity:1}
+}
+@keyframes fadeIn {
+  from {opacity:0}
+  to {opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Kiểm Tra Tọa Độ</h1>
+<strong> Tọa độ gốc: (454;y;-1212)<strong>
+<label for="x">Tọa độ X</label>
+<input type="number" id="x" placeholder="Nhập x">
+<label for="y">Tọa độ Z</label>
+<input type="number" id="y" placeholder="Nhập z">
+<button onclick="checkDistance()">Kiểm Tra Khoảng Cách</button>
+<div id="output" class="result" style="display:none"></div>
+</div>
+
+<script>
+const targetX = 454, targetY = -1212
+function checkDistance() {
+  const x = parseFloat(document.getElementById('x').value)
+  const y = parseFloat(document.getElementById('y').value)
+  const output = document.getElementById('output')
+  if (isNaN(x) || isNaN(y)) {
+    output.textContent = 'Vui lòng nhập đầy đủ tọa độ!'
+    output.className = 'result bad'
+    output.style.display = 'block'
+    return
+  }
+  const dx = x - targetX
+  const dy = y - targetY
+  const distance = Math.sqrt(dx*dx + dy*dy)
+  let msg = '', cls = ''
+  if (distance < 100) {
+    msg = `✔️ OK! Khoảng cách: ${distance.toFixed(2)} block`
+    cls = 'ok'
+  } else if (distance <= 200) {
+    msg = `⚠️ Khu vực hợp lý. Khoảng cách: ${distance.toFixed(2)} block`
+    cls = 'medium'
+  } else {
+    msg = `❌ Cảnh báo! Không đạt yêu cầu (${distance.toFixed(2)} block)`
+    cls = 'bad'
+  }
+  output.textContent = msg
+  output.className = 'result ' + cls
+  output.style.display = 'block'
+}
+</script>
+</body>
+</html>
