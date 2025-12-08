@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clock</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Courier New',monospace;display:flex;align-items:center;justify-content:center;font-weight:bold;overflow:hidden}
+#clock-container{display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #fff;border-radius:16px;padding:40px;background:#000;box-shadow:0 0 20px #fff;animation:fadeIn 2s ease}
+#clock{font-size:6rem;letter-spacing:.1em;text-shadow:0 0 20px #fff;transition:all .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.hide-cursor{cursor:none!important}
+@media(min-width:1025px){#clock{font-size:10rem}}
+@media(max-width:600px){#clock{font-size:3rem}#clock-container{padding:20px}}
+</style>
+</head>
+<body>
+<div id="clock-container"><div id="clock">00:00:00</div></div>
+
+<script>
+let start=Date.now(),wakeLock=null;
+
+function update(){
+ let now=Date.now(),el=Math.floor((now-start)/1000);
+ let h=String(Math.floor(el/3600)).padStart(2,"0");
+ let m=String(Math.floor((el%3600)/60)).padStart(2,"0");
+ let s=String(el%60).padStart(2,"0");
+ clock.textContent=`${h}:${m}:${s}`;
+}
+setInterval(update,1000);update();
+
+document.addEventListener("keydown",e=>{
+ if(e.key.toLowerCase()==="f")toggleFS();
+});
+
+function toggleFS(){
+ if(!document.fullscreenElement){
+  document.documentElement.requestFullscreen?.();
+  enableWakeLock();
+  document.body.classList.add("hide-cursor");
+ }else{
+  document.exitFullscreen?.();
+  disableWakeLock();
+  document.body.classList.remove("hide-cursor");
+ }
+}
+
+async function enableWakeLock(){
+ try{wakeLock=await navigator.wakeLock.request("screen");}
+ catch(e){}
+}
+
+async function disableWakeLock(){
+ try{await wakeLock?.release();wakeLock=null;}
+ catch(e){}
+}
+
+window.onload=()=>document.body.focus();
+</script>
+</body>
+</html>
