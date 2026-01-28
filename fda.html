@@ -434,6 +434,10 @@
 </head>
 <body>
 
+
+  <script>
+
+  </script>
   <div id="pink-bg-layer"></div>
   <div id="star-container"></div>
   <div id="game-area"></div>
@@ -516,6 +520,7 @@
           <i> From Thanh Ngà<br> 🎂 ~ 29/01/2026</i>
         </div>
       </p>
+
       <img src="da.png" class="floating-png">
       <br>
       <div class="final-icons-container">
@@ -524,77 +529,74 @@
         <span class="float-item delay-3">🦄</span>
         <span class="float-item delay-4">🌈</span>
       </div>
-          <div class="intro-icon" style="top: -40px; left: 10px;">
-  🎉
-    </div>
-    <div class="intro-icon" style="top: 20px; right: -20px; animation-delay: 1s;">
-🎁
-    </div>
-    <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-🦄
-    </div>
-        <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-          
-    </div>
+      <div class="intro-icon" style="top: -40px; left: 10px;">
+        🎉
+      </div>
+      <div class="intro-icon" style="top: 20px; right: -20px; animation-delay: 1s;">
+        🎁
+      </div>
+      <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
+        🦄
+      </div>
+      <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
+
+      </div>
     </div>
   </div>
 
   <script>
+    const audio = new Audio("bd.mp3");
+    audio.loop = false;
+    audio.volume = 0.5;
 
-/* =========================================================
-   __BGE_SAFE_BG_ICON_ENGINE__ v1.1
-   - Icons stay INSIDE container bounds
-   - No overflow, no negative position
-   - Variables fully prefixed
-   ========================================================= */
 
-(function () {
+    (function () {
 
-    /* ================= CONFIG ================= */
+      /* ================= CONFIG ================= */
 
-    const __BGE_ICONS__ = ["🎉", "🎁", "🎂", "🎈", "🥳", "✨", "🦄"];
-    const __BGE_COUNT__ = 12;
+      const __BGE_ICONS__ = ["🎉", "🎁", "🎂", "🎈", "🥳", "✨", "🦄"];
+      const __BGE_COUNT__ = 12;
 
-    const __BGE_SIZE_MIN__ = 20;
-    const __BGE_SIZE_MAX__ = 36;
+      const __BGE_SIZE_MIN__ = 20;
+      const __BGE_SIZE_MAX__ = 36;
 
-    /* ================= UTIL ================= */
+      /* ================= UTIL ================= */
 
-    function __BGE_RAND__(min, max) {
+      function __BGE_RAND__(min, max) {
         return Math.random() * (max - min) + min;
-    }
+      }
 
-    function __BGE_PICK__(arr) {
+      function __BGE_PICK__(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
-    }
+      }
 
-    /* ================= TARGET ================= */
+      /* ================= TARGET ================= */
 
-    const __BGE_TARGET__ = document.body.firstElementChild || document.body;
+      const __BGE_TARGET__ = document.body.firstElementChild || document.body;
 
-    const __BGE_TARGET_STYLE__ = getComputedStyle(__BGE_TARGET__);
-    if (__BGE_TARGET_STYLE__.position === "static") {
+      const __BGE_TARGET_STYLE__ = getComputedStyle(__BGE_TARGET__);
+      if (__BGE_TARGET_STYLE__.position === "static") {
         __BGE_TARGET__.style.position = "relative";
-    }
-    __BGE_TARGET__.style.overflow = "hidden";
+      }
+      __BGE_TARGET__.style.overflow = "hidden";
 
-    const __BGE_RECT__ = __BGE_TARGET__.getBoundingClientRect();
+      const __BGE_RECT__ = __BGE_TARGET__.getBoundingClientRect();
 
-    /* ================= KEYFRAMES ================= */
+      /* ================= KEYFRAMES ================= */
 
-    const __BGE_STYLE__ = document.createElement("style");
-    __BGE_STYLE__.textContent = `
-        @keyframes __bgeFloatSafe {
-            0%   { transform: translateY(0) rotate(0deg); }
-            50%  { transform: translateY(-14px) rotate(8deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
-    `;
-    document.head.appendChild(__BGE_STYLE__);
+      const __BGE_STYLE__ = document.createElement("style");
+      __BGE_STYLE__.textContent = `
+      @keyframes __bgeFloatSafe {
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(-14px) rotate(8deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+      }
+      `;
+      document.head.appendChild(__BGE_STYLE__);
 
-    /* ================= CREATE ICON ================= */
+      /* ================= CREATE ICON ================= */
 
-    function __BGE_CREATE_ICON__() {
+      function __BGE_CREATE_ICON__() {
 
         const __bge_icon__ = document.createElement("div");
         const __bge_size__ = __BGE_RAND__(__BGE_SIZE_MIN__, __BGE_SIZE_MAX__);
@@ -614,7 +616,7 @@
         const __bge_maxY__ = Math.max(0, __BGE_RECT__.height - __bge_size__);
 
         __bge_icon__.style.left = __BGE_RAND__(0, __bge_maxX__) + "px";
-        __bge_icon__.style.top  = __BGE_RAND__(0, __bge_maxY__) + "px";
+        __bge_icon__.style.top = __BGE_RAND__(0, __bge_maxY__) + "px";
 
         /* ---- ANIMATION ---- */
 
@@ -622,18 +624,18 @@
         const __bge_duration__ = __BGE_RAND__(5, 8);
 
         __bge_icon__.style.animation =
-            `__bgeFloatSafe ${__bge_duration__}s ease-in-out ${__bge_delay__}s infinite`;
+        `__bgeFloatSafe ${__bge_duration__}s ease-in-out ${__bge_delay__}s infinite`;
 
         __BGE_TARGET__.appendChild(__bge_icon__);
-    }
+      }
 
-    /* ================= INIT ================= */
+      /* ================= INIT ================= */
 
-    for (let __bge_i__ = 0; __bge_i__ < __BGE_COUNT__; __bge_i__++) {
+      for (let __bge_i__ = 0; __bge_i__ < __BGE_COUNT__; __bge_i__++) {
         __BGE_CREATE_ICON__();
-    }
+      }
 
-})();
+    })();
 
 
     const questions = [{
@@ -840,7 +842,7 @@
       document.getElementById('game-area').style.display = 'none';
       document.getElementById('pink-bg-layer').classList.add('visible');
       document.getElementById('star-container').style.opacity = 0;
-
+      audio.play();
       nextStage(4);
       setInterval(createFloatingIcon, 350);
       setTimeout(() => {
