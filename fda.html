@@ -536,7 +536,7 @@
           🎁
         </div>
         <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-🎊
+          🎊
         </div>
         <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
 
@@ -546,7 +546,7 @@
 
     <script>
       const audio = new Audio("bd.mp3");
-      audio.loop = false;
+      audio.loop = true;
       audio.volume = 0.5;
 
 
@@ -703,11 +703,11 @@
 
           setTimeout(() => {
 
-            showBeautifulToast("Thanh Ngà", "Sai òii! 😲 Ngôi sao sáng nhất hôm nay không phải là nó đâu, mà chính là bạn đó! 🫵", "🌟", () => {
-              showBeautifulToast("Thanh Ngà", "Tăng âm lượng lên để qua phần tiếp theo nhe", "🔊", () => {
-                endGame()}, 7000)
-            }, 9000);
-          }, 1000);
+            showBeautifulToast("Thanh Ngà", "Sai òii! 😲 Ngôi sao sáng nhất hôm nay không phải là nó đâu, mà chính là bạn đó ^^! 🫵", "🌟", () => {
+              endGame()}, 7000)
+
+          },
+            1000);
         };
         gameArea.appendChild(real);
       }
