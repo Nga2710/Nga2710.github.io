@@ -1,812 +1,247 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>fda</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- 1. CORE SETUP --- */
-:root {
-      --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
-    }
+<meta charset="UTF-8">
+<title>Message Display Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      font-family: 'Quicksand', sans-serif;
-      overflow: hidden;
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
-      font-weight: bold;
-      width: auto;
-      background: #0f2027;
-      color: white;
+<style>
+:root{
+    --bg-dark: #0f1220;
+    --bg-light: #1b1f3a;
+    --board-bg: linear-gradient(145deg, #fff8e8, #f3ecd8);
+    --board-border: #c7bfa8;
+    --text-main: #2a2a2a;
+    --accent: #ffb703;
+    --shadow-deep: 0 30px 80px rgba(0,0,0,0.45);
+}
 
-      position: relative;
-      overflow-x: hidden;
-      min-height: 100vh;
+/* RESET */
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    }
+body{
+    min-height: 100vh;
+    background: radial-gradient(circle at top, var(--bg-light), var(--bg-dark));
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
-    /* Nền hồng Fade In */
-    #pink-bg-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, #fff0f5 0%, #ffc3a0 100%);
-      opacity: 0;
-      transition: opacity 2.5s ease-in-out;
-      z-index: 5;
-      pointer-events: none;
-    }
-    #pink-bg-layer.visible {
-      opacity: 1;
-    }
+/* BACKGROUND FLOAT PARTICLES */
+.particle{
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+}
 
-    /* --- 2. STAGE CONTROLLER --- */
-    .stage {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 500px;
-      text-align: center;
-      opacity: 0;
-      visibility: hidden;
-      z-index: 20;
-      display: none;
-    }
-    .stage.active {
-      display: block;
-      opacity: 1;
-      visibility: visible;
-      animation: stageEnter 0.8s var(--ease-out-back) forwards;
-    }
-    .stage.exit {
-      display: block;
-      animation: stageExit 0.6s var(--ease-in-out) forwards;
-    }
-@keyframes stageEnter {
-      from {
+@keyframes floatUp{
+    from{
+        transform: translateY(100vh) scale(0.8);
         opacity: 0;
-        transform: translate(-50%, -40%) scale(0.9);
-      }
+    }
+    30%{ opacity: 1; }
+    to{
+        transform: translateY(-120vh) scale(1.4);
+        opacity: 0;
+    }
+}
 
-      to {
+/* BOARD WRAPPER */
+.board-wrapper{
+    position: relative;
+    animation: boardEntrance 1.6s ease forwards;
+}
+
+@keyframes boardEntrance{
+    from{
+        transform: translateY(60px) scale(0.96);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0) scale(1);
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
     }
-@keyframes stageExit {
-      from {
+}
+
+/* HANGING STRING */
+.string{
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(#aaa, #666);
+    transform: translateX(-50%);
+}
+
+/* BOARD */
+.board{
+    width: min(88vw, 760px);
+    padding: 60px 56px;
+    background: var(--board-bg);
+    border-radius: 22px;
+    box-shadow: var(--shadow-deep);
+    border: 3px solid var(--board-border);
+    position: relative;
+    animation: boardFloat 6s ease-in-out infinite;
+}
+
+@keyframes boardFloat{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+}
+
+/* LIGHT SHINE */
+.board::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255,255,255,0.25) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    animation: shine 6s ease-in-out infinite;
+    border-radius: 22px;
+}
+
+@keyframes shine{
+    0%,70%,100%{ opacity: 0; }
+    75%{ opacity: 1; }
+}
+
+/* MESSAGE TEXT */
+.message{
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--text-main);
+    text-align: center;
+    opacity: 0;
+    animation: textReveal 2.2s ease forwards;
+    animation-delay: 1s;
+}
+
+@keyframes textReveal{
+    from{
+        opacity: 0;
+        letter-spacing: 2px;
+        transform: translateY(10px);
+    }
+    to{
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-
-      to {
-        opacity: 0;
-        transform: translate(-50%, -60%) scale(0.8);
-      }
-    }
-
-    /* --- 3. TOAST (BEAUTIFUL GLASS STYLE) --- */
-    #toast-beautiful {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      width: 85%;
-      max-width: 300px;
-
-      /* Glassmorphism */
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.8);
-      border-left: 6px solid #76ff75;
-      /* Điểm nhấn màu */
-
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-
-      display: flex;
-      align-items: flex-start;
-      gap: 15px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      z-index: 300;
-      transition: all 0.6s var(--ease-out-back);
-
-    }
-
-    #toast-beautiful.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    #toast-beautiful.fly-out-up {
-      opacity: 0;
-      transform: translate(-50%, -150%) scale(1) rotate(-5deg);
-      /* Bay lên và nghiêng nhẹ */
-      transition: all 0.8s ease-in;
-    }
-
-    .toast-icon {
-      font-size: 32px;
-      animation: bounceIcon 2s infinite;
-    }
-@keyframes bounceIcon {
-      0%, 100% {
+        letter-spacing: 0.5px;
         transform: translateY(0);
-      }
+    }
+}
 
-      50% {
-        transform: translateY(-5px);
-      }
-    }
+/* AUTHOR */
+.author{
+    margin-top: 36px;
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards;
+    animation-delay: 2.6s;
+}
 
-    .toast-content {
-      flex: 1;
-      text-align: left;
-      color: #333;
-    }
-    .toast-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #00aa00;
-      margin-bottom: 4px;
-    }
-    .toast-msg {
-      font-size: 1rem;
-      line-height: 1.4;
-      color: #555;
-      font-weight: 500;
-    }
+@keyframes fadeIn{
+    from{ opacity: 0; }
+    to{ opacity: 1; }
+}
 
-    /* --- 4. GAME STARS (UPDATED) --- */
-    #game-area {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 15;
-      display: none;
-    }
+/* PIN */
+.pin{
+    position:absolute;
+    top:18px;
+    left:50%;
+    width:16px;
+    height:16px;
+    background: var(--accent);
+    border-radius:50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
 
-    .game-star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-      /* Mặc định sao giả mờ hơn 1 chút */
-      opacity: 0.7;
-      transition: opacity 0.3s;
+/* MOBILE */
+@media(max-width:600px){
+    .board{
+        padding: 40px 28px;
     }
-
-    /* SAO GIẢ: Không có hiệu ứng hover phóng to hay phát sáng */
-    .game-star:not(.brightest-star):hover {
-      opacity: 1;
-      /* Chỉ sáng lên chút xíu cho biết đã trỏ vào */
-    }
-
-    /* SAO THẬT: Highlight ngay từ đầu */
-    .brightest-star {
-      width: 14px;
-      height: 14px;
-      opacity: 1;
-      background: #fff;
-      /* Glow effect mạnh mẽ */
-      box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8), 0 0 40px 10px rgba(255, 234, 167, 0.5);
-      animation: starPulse 1.5s infinite alternate ease-in-out;
-      z-index: 10;
-    }
-
-@keyframes starPulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
-      }
-      100% {
-        transform: scale(1.3);
-        box-shadow: 0 0 35px 10px rgba(255, 255, 255, 1);
-      }
-    }
-
-    .wrong-mark {
-      position: absolute;
-      color: #ff4757;
-      font-size: 28px;
-      font-weight: bold;
-      animation: shake 0.4s;
-      pointer-events: none;
-    }
-@keyframes shake {
-      0%,100% {
-        transform: translate(-50%,-50%) translateX(0)
-      }
-
-      25%,75% {
-        transform: translate(-50%,-50%) translateX(-5px)
-      }
-
-      50% {
-        transform: translate(-50%,-50%) translateX(5px)
-      }
-    }
-
-
-
-    .floating-png {
-      position: fixed;
-      right: 0;
-      bottom: 0%;
-      transform: translateX(25%);
-      width: 120px;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    .star-fly-out {
-      animation: flyExplode 1.2s forwards ease-in-out !important;
-      pointer-events: none;
-      z-index: 140;
-    }
-@keyframes flyExplode {
-      0% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(30);
-        opacity: 0;
-        top: 50%!important;
-        left: 50%!important;
-      }
-    }
-
-    /* --- 5. FINAL ICONS (FLOATING) --- */
-    .final-icons-container {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    .float-item {
-      font-size: 2.5rem;
-      display: inline-block;
-      animation: floating 3s ease-in-out infinite;
-    }
-    /* Stagger animation delay để chúng trôi lệch nhau */
-    .delay-1 {
-      animation-delay: 0s;
-    }
-    .delay-2 {
-      animation-delay: 0.5s;
-    }
-    .delay-3 {
-      animation-delay: 1s;
-    }
-    .delay-4 {
-      animation-delay: 1.5s;
-    }
-
-@keyframes floating {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-15px) rotate(5deg);
-      }
-    }
-
-    /* --- OTHER STYLES (Basic) --- */
-    h1 {
-      font-family: 'Pacifico', cursive;
-      font-size: 2.8rem;
-      margin-bottom: 25px;
-      text-shadow: 0 0 15px rgba(255,255,255,0.6);
-    }
-    .btn {
-      padding: 14px 40px;
-      font-size: 1.2rem;
-      border-radius: 50px;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.6);
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-      font-weight: 700;
-      position: relative;
-      z-index: 10;
-    }
-    .btn:hover {
-      background: white;
-      color: #333;
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
-    }
-    .intro-icon {
-      position: absolute;
-      font-size: 3rem;
-      opacity: 0.8;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
-      animation: floatIcon 4s infinite ease-in-out alternate;
-    }
-@keyframes floatIcon {
-      0% {
-        transform: translateY(0);
-      }
-
-      100% {
-        transform: translateY(-20px);
-      }
-    }
-    .question-box {
-      background: rgba(0,0,0,0.6);
-      padding: 30px;
-      border-radius: 25px;
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,0.15);
-
-    }
-    .option {
-      background: rgba(255,255,255,0.1);
-      padding: 18px;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: all 0.3s;
-      opacity: 0;
-      transform: translateY(20px);
-      margin-top: 15px;
-      border: 1px solid transparent;
-    }
-    .option.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .option:hover {
-      background: rgba(255,255,255,0.25);
-      transform: translateX(5px);
-    }
-    .option.selected {
-      background: #fff;
-      color: #333;
-      transform: scale(1.05);
-      box-shadow: 0 0 15px white;
-    }
-    .option.dimmed {
-      opacity: 0.3;
-      pointer-events: none;
-      filter: grayscale(1);
-    }
-    .options.locked {
-      pointer-events: none;
-    }
-    .message-card {
-
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(20px);
-      padding: 40px;
-      border-radius: 30px;
-      border: 2px solid rgba(255,255,255,0.6);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      animation: hoverCard 4s infinite ease-in-out;
-    }
-@keyframes hoverCard {
-      0%,100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-15px)
-      }
-    }
-    .fade-in-up {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: 1s;
-    }
-    .fade-in-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    #star-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      transition: opacity 2s;
-    }
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle infinite;
-    }
-
-  </style>
+}
+</style>
 </head>
+
 <body>
 
+<!-- PARTICLES -->
+<script>
+for(let i=0;i<30;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*100+"vw";
+    p.style.animationDuration=10+Math.random()*12+"s";
+    p.style.animationDelay=Math.random()*8+"s";
+    document.body.appendChild(p);
+}
+</script>
 
-  <script>
+<div class="board-wrapper">
+    <div class="string"></div>
 
-  </script>
-  <div id="pink-bg-layer"></div>
-  <div id="star-container"></div>
-  <div id="game-area"></div>
+    <div class="board">
+        <div class="pin"></div>
 
-  <div id="toast-beautiful">
-    <div class="toast-icon" id="toast-icon">
-      ✨
+        <div class="message" id="messageText"></div>
+
+        <div class="author" id="authorText"></div>
     </div>
-    <div class="toast-content">
-      <div class="toast-title" id="toast-title">
-        Thông báo
-      </div>
-      <div style="font-weight: bold" class="toast-msg" id="toast-msg">
-        Nội dung...
-      </div>
-    </div>
-  </div>
+</div>
 
-  <div class="stage active" id="stage1">
-    <div class="intro-icon" style="top: -60px; left: 10px;">
-      🌙
-    </div>
-    <div class="intro-icon" style="top: 20px; right: -20px; animation-delay: 1s;">
-      🪐
-    </div>
-    <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-      ☄️
-    </div>
+<script>
+/* ====== CHỈNH THÔNG ĐIỆP Ở ĐÂY ====== */
+const MESSAGE = `
+Có thể sinh nhật đã trôi qua,
+và hôm nay chỉ là một ngày rất bình thường như bao ngày khác.
+Nhưng tui vẫn muốn để lại ở đây vài dòng,
+không phải vì hôm nay là ngày gì đặc biệt. 
+Nếu một ngày nào đó bạn quay lại đây lần nữa, tui muốn nhắn nhủ với bạn rằng:
+"hy vọng bạn vẫn sẽ mỉm cười":>
+`;
 
-    <h1>Hellooo! 👋</h1>
-    <p>
-      Hôm nay vũ trụ có một thông điệp nho nhỏ muốn gửi đến bạn...
-    </p>
-    <br>
-    <button class="btn" onclick="nextStage(2)">Tìm hiểu.. 🚀</button>
-  </div>
+const AUTHOR = "- Thanh Ngà was here";
 
-  <div class="stage" id="stage2">
-    <div class="question-box">
-      <h2 id="q-text" style="font-family: 'Pacifico'; margin-bottom: 20px; color: #ee0">Câu hỏi</h2>
-      <div class="options" id="q-options"></div>
-    </div>
-  </div>
+/* TYPEWRITER DISPLAY */
+const msgEl = document.getElementById("messageText");
+const authorEl = document.getElementById("authorText");
 
-  <div class="stage" id="stage3-intro">
-    <h1> Nhưng mà trước hết, cùng chơi 1 trò chơi nhé!:></h1>
-    <p>
-      Hãy tìm và chạm vào <b style="color: yellow">NGÔI SAO SÁNG NHẤT</b> để mở khóa thông điệp! 🌟
-    </p>
-    <br>
-    <button class="btn" onclick="startGame()">Bắt đầu tìm 🔭</button>
-  </div>
+let index = 0;
+function typeEffect(){
+    if(index < MESSAGE.length){
+        msgEl.textContent += MESSAGE.charAt(index);
+        index++;
+        setTimeout(typeEffect, 4);
+    }
+}
+setTimeout(typeEffect, 1200);
 
-  <div class="stage" id="stage4">
+authorEl.textContent = AUTHOR;
+</script>
 
-
-    <div class="message-card fade-in-up" style="transition-delay: 0.3s;">
-      <h1 style="color: #d63384; font-size: 2rem;margin-top: 10px">Happy 19th Birthday!><</h1>
-        <p style="font-size: 10px; line-height: 1; color: #440044;      text-align: left; font-weight: 0">
-          Chúc mừng sinh nhật Đông Anh nha🌱
-          <br>
-          <br>
-          Nhân dịp đặc biệt này, tui cũng muốn nói vài điều từ những cảm nhận của mình._.
-          <br>
-          <br>
-          Sau một khoảng thời gian rất lâu không gặp, có thể bạn ít nhiều đã thay đổi giọng nói, ngoại hình hay phong cách. Nhưng nhìn chung, tính cách thì dường như vẫn vậy — theo tui, bạn vẫn là bạn của những ngày ấy..
-          <br>
-          <br>
-          Việc bạn vẫn giữ món đồ mà tui từng tặng khiến tui thật sự rất trân quý. Ngày đó tui nhớ mình có nói: <i>“Nếu có duyên sẽ gặp lại.”</i> Không ngờ câu nói ấy lại trở thành sự thật XD Và càng bất ngờ hơn  là tụi mình thậm chí còn trở thành đồng nghiệp vào 1 ngày không xa =))
-          <br>
-          <br>
-          Chúc cô giáo tương lai bước sang tuổi mới với thật nhiều niềm vui và hạnh phúc <br>(๑•﹏•) Mong rằng bạn sẽ luôn rực rỡ,<br> tỏa sáng và thành công trên <br>con đường mà bản thân đã chọn ✨
-          <br>
-          <br>
-          Còn nữa, hãy luôn mỉm cười
-          <br>và tự tin về chính mình nhé :>
-          <br>
-          <br>
-          <div style="font-size: 10px; margin-bottom: 10px; color: gray">
-            <i> From Thanh Ngà<br> 🎂 ~ 29/01/2026</i>
-          </div>
-        </p>
-
-        <img src="da.png" class="floating-png">
-        <br>
-        <div class="final-icons-container">
-          <span class="float-item delay-1">🎉</span>
-          <span class="float-item delay-2">🎁</span>
-          <span class="float-item delay-3">🦄</span>
-          <span class="float-item delay-4">🌈</span>
-        </div>
-        <div class="intro-icon" style="top: -40px; left: 10px;">
-          🎉
-        </div>
-        <div class="intro-icon" style="top: 20px; right: -20px; animation-delay: 1s;">
-          🎁
-        </div>
-        <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-          🎊
-        </div>
-        <div class="intro-icon" style="bottom: -40px; left: 50px; animation-delay: 2s;">
-
-        </div>
-      </div>
-    </div>
-
-    <script>
-      const audio = new Audio("bd.mp3");
-      audio.loop = true;
-      audio.volume = 0.8;
-
-
-
-
-      const questions = [{
-        text: "Trước khi tiếp tục, cho tui hỏi cái nha 👀",
-        answers: [{
-          text: "Hỏi lẹ đi 😄",
-          msg: "Okii, vô vấn đề luôn nha~",
-          icon: "😄"
-        },
-          {
-            text: "Nghe là thấy có mùi rồi đó 😏",
-            msg: "Hehehehehehehe",
-            icon: "😄"
-          }]
-      },
-        {
-          text: "Bà có thấy hôm nay hơi khác mọi ngày không=))?",
-          answers: [{
-            text: "Ừ, hình như có 🤔",
-            msg: "Đúng òii, chắc hôm nay là ngày siêuu đặc biệt á=))!",
-            icon: "✨"
-          },
-            {
-              text: "Không để ý nữa 😅",
-              msg: "Vậy thì để tui nhắc cho bà nhớ nhaa:))",
-              icon: "🎂"
-            }]
-        }];
-      let currentQ = 0;
-      let isTransitioning = false;
-
-      function nextStage(num) {
-        if (isTransitioning) return;
-        isTransitioning = true;
-        const current = document.querySelector('.stage.active');
-
-        if (current) {
-          current.classList.remove('active');
-          current.classList.add('exit');
-          setTimeout(() => {
-            current.classList.remove('exit');
-            showNewStage(num);
-          }, 600);
-        } else {
-          showNewStage(num);
-        }
-      }
-
-      function showNewStage(num) {
-        const next = document.getElementById(`stage${num}`);
-        if (next) {
-          requestAnimationFrame(() => {
-            next.classList.add('active');
-            isTransitioning = false;
-            if (num === 2) loadQuestion();
-          });
-        }
-      }
-
-      // --- QUIZ LOGIC ---
-      function loadQuestion() {
-        if (currentQ >= questions.length) {
-          nextStage('3-intro'); return;
-        }
-        const q = questions[currentQ];
-        document.getElementById('q-text').innerText = q.text;
-        const optDiv = document.getElementById('q-options');
-        optDiv.innerHTML = '';
-        optDiv.classList.remove('locked');
-
-        q.answers.forEach((ans, index) => {
-          const btn = document.createElement('div');
-          btn.className = 'option';
-          btn.innerText = ans.text;
-          setTimeout(() => btn.classList.add('show'), index * 150);
-          btn.onclick = () => handleAnswer(btn, ans.msg, ans.icon, optDiv);
-          optDiv.appendChild(btn);
-        });
-      }
-
-      function handleAnswer(selectedBtn, msg, icon, container) {
-        container.classList.add('locked');
-        container.querySelectorAll('.option').forEach(btn => {
-          btn === selectedBtn ? btn.classList.add('selected'): btn.classList.add('dimmed');
-        });
-        showBeautifulToast("Thanh Ngà", msg, icon, () => {
-          currentQ++; loadQuestion();
-        });
-      }
-
-      // --- BEAUTIFUL TOAST LOGIC ---
-      function showBeautifulToast(title, msg, icon, callback, time = 4000) {
-        const t = document.getElementById('toast-beautiful');
-        document.getElementById('toast-title').innerText = title;
-        document.getElementById('toast-msg').innerText = msg;
-        document.getElementById('toast-icon').innerText = icon || "✨";
-
-        t.className = ''; // Reset class
-        requestAnimationFrame(() => {
-          t.classList.add('show');
-        });
-
-        // Hiện 5s -> Bay lên
-        setTimeout(() => {
-          t.classList.remove('show');
-          t.classList.add('fly-out-up');
-
-          setTimeout(() => {
-            t.classList.remove('fly-out-up');
-            if (callback) callback();
-          },
-            800);
-        }, time);
-      }
-
-      // --- MINIGAME ---
-      function startGame() {
-        const intro = document.getElementById('stage3-intro');
-        intro.classList.remove('active');
-
-        const gameArea = document.getElementById('game-area');
-        gameArea.style.display = 'block';
-
-        // FAKE STARS
-        for (let i = 0; i < 40; i++) {
-          const s = document.createElement('div');
-          s.className = 'game-star';
-          let size = Math.random()*4+2;
-          s.style.width = size+'px'; s.style.height = size+'px';
-          s.style.left = Math.random()*90+5+'%'; s.style.top = Math.random()*90+5+'%';
-
-          s.onclick = (e) => {
-            // X Mark
-            const x = document.createElement('div');
-            x.className = 'wrong-mark'; x.innerHTML = '✗';
-            x.style.left = e.clientX+'px'; x.style.top = e.clientY+'px';
-            document.body.appendChild(x);
-            setTimeout(()=>x.remove(), 400);
-          };
-          gameArea.appendChild(s);
-        }
-
-        // REAL STAR (Always highlighted)
-        const real = document.createElement('div');
-        real.className = 'game-star brightest-star';
-        real.style.left = Math.random()*60+20+'%'; real.style.top = Math.random()*60+20+'%';
-
-        real.onclick = function() {
-          gameArea.style.pointerEvents = 'none';
-          this.classList.add('star-fly-out');
-
-          setTimeout(() => {
-
-            showBeautifulToast("Thanh Ngà", "Sai òii! 😲 Ngôi sao sáng nhất hôm nay không phải là nó đâu, mà chính là bạn đó ^^! 🫵", "🌟", () => {
-              endGame()}, 7000)
-
-          },
-            1000);
-        };
-        gameArea.appendChild(real);
-      }
-
-
-      const icons = ["🎉", "🎂", "🎈", "🎁", "✨", "🥳", "🍰", "🎊"];
-      const maxIcons = 50;
-      let iconCount = 0;
-
-      function createFloatingIcon() {
-        if (iconCount >= maxIcons) return;
-
-        const icon = document.createElement("span");
-        icon.innerText = icons[Math.floor(Math.random() * icons.length)];
-
-        const size = Math.random() * 24 + 18;
-        const startX = Math.random() * window.innerWidth;
-        const duration = Math.random() * 3 + 4;
-
-        icon.style.position = "fixed";
-        icon.style.left = startX + "px";
-        icon.style.bottom = "-40px";
-        icon.style.fontSize = size + "px";
-        icon.style.opacity = "0.9";
-        icon.style.pointerEvents = "none";
-        icon.style.zIndex = "99";
-        icon.style.transition = `transform ${duration}s linear, opacity ${duration}s linear`;
-
-        document.body.appendChild(icon);
-        iconCount++;
-
-        requestAnimationFrame(() => {
-          icon.style.transform = `
-          translateY(-${window.innerHeight + 100}px)
-          rotate(${Math.random() * 360}deg)
-          `;
-          icon.style.opacity = "0";
-        });
-
-        setTimeout(() => {
-          icon.remove();
-          iconCount--;
-        }, duration * 1000);
-      }
-
-      // --- END GAME ---
-      function endGame() {
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('pink-bg-layer').classList.add('visible');
-        document.getElementById('star-container').style.opacity = 0;
-        audio.play();
-        nextStage(4);
-        setInterval(createFloatingIcon, 350);
-        setTimeout(() => {
-          document.querySelectorAll('#stage4 .fade-in-up').forEach((el, idx) => {
-            setTimeout(() => el.classList.add('visible'), idx * 500);
-
-          }, 800)
-          fireConfetti();
-        })
-      }
-      function createBgStars() {
-        const c = document.getElementById('star-container');
-        for (let i = 0; i < 60; i++) {
-          const s = document.createElement('div');
-          s.className = 'star';
-          s.style.width = Math.random()*3+'px'; s.style.height = s.style.width;
-          s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
-          s.style.animationDuration = Math.random()*3+2+'s';
-          c.appendChild(s);
-        }
-      }
-      createBgStars();
-
-      function fireConfetti() {
-        const colors = ['#ff7675',
-          '#74b9ff',
-          '#55efc4',
-          '#ffeaa7',
-          '#a29bfe'];
-        for (let i = 0; i < 150; i++) {
-          const c = document.createElement('div');
-          c.style.position = 'absolute'; c.style.width = Math.random()*8+5+'px'; c.style.height = c.style.width;
-          c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-          c.style.top = '50%'; c.style.left = '50%'; c.style.borderRadius = '50%'; c.style.zIndex = '200';
-          document.body.appendChild(c);
-          const x = (Math.random()-0.5)*window.innerWidth*1.2;
-          const y = (Math.random()-0.5)*window.innerHeight*1.2;
-          c.animate([{
-            transform: 'translate(0,0)', opacity: 1
-          }, {
-            transform: `translate(${x}px,${y}px)`, opacity: 0
-          }], {
-            duration: 2500, fill: 'forwards'
-          });
-          setTimeout(()=>c.remove(), 2500);
-        }
-      }
-
-    </script>
-  </body>
+</body>
 </html>
