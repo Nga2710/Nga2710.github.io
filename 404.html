@@ -1,41 +1,73 @@
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="theme-color" content="#262626">
-  <link rel="stylesheet" href="https://nga2710.github.io/assets/css/defaults.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lỗi 404 | BDev-Book</title>
-  <meta property="og:title" content="Lỗi 404 | BDev-Book">
-  <meta name="twitter:title" content="Lỗi 404 | BDev-Book">
-  <meta name="description" content="Không tìm thấy trang">
-  <meta property="og:description" content="Không tìm thấy trang">
-  <meta name="twitter:description" content="Không tìm thấy trang">
-  <meta property="og:image" content="https://nga2710.github.io/assets/media/icon_error.png">
-  <meta name="twitter:image" content="https://nga2710.github.io/assets/media/icon_error.png">
-  <meta property="og:url" content="https://nga2710.github.io/404.html">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="720">
-  <meta property="og:site_name" content="BDev-Book">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="https://nga2710.github.io/assets/css/defaults.css/assets/media/ui/book_close.png" type="image/x-icon">
-  <script src="https://nga2710.github.io/assets/js/defaults.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Not Found</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+body{
+    height:100vh;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#333;
+}
+.container{
+    text-align:center;
+}
+h1{
+    font-size:120px;
+    font-weight:700;
+    color:#222;
+    animation:show .8s ease;
+}
+h2{
+    font-size:28px;
+    margin-bottom:15px;
+}
+p{
+    color:#777;
+    font-size:16px;
+    margin-bottom:30px;
+}
+a{
+    text-decoration:none;
+    color:white;
+    background:#222;
+    padding:12px 25px;
+    border-radius:8px;
+    transition:.3s;
+}
+a:hover{
+    background:#555;
+}
+@keyframes show{
+    from{
+        opacity:0;
+        transform:translateY(-30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
 </head>
 <body>
-  <div id="script"></div>
-  <header id="header"></header>
-  <div id="sidebar"></div>
-  <div class="box">
-    <img class="icon_error icond">
-    <div class="yellow h">
-      Lỗi 404
-    </div>
-    <div class="p ar" style="font-size: 20px;">
-      Opps! Có gì đó sai sai, hãy <a href="nga2710.github.io">thử lại</a>!
-    </div>
-    <br>
-  </div>
+
+<div class="container">
+    <h1>404</h1>
+    <h2>Page Not Found</h2>
+    <p>Xin lỗi, trang bạn đang tìm kiếm không tồn tại.</p>
+    <a href="/">Về trang chủ</a>
 </div>
-<footer id="footer"></footer>
+
 </body>
 </html>
