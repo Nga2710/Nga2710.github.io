@@ -1,0 +1,4626 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mô phỏng thanh trên hai con lăn – Dao động điều hòa</title>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'local',
+                useXlink: false
+            }
+        };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #080d18;
+            color: #e5e7eb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px 26px;
+            background: #101827;
+            border-bottom: 1px solid #26344a;
+        }
+
+        header h1 {
+            margin: 0 0 7px;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: auto;
+            padding: 18px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .left-column,
+        .right-column {
+            min-width: 0;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #26344a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 18px;
+        }
+
+        .card h2,
+        .card h3 {
+            margin-top: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 9px;
+            background: #080d18;
+        }
+
+        #scene {
+            height: 650px;
+        }
+
+        #graph {
+            height: 440px;
+        }
+
+        .control {
+            margin-bottom: 18px;
+        }
+
+        .control label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .value {
+            color: #67e8f9;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 9px 13px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #playButton {
+            background: #22c55e;
+            color: #052e16;
+        }
+
+        #resetButton {
+            background: #3b82f6;
+            color: white;
+        }
+
+        #vectorButton {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        #gridButton {
+            background: #475569;
+            color: white;
+        }
+
+        button:hover {
+            filter: brightness(1.12);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+
+        .result {
+            padding: 9px;
+            background: #0b1220;
+            border-radius: 7px;
+        }
+
+        .result small {
+            display: block;
+            color: #94a3b8;
+            margin-bottom: 3px;
+        }
+
+        .result strong {
+            color: #f8fafc;
+            font-size: 14px;
+        }
+
+        .equation {
+            background: #0b1220;
+            border-left: 4px solid #38bdf8;
+            padding: 13px;
+            line-height: 2;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .equation .eq-title {
+            color: #67e8f9;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .solution {
+            background: #0b1220;
+            border: 1px solid #26344a;
+            border-radius: 10px;
+            padding: 20px;
+            line-height: 1.75;
+        }
+
+        .solution h2 {
+            color: #67e8f9;
+        }
+
+        .solution h3 {
+            color: #facc15;
+            margin-top: 24px;
+        }
+
+        .solution .step {
+            margin: 12px 0;
+        }
+
+        .result-final {
+            padding: 12px 15px;
+            margin: 12px 0;
+            background: #071b13;
+            border-left: 4px solid #22c55e;
+            border-radius: 5px;
+        }
+
+        .check {
+            margin-top: 12px;
+            padding: 11px;
+            background: #071b13;
+            border: 1px solid #166534;
+            border-radius: 7px;
+            color: #86efac;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .warning {
+            display: none;
+            margin-bottom: 15px;
+            padding: 11px;
+            background: #3b170b;
+            border: 1px solid #c2410c;
+            color: #fdba74;
+            border-radius: 7px;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            padding-top: 10px;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .note {
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .physics-note {
+            background: #0b1220;
+            border: 1px solid #26344a;
+            border-radius: 8px;
+            padding: 10px;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.55;
+            margin-top: 12px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #26344a;
+            margin: 17px 0;
+        }
+
+        @media(max-width: 950px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            #scene {
+                height: 560px;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 19px;
+            }
+
+            #scene {
+                height: 510px;
+            }
+
+            #graph {
+                height: 470px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        ⚙️ Mô phỏng thanh trên hai con lăn quay ngược chiều
+    </h1>
+
+    <p>
+        Thanh đồng tính dài \(2L\), khối tâm dao động quanh vị trí cân bằng.
+        Khối lượng \(m\) làm thay đổi độ lớn các lực nhưng triệt tiêu khỏi
+        phương trình dao động.
+    </p>
+
+</header>
+
+<div class="container">
+
+    <div class="main-layout">
+
+        <div class="left-column">
+
+            <div class="card">
+
+                <canvas id="scene"></canvas>
+
+                <div class="legend">
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#ff4d6d"></span>
+                        <span>\(mg\)</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#4ade80"></span>
+                        <span>\(N_A,N_B\)</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#c084fc"></span>
+                        <span>\(f_A,f_B\)</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#facc15"></span>
+                        <span>\(F_x=ma\)</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#38bdf8"></span>
+                        <span>\(x\)</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot" style="background:#f97316"></span>
+                        <span>\(L\)</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h3>📈 Đồ thị dao động</h3>
+
+                <canvas id="graph"></canvas>
+
+            </div>
+
+        </div>
+
+        <div class="right-column">
+
+            <div class="card">
+
+                <h3>⚙️ Thông số mô phỏng</h3>
+
+                <div id="warning" class="warning"></div>
+
+                <!-- KHỐI LƯỢNG -->
+
+                <div class="control">
+
+                    <label>
+                        <span>Khối lượng \(m\)</span>
+                        <span id="mValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="mSlider"
+                        type="range"
+                        min="0.1"
+                        max="10"
+                        step="0.1"
+                        value="3"
+                    >
+
+                </div>
+
+                <!-- NỬA CHIỀU DÀI VẬT LÝ L -->
+
+                <div class="control">
+
+                    <label>
+                        <span>Khoảng cách từ tâm đến bánh \(L\)</span>
+                        <span id="LValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="LSlider"
+                        type="range"
+                        min="0.010"
+                        max="0.100"
+                        step="0.001"
+                        value="0.020"
+                    >
+
+                </div>
+
+                <div class="control">
+
+                    <label>
+                        <span>Hệ số ma sát \(\mu_k\)</span>
+                        <span id="muValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="muSlider"
+                        type="range"
+                        min="0.05"
+                        max="1.00"
+                        step="0.01"
+                        value="0.40"
+                    >
+
+                </div>
+
+                <div class="control">
+
+                    <label>
+                        <span>Biên độ \(A\)</span>
+                        <span id="AValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="ASlider"
+                        type="range"
+                        min="0.001"
+                        max="0.019"
+                        step="0.0001"
+                        value="0.005"
+                    >
+
+                </div>
+
+                <div class="control">
+
+                    <label>
+                        <span>Gia tốc trọng trường \(g\)</span>
+                        <span id="gValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="gSlider"
+                        type="range"
+                        min="1"
+                        max="20"
+                        step="0.1"
+                        value="9.8"
+                    >
+
+                </div>
+
+                <div class="control">
+
+                    <label>
+                        <span>Tốc độ mô phỏng</span>
+                        <span id="speedValue" class="value"></span>
+                    </label>
+
+                    <input
+                        id="speedSlider"
+                        type="range"
+                        min="0.1"
+                        max="3"
+                        step="0.1"
+                        value="0.1"
+                    >
+
+                </div>
+
+                <hr>
+
+                <div class="buttons">
+
+                    <button id="playButton">
+                        ⏸ Tạm dừng
+                    </button>
+
+                    <button id="resetButton">
+                        ↻ Reset
+                    </button>
+
+                    <button id="vectorButton">
+                        Ẩn vector
+                    </button>
+
+                    <button id="gridButton">
+                        Ẩn lưới
+                    </button>
+
+                </div>
+
+  
+
+                <h3>📐 Đại lượng dao động</h3>
+
+                <div class="results">
+
+                    <div class="result">
+                        <small>\(\omega\)</small>
+                        <strong id="omegaValue">—</strong>
+                    </div>
+
+                    <div class="result">
+                        <small>\(T\)</small>
+                        <strong id="periodValue">—</strong>
+                    </div>
+
+                    <div class="result">
+                        <small>\(t\)</small>
+                        <strong id="timeValue">—</strong>
+                    </div>
+
+                    <div class="result">
+                        <small>\(x\)</small>
+                        <strong id="xValue">—</strong>
+                    </div>
+
+                    <div class="result">
+                        <small>\(v\)</small>
+                        <strong id="vValue">—</strong>
+                    </div>
+
+                    <div class="result">
+                        <small>\(a\)</small>
+                        <strong id="aValue">—</strong>
+                    </div>
+
+                </div>
+
+                <div class="check">
+
+                    <b>✓ Kiểm tra phương trình động lực học</b>
+
+                    <br><br>
+
+                    Theo phương ngang:
+
+                    \[
+                    F_x=f_A+f_B=ma
+                    \]
+
+                    Sai số:
+
+                    <span id="checkValue">0</span> N
+
+                    <hr>
+
+                    Theo phương thẳng đứng:
+
+                    \[
+                    N_A+N_B=mg
+                    \]
+
+                    Sai số:
+
+                    <span id="normalCheck">0</span> N
+
+                </div>
+              <div class="physics-note">
+
+                    <b>Về khối lượng \(m\):</b>
+
+                    <br><br>
+
+                    Trong mô hình:
+
+                    \[
+                    ma=
+                    -\frac{\mu_kmg}{L}x
+                    \]
+
+                    nên \(m\) triệt tiêu:
+
+                    \[
+                    a=
+                    -\frac{\mu_kg}{L}x
+                    \]
+
+                    Vì vậy thay đổi \(m\) không làm thay đổi
+                    \(\omega\), \(T\), \(v(t)\) hay \(a(t)\).
+
+                    <br><br>
+
+                    Tuy nhiên \(m\) làm thay đổi độ lớn thực của
+                    \(mg,N_A,N_B,f_A,f_B,F_x\), nên các vector
+                    lực trên hình sẽ dài ngắn theo \(m\).
+
+                </div>
+
+                <hr>
+                <div class="equation">
+
+                    <div class="eq-title">
+                        Mô hình vật lý
+                    </div>
+
+                    \[
+                    N_A=
+                    \frac{mg}{2}
+                    \left(
+                    1-\frac{x}{L}
+                    \right)
+                    \]
+
+                    \[
+                    N_B=
+                    \frac{mg}{2}
+                    \left(
+                    1+\frac{x}{L}
+                    \right)
+                    \]
+
+                    \[
+                    N_A+N_B=mg
+                    \]
+
+                    \[
+                    f_A=\mu_kN_A
+                    \]
+
+                    \[
+                    f_B=-\mu_kN_B
+                    \]
+
+                    \[
+                    F_x=f_A+f_B
+                    \]
+
+                    \[
+                    F_x=
+                    -\frac{\mu_kmg}{L}x
+                    \]
+
+                    \[
+                    ma=
+                    -\frac{\mu_kmg}{L}x
+                    \]
+
+                    \[
+                    \boxed{
+                    a=
+                    -\frac{\mu_kg}{L}x
+                    }
+                    \]
+
+                    \[
+                    a=-\omega^2x
+                    \]
+
+                    \[
+                    \boxed{
+                    \omega=
+                    \sqrt{
+                    \frac{\mu_kg}{L}
+                    }
+                    }
+                    \]
+
+                    \[
+                    \boxed{
+                    T=
+                    2\pi
+                    \sqrt{
+                    \frac{L}{\mu_kg}
+                    }
+                    }
+                    \]
+
+                </div>
+
+                <p class="note">
+
+                    <strong>Điều kiện tiếp xúc:</strong>
+
+                    \[
+                    |x|_{\max}=A<L
+                    \]
+
+                    Vì vậy biên độ luôn được giới hạn để
+                    \(A<L\).
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="solution">
+
+            <h2>📚 Bản chất vật lý của mô hình</h2>
+
+            <p>
+                Xét thanh đồng tính dài \(2L\), đặt trên hai con lăn
+                cố định tại \(A,B\). Hai con lăn quay ngược chiều nhau.
+                Chọn \(O\) là vị trí cân bằng và \(x\) là li độ của
+                khối tâm.
+            </p>
+
+            <h3>1. Phản lực</h3>
+
+            <p>
+                Thanh không có gia tốc theo phương thẳng đứng:
+            </p>
+
+            \[
+            N_A+N_B=mg
+            \]
+
+            Lấy mômen đối với \(A\):
+
+            \[
+            N_B(2L)=mg(L+x)
+            \]
+
+            nên:
+
+            \[
+            \boxed{
+            N_B=
+            \frac{mg}{2}
+            \left(
+            1+\frac{x}{L}
+            \right)
+            }
+            \]
+
+            và:
+
+            \[
+            \boxed{
+            N_A=
+            \frac{mg}{2}
+            \left(
+            1-\frac{x}{L}
+            \right)
+            }
+            \]
+
+            <h3>2. Ma sát</h3>
+
+            <p>
+                Do hai con lăn quay ngược chiều, lực ma sát tác dụng
+                lên thanh tại \(A\) hướng sang phải và tại \(B\)
+                hướng sang trái.
+            </p>
+
+            \[
+            f_A=\mu_kN_A
+            \]
+
+            \[
+            f_B=-\mu_kN_B
+            \]
+
+            <h3>3. Hợp lực ngang</h3>
+
+            \[
+            F_x=f_A+f_B
+            \]
+
+            \[
+            F_x=
+            \mu_kN_A-\mu_kN_B
+            \]
+
+            \[
+            =
+            \mu_k(N_A-N_B)
+            \]
+
+            \[
+            \boxed{
+            F_x=
+            -\frac{\mu_kmg}{L}x
+            }
+            \]
+
+            Đây là lực kéo thanh trở về vị trí cân bằng.
+
+            <h3>4. Ảnh hưởng của khối lượng</h3>
+
+            Theo Newton:
+
+            \[
+            F_x=ma
+            \]
+
+            nên:
+
+            \[
+            ma=
+            -\frac{\mu_kmg}{L}x
+            \]
+
+            Chia cả hai vế cho \(m\):
+
+            \[
+            \boxed{
+            a=
+            -\frac{\mu_kg}{L}x
+            }
+            \]
+
+            Do đó \(m\) không ảnh hưởng đến dao động.
+
+            Tuy nhiên, các lực vật lý vẫn tỉ lệ với \(m\):
+
+            \[
+            mg\propto m
+            \]
+
+            \[
+            N_A,N_B\propto m
+            \]
+
+            \[
+            f_A,f_B\propto m
+            \]
+
+            \[
+            F_x\propto m
+            \]
+
+            Vì vậy trên hình, khi tăng \(m\), các vector lực
+            được vẽ dài hơn.
+
+            <h3>5. Dao động điều hòa</h3>
+
+            So sánh:
+
+            \[
+            a=-\omega^2x
+            \]
+
+            với:
+
+            \[
+            a=
+            -\frac{\mu_kg}{L}x
+            \]
+
+            ta được:
+
+            \[
+            \boxed{
+            \omega=
+            \sqrt{
+            \frac{\mu_kg}{L}
+            }
+            }
+            \]
+
+            và:
+
+            \[
+            \boxed{
+            T=
+            2\pi
+            \sqrt{
+            \frac{L}{\mu_kg}
+            }
+            }
+            \]
+
+            <h3>6. Phương trình dao động</h3>
+
+            Nếu tại \(t=0\), thanh ở biên dương:
+
+            \[
+            x(0)=A
+            \]
+
+            thì:
+
+            \[
+            \boxed{
+            x(t)=A\cos(\omega t)
+            }
+            \]
+
+            \[
+            \boxed{
+            v(t)=
+            -A\omega\sin(\omega t)
+            }
+            \]
+
+            \[
+            \boxed{
+            a(t)=
+            -A\omega^2\cos(\omega t)
+            }
+            \]
+
+            <h3>7. Quan hệ giữa các vector lực</h3>
+
+            Tất cả các lực được quy đổi bằng cùng một hệ số
+            chiều dài trên đơn vị Newton.
+
+            Vì vậy nếu:
+
+            \[
+            F_1=2F_2
+            \]
+
+            thì vector \(F_1\) trên hình cũng dài gấp đôi
+            vector \(F_2\).
+
+            Đặc biệt:
+
+            \[
+            |f_A|=\mu_kN_A
+            \]
+
+            \[
+            |f_B|=\mu_kN_B
+            \]
+
+            nên:
+
+            \[
+            \frac{|f_A|}{|f_B|}
+            =
+            \frac{N_A}{N_B}
+            \]
+
+            Đồng thời:
+
+            \[
+            F_x=f_A+f_B
+            \]
+
+            là tổng vector chứ không phải tổng độ lớn.
+
+            Vì vậy khi \(x>0\):
+
+            \[
+            N_B>N_A
+            \]
+
+            nên:
+
+            \[
+            |f_B|>|f_A|
+            \]
+
+            và hợp lực hướng sang trái.
+
+            Khi \(x<0\), điều ngược lại xảy ra.
+
+            <h3>8. Điều kiện tiếp xúc</h3>
+
+            Ta có:
+
+            \[
+            N_A=
+            \frac{mg}{2}
+            \left(
+            1-\frac{x}{L}
+            \right)
+            \]
+
+            \[
+            N_B=
+            \frac{mg}{2}
+            \left(
+            1+\frac{x}{L}
+            \right)
+            \]
+
+            Để cả hai phản lực không âm:
+
+            \[
+            |x|\le L
+            \]
+
+            Với biên độ:
+
+            \[
+            \boxed{A<L}
+            \]
+
+            <div class="result-final">
+
+                <strong>🎯 Kết luận</strong>
+
+                \[
+                \boxed{
+                a=
+                -\frac{\mu_kg}{L}x
+                }
+                \]
+
+                \[
+                \boxed{
+                \omega=
+                \sqrt{
+                \frac{\mu_kg}{L}
+                }
+                }
+                \]
+
+                \[
+                \boxed{
+                T=
+                2\pi
+                \sqrt{
+                \frac{L}{\mu_kg}
+                }
+                }
+                \]
+
+                \[
+                \boxed{
+                x(t)=A\cos(\omega t)
+                }
+                \]
+
+                <p>
+                    Khối lượng \(m\) không ảnh hưởng đến
+                    \(a,\omega,T\), nhưng ảnh hưởng trực tiếp
+                    đến độ lớn của tất cả các lực.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const scene =
+    document.getElementById("scene");
+
+const ctx =
+    scene.getContext("2d");
+
+const graph =
+    document.getElementById("graph");
+
+const gx =
+    graph.getContext("2d");
+
+
+/* =========================================================
+   PARAMETERS
+========================================================= */
+
+let m = 3.0;
+
+let L = 0.020;
+
+let mu = 0.40;
+
+let A = 0.005;
+
+let g = 9.8;
+
+let speed = 0.1;
+
+let time = 0;
+
+let running = true;
+
+let showVectors = true;
+
+let showGrid = true;
+
+
+/*
+    Scale chuẩn:
+
+    m = 1 kg
+    g = 9.8 m/s²
+
+    thì mg có độ dài khoảng 100 px.
+
+    Khi tăng m, vector lực tăng
+    tuyến tính theo m.
+*/
+
+const forcePixelsPerNewton =
+    100 / 9.8;
+
+
+let lastTime =
+    performance.now();
+
+let history = [];
+
+
+/* =========================================================
+   LATEX CACHE
+========================================================= */
+
+const latexCache =
+    new Map();
+
+
+function getLatexImage(
+    latex,
+    color = "#ffffff"
+) {
+
+    const key =
+        latex + "|" + color;
+
+    if (
+        latexCache.has(key)
+    ) {
+        return latexCache.get(key);
+    }
+
+    const item = {
+        img: new Image(),
+        ready: false,
+        loading: true
+    };
+
+    latexCache.set(
+        key,
+        item
+    );
+
+
+    Promise.resolve()
+        .then(async () => {
+
+            if (
+                !window.MathJax ||
+                !MathJax.tex2svgPromise
+            ) {
+                throw new Error(
+                    "MathJax chưa sẵn sàng"
+                );
+            }
+
+
+            const wrapper =
+                await MathJax.tex2svgPromise(
+                    latex,
+                    {
+                        display: false
+                    }
+                );
+
+
+            const svg =
+                wrapper.querySelector("svg");
+
+
+            if (!svg) {
+                throw new Error(
+                    "Không tạo được SVG LaTeX"
+                );
+            }
+
+
+            let svgString =
+                new XMLSerializer()
+                    .serializeToString(svg);
+
+
+            svgString =
+                svgString.replace(
+                    /currentColor/g,
+                    color
+                );
+
+
+            if (
+                !svgString.includes(
+                    'xmlns="http://www.w3.org/2000/svg"'
+                )
+            ) {
+
+                svgString =
+                    svgString.replace(
+                        "<svg",
+                        '<svg xmlns="http://www.w3.org/2000/svg"'
+                    );
+            }
+
+
+            const dataUri =
+                "data:image/svg+xml;charset=utf-8," +
+                encodeURIComponent(
+                    svgString
+                );
+
+
+            item.img.onload =
+                () => {
+
+                    item.ready = true;
+                    item.loading = false;
+
+                    drawScene();
+                };
+
+
+            item.img.onerror =
+                () => {
+
+                    item.ready = false;
+                    item.loading = false;
+
+                    console.warn(
+                        "Không tải được SVG:",
+                        latex
+                    );
+                };
+
+
+            item.img.src =
+                dataUri;
+
+        })
+        .catch(error => {
+
+            item.loading = false;
+
+            console.warn(
+                "MathJax canvas error:",
+                latex,
+                error
+            );
+        });
+
+
+    return item;
+}
+
+
+function drawLatex(
+    latex,
+    x,
+    y,
+    color = "#ffffff",
+    scale = 1
+) {
+
+    const item =
+        getLatexImage(
+            latex,
+            color
+        );
+
+
+    if (
+        !item ||
+        !item.ready ||
+        !item.img.complete ||
+        item.img.naturalWidth === 0
+    ) {
+        return;
+    }
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.scale(
+        scale,
+        scale
+    );
+
+
+    ctx.drawImage(
+        item.img,
+        -item.img.width / 2,
+        -item.img.height / 2
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+function trimNumber(
+    value,
+    decimals = 4
+) {
+
+    return Number(
+        Number(value).toFixed(decimals)
+    ).toString();
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+function resizeCanvas() {
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    const sceneW =
+        scene.clientWidth;
+
+    const sceneH =
+        scene.clientHeight;
+
+
+    scene.width =
+        Math.max(
+            1,
+            Math.floor(sceneW * dpr)
+        );
+
+    scene.height =
+        Math.max(
+            1,
+            Math.floor(sceneH * dpr)
+        );
+
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    const graphW =
+        graph.clientWidth;
+
+    const graphH =
+        graph.clientHeight;
+
+
+    graph.width =
+        Math.max(
+            1,
+            Math.floor(graphW * dpr)
+        );
+
+    graph.height =
+        Math.max(
+            1,
+            Math.floor(graphH * dpr)
+        );
+
+
+    gx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =========================================================
+   PHYSICS
+========================================================= */
+
+function omega() {
+
+    return Math.sqrt(
+        mu * g / L
+    );
+}
+
+
+function period() {
+
+    return (
+        2 *
+        Math.PI /
+        omega()
+    );
+}
+
+
+function xOf(t) {
+
+    return A *
+        Math.cos(
+            omega() * t
+        );
+}
+
+
+function vOf(t) {
+
+    return -
+        A *
+        omega() *
+        Math.sin(
+            omega() * t
+        );
+}
+
+
+function aOf(t) {
+
+    return -
+        omega() *
+        omega() *
+        xOf(t);
+}
+
+
+/* =========================================================
+   PHYSICS STATE
+========================================================= */
+
+function calculatePhysics(t) {
+
+    const x =
+        xOf(t);
+
+    const v =
+        vOf(t);
+
+    const a =
+        aOf(t);
+
+
+    const NA =
+        m *
+        g /
+        2 *
+        (
+            1 -
+            x / L
+        );
+
+
+    const NB =
+        m *
+        g /
+        2 *
+        (
+            1 +
+            x / L
+        );
+
+
+    const fA =
+        mu * NA;
+
+
+    const fB =
+        -mu * NB;
+
+
+    const F =
+        fA + fB;
+
+
+    const ma =
+        m * a;
+
+
+    return {
+
+        x,
+        v,
+        a,
+
+        NA,
+        NB,
+
+        fA,
+        fB,
+
+        F,
+        ma,
+
+        errorNewton:
+            F - ma,
+
+        errorNormal:
+            NA +
+            NB -
+            m * g
+    };
+}
+
+
+/* =========================================================
+   SLIDERS
+========================================================= */
+
+const mSlider =
+    document.getElementById(
+        "mSlider"
+    );
+
+const LSlider =
+    document.getElementById(
+        "LSlider"
+    );
+
+const muSlider =
+    document.getElementById(
+        "muSlider"
+    );
+
+const ASlider =
+    document.getElementById(
+        "ASlider"
+    );
+
+const gSlider =
+    document.getElementById(
+        "gSlider"
+    );
+
+const speedSlider =
+    document.getElementById(
+        "speedSlider"
+    );
+
+
+/* =========================================================
+   KEEP A < L
+========================================================= */
+
+function enforceAmplitudeLimit() {
+
+    const maxA =
+        Math.max(
+            0.001,
+            L * 0.95
+        );
+
+
+    ASlider.max =
+        maxA.toFixed(4);
+
+
+    if (
+        A >= maxA
+    ) {
+
+        A =
+            maxA;
+
+        ASlider.value =
+            maxA.toFixed(4);
+    }
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateParameterUI() {
+
+    m =
+        Number(
+            mSlider.value
+        );
+
+    L =
+        Number(
+            LSlider.value
+        );
+
+    mu =
+        Number(
+            muSlider.value
+        );
+
+    g =
+        Number(
+            gSlider.value
+        );
+
+    speed =
+        Number(
+            speedSlider.value
+        );
+
+
+    enforceAmplitudeLimit();
+
+
+    A =
+        Number(
+            ASlider.value
+        );
+
+
+    document.getElementById(
+        "mValue"
+    ).textContent =
+        trimNumber(
+            m,
+            1
+        ) +
+        " kg";
+
+
+    document.getElementById(
+        "LValue"
+    ).textContent =
+        trimNumber(
+            L * 100,
+            2
+        ) +
+        " cm";
+
+
+    document.getElementById(
+        "muValue"
+    ).textContent =
+        trimNumber(
+            mu,
+            2
+        );
+
+
+    document.getElementById(
+        "AValue"
+    ).textContent =
+        trimNumber(
+            A * 100,
+            3
+        ) +
+        " cm";
+
+
+    document.getElementById(
+        "gValue"
+    ).textContent =
+        trimNumber(
+            g,
+            2
+        ) +
+        " m/s²";
+
+
+    document.getElementById(
+        "speedValue"
+    ).textContent =
+        trimNumber(
+            speed,
+            1
+        ) +
+        "×";
+
+
+    updateWarning();
+}
+
+
+/* =========================================================
+   WARNING
+========================================================= */
+
+function updateWarning() {
+
+    const warning =
+        document.getElementById(
+            "warning"
+        );
+
+
+    if (A >= L) {
+
+        warning.style.display =
+            "block";
+
+
+        warning.innerHTML = `
+            <b>⚠ Biên độ không hợp lệ.</b>
+            <br><br>
+            Cần có \\(A<L\\) để cả hai điểm tiếp xúc
+            vẫn duy trì phản lực dương trong toàn bộ dao động.
+        `;
+
+
+        if (
+            window.MathJax &&
+            MathJax.typesetPromise
+        ) {
+
+            MathJax.typesetPromise(
+                [warning]
+            ).catch(() => {});
+        }
+
+    } else {
+
+        warning.style.display =
+            "none";
+    }
+}
+
+
+/* =========================================================
+   SLIDER EVENTS
+========================================================= */
+
+[
+    mSlider,
+    LSlider,
+    muSlider,
+    ASlider,
+    gSlider,
+    speedSlider
+
+].forEach(
+    slider => {
+
+        slider.addEventListener(
+            "input",
+            () => {
+
+                history = [];
+
+                updateParameterUI();
+
+                drawScene();
+                drawGraph();
+                updateResults();
+            }
+        );
+    }
+);
+
+
+/* =========================================================
+   COORDINATE SYSTEM
+========================================================= */
+
+function createCoordinateSystem(
+    W,
+    H
+) {
+
+    const O =
+        W / 2;
+
+
+    const axisY =
+        250;
+
+
+    const physicalHalfWidth =
+        Math.max(
+            L * 2.4,
+            A * 4,
+            0.04
+        );
+
+
+    const usableWidth =
+        W * 0.42;
+
+
+    const scale =
+        usableWidth /
+        physicalHalfWidth;
+
+
+    return {
+        O,
+        axisY,
+        scale,
+        physicalHalfWidth
+    };
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+function drawArrow(
+    x1,
+    y1,
+    x2,
+    y2,
+    color,
+    width = 4,
+    head = 10
+) {
+
+    const dx =
+        x2 - x1;
+
+    const dy =
+        y2 - y1;
+
+
+    const len =
+        Math.hypot(
+            dx,
+            dy
+        );
+
+
+    if (
+        len < 0.01
+    ) {
+        return;
+    }
+
+
+    const angle =
+        Math.atan2(
+            dy,
+            dx
+        );
+
+
+    ctx.save();
+
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.fillStyle =
+        color;
+
+    ctx.lineWidth =
+        width;
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x1,
+        y1
+    );
+
+    ctx.lineTo(
+        x2,
+        y2
+    );
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x2,
+        y2
+    );
+
+    ctx.lineTo(
+        x2 -
+        head *
+        Math.cos(
+            angle -
+            Math.PI / 6
+        ),
+
+        y2 -
+        head *
+        Math.sin(
+            angle -
+            Math.PI / 6
+        )
+    );
+
+    ctx.lineTo(
+        x2 -
+        head *
+        Math.cos(
+            angle +
+            Math.PI / 6
+        ),
+
+        y2 -
+        head *
+        Math.sin(
+            angle +
+            Math.PI / 6
+        )
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+function drawText(
+    text,
+    x,
+    y,
+    color,
+    size = 13,
+    align = "center"
+) {
+
+    ctx.save();
+
+
+    ctx.fillStyle =
+        color;
+
+    ctx.font =
+        "bold " +
+        size +
+        "px Arial";
+
+    ctx.textAlign =
+        align;
+
+    ctx.textBaseline =
+        "middle";
+
+
+    ctx.fillText(
+        text,
+        x,
+        y
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+function drawGrid(
+    W,
+    H,
+    sys
+) {
+
+    if (!showGrid) {
+        return;
+    }
+
+
+    const O =
+        sys.O;
+
+    const axisY =
+        sys.axisY;
+
+    const scale =
+        sys.scale;
+
+
+    ctx.save();
+
+
+    ctx.strokeStyle =
+        "#162338";
+
+    ctx.lineWidth =
+        1;
+
+
+    let step =
+        Math.max(
+            A / 2,
+            L / 4
+        );
+
+
+    while (
+        step * scale < 35
+    ) {
+        step *= 2;
+    }
+
+
+    while (
+        step * scale > 85
+    ) {
+        step /= 2;
+    }
+
+
+    const stepPx =
+        step * scale;
+
+
+    const maxLeft =
+        Math.ceil(
+            O /
+            stepPx
+        );
+
+
+    const maxRight =
+        Math.ceil(
+            (W - O) /
+            stepPx
+        );
+
+
+    for (
+        let i = -maxLeft;
+        i <= maxRight;
+        i++
+    ) {
+
+        if (i === 0) {
+            continue;
+        }
+
+
+        const px =
+            O +
+            i * stepPx;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            px,
+            45
+        );
+
+        ctx.lineTo(
+            px,
+            H - 60
+        );
+
+        ctx.stroke();
+
+
+        drawText(
+            formatPosition(
+                i * step
+            ),
+            px,
+            axisY + 27,
+            "#64748b",
+            10
+        );
+    }
+
+
+    const horizontalStep =
+        45;
+
+
+    for (
+        let y =
+            axisY -
+            horizontalStep;
+
+        y > 45;
+
+        y -= horizontalStep
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            20,
+            y
+        );
+
+        ctx.lineTo(
+            W - 20,
+            y
+        );
+
+        ctx.stroke();
+    }
+
+
+    for (
+        let y =
+            axisY +
+            horizontalStep;
+
+        y < H - 60;
+
+        y += horizontalStep
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            20,
+            y
+        );
+
+        ctx.lineTo(
+            W - 20,
+            y
+        );
+
+        ctx.stroke();
+    }
+
+
+    ctx.strokeStyle =
+        "#64748b";
+
+    ctx.lineWidth =
+        1.7;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        20,
+        axisY
+    );
+
+    ctx.lineTo(
+        W - 25,
+        axisY
+    );
+
+    ctx.stroke();
+
+
+    drawArrow(
+        W - 50,
+        axisY,
+        W - 22,
+        axisY,
+        "#94a3b8",
+        2,
+        8
+    );
+
+
+    drawText(
+        "Ox",
+        W - 15,
+        axisY - 13,
+        "#94a3b8",
+        12,
+        "right"
+    );
+
+
+    ctx.strokeStyle =
+        "#f8fafc";
+
+    ctx.lineWidth =
+        1.6;
+
+    ctx.setLineDash(
+        [7, 6]
+    );
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O,
+        45
+    );
+
+    ctx.lineTo(
+        O,
+        H - 60
+    );
+
+    ctx.stroke();
+
+
+    ctx.setLineDash([]);
+
+
+    ctx.fillStyle =
+        "#facc15";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        O,
+        axisY,
+        5,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    drawLatex(
+        "O",
+        O,
+        axisY - 18,
+        "#facc15",
+        0.9
+    );
+
+
+    drawText(
+        "Vị trí cân bằng",
+        O,
+        axisY + 48,
+        "#94a3b8",
+        11
+    );
+
+
+    const Apx =
+        A * scale;
+
+
+    ctx.strokeStyle =
+        "#38bdf8";
+
+    ctx.setLineDash(
+        [4, 5]
+    );
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O - Apx,
+        axisY - 24
+    );
+
+    ctx.lineTo(
+        O - Apx,
+        axisY + 24
+    );
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O + Apx,
+        axisY - 24
+    );
+
+    ctx.lineTo(
+        O + Apx,
+        axisY + 24
+    );
+
+    ctx.stroke();
+
+
+    ctx.setLineDash([]);
+
+
+    drawLatex(
+        "-A",
+        O - Apx,
+        axisY + 38,
+        "#38bdf8",
+        0.8
+    );
+
+
+    drawLatex(
+        "+A",
+        O + Apx,
+        axisY + 38,
+        "#38bdf8",
+        0.8
+    );
+
+
+    ctx.fillStyle =
+        "#38bdf8";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        O - Apx,
+        axisY,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        O + Apx,
+        axisY,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   POSITION FORMAT
+========================================================= */
+
+function formatPosition(x) {
+
+    const cm =
+        x * 100;
+
+
+    if (
+        Math.abs(cm) >= 1
+    ) {
+
+        return (
+            trimNumber(
+                cm,
+                2
+            ) +
+            " cm"
+        );
+    }
+
+
+    return (
+        trimNumber(
+            cm * 10,
+            2
+        ) +
+        " mm"
+    );
+}
+
+
+/* =========================================================
+   WHEEL
+========================================================= */
+
+function drawWheel(
+    x,
+    y,
+    r,
+    rotation,
+    clockwise,
+    name
+) {
+
+    ctx.save();
+
+
+    ctx.fillStyle =
+        "#d99124";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        r,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.strokeStyle =
+        "#ffd166";
+
+    ctx.lineWidth =
+        2.5;
+
+    ctx.stroke();
+
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(
+        rotation
+    );
+
+
+    for (
+        let i = 0;
+        i < 10;
+        i++
+    ) {
+
+        const angle =
+            i *
+            Math.PI /
+            5;
+
+
+        ctx.save();
+
+        ctx.rotate(
+            angle
+        );
+
+
+        ctx.strokeStyle =
+            "#8b5e18";
+
+        ctx.lineWidth =
+            1.5;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            5,
+            0
+        );
+
+        ctx.lineTo(
+            r - 4,
+            0
+        );
+
+        ctx.stroke();
+
+
+        ctx.restore();
+    }
+
+
+    ctx.restore();
+
+
+    ctx.fillStyle =
+        "#374151";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    drawRotationArrow(
+        x,
+        y,
+        r + 8,
+        clockwise
+    );
+
+
+    drawLatex(
+        name,
+        x,
+        y + r + 18,
+        "#ffffff",
+        0.82
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   ROTATION ARROW
+========================================================= */
+
+function drawRotationArrow(
+    cx,
+    cy,
+    radius,
+    clockwise
+) {
+
+    const start =
+        clockwise
+            ? -Math.PI * 0.80
+            : Math.PI * 0.80;
+
+
+    const sweep =
+        clockwise
+            ? Math.PI * 1.15
+            : -Math.PI * 1.15;
+
+
+    const end =
+        start +
+        sweep;
+
+
+    const steps =
+        36;
+
+
+    ctx.save();
+
+
+    ctx.strokeStyle =
+        "#ffffff";
+
+    ctx.lineWidth =
+        2.5;
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.beginPath();
+
+
+    for (
+        let i = 0;
+        i <= steps;
+        i++
+    ) {
+
+        const t =
+            i / steps;
+
+
+        const angle =
+            start +
+            sweep * t;
+
+
+        const px =
+            cx +
+            radius *
+            Math.cos(angle);
+
+
+        const py =
+            cy +
+            radius *
+            Math.sin(angle);
+
+
+        if (i === 0) {
+
+            ctx.moveTo(
+                px,
+                py
+            );
+
+        } else {
+
+            ctx.lineTo(
+                px,
+                py
+            );
+        }
+    }
+
+
+    ctx.stroke();
+
+
+    const angle =
+        end;
+
+
+    const tangentX =
+        clockwise
+            ? -Math.sin(angle)
+            : Math.sin(angle);
+
+
+    const tangentY =
+        clockwise
+            ? Math.cos(angle)
+            : -Math.cos(angle);
+
+
+    const tipX =
+        cx +
+        radius *
+        Math.cos(angle);
+
+
+    const tipY =
+        cy +
+        radius *
+        Math.sin(angle);
+
+
+    const head =
+        8;
+
+
+    const tangentAngle =
+        Math.atan2(
+            tangentY,
+            tangentX
+        );
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        tipX,
+        tipY
+    );
+
+    ctx.lineTo(
+        tipX -
+        head *
+        Math.cos(
+            tangentAngle -
+            Math.PI / 6
+        ),
+
+        tipY -
+        head *
+        Math.sin(
+            tangentAngle -
+            Math.PI / 6
+        )
+    );
+
+    ctx.lineTo(
+        tipX -
+        head *
+        Math.cos(
+            tangentAngle +
+            Math.PI / 6
+        ),
+
+        tipY -
+        head *
+        Math.sin(
+            tangentAngle +
+            Math.PI / 6
+        )
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   FORCE SCALE
+========================================================= */
+
+function getForceScale() {
+
+    return forcePixelsPerNewton;
+}
+
+
+/* =========================================================
+   DRAW FORCES
+========================================================= */
+
+function drawForces(
+    p,
+    boardCenter,
+    boardY,
+    boardHeight,
+    wheelA,
+    wheelB,
+    contactY
+) {
+
+    const forceScale =
+        getForceScale();
+
+
+    /* =====================================================
+       MG
+    ====================================================== */
+
+    const mgLength =
+        m *
+        g *
+        forceScale;
+
+
+    const mgX =
+        boardCenter;
+
+
+    const mgY =
+        boardY +
+        boardHeight / 2;
+
+
+    drawArrow(
+        mgX,
+        mgY,
+        mgX,
+        mgY + mgLength,
+        "#ff4d6d",
+        4,
+        10
+    );
+
+
+    drawLatex(
+        "mg",
+        mgX + 23,
+        mgY +
+        mgLength -
+        20,
+        "#ff4d6d",
+        0.82
+    );
+
+
+    /* =====================================================
+       NORMAL
+    ====================================================== */
+
+    const lengthNA =
+        Math.max(
+            0,
+            p.NA *
+            forceScale
+        );
+
+
+    const lengthNB =
+        Math.max(
+            0,
+            p.NB *
+            forceScale
+        );
+
+
+    drawArrow(
+        wheelA,
+        contactY,
+        wheelA,
+        contactY -
+        lengthNA,
+        "#4ade80",
+        3.5,
+        9
+    );
+
+
+    drawArrow(
+        wheelB,
+        contactY,
+        wheelB,
+        contactY -
+        lengthNB,
+        "#4ade80",
+        3.5,
+        9
+    );
+
+
+    drawLatex(
+        "N_A",
+        wheelA - 25,
+        contactY -
+        lengthNA -
+        10,
+        "#4ade80",
+        0.76
+    );
+
+
+    drawLatex(
+        "N_B",
+        wheelB + 25,
+        contactY -
+        lengthNB -
+        10,
+        "#4ade80",
+        0.76
+    );
+
+
+    /* =====================================================
+       FRICTION
+    ====================================================== */
+
+    const lengthFA =
+        Math.abs(p.fA) *
+        forceScale;
+
+
+    const lengthFB =
+        Math.abs(p.fB) *
+        forceScale;
+
+
+    drawArrow(
+        wheelA,
+        contactY,
+        wheelA +
+        lengthFA,
+        contactY,
+        "#c084fc",
+        3.5,
+        9
+    );
+
+
+    drawArrow(
+        wheelB,
+        contactY,
+        wheelB -
+        lengthFB,
+        contactY,
+        "#c084fc",
+        3.5,
+        9
+    );
+
+
+    drawLatex(
+        "f_A",
+        wheelA +
+        lengthFA / 2,
+        contactY - 17,
+        "#c084fc",
+        0.76
+    );
+
+
+    drawLatex(
+        "f_B",
+        wheelB -
+        lengthFB / 2,
+        contactY - 17,
+        "#c084fc",
+        0.76
+    );
+
+
+    /* =====================================================
+       RESULTANT
+    ====================================================== */
+
+    const FLength =
+        Math.abs(p.F) *
+        forceScale;
+
+
+    const forceY =
+        boardY - 48;
+
+
+    if (
+        Math.abs(p.F) >
+        1e-10
+    ) {
+
+        const direction =
+            p.F > 0
+                ? 1
+                : -1;
+
+
+        drawArrow(
+            boardCenter,
+            forceY,
+            boardCenter +
+            direction *
+            FLength,
+            forceY,
+            "#facc15",
+            4,
+            10
+        );
+
+
+        drawLatex(
+            "F_x=ma",
+            boardCenter +
+            direction *
+            FLength / 2,
+            forceY - 14,
+            "#facc15",
+            0.76
+        );
+
+    } else {
+
+        drawLatex(
+            "F_x=0",
+            boardCenter,
+            forceY,
+            "#facc15",
+            0.76
+        );
+    }
+}
+
+
+/* =========================================================
+   DRAW L DIMENSION
+========================================================= */
+
+function drawLDimensions(
+    O,
+    wheelA,
+    wheelB,
+    contactY
+) {
+
+    /*
+        Đường kích thước L được đưa lên phía trên thanh.
+        A -> O và O -> B đều có chiều dài đúng bằng L.
+    */
+
+    const dimensionY =
+        contactY - 62;
+
+
+    const tickHeight =
+        8;
+
+
+    ctx.save();
+
+
+    ctx.strokeStyle =
+        "#f97316";
+
+    ctx.fillStyle =
+        "#f97316";
+
+    ctx.lineWidth =
+        2;
+
+
+    /* =====================================================
+       L BÊN TRÁI: A -> O
+    ====================================================== */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        wheelA,
+        dimensionY
+    );
+
+    ctx.lineTo(
+        O,
+        dimensionY
+    );
+
+    ctx.stroke();
+
+
+    /* Vạch tại A */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        wheelA,
+        dimensionY -
+        tickHeight
+    );
+
+    ctx.lineTo(
+        wheelA,
+        dimensionY +
+        tickHeight
+    );
+
+    ctx.stroke();
+
+
+    /* Vạch tại O */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O,
+        dimensionY -
+        tickHeight
+    );
+
+    ctx.lineTo(
+        O,
+        dimensionY +
+        tickHeight
+    );
+
+    ctx.stroke();
+
+
+    /* Mũi tên vào A */
+
+    drawArrow(
+        wheelA + 1,
+        dimensionY,
+        wheelA + 15,
+        dimensionY,
+        "#f97316",
+        2,
+        7
+    );
+
+
+    /* Mũi tên vào O */
+
+    drawArrow(
+        O - 1,
+        dimensionY,
+        O - 15,
+        dimensionY,
+        "#f97316",
+        2,
+        7
+    );
+
+
+    /* Nhãn L bên trái */
+
+    drawLatex(
+        "L",
+        (wheelA + O) / 2,
+        dimensionY - 14,
+        "#f97316",
+        0.88
+    );
+
+
+    /* =====================================================
+       L BÊN PHẢI: O -> B
+    ====================================================== */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O,
+        dimensionY
+    );
+
+    ctx.lineTo(
+        wheelB,
+        dimensionY
+    );
+
+    ctx.stroke();
+
+
+    /* Vạch tại O */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        O,
+        dimensionY -
+        tickHeight
+    );
+
+    ctx.lineTo(
+        O,
+        dimensionY +
+        tickHeight
+    );
+
+    ctx.stroke();
+
+
+    /* Vạch tại B */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        wheelB,
+        dimensionY -
+        tickHeight
+    );
+
+    ctx.lineTo(
+        wheelB,
+        dimensionY +
+        tickHeight
+    );
+
+    ctx.stroke();
+
+
+    /* Mũi tên vào O */
+
+    drawArrow(
+        O + 1,
+        dimensionY,
+        O + 15,
+        dimensionY,
+        "#f97316",
+        2,
+        7
+    );
+
+
+    /* Mũi tên vào B */
+
+    drawArrow(
+        wheelB - 1,
+        dimensionY,
+        wheelB - 15,
+        dimensionY,
+        "#f97316",
+        2,
+        7
+    );
+
+
+    /* Nhãn L bên phải */
+
+    drawLatex(
+        "L",
+        (O + wheelB) / 2,
+        dimensionY - 14,
+        "#f97316",
+        0.88
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   DRAW SCENE
+========================================================= */
+
+function drawScene() {
+
+    const W =
+        scene.clientWidth;
+
+    const H =
+        scene.clientHeight;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    const sys =
+        createCoordinateSystem(
+            W,
+            H
+        );
+
+
+    drawGrid(
+        W,
+        H,
+        sys
+    );
+
+
+    const O =
+        sys.O;
+
+    const scale =
+        sys.scale;
+
+    const axisY =
+        sys.axisY;
+
+
+    /* =====================================================
+       WHEEL GEOMETRY
+    ====================================================== */
+
+    const wheelRadius =
+        25;
+
+
+    /*
+        A và B cách O đúng một khoảng L.
+    */
+
+    const contactDistance =
+        2 *
+        L *
+        scale;
+
+
+    const wheelA =
+        O -
+        contactDistance / 2;
+
+
+    const wheelB =
+        O +
+        contactDistance / 2;
+
+
+    const wheelY =
+        axisY +
+        108;
+
+
+    const contactY =
+        wheelY -
+        wheelRadius;
+
+
+    /* =====================================================
+       PHYSICS
+    ====================================================== */
+
+    const p =
+        calculatePhysics(
+            time
+        );
+
+
+    const boardCenter =
+        O +
+        p.x *
+        scale;
+
+
+    /* =====================================================
+       BAR
+    ====================================================== */
+
+    /*
+        Thanh dài hơn phiên bản cũ 100 px.
+
+        Phiên bản cũ:
+            (2L + A) * scale + 30
+
+        Phiên bản mới:
+            (2L + A) * scale + 130
+    */
+
+    const boardLength =
+        (2 * L + A) *
+        scale +
+        130;
+
+
+    const boardHeight =
+        24;
+
+
+    const boardY =
+        contactY -
+        boardHeight;
+
+
+    const boardLeft =
+        boardCenter -
+        boardLength / 2;
+
+
+    const boardRight =
+        boardCenter +
+        boardLength / 2;
+
+
+    /* =====================================================
+       WHEELS
+    ====================================================== */
+
+    const rotation =
+        omega() *
+        time;
+
+
+    drawWheel(
+        wheelA,
+        wheelY,
+        wheelRadius,
+        rotation,
+        true,
+        "A"
+    );
+
+
+    drawWheel(
+        wheelB,
+        wheelY,
+        wheelRadius,
+        -rotation,
+        false,
+        "B"
+    );
+
+
+    /* =====================================================
+       L DIMENSIONS
+    ====================================================== */
+
+    drawLDimensions(
+        O,
+        wheelA,
+        wheelB,
+        contactY
+    );
+
+
+    /* =====================================================
+       BAR
+    ====================================================== */
+
+    ctx.fillStyle =
+        "#38bdf8";
+
+    ctx.strokeStyle =
+        "#bae6fd";
+
+    ctx.lineWidth =
+        2;
+
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        boardLeft,
+        boardY,
+        boardLength,
+        boardHeight,
+        6
+    );
+
+    ctx.fill();
+
+    ctx.stroke();
+
+
+    /* =====================================================
+       CONTACT POINTS
+    ====================================================== */
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        wheelA,
+        contactY,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        wheelB,
+        contactY,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* =====================================================
+       CENTER OF MASS
+    ====================================================== */
+
+    const cmX =
+        boardCenter;
+
+
+    const cmY =
+        boardY +
+        boardHeight / 2;
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cmX,
+        cmY,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    drawLatex(
+        "CM",
+        cmX,
+        boardY - 12,
+        "#ffffff",
+        0.74
+    );
+
+
+    /* =====================================================
+       FORCE VECTORS
+    ====================================================== */
+
+    if (showVectors) {
+
+        drawForces(
+            p,
+            boardCenter,
+            boardY,
+            boardHeight,
+            wheelA,
+            wheelB,
+            contactY
+        );
+    }
+
+
+    /* =====================================================
+       DISPLACEMENT x
+    ====================================================== */
+
+    const displacementY =
+        boardY +
+        boardHeight +
+        85;
+
+
+    const displacement =
+        boardCenter -
+        O;
+
+
+    if (
+        Math.abs(displacement) > 1
+    ) {
+
+        drawArrow(
+            O,
+            displacementY,
+            boardCenter,
+            displacementY,
+            "#38bdf8",
+            3,
+            9
+        );
+
+
+        drawArrow(
+            boardCenter,
+            displacementY,
+            O,
+            displacementY,
+            "#38bdf8",
+            3,
+            9
+        );
+    }
+
+
+    drawLatex(
+        "x=" +
+        trimNumber(
+            p.x,
+            4
+        ) +
+        "\\,\\mathrm{m}",
+        (O + boardCenter) / 2,
+        displacementY - 12,
+        "#38bdf8",
+        0.68
+    );
+
+
+    /* =====================================================
+       INFORMATION
+    ====================================================== */
+
+    drawText(
+        "Dao động điều hòa",
+        W / 2,
+        23,
+        "#dbeafe",
+        15
+    );
+
+
+    ctx.save();
+
+
+    ctx.textAlign =
+        "left";
+
+    ctx.textBaseline =
+        "alphabetic";
+
+    ctx.font =
+        "13px Arial";
+
+
+    ctx.fillStyle =
+        "#facc15";
+
+
+    ctx.fillText(
+        "Fₓ = " +
+        trimNumber(
+            p.F,
+            3
+        ) +
+        " N",
+        18,
+        H - 21
+    );
+
+
+    ctx.fillStyle =
+        "#94a3b8";
+
+
+    ctx.fillText(
+        "ω = " +
+        trimNumber(
+            omega(),
+            2
+        ) +
+        " rad/s",
+        145,
+        H - 21
+    );
+
+
+    ctx.fillText(
+        "m = " +
+        trimNumber(
+            m,
+            1
+        ) +
+        " kg",
+        300,
+        H - 21
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   GRAPH AMPLITUDE
+========================================================= */
+
+function getGraphAmplitude(
+    key
+) {
+
+    const w =
+        omega();
+
+
+    switch (key) {
+
+        case "x":
+            return Math.abs(A);
+
+        case "v":
+            return Math.abs(
+                A * w
+            );
+
+        case "a":
+            return Math.abs(
+                A * w * w
+            );
+
+        case "F":
+            return Math.abs(
+                m *
+                A *
+                w *
+                w
+            );
+
+        default:
+            return 1;
+    }
+}
+
+
+/* =========================================================
+   GRAPH
+========================================================= */
+
+function drawGraph() {
+
+    const W =
+        graph.clientWidth;
+
+    const H =
+        graph.clientHeight;
+
+
+    gx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    gx.fillStyle =
+        "#080d18";
+
+    gx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    if (
+        history.length < 2
+    ) {
+        return;
+    }
+
+
+    const windowTime =
+        2 *
+        period();
+
+
+    const startTime =
+        Math.max(
+            0,
+            time -
+            windowTime
+        );
+
+
+    const endTime =
+        Math.max(
+            time,
+            startTime +
+            0.001
+        );
+
+
+    const data =
+        history.filter(
+            p =>
+                p.t >= startTime &&
+                p.t <= endTime
+        );
+
+
+    if (
+        data.length < 2
+    ) {
+        return;
+    }
+
+
+    const left =
+        75;
+
+    const right =
+        15;
+
+    const top =
+        20;
+
+    const bottom =
+        24;
+
+
+    const width =
+        W -
+        left -
+        right;
+
+
+    const totalHeight =
+        H -
+        top -
+        bottom;
+
+
+    const gap =
+        8;
+
+
+    const plotHeight =
+        (
+            totalHeight -
+            gap * 3
+        ) / 4;
+
+
+    const plots = [
+
+        {
+            key: "x",
+            title: "x(t)",
+            unit: "m",
+            color: "#38bdf8"
+        },
+
+        {
+            key: "v",
+            title: "v(t)",
+            unit: "m/s",
+            color: "#4ade80"
+        },
+
+        {
+            key: "a",
+            title: "a(t)",
+            unit: "m/s²",
+            color: "#facc15"
+        },
+
+        {
+            key: "F",
+            title: "Fₓ(t)",
+            unit: "N",
+            color: "#fb7185"
+        }
+    ];
+
+
+    plots.forEach(
+        (plot, index) => {
+
+            const topY =
+                top +
+                index *
+                (
+                    plotHeight +
+                    gap
+                );
+
+
+            const bottomY =
+                topY +
+                plotHeight;
+
+
+            const centerY =
+                (
+                    topY +
+                    bottomY
+                ) / 2;
+
+
+            const physicalAmplitude =
+                getGraphAmplitude(
+                    plot.key
+                );
+
+
+            const maxValue =
+                Math.max(
+                    physicalAmplitude *
+                    1.15,
+                    1e-12
+                );
+
+
+            gx.strokeStyle =
+                "#17243a";
+
+            gx.lineWidth =
+                1;
+
+
+            for (
+                let i = 0;
+                i <= 4;
+                i++
+            ) {
+
+                const y =
+                    topY +
+                    i *
+                    plotHeight /
+                    4;
+
+
+                gx.beginPath();
+
+                gx.moveTo(
+                    left,
+                    y
+                );
+
+                gx.lineTo(
+                    W - right,
+                    y
+                );
+
+                gx.stroke();
+            }
+
+
+            gx.strokeStyle =
+                "#475569";
+
+
+            gx.beginPath();
+
+            gx.moveTo(
+                left,
+                centerY
+            );
+
+            gx.lineTo(
+                W - right,
+                centerY
+            );
+
+            gx.stroke();
+
+
+            const amplitudeY =
+                (
+                    physicalAmplitude /
+                    maxValue
+                ) *
+                (
+                    plotHeight *
+                    0.40
+                );
+
+
+            gx.strokeStyle =
+                plot.color;
+
+            gx.globalAlpha =
+                0.25;
+
+            gx.setLineDash(
+                [5, 5]
+            );
+
+
+            gx.beginPath();
+
+            gx.moveTo(
+                left,
+                centerY -
+                amplitudeY
+            );
+
+            gx.lineTo(
+                W - right,
+                centerY -
+                amplitudeY
+            );
+
+            gx.stroke();
+
+
+            gx.beginPath();
+
+            gx.moveTo(
+                left,
+                centerY +
+                amplitudeY
+            );
+
+            gx.lineTo(
+                W - right,
+                centerY +
+                amplitudeY
+            );
+
+            gx.stroke();
+
+
+            gx.setLineDash([]);
+
+            gx.globalAlpha =
+                1;
+
+
+            gx.strokeStyle =
+                plot.color;
+
+            gx.lineWidth =
+                2.4;
+
+            gx.lineJoin =
+                "round";
+
+
+            gx.beginPath();
+
+
+            data.forEach(
+                (p, i) => {
+
+                    const ratio =
+                        (
+                            p.t -
+                            startTime
+                        ) /
+                        (
+                            endTime -
+                            startTime
+                        );
+
+
+                    const px =
+                        left +
+                        ratio *
+                        width;
+
+
+                    const py =
+                        centerY -
+                        (
+                            p[plot.key] /
+                            maxValue
+                        ) *
+                        (
+                            plotHeight *
+                            0.40
+                        );
+
+
+                    if (
+                        i === 0
+                    ) {
+
+                        gx.moveTo(
+                            px,
+                            py
+                        );
+
+                    } else {
+
+                        gx.lineTo(
+                            px,
+                            py
+                        );
+                    }
+                }
+            );
+
+
+            gx.stroke();
+
+
+            gx.fillStyle =
+                plot.color;
+
+            gx.font =
+                "bold 14px Arial";
+
+            gx.textAlign =
+                "left";
+
+            gx.textBaseline =
+                "alphabetic";
+
+
+            gx.fillText(
+                plot.title,
+                8,
+                topY + 15
+            );
+
+
+            gx.fillStyle =
+                "#94a3b8";
+
+            gx.font =
+                "11px Arial";
+
+
+            gx.fillText(
+                plot.unit,
+                8,
+                topY + 30
+            );
+
+
+            gx.textAlign =
+                "right";
+
+
+            gx.fillText(
+                "+" +
+                formatGraphValue(
+                    physicalAmplitude
+                ),
+                left - 8,
+                centerY -
+                amplitudeY +
+                4
+            );
+
+
+            gx.fillText(
+                "-" +
+                formatGraphValue(
+                    physicalAmplitude
+                ),
+                left - 8,
+                centerY +
+                amplitudeY +
+                4
+            );
+
+
+            if (
+                index < 3
+            ) {
+
+                gx.strokeStyle =
+                    "#26344a";
+
+
+                gx.beginPath();
+
+                gx.moveTo(
+                    0,
+                    bottomY +
+                    gap / 2
+                );
+
+                gx.lineTo(
+                    W,
+                    bottomY +
+                    gap / 2
+                );
+
+                gx.stroke();
+            }
+        }
+    );
+
+
+    gx.fillStyle =
+        "#94a3b8";
+
+    gx.font =
+        "11px Arial";
+
+    gx.textAlign =
+        "center";
+
+
+    for (
+        let i = 0;
+        i <= 5;
+        i++
+    ) {
+
+        const ratio =
+            i / 5;
+
+
+        const px =
+            left +
+            ratio *
+            width;
+
+
+        const t =
+            startTime +
+            ratio *
+            (
+                endTime -
+                startTime
+            );
+
+
+        gx.fillText(
+            trimNumber(
+                t,
+                2
+            ) +
+            " s",
+            px,
+            H - 4
+        );
+    }
+}
+
+
+/* =========================================================
+   GRAPH VALUE
+========================================================= */
+
+function formatGraphValue(v) {
+
+    const a =
+        Math.abs(v);
+
+
+    if (a >= 100) {
+        return trimNumber(v, 0);
+    }
+
+
+    if (a >= 10) {
+        return trimNumber(v, 1);
+    }
+
+
+    if (a >= 1) {
+        return trimNumber(v, 2);
+    }
+
+
+    if (a >= 0.01) {
+        return trimNumber(v, 3);
+    }
+
+
+    if (a >= 0.0001) {
+        return trimNumber(v, 5);
+    }
+
+
+    return v.toExponential(1);
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function updateResults() {
+
+    const p =
+        calculatePhysics(
+            time
+        );
+
+
+    document.getElementById(
+        "omegaValue"
+    ).textContent =
+        trimNumber(
+            omega(),
+            3
+        ) +
+        " rad/s";
+
+
+    document.getElementById(
+        "periodValue"
+    ).textContent =
+        trimNumber(
+            period(),
+            3
+        ) +
+        " s";
+
+
+    document.getElementById(
+        "timeValue"
+    ).textContent =
+        trimNumber(
+            time,
+            3
+        ) +
+        " s";
+
+
+    document.getElementById(
+        "xValue"
+    ).textContent =
+        trimNumber(
+            p.x * 100,
+            3
+        ) +
+        " cm";
+
+
+    document.getElementById(
+        "vValue"
+    ).textContent =
+        trimNumber(
+            p.v,
+            3
+        ) +
+        " m/s";
+
+
+    document.getElementById(
+        "aValue"
+    ).textContent =
+        trimNumber(
+            p.a,
+            3
+        ) +
+        " m/s²";
+
+
+    document.getElementById(
+        "checkValue"
+    ).textContent =
+        p.errorNewton.toExponential(
+            3
+        );
+
+
+    document.getElementById(
+        "normalCheck"
+    ).textContent =
+        p.errorNormal.toExponential(
+            3
+        );
+}
+
+
+/* =========================================================
+   PLAY
+========================================================= */
+
+document
+    .getElementById(
+        "playButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            running =
+                !running;
+
+
+            document
+                .getElementById(
+                    "playButton"
+                )
+                .textContent =
+                running
+                    ? "⏸ Tạm dừng"
+                    : "▶ Chạy";
+        }
+    );
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+document
+    .getElementById(
+        "resetButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            time = 0;
+
+            history = [];
+
+            running = true;
+
+
+            document
+                .getElementById(
+                    "playButton"
+                )
+                .textContent =
+                "⏸ Tạm dừng";
+
+
+            lastTime =
+                performance.now();
+
+
+            drawScene();
+            drawGraph();
+            updateResults();
+        }
+    );
+
+
+/* =========================================================
+   VECTOR BUTTON
+========================================================= */
+
+document
+    .getElementById(
+        "vectorButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            showVectors =
+                !showVectors;
+
+
+            document
+                .getElementById(
+                    "vectorButton"
+                )
+                .textContent =
+                showVectors
+                    ? "Ẩn vector"
+                    : "Hiện vector";
+
+
+            drawScene();
+        }
+    );
+
+
+/* =========================================================
+   GRID BUTTON
+========================================================= */
+
+document
+    .getElementById(
+        "gridButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            showGrid =
+                !showGrid;
+
+
+            document
+                .getElementById(
+                    "gridButton"
+                )
+                .textContent =
+                showGrid
+                    ? "Ẩn lưới"
+                    : "Hiện lưới";
+
+
+            drawScene();
+        }
+    );
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+function animate(now) {
+
+    let dt =
+        (
+            now -
+            lastTime
+        ) / 1000;
+
+
+    lastTime =
+        now;
+
+
+    dt =
+        Math.min(
+            dt,
+            0.05
+        );
+
+
+    if (running) {
+
+        time +=
+            dt *
+            speed;
+
+
+        const p =
+            calculatePhysics(
+                time
+            );
+
+
+        history.push({
+
+            t: time,
+
+            x: p.x,
+
+            v: p.v,
+
+            a: p.a,
+
+            F: p.F
+
+        });
+
+
+        const keep =
+            Math.max(
+                3 *
+                period(),
+                2
+            );
+
+
+        history =
+            history.filter(
+                item =>
+                    item.t >
+                    time -
+                    keep
+            );
+    }
+
+
+    drawScene();
+
+    drawGraph();
+
+    updateResults();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+function startSimulation() {
+
+    resizeCanvas();
+
+    updateParameterUI();
+
+
+    running = true;
+
+    time = 0;
+
+    history = [];
+
+
+    lastTime =
+        performance.now();
+
+
+    if (
+        window.MathJax &&
+        MathJax.typesetPromise
+    ) {
+
+        MathJax.typesetPromise()
+            .catch(
+                error =>
+                    console.warn(
+                        "MathJax page error:",
+                        error
+                    )
+            );
+    }
+
+
+    drawScene();
+
+    drawGraph();
+
+    updateResults();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+if (
+    window.MathJax &&
+    window.MathJax.startup &&
+    window.MathJax.startup.promise
+) {
+
+    MathJax.startup.promise.then(
+        startSimulation
+    );
+
+} else {
+
+    window.addEventListener(
+        "load",
+        startSimulation
+    );
+}
+
+</script>
+
+</body>
+</html>
