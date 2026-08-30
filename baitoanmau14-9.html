@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Dao Động Hệ Đĩa - Chú Khỉ m2</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 { color: #38bdf8; margin: 0 0 15px 0; font-size: 22px; text-align: center; }
+        
+        #main-wrapper {
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #app-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        #controls {
+            width: 330px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .btn-group { display: flex; flex-direction: column; gap: 8px; }
+        button {
+            padding: 10px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; color: #0f172a; transition: 0.2s;
+        }
+        #btn-pull { background-color: #fbbf24; }
+        #btn-pull:hover { background-color: #f59e0b; }
+        #btn-release { background-color: #4ade80; }
+        #btn-release:hover { background-color: #22c55e; }
+        #btn-reset { background-color: #f87171; color: white; }
+
+        .control-group { display: flex; flex-direction: column; }
+        .control-group label { font-size: 12px; margin-bottom: 2px; color: #94a3b8; }
+        .control-group input[type=range] { width: 100%; }
+
+        #input-phi { accent-color: #fbbf24; }
+        #input-m1 { accent-color: #f87171; }
+        #input-m2 { accent-color: #4ade80; }
+        #input-delta { accent-color: #4ade80; }
+        #input-R { accent-color: #38bdf8; }
+        #input-b { accent-color: #94a3b8; }
+
+        .val-txt { font-weight: bold; float: right; }
+        .val-phi { color: #fbbf24; }
+        .val-m1 { color: #f87171; }
+        .val-m2 { color: #4ade80; }
+        .val-delta { color: #4ade80; }
+        .val-R { color: #38bdf8; }
+        .val-b { color: #94a3b8; }
+
+        .info-card {
+            background: #1e293b;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-left: 4px solid #38bdf8;
+            margin-top: 5px;
+        }
+        .highlight-yellow { color: #fbbf24; font-weight: bold; }
+        .highlight-green { color: #4ade80; font-weight: bold; }
+        .highlight-blue { color: #38bdf8; font-weight: bold; }
+        .highlight-red { color: #f87171; font-weight: bold; }
+        .highlight-cyan { color: #06b6d4; font-weight: bold; }
+        .highlight-orange { color: #f97316; font-weight: bold; }
+
+        /* KHU VỰC BÀI GIẢI LÝ THUYẾT */
+        .solution-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .solution-card h3 {
+            color: #38bdf8;
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 8px;
+        }
+        .solution-step {
+            margin-bottom: 15px;
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #38bdf8;
+        }
+        .solution-step h4 {
+            margin: 0 0 6px 0;
+            color: #fbbf24;
+            font-size: 14px;
+        }
+        .formula {
+            font-family: 'Courier New', Courier, monospace;
+            background: #1e293b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #4ade80;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .source-tag {
+            font-size: 11px;
+            color: #94a3b8;
+            font-style: italic;
+            text-align: right;
+            margin-top: 15px;
+            border-top: 1px solid #334155;
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-wrapper">
+        <h2>Mô Phỏng Dao Động - Chiều Dương Ngược Kim Đồng Hồ</h2>
+
+        <!-- KHUNG MÔ PHỎNG -->
+        <div id="app-container">
+            <div id="canvas-holder"></div>
+
+            <div id="controls">
+                <div class="btn-group">
+                    <button id="btn-pull">1. Kéo ngược chiều kim đồng hồ (&Delta;&phi;)</button>
+                    <button id="btn-release">2. Thả cho hệ dao động</button>
+                    <button id="btn-reset">🔄 Đặt lại vị trí cân bằng</button>
+                </div>
+
+                <div class="control-group">
+                    <label>Góc cân bằng ban đầu &phi; (độ): <span id="val-phi" class="val-txt val-phi">30°</span></label>
+                    <input type="range" id="input-phi" min="5" max="75" step="1" value="30">
+                </div>
+
+                <div class="control-group">
+                    <label>Góc kéo lệch &Delta;&phi; (độ): <span id="val-delta" class="val-txt val-delta">15°</span></label>
+                    <input type="range" id="input-delta" min="3" max="35" step="1" value="15">
+                </div>
+
+                <div class="control-group">
+                    <label>Khối lượng m1 (kg): <span id="val-m1" class="val-txt val-m1">4.0 kg</span></label>
+                    <input type="range" id="input-m1" min="1.0" max="10.0" step="0.2" value="4.0">
+                </div>
+
+                <div class="control-group">
+                    <label>Khối lượng m2 (kg): <span id="val-m2" class="val-txt val-m2">1.0 kg</span></label>
+                    <input type="range" id="input-m2" min="0.5" max="5.0" step="0.1" value="1.0">
+                </div>
+
+                <div class="control-group">
+                    <label>Bán kính đĩa R (m): <span id="val-R" class="val-txt val-R">0.20 m</span></label>
+                    <input type="range" id="input-R" min="0.10" max="0.30" step="0.01" value="0.20">
+                </div>
+
+                <div class="control-group">
+                    <label>Hệ số ma sát trục (b): <span id="val-b" class="val-txt val-b">0.02</span></label>
+                    <input type="range" id="input-b" min="0.00" max="0.10" step="0.005" value="0.02">
+                </div>
+
+                <div class="info-card">
+                    <b>📊 Thông Số Thời Gian Thực:</b><br>
+                    • Góc cân bằng <span class="highlight-yellow">&phi;</span>: <span id="txt-phi-val">30.0</span>°<br>
+                    • Góc lệch kéo <span class="highlight-green">&Delta;&phi;</span>: <span id="txt-delta">0.0</span>°<br>
+                    • Trọng lực P1 = m1·g: <span id="txt-p1" class="highlight-red">39.2</span> N<br>
+                    • <b>Lực căng T₁ (m₁-O): <span id="txt-t1" class="highlight-orange">33.98</span> N</b><br>
+                    • Trọng lực P2 (Khỉ): <span id="txt-p2" class="highlight-green">9.8</span> N<br>
+                    • <b>Lực căng T₂ (Khỉ): <span id="txt-t2" class="highlight-cyan">9.81</span> N</b>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÓM TẮT BÀI GIẢI LÝ THUYẾT CHI TIẾT -->
+        <div class="solution-card">
+            <h3>📝 Công Thức Lực Căng Của Cả Hai Vật (T₁ và T₂)</h3>
+
+            <div class="solution-step">
+                <h4>a) Lực căng T₁ giữ khối m₁ hướng về tâm O</h4>
+                Chiếu phương trình định luật II Newton lên phương hướng tâm O:<br>
+                <span class="formula">T₁ - m₁&middot;g&middot;cos(&phi; + &Delta;&phi;) = m₁&middot;r&middot;&omega;²</span><br>
+                Suy ra:<br>
+                <span class="formula">T₁ = m₁ [ g&middot;cos(&phi; + &Delta;&phi;) + r&middot;&omega;² ]</span><br>
+                * Tại VTCB (&omega; = 0, &Delta;&phi; = 0): <span class="formula">T₁ = m₁&middot;g&middot;cos(&phi;) &approx; 33.98 N</span>
+            </div>
+
+            <div class="solution-step">
+                <h4>b) Lực căng T₂ giữ vật m₂ (chú khỉ)</h4>
+                Chiếu phương trình chuyển động lên phương thẳng đứng (chiều dương hướng xuống):<br>
+                <span class="formula">P₂ - T₂ = m₂ &middot; a₂</span> &nbsp;&Rightarrow;&nbsp; <span class="formula">T₂ = m₂(g - R&middot;&alpha;)</span><br>
+                * Tại VTCB hoặc tĩnh: <span class="formula">T₂ = P₂ = m₂&middot;g = 9.81 N</span>
+            </div>
+
+            <div class="source-tag">
+                Nguồn: "Dao động từ Atwood" - Thomas B. Greenslade (American Journal of Physics, 12/1988)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const g = 9.81;
+        let R = 0.20;
+        let r = R / 2;
+        let m1 = 4.0;
+        let m2 = 1.0;
+        let phi = Math.PI / 6;
+
+        let deltaPhi0 = 15 * Math.PI / 180;
+        let deltaPhi = 0;
+        let omega = 0;
+        let alpha = 0;
+        let T1 = 33.98;
+        let T2 = 9.81;
+        let b = 0.02;
+
+        let state = 'PAUSED';
+        let historyY = [];
+        const maxHistory = 200;
+
+        function setup() {
+            let canvas = createCanvas(560, 560);
+            canvas.parent('canvas-holder');
+
+            select('#input-phi').input(updateParams);
+            select('#input-m1').input(updateParams);
+            select('#input-m2').input(updateParams);
+            select('#input-delta').input(updateParams);
+            select('#input-R').input(updateParams);
+            select('#input-b').input(updateParams);
+
+            select('#btn-pull').mousePressed(pullSystem);
+            select('#btn-release').mousePressed(releaseSystem);
+            select('#btn-reset').mousePressed(resetSystem);
+
+            updateParams();
+        }
+
+        function updateParams() {
+            phi = parseFloat(select('#input-phi').value()) * Math.PI / 180;
+            m1 = parseFloat(select('#input-m1').value());
+            m2 = parseFloat(select('#input-m2').value());
+            R = parseFloat(select('#input-R').value());
+            r = R / 2;
+            deltaPhi0 = parseFloat(select('#input-delta').value()) * Math.PI / 180;
+            b = parseFloat(select('#input-b').value());
+
+            select('#val-phi').html(degrees(phi).toFixed(0) + "°");
+            select('#val-m1').html(m1.toFixed(1) + " kg");
+            select('#val-m2').html(m2.toFixed(1) + " kg");
+            select('#val-R').html(R.toFixed(2) + " m");
+            select('#val-delta').html(degrees(deltaPhi0).toFixed(0) + "°");
+            select('#val-b').html(b.toFixed(3));
+
+            select('#txt-phi-val').html(degrees(phi).toFixed(1));
+            select('#txt-p1').html((m1 * g).toFixed(1));
+            select('#txt-p2').html((m2 * g).toFixed(1));
+
+            if (state === 'PULLED') {
+                deltaPhi = deltaPhi0;
+            }
+
+            if (state !== 'RUNNING') {
+                let currAng = phi + deltaPhi;
+                T1 = m1 * g * Math.cos(currAng);
+                T2 = m2 * g;
+                select('#txt-t1').html(T1.toFixed(2));
+                select('#txt-t2').html(T2.toFixed(2));
+            }
+        }
+
+        function pullSystem() {
+            state = 'PULLED';
+            deltaPhi = deltaPhi0;
+            omega = 0;
+            alpha = 0;
+            T1 = m1 * g * Math.cos(phi + deltaPhi);
+            T2 = m2 * g;
+            historyY = [];
+        }
+
+        function releaseSystem() {
+            if (state === 'PULLED') {
+                state = 'RUNNING';
+            }
+        }
+
+        function resetSystem() {
+            state = 'PAUSED';
+            deltaPhi = 0;
+            omega = 0;
+            alpha = 0;
+            T1 = m1 * g * Math.cos(phi);
+            T2 = m2 * g;
+            historyY = [];
+        }
+
+        function draw() {
+            background(15, 23, 42);
+            let dt = 0.016;
+
+            if (state === 'RUNNING') {
+                let M = 8 * m2;
+                let I_total = 0.5 * M * R * R + m1 * r * r;
+                let stiffness = m1 * g * r * Math.cos(phi);
+                let w2 = stiffness / I_total;
+
+                alpha = -w2 * deltaPhi - b * omega;
+                omega += alpha * dt;
+                deltaPhi += omega * dt;
+
+                // Gia tốc thẳng m2: a = R * alpha
+                let a_m2 = R * alpha;
+                T2 = m2 * (g - a_m2);
+
+                // Lực căng T1 hướng về O: T1 = m1 * (g * cos(theta) + r * omega^2)
+                let currAng = phi + deltaPhi;
+                T1 = m1 * (g * Math.cos(currAng) + r * omega * omega);
+
+                let currentY = r * Math.cos(currAng);
+                historyY.push(currentY);
+                if (historyY.length > maxHistory) historyY.shift();
+            }
+
+            select('#txt-t1').html(T1.toFixed(2));
+            select('#txt-t2').html(T2.toFixed(2));
+
+            let currentAngle = phi + deltaPhi;
+            select('#txt-delta').html(degrees(deltaPhi).toFixed(1));
+
+            let originX = 270, originY = 210;
+            let scaleFactor = 750;
+            let R_px = R * scaleFactor;
+            let r_px = r * scaleFactor;
+
+            push();
+            translate(originX, originY);
+
+            // 1. ĐĨA QUAY
+            push();
+            rotate(-currentAngle);
+            
+            fill(30, 41, 59);
+            stroke(56, 189, 248);
+            strokeWeight(3);
+            ellipse(0, 0, R_px * 2, R_px * 2);
+
+            stroke(71, 85, 105);
+            strokeWeight(1);
+            for (let a = 0; a < TWO_PI; a += PI / 4) {
+                line(0, 0, R_px * cos(a), R_px * sin(a));
+            }
+
+            // Đoạn Om1 Nét liền đỏ
+            stroke(248, 113, 113);
+            strokeWeight(2.5);
+            drawingContext.setLineDash([]);
+            line(0, 0, 0, r_px);
+
+            // Khối m1
+            let m1_size = map(m1, 1, 10, 18, 32);
+            fill(248, 113, 113);
+            stroke(255);
+            strokeWeight(1.5);
+            ellipse(0, r_px, m1_size, m1_size);
+            fill(15, 23, 42);
+            noStroke();
+            textSize(10);
+            textAlign(CENTER, CENTER);
+            text("m1", 0, r_px);
+
+            // VECTƠ LỰC CĂNG T1 (MÀU CAM/VÀNG - HƯỚNG TỪ m1 VỀ TÂM O)
+            let t1Len = map(T1, 0, 60, 0, 55);
+            stroke(249, 115, 22);
+            strokeWeight(3);
+            fill(249, 115, 22);
+            line(0, r_px, 0, r_px - t1Len);
+            triangle(0, r_px - t1Len, -4, r_px - t1Len + 8, 4, r_px - t1Len + 8);
+            
+            noStroke();
+            textSize(11);
+            textStyle(BOLD);
+            textAlign(LEFT, CENTER);
+            text(`T₁ = ${T1.toFixed(1)} N`, 8, r_px - t1Len / 2);
+
+            // VECTƠ TRỌNG LỰC P1
+            push();
+            translate(0, r_px);
+            rotate(currentAngle);
+            
+            stroke(248, 113, 113);
+            strokeWeight(3);
+            fill(248, 113, 113);
+            line(0, 0, 0, 55);
+            triangle(0, 55, -4, 47, 4, 47);
+            
+            noStroke();
+            textSize(11);
+            textStyle(NORMAL);
+            textAlign(LEFT, CENTER);
+            text(`P₁ = ${(m1 * g).toFixed(1)} N`, 8, 50);
+            pop();
+
+            pop();
+
+            // 2. ĐƯỜNG NÉT ĐỨT THAM CHIẾU TỪ TÂM O XUỐNG DƯỚI
+            stroke(148, 163, 184);
+            strokeWeight(2);
+            drawingContext.setLineDash([6, 6]);
+            line(0, 0, 0, R_px + 70);
+            drawingContext.setLineDash([]);
+
+            // 3. Đường vị trí cân bằng phi
+            let x_eq = r_px * 1.6 * Math.sin(phi);
+            let y_eq = r_px * 1.6 * Math.cos(phi);
+            stroke(251, 191, 36, 180);
+            drawingContext.setLineDash([4, 4]);
+            line(0, 0, x_eq, y_eq);
+            drawingContext.setLineDash([]);
+
+            // CUNG GÓC PHI
+            noFill();
+            stroke(251, 191, 36);
+            strokeWeight(2.5);
+            arc(0, 0, 90, 90, HALF_PI - phi, HALF_PI);
+            fill(251, 191, 36);
+            noStroke();
+            textSize(13);
+            textStyle(BOLD);
+            let labelPhiAng = HALF_PI - phi / 2;
+            text(`φ=${degrees(phi).toFixed(0)}°`, 60 * Math.cos(labelPhiAng), 60 * Math.sin(labelPhiAng));
+
+            // CUNG GÓC DELTA PHI
+            if (Math.abs(deltaPhi) > 0.002) {
+                noFill();
+                stroke(74, 222, 128);
+                strokeWeight(3.5);
+                let startArc = HALF_PI - Math.max(phi, currentAngle);
+                let endArc = HALF_PI - Math.min(phi, currentAngle);
+                arc(0, 0, 130, 130, startArc, endArc);
+
+                fill(74, 222, 128);
+                noStroke();
+                textSize(13);
+                textStyle(BOLD);
+                let labelDeltaAng = HALF_PI - (phi + deltaPhi / 2);
+                text("Δφ", 80 * Math.cos(labelDeltaAng), 80 * Math.sin(labelDeltaAng));
+            }
+
+            // 4. Đoạn R Nét liền xanh
+            stroke(74, 222, 128);
+            strokeWeight(2);
+            drawingContext.setLineDash([]);
+            line(0, 0, -R_px, 0);
+            
+            stroke(74, 222, 128);
+            strokeWeight(1.5);
+            noFill();
+            rect(-R_px, 0, 10, 10);
+
+            fill(74, 222, 128);
+            noStroke();
+            textSize(11);
+            textStyle(BOLD);
+            textAlign(CENTER, BOTTOM);
+            text(`R = ${R.toFixed(2)}m`, -R_px / 2, -5);
+
+            // Trục quay O
+            fill(251, 191, 36);
+            stroke(255);
+            strokeWeight(1.5);
+            ellipse(0, 0, 12, 12);
+            fill(255);
+            noStroke();
+            textSize(12);
+            text("O", 12, -12);
+
+            // 5. KHỐI m2 - CHÚ KHỈ VÀ VECTƠ LỰC CĂNG T2
+            stroke(74, 222, 128);
+            strokeWeight(2.5);
+            let ropeLen = R_px + 35 + deltaPhi * R_px;
+            line(-R_px, 0, -R_px, ropeLen);
+
+            let monkeySize = map(m2, 0.5, 5, 30, 55);
+            
+            push();
+            translate(-R_px, ropeLen + monkeySize / 2);
+
+            // Tai khỉ
+            fill(160, 82, 45);
+            stroke(74, 222, 128);
+            strokeWeight(1.5);
+            ellipse(-monkeySize * 0.45, -monkeySize * 0.1, monkeySize * 0.35, monkeySize * 0.35);
+            ellipse(monkeySize * 0.45, -monkeySize * 0.1, monkeySize * 0.35, monkeySize * 0.35);
+            fill(222, 184, 135);
+            noStroke();
+            ellipse(-monkeySize * 0.45, -monkeySize * 0.1, monkeySize * 0.2, monkeySize * 0.2);
+            ellipse(monkeySize * 0.45, -monkeySize * 0.1, monkeySize * 0.2, monkeySize * 0.2);
+
+            // Đầu khỉ
+            fill(139, 69, 19);
+            stroke(74, 222, 128);
+            strokeWeight(2);
+            ellipse(0, 0, monkeySize, monkeySize);
+
+            // Mặt khỉ
+            fill(255, 228, 196);
+            noStroke();
+            ellipse(-monkeySize * 0.15, -monkeySize * 0.08, monkeySize * 0.4, monkeySize * 0.45);
+            ellipse(monkeySize * 0.15, -monkeySize * 0.08, monkeySize * 0.4, monkeySize * 0.45);
+            ellipse(0, monkeySize * 0.1, monkeySize * 0.55, monkeySize * 0.4);
+
+            // Mắt khỉ
+            fill(15, 23, 42);
+            ellipse(-monkeySize * 0.15, -monkeySize * 0.1, monkeySize * 0.1, monkeySize * 0.14);
+            ellipse(monkeySize * 0.15, -monkeySize * 0.1, monkeySize * 0.1, monkeySize * 0.14);
+            fill(255);
+            ellipse(-monkeySize * 0.17, -monkeySize * 0.12, monkeySize * 0.04, monkeySize * 0.04);
+            ellipse(monkeySize * 0.13, -monkeySize * 0.12, monkeySize * 0.04, monkeySize * 0.04);
+
+            // Mũi khỉ
+            fill(80, 40, 10);
+            ellipse(0, 0.02 * monkeySize, monkeySize * 0.12, monkeySize * 0.08);
+
+            // Miệng khỉ
+            noFill();
+            stroke(80, 40, 10);
+            strokeWeight(1.5);
+            arc(0, monkeySize * 0.08, monkeySize * 0.25, monkeySize * 0.18, 0.1, PI - 0.1);
+
+            // Nhãn m2
+            fill(74, 222, 128);
+            noStroke();
+            textSize(11);
+            textStyle(BOLD);
+            textAlign(CENTER, TOP);
+            text("m2", 0, monkeySize * 0.55);
+
+            // VECTƠ TRỌNG LỰC P2
+            stroke(74, 222, 128);
+            strokeWeight(3);
+            fill(74, 222, 128);
+            line(0, monkeySize * 0.5, 0, monkeySize * 0.5 + 45);
+            triangle(0, monkeySize * 0.5 + 45, -4, monkeySize * 0.5 + 37, 4, monkeySize * 0.5 + 37);
+            
+            noStroke();
+            textSize(11);
+            textStyle(NORMAL);
+            textAlign(LEFT, CENTER);
+            text(`P₂ = ${(m2 * g).toFixed(1)} N`, 8, monkeySize * 0.5 + 40);
+
+            // VECTƠ LỰC CĂNG T2
+            let t2Len = map(T2, 0, 20, 0, 80);
+            stroke(6, 182, 212);
+            strokeWeight(3);
+            fill(6, 182, 212);
+            line(0, -monkeySize * 0.5, 0, -monkeySize * 0.5 - t2Len);
+            triangle(0, -monkeySize * 0.5 - t2Len, -4, -monkeySize * 0.5 - t2Len + 8, 4, -monkeySize * 0.5 - t2Len + 8);
+
+            noStroke();
+            textSize(11);
+            textStyle(BOLD);
+            textAlign(RIGHT, CENTER);
+            text(`T₂ = ${T2.toFixed(1)} N`, -8, -monkeySize * 0.5 - t2Len / 2);
+
+            pop();
+
+            pop();
+
+            // Đồ thị
+            drawGraph();
+        }
+
+        function drawGraph() {
+            push();
+            translate(30, 430);
+            fill(30, 41, 59);
+            stroke(51, 65, 85);
+            rect(0, 0, 500, 100, 6);
+
+            fill(226, 232, 240);
+            noStroke();
+            textSize(11);
+            textStyle(NORMAL);
+            textAlign(LEFT, CENTER);
+            text("Đồ thị nhấp nhô độ cao vật m1 theo thời gian", 15, 15);
+
+            stroke(100, 116, 139);
+            strokeWeight(1);
+            line(20, 55, 480, 55);
+
+            noFill();
+            stroke(248, 113, 113);
+            strokeWeight(2);
+            beginShape();
+            for (let i = 0; i < historyY.length; i++) {
+                let x = map(i, 0, maxHistory, 20, 480);
+                let y = map(historyY[i], 0.15, 0.02, 90, 20);
+                vertex(x, y);
+            }
+            endShape();
+            pop();
+        }
+    </script>
+</body>
+</html>
