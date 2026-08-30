@@ -92,33 +92,33 @@
         
         mjx-container { margin: 0 !important; }
         .number-input,
-.control-header > span:last-child {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        .control-header > span:last-child {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.control-header input[type="number"] {
-    width: 75px;
-    padding: 5px 8px;
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: 7px;
-    background: rgba(255,255,255,.08);
-    color: inherit;
-    font-size: 14px;
-    text-align: right;
-    outline: none;
-}
+        .control-header input[type="number"] {
+            width: 75px;
+            padding: 5px 8px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 7px;
+            background: rgba(255,255,255,.08);
+            color: inherit;
+            font-size: 14px;
+            text-align: right;
+            outline: none;
+        }
 
-.control-header input[type="number"]:focus {
-    border-color: #00e676;
-    box-shadow: 0 0 8px rgba(0,230,118,.25);
-}
+        .control-header input[type="number"]:focus {
+            border-color: #00e676;
+            box-shadow: 0 0 8px rgba(0,230,118,.25);
+        }
 
-.control-header input[type="number"]::-webkit-inner-spin-button,
-.control-header input[type="number"]::-webkit-outer-spin-button {
-    opacity: 1;
-}
+        .control-header input[type="number"]::-webkit-inner-spin-button,
+        .control-header input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -160,8 +160,6 @@
 
                 <!-- ================== CUỘN CẢM & HIỆN TƯỢNG TỰ CẢM ================== -->
                 <g transform="translate(400, 150)">
-                    <!-- ĐÃ XÓA: Bỏ hoàn toàn <rect> nền che lấp dây điện ở đây -->
-
                     <!-- Lõi từ bên trong -->
                     <rect x="-4" y="-35" width="8" height="70" fill="#2a354d" rx="3" />
 
@@ -366,6 +364,7 @@ syncSliderInput('slider-C', 'input-C');
 syncSliderInput('slider-L', 'input-L');
 syncSliderInput('slider-U0', 'input-U0');
 syncSliderInput('slider-R', 'input-R');
+    
     let mode = 'LC'; let simState = 0; let isPaused = false; let reqAnimFrame = null;
     let L = 0.5, C = 100e-6, R = 5, U0 = 12;      
     let q = 0, i = 0, time = 0;     
@@ -382,8 +381,6 @@ syncSliderInput('slider-R', 'input-R');
         slL: document.getElementById('slider-L'), slC: document.getElementById('slider-C'),
         slU0: document.getElementById('slider-U0'), slR: document.getElementById('slider-R'),
         chkSlow: document.getElementById('chk-slow'), groupR: document.getElementById('group-R'),
-        vL: document.getElementById('val-L'), vC: document.getElementById('val-C'),
-        vU0: document.getElementById('val-U0'), vR: document.getElementById('val-R'),
         dispUc: document.getElementById('disp-uc'), dispI: document.getElementById('disp-i'),
         dispUL: document.getElementById('disp-ul'), dispF: document.getElementById('disp-f'),
         barWc: document.getElementById('bar-wc'), barWl: document.getElementById('bar-wl'), barWtot: document.getElementById('bar-wtot'),
@@ -450,10 +447,18 @@ syncSliderInput('slider-R', 'input-R');
         L = parseFloat(ui.slL.value); C = parseFloat(ui.slC.value) * 1e-6;
         U0 = parseFloat(ui.slU0.value); R = parseFloat(ui.slR.value);
         
-        ui.vL.innerText = L.toFixed(2) + " H"; ui.vC.innerText = (C * 1e6).toFixed(0) + " μF";
-        ui.vU0.innerText = U0 + " V"; ui.vR.innerText = R + " Ω";
-        
-        let omega0 = 1 / Math.sqrt(L * C); let f = omega0 / (2 * Math.PI);
+        // Áp dụng công thức có tính hệ số cản (damping) khi ở chế độ RLC
+        let currentR = mode === 'RLC' ? R : 0;
+        let omega0_sq = 1 / (L * C); // Bình phương tần số góc riêng
+        let beta = currentR / (2 * L); // Hệ số tắt dần
+        let omega_sq = omega0_sq - (beta * beta); // Tần số góc thực tế
+
+        let f = 0;
+        // Nếu hệ số cản chưa đủ làm mất dao động (omega_sq > 0)
+        if (omega_sq > 0) {
+            f = Math.sqrt(omega_sq) / (2 * Math.PI);
+        }
+
         ui.dispF.innerText = f.toFixed(1) + " Hz";
 
         if (simState === 1) { q = C * U0; render(); drawGraph(); }
@@ -670,6 +675,7 @@ syncSliderInput('slider-R', 'input-R');
             ui.groupR.classList.add('hidden'); ui.resistorNode.classList.add('hidden');
             ui.wirePath.setAttribute("d", "M 100 170 L 100 200 L 400 200 L 400 180 M 400 120 L 400 100 L 280 100 M 220 100 L 100 100 L 100 130");
         }
+        updateDerivedParameters();
         pathLength = ui.electronPath.getTotalLength(); initElectrons(); ui.btnReset.click();
     }
 
