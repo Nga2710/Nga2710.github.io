@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Thí Nghiệm Ảo: Dao Động Điện Từ (V.6.2 - Hoàn Hảo)</title>
+    
+    <!-- Tích hợp MathJax để render LaTeX -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #11141a;
+            --panel-bg: #1a2235;
+            --card-bg: #232d45;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0b8;
+            
+            --color-c: #00e0ff; /* Màu Tụ điện / Điện áp */
+            --color-l: #f9a826; /* Màu Cuộn cảm */
+            --color-r: #ff5722;
+            --color-i: #ff2a5f; /* Màu Dòng điện */
+            --color-etc: #ff9800; /* Màu Điện áp tự cảm e_tc */
+            --color-w: #b027ff;
+            --color-wc: #4caf50;
+            --color-success: #00e676;
+            
+            --border-radius-lg: 20px;
+            --border-radius-md: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        nav { display: flex; justify-content: center; gap: 15px; padding: 15px; background: rgba(26, 34, 53, 0.9); box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 10; }
+        .nav-btn { background: var(--card-bg); color: var(--text-main); border: 2px solid transparent; padding: 10px 24px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-btn:hover { border-color: var(--color-c); }
+        .nav-btn.active { background: var(--color-c); color: #000; box-shadow: 0 0 15px var(--color-c); }
+
+        .container { display: grid; grid-template-columns: 1fr 400px; grid-template-rows: auto auto; gap: 20px; padding: 20px; max-width: 1450px; margin: 0 auto; width: 100%; }
+        .panel { background: var(--panel-bg); border-radius: var(--border-radius-lg); padding: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); position: relative; }
+        h2 { font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+
+        .circuit-area { display: flex; align-items: center; justify-content: center; min-height: 400px; background: #151a28; border: 2px dashed rgba(0, 224, 255, 0.15); }
+        #circuit-svg { width: 100%; height: 100%; max-width: 600px; overflow: visible; }
+        .component-label { font-size: 18px; font-weight: bold; pointer-events: none; }
+
+        .controls-grid { display: flex; flex-direction: column; gap: 12px; }
+        .control-group { background: var(--card-bg); padding: 12px 15px; border-radius: var(--border-radius-md); }
+        .control-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: center;}
+        .control-header span:last-child { font-weight: bold; color: var(--color-c); }
+        input[type="range"] { width: 100%; accent-color: var(--color-c); cursor: pointer; }
+        
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        .action-btn { padding: 12px; border: none; border-radius: var(--border-radius-md); font-weight: bold; cursor: pointer; transition: 0.2s; color: white; font-size: 14px; }
+        .btn-charge { background: #2196f3; } .btn-switch { background: #ff9800; }
+        .btn-play { background: var(--color-success); } .btn-reset { background: #f44336; }
+        .action-btn:hover:not(:disabled) { filter: brightness(1.2); transform: translateY(-2px); }
+        .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .slow-motion-box { background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); padding: 10px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; color: #ffc107; font-weight: bold; transition: 0.3s; }
+        
+        .charge-toggles { display: flex; gap:12px; font-size: 13px; margin-top:8px; margin-bottom: 12px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px;}
+        .charge-toggles label { cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500;}
+
+        .knowledge-card { background: linear-gradient(145deg, #1e273b, #151a28); padding: 20px; border-radius: var(--border-radius-md); border-left: 5px solid var(--color-c); margin-top: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 14px; line-height: 1.8; color: #d1d5db; }
+        .math-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);}
+        .highlight-w { color: var(--color-w); font-weight: bold; }
+        .highlight-c { color: var(--color-c); font-weight: bold; }
+        .highlight-i { color: var(--color-i); font-weight: bold; }
+        .highlight-etc { color: var(--color-etc); font-weight: bold; }
+
+        .energy-container { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .energy-row { display: flex; align-items: center; gap: 10px; }
+        .energy-label { width: 45px; font-weight: bold; font-size: 14px; display:flex; align-items:center; }
+        .energy-bar-bg { flex-grow: 1; height: 14px; background: rgba(0,0,0,0.5); border-radius: 7px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .energy-fill { height: 100%; width: 0%; transition: width 0.05s linear; }
+        .fill-c { background: var(--color-wc); } .fill-l { background: var(--color-l); } .fill-tot { background: var(--color-w); }
+
+        canvas { width: 100%; height: 280px; background: #080b12; border-radius: var(--border-radius-md); border: 1px solid #333; }
+        .chart-legend { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; font-size: 14px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .legend-color { width: 14px; height: 14px; border-radius: 4px; }
+
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .data-card { background: var(--card-bg); padding: 12px; border-radius: var(--border-radius-md); text-align: center; }
+        .data-title { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+        .data-value { font-size: 16px; font-weight: bold; font-family: 'Courier New', monospace; }
+
+        .status-badge { position: absolute; top: 15px; right: 20px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); }
+        .hidden { display: none !important; }
+        
+        mjx-container { margin: 0 !important; }
+        .number-input,
+.control-header > span:last-child {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.control-header input[type="number"] {
+    width: 75px;
+    padding: 5px 8px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 7px;
+    background: rgba(255,255,255,.08);
+    color: inherit;
+    font-size: 14px;
+    text-align: right;
+    outline: none;
+}
+
+.control-header input[type="number"]:focus {
+    border-color: #00e676;
+    box-shadow: 0 0 8px rgba(0,230,118,.25);
+}
+
+.control-header input[type="number"]::-webkit-inner-spin-button,
+.control-header input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="nav-btn active" id="btn-mode-lc">🌀 Dao Động Tự Do \( (LC) \)</button>
+        <button class="nav-btn" id="btn-mode-rlc">🔥 Dao Động Tắt Dần \( (RLC) \)</button>
+    </nav>
+
+    <div class="container">
+        <div class="panel circuit-area">
+            <h2 style="position: absolute; top: 15px; left: 20px;">🔬 Mạch Điện Mô Phỏng</h2>
+            <div class="status-badge" id="sim-status">Trạng thái: Chưa nạp tụ</div>
+            
+            <svg id="circuit-svg" viewBox="0 0 500 300">
+                <!-- Đường truyền Electron -->
+                <path id="electron-path" d="M 100 130 L 100 100 L 400 100 L 400 200 L 100 200 L 100 170" fill="none" stroke="none"/>
+
+                <!-- ĐÃ FIX: Dây hiển thị nối chính xác vào mốc y=120 và y=180 của cuộn cảm -->
+                <path id="wire-path" d="M 100 170 L 100 200 L 400 200 L 400 180 M 400 120 L 400 100 L 280 100 M 220 100 L 100 100 L 100 130" fill="none" stroke="#445" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="220" y1="100" x2="280" y2="100" stroke="#445" stroke-width="6" stroke-dasharray="4,4"/>
+
+                <!-- Khóa K -->
+                <circle cx="220" cy="100" r="5" fill="#fff"/>
+                <circle cx="280" cy="100" r="5" fill="#fff"/>
+                <line id="switch-lever" x1="220" y1="100" x2="280" y2="100" stroke="#fff" stroke-width="5" stroke-linecap="round" style="transition: transform 0.3s; transform-origin: 220px 100px; transform: rotate(-35deg);"/>
+                <text x="245" y="60" class="component-label" fill="#fff">K</text>
+
+                <!-- Tụ Điện -->
+                <g id="capacitor" transform="translate(100, 150)">
+                    <rect x="-25" y="-15" width="50" height="30" fill="#151a28"/>
+                    <line x1="-20" y1="-20" x2="20" y2="-20" stroke="#00e0ff" stroke-width="6" stroke-linecap="round" id="plate-top"/>
+                    <line x1="-20" y1="20" x2="20" y2="20" stroke="#00e0ff" stroke-width="6" stroke-linecap="round" id="plate-bot"/>
+                    <text x="30" y="6" class="component-label" fill="#00e0ff">C</text>
+                    
+                    <text x="-35" y="-12" class="component-label" id="charge-top" font-size="28" fill="#00e0ff" font-weight="900"></text>
+                    <text x="-35" y="28" class="component-label" id="charge-bot" font-size="28" fill="#00e0ff" font-weight="900"></text>
+                </g>
+
+                <!-- ================== CUỘN CẢM & HIỆN TƯỢNG TỰ CẢM ================== -->
+                <g transform="translate(400, 150)">
+                    <!-- ĐÃ XÓA: Bỏ hoàn toàn <rect> nền che lấp dây điện ở đây -->
+
+                    <!-- Lõi từ bên trong -->
+                    <rect x="-4" y="-35" width="8" height="70" fill="#2a354d" rx="3" />
+
+                    <!-- Cuộn dây (Coil) nối khớp y=-30 (tương đương y=120) và y=30 (tương đương y=180) -->
+                    <path d="M 0 -30 A 10 10 0 1 1 0 -10 A 10 10 0 1 1 0 10 A 10 10 0 1 1 0 30" 
+                          fill="none" stroke="#f9a826" stroke-width="6" stroke-linecap="round" id="coil"/>
+                    
+                    <text x="25" y="6" class="component-label" fill="#f9a826">L</text>
+
+                    <!-- Dấu 2 đầu cuộn cảm (Phản ứng Fade-in/Fade-out theo đạo hàm dòng điện) -->
+                    <text x="-35" y="-12" class="component-label" id="ind-charge-top" font-size="28" fill="var(--color-etc)" font-weight="900" style="transition: opacity 0.05s linear;"></text>
+                    <text x="-35" y="28" class="component-label" id="ind-charge-bot" font-size="28" fill="var(--color-etc)" font-weight="900" style="transition: opacity 0.05s linear;"></text>
+                </g>
+
+                <!-- Điện trở -->
+                <g id="resistor" transform="translate(250, 200)" class="hidden">
+                    <rect x="-35" y="-15" width="70" height="30" fill="#151a28"/>
+                    <path d="M -30 0 L -20 -15 L -10 15 L 0 -15 L 10 15 L 20 -15 L 30 0" fill="none" stroke="#ff5722" stroke-width="4" stroke-linejoin="miter" id="zigzag"/>
+                    <text x="-5" y="35" class="component-label" fill="#ff5722">R</text>
+                </g>
+
+                <!-- Hạt tải điện & Mũi tên dòng -->
+                <g id="electrons-container"></g>
+                <g id="current-arrow" opacity="0" style="transition: opacity 0.3s;">
+                    <path d="M -12 -12 L 12 0 L -12 12 Z" fill="#ff2a5f" id="arrow-shape" style="transition: transform 0.1s;"/>
+                    <text x="-5" y="-20" class="component-label" fill="#ff2a5f">i</text>
+                </g>
+            </svg>
+        </div>
+
+        <div class="panel controls-grid">
+            <h2>⚙️ Bảng Điều Khiển</h2>
+            <div class="btn-group">
+                <button class="action-btn btn-charge" id="btn-charge">⚡ Nạp Tụ</button>
+                <button class="action-btn btn-switch" id="btn-switch" disabled>🔒 Đóng Khóa \( K \)</button>
+                <button class="action-btn btn-play" id="btn-playpause" disabled>⏸ Tạm Dừng</button>
+                <button class="action-btn btn-reset" id="btn-reset">🔄 Đặt Lại</button>
+            </div>
+
+            <label class="slow-motion-box mt-2">
+                <input type="checkbox" id="chk-slow"> 🐢 Bật Chế Độ SLOW MOTION
+            </label>
+
+            <div class="charge-toggles">
+                <label><input type="checkbox" id="chk-charges" checked> Hạt tải:</label>
+                <label style="color: #00e0ff;"><input type="radio" name="chargeType" id="rad-elec" checked> \( e^- \)</label>
+                <label style="color: #ff2a5f;"><input type="radio" name="chargeType" id="rad-pos"> Ion \( (+) \)</label>
+                <label style="margin-left: auto;"><input type="checkbox" id="chk-arrow" checked> Dòng \( i \)</label>
+            </div>
+
+         <div class="control-group">
+    <div class="control-header">
+        <span>Điện dung \( C \)</span>
+        <span><input type="number" id="input-C" min="10" max="500" value="100" step="10"> μF</span>
+    </div>
+    <input type="range" id="slider-C" min="10" max="500" value="100" step="10">
+</div>
+
+<div class="control-group">
+    <div class="control-header">
+        <span>Độ tự cảm \( L \)</span>
+        <span><input type="number" id="input-L" min="0.1" max="2.0" value="0.5" step="0.1"> H</span>
+    </div>
+    <input type="range" id="slider-L" min="0.1" max="2.0" value="0.5" step="0.1">
+</div>
+
+<div class="control-group">
+    <div class="control-header">
+        <span>Điện áp Tụ ban đầu \( U_0 \)</span>
+        <span><input type="number" id="input-U0" min="1" max="24" value="12" step="1"> V</span>
+    </div>
+    <input type="range" id="slider-U0" min="1" max="24" value="12" step="1">
+</div>
+
+<div class="control-group hidden" id="group-R">
+    <div class="control-header">
+        <span>Điện trở \( R \)</span>
+        <span>
+            <input type="number" id="input-R" min="1" max="100" value="5" step="1">
+            Ω
+        </span>
+    </div>
+    <input type="range" id="slider-R" min="1" max="100" value="5" step="1">
+</div>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-title">Điện áp Tụ \( u_C \)</div>
+                    <div class="data-value" id="disp-uc" style="color: var(--color-c)">0.00 V</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-title">Dòng điện \( i \)</div>
+                    <div class="data-value" id="disp-i" style="color: var(--color-i)">0.00 mA</div>
+                </div>
+                <!-- S.Đ.Đ Tự cảm -->
+                <div class="data-card">
+                    <div class="data-title">S.Đ.Đ Tự cảm \( e_{tc} \)</div>
+                    <div class="data-value" id="disp-ul" style="color: var(--color-etc)">0.00 V</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-title">Tần số \( f \)</div>
+                    <div class="data-value" id="disp-f">0 Hz</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel oscilloscope">
+            <h2>📈 Oscilloscope & Năng Lượng</h2>
+            <div class="chart-legend">
+                <label class="legend-item"><div class="legend-color" style="background:var(--color-c);"></div> <input type="checkbox" id="chk-plot-uc" checked> \( u_C \)</label>
+                <label class="legend-item"><div class="legend-color" style="background:var(--color-i);"></div> <input type="checkbox" id="chk-plot-i" checked> \( i \)</label>
+                <label class="legend-item"><div class="legend-color" style="background:var(--color-wc);"></div> <input type="checkbox" id="chk-plot-wc"> \( W_C \)</label>
+                <label class="legend-item"><div class="legend-color" style="background:var(--color-wl);"></div> <input type="checkbox" id="chk-plot-wl"> \( W_L \)</label>
+                <label class="legend-item"><div class="legend-color" style="background:var(--color-w);"></div> <input type="checkbox" id="chk-plot-wtotal" checked> \( W_{Total} \)</label>
+            </div>
+            <canvas id="graph-canvas"></canvas>
+            
+            <div class="energy-container">
+                <div class="energy-row">
+                    <span class="energy-label" style="color:var(--color-wc)">\( W_C \)</span>
+                    <div class="energy-bar-bg"><div class="energy-fill fill-c" id="bar-wc"></div></div>
+                </div>
+                <div class="energy-row">
+                    <span class="energy-label" style="color:var(--color-l)">\( W_L \)</span>
+                    <div class="energy-bar-bg"><div class="energy-fill fill-l" id="bar-wl"></div></div>
+                </div>
+                <div class="energy-row">
+                    <span class="energy-label" style="color:var(--color-w)">\( W \)</span>
+                    <div class="energy-bar-bg"><div class="energy-fill fill-tot" id="bar-wtot"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>📚 Bản Chất Vật Lý</h2>
+            <div class="knowledge-card">
+                <div class="math-box">
+                    <span class="highlight-c">Điện áp trên Tụ:</span> 
+                    \[ u_C(t) = U_0 \cos(\omega t + \varphi) \]
+                </div>
+                <div class="math-box">
+                    <span class="highlight-i">Dòng điện chạy qua mạch:</span>
+                    \[ i(t) = C \cdot u_C'(t) = -I_0 \sin(\omega t + \varphi) \]
+                </div>
+                <div class="math-box">
+                    <span class="highlight-etc">Suất điện động tự cảm (Định luật Lenz):</span><br>
+                    <small style="color: #a0a0b8;">(Luôn sinh ra phân cực +/- để <b>cản lại</b> sự biến thiên của dòng điện)</small>
+                    \[ e_{tc} = -L \frac{di}{dt} \]
+                </div>
+                <div>
+                    Tần số góc: \( \omega = \frac{1}{\sqrt{LC}} \)
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function syncSliderInput(sliderId, inputId) {
+    const slider = document.getElementById(sliderId);
+    const input = document.getElementById(inputId);
+
+    if (!slider || !input) return;
+
+    slider.addEventListener('input', () => {
+        input.value = slider.value;
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    input.addEventListener('input', () => {
+        let value = parseFloat(input.value);
+        if (isNaN(value)) return;
+
+        const min = parseFloat(slider.min);
+        const max = parseFloat(slider.max);
+
+        if (value < min) value = min;
+        if (value > max) value = max;
+
+        slider.value = value;
+        input.value = value;
+
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    input.addEventListener('change', () => {
+        let value = parseFloat(input.value);
+        if (isNaN(value)) value = parseFloat(slider.value);
+
+        const min = parseFloat(slider.min);
+        const max = parseFloat(slider.max);
+
+        value = Math.min(max, Math.max(min, value));
+
+        slider.value = value;
+        input.value = value;
+
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+}
+
+syncSliderInput('slider-C', 'input-C');
+syncSliderInput('slider-L', 'input-L');
+syncSliderInput('slider-U0', 'input-U0');
+syncSliderInput('slider-R', 'input-R');
+    let mode = 'LC'; let simState = 0; let isPaused = false; let reqAnimFrame = null;
+    let L = 0.5, C = 100e-6, R = 5, U0 = 12;      
+    let q = 0, i = 0, time = 0;     
+    let dt = 0.0001; 
+    let speedFactorNormal = 10; let speedFactorSlow = 1;    
+    let arrowAngle = 0; 
+    let graphData = [];
+    const maxDataPoints = 350;
+
+    const ui = {
+        btnLC: document.getElementById('btn-mode-lc'), btnRLC: document.getElementById('btn-mode-rlc'),
+        btnCharge: document.getElementById('btn-charge'), btnSwitch: document.getElementById('btn-switch'),
+        btnPlay: document.getElementById('btn-playpause'), btnReset: document.getElementById('btn-reset'),
+        slL: document.getElementById('slider-L'), slC: document.getElementById('slider-C'),
+        slU0: document.getElementById('slider-U0'), slR: document.getElementById('slider-R'),
+        chkSlow: document.getElementById('chk-slow'), groupR: document.getElementById('group-R'),
+        vL: document.getElementById('val-L'), vC: document.getElementById('val-C'),
+        vU0: document.getElementById('val-U0'), vR: document.getElementById('val-R'),
+        dispUc: document.getElementById('disp-uc'), dispI: document.getElementById('disp-i'),
+        dispUL: document.getElementById('disp-ul'), dispF: document.getElementById('disp-f'),
+        barWc: document.getElementById('bar-wc'), barWl: document.getElementById('bar-wl'), barWtot: document.getElementById('bar-wtot'),
+        simStatus: document.getElementById('sim-status'), switchLever: document.getElementById('switch-lever'), 
+        wirePath: document.getElementById('wire-path'), electronPath: document.getElementById('electron-path'),
+        electronContainer: document.getElementById('electrons-container'), arrow: document.getElementById('current-arrow'), arrowShape: document.getElementById('arrow-shape'),
+        plateTop: document.getElementById('plate-top'), plateBot: document.getElementById('plate-bot'),
+        chargeTop: document.getElementById('charge-top'), chargeBot: document.getElementById('charge-bot'),
+        coil: document.getElementById('coil'), resistorNode: document.getElementById('resistor'), zigzag: document.getElementById('zigzag'),
+        
+        indChargeTop: document.getElementById('ind-charge-top'), 
+        indChargeBot: document.getElementById('ind-charge-bot'),
+
+        chkPlotUc: document.getElementById('chk-plot-uc'), chkPlotI: document.getElementById('chk-plot-i'),
+        chkPlotWc: document.getElementById('chk-plot-wc'), chkPlotWl: document.getElementById('chk-plot-wl'), chkPlotWtot: document.getElementById('chk-plot-wtotal'),
+        chkCharges: document.getElementById('chk-charges'), radElec: document.getElementById('rad-elec'), radPos: document.getElementById('rad-pos'),
+        chkArrow: document.getElementById('chk-arrow'),
+        canvas: document.getElementById('graph-canvas'), ctx: document.getElementById('graph-canvas').getContext('2d')
+    };
+
+    const colorC = '#00e0ff', colorI = '#ff2a5f', colorW = '#b027ff', colorWc = '#4caf50', colorWl = '#f9a826';
+    
+    function resizeCanvas() { ui.canvas.width = ui.canvas.parentElement.clientWidth; ui.canvas.height = 280; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    const numElectrons = 50; let electrons = []; let pathLength = ui.electronPath.getTotalLength();
+    
+    function initElectrons() {
+        ui.electronContainer.innerHTML = ''; electrons = [];
+        pathLength = ui.electronPath.getTotalLength();
+        
+        let isPos = ui.radPos.checked;
+        let color = isPos ? '#ff2a5f' : '#00e0ff'; 
+        let symbol = isPos ? '+' : '-';
+        let step = pathLength / (numElectrons - 1);
+        
+        for(let k = 0; k < numElectrons; k++) {
+            let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("r", "5.5"); 
+            circle.setAttribute("fill", color); 
+            
+            let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.textContent = symbol;
+            text.setAttribute("fill", "#111"); 
+            text.setAttribute("font-size", "10");
+            text.setAttribute("font-weight", "bold");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("dominant-baseline", "central");
+            text.setAttribute("y", "0.5");
+            
+            g.appendChild(circle);
+            g.appendChild(text);
+            ui.electronContainer.appendChild(g);
+            electrons.push({ el: g, basePos: k * step });
+        }
+    }
+    
+    ui.radElec.addEventListener('change', () => { initElectrons(); render(); });
+    ui.radPos.addEventListener('change', () => { initElectrons(); render(); });
+    initElectrons();
+
+    function updateDerivedParameters() {
+        L = parseFloat(ui.slL.value); C = parseFloat(ui.slC.value) * 1e-6;
+        U0 = parseFloat(ui.slU0.value); R = parseFloat(ui.slR.value);
+        
+        ui.vL.innerText = L.toFixed(2) + " H"; ui.vC.innerText = (C * 1e6).toFixed(0) + " μF";
+        ui.vU0.innerText = U0 + " V"; ui.vR.innerText = R + " Ω";
+        
+        let omega0 = 1 / Math.sqrt(L * C); let f = omega0 / (2 * Math.PI);
+        ui.dispF.innerText = f.toFixed(1) + " Hz";
+
+        if (simState === 1) { q = C * U0; render(); drawGraph(); }
+    }
+
+    function physicsStep() {
+        if (simState !== 2) return;
+        let currentR = mode === 'RLC' ? R : 0;
+        let uc = q / C;
+        let di_dt = (uc - i * currentR) / L; 
+        i += di_dt * dt;
+        q -= i * dt;
+        time += dt;
+    }
+
+    function render() {
+        let uc = q / C; let wc = 0.5 * q * q / C; let wl = 0.5 * L * i * i; let wtot = wc + wl;
+        
+        let currentR = mode === 'RLC' ? R : 0;
+        let di_dt = (uc - i * currentR) / L;
+        let e_tc = -L * di_dt; 
+        
+        let I_max = U0 * Math.sqrt(C / L);
+        let max_di_dt = U0 / L; 
+
+        ui.dispUc.innerText = uc.toFixed(2) + " V"; 
+        ui.dispI.innerText = (i * 1000).toFixed(2) + " mA";
+        ui.dispUL.innerText = e_tc.toFixed(2) + " V"; 
+        
+        let E_max = Math.max(wtot, 0.5 * C * U0 * U0);
+        ui.barWc.style.width = Math.min(100, (wc / E_max) * 100) + "%";
+        ui.barWl.style.width = Math.min(100, (wl / E_max) * 100) + "%";
+        ui.barWtot.style.width = Math.min(100, (wtot / E_max) * 100) + "%";
+
+        let intensityC = Math.min(1, Math.abs(uc / U0)); 
+        ui.plateTop.style.opacity = 0.2 + 0.8 * intensityC; 
+        ui.plateBot.style.opacity = 0.2 + 0.8 * intensityC;
+        
+        if (uc > 0.5) { ui.chargeTop.textContent = "+"; ui.chargeBot.textContent = "-"; }
+        else if (uc < -0.5) { ui.chargeTop.textContent = "-"; ui.chargeBot.textContent = "+"; }
+        else { ui.chargeTop.textContent = ""; ui.chargeBot.textContent = ""; }
+
+        let intensityL = Math.min(1, Math.abs(i / I_max));
+        let intensityEMF = Math.min(1, Math.abs(di_dt) / max_di_dt);
+        
+        // Cập nhật Opacity bám sát cường độ di_dt mượt mà
+        if (simState === 2) {
+            ui.indChargeTop.style.opacity = intensityEMF;
+            ui.indChargeBot.style.opacity = intensityEMF;
+            
+            // Ở thời điểm di_dt = 0, opacity tự động = 0 (tàng hình) để swap cực tính êm mượt
+            if (di_dt > 0) {
+                ui.indChargeTop.textContent = "+";
+                ui.indChargeBot.textContent = "-";
+            } else {
+                ui.indChargeTop.textContent = "-";
+                ui.indChargeBot.textContent = "+";
+            }
+        } else {
+            ui.indChargeTop.textContent = "";
+            ui.indChargeBot.textContent = "";
+        }
+
+        if(mode === 'RLC') {
+            ui.zigzag.style.stroke = intensityL > 0.3 ? '#ffeb3b' : '#ff5722';
+        }
+
+        if (ui.chkCharges.checked && simState !== 0) {
+            ui.electronContainer.style.display = 'block';
+            let q_norm = q / (C * U0); 
+            let isPos = ui.radPos.checked;
+            let dir = isPos ? -1 : 1; 
+            let displacement = dir * q_norm * 320; 
+
+            electrons.forEach(el => {
+                let current_pos = el.basePos + displacement;
+                current_pos = Math.max(0, Math.min(pathLength, current_pos));
+                let pt = ui.electronPath.getPointAtLength(current_pos);
+                el.el.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
+            });
+        } else { 
+            ui.electronContainer.style.display = 'none'; 
+        }
+
+        if (ui.chkArrow.checked && simState === 2) {
+            ui.arrow.setAttribute("opacity", "1");
+            if (i > 0.001) arrowAngle = 180; else if (i < -0.001) arrowAngle = 0;
+            let scale = 0.4 + 0.6 * intensityL; 
+            ui.arrow.setAttribute("transform", `translate(250, 200)`); ui.arrowShape.setAttribute("transform", `rotate(${arrowAngle}) scale(${scale})`);
+        } else { ui.arrow.setAttribute("opacity", "0"); }
+    }
+
+    function drawGraph() {
+        let w = ui.canvas.width; let h = ui.canvas.height;
+        ui.ctx.clearRect(0, 0, w, h);
+        
+        ui.ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ui.ctx.lineWidth = 1; ui.ctx.beginPath();
+        for(let x=0; x<w; x+=40) { ui.ctx.moveTo(x,0); ui.ctx.lineTo(x,h); }
+        for(let y=0; y<h; y+=40) { ui.ctx.moveTo(0,y); ui.ctx.lineTo(w,y); }
+        ui.ctx.stroke();
+
+        let midY = h / 2;
+        ui.ctx.lineWidth = 1.5; ui.ctx.strokeStyle = '#aaaaaa'; ui.ctx.fillStyle = '#aaaaaa'; ui.ctx.font = '12px Arial';
+
+        ui.ctx.beginPath(); ui.ctx.moveTo(20, midY); ui.ctx.lineTo(w - 10, midY);
+        ui.ctx.lineTo(w - 18, midY - 4); ui.ctx.moveTo(w - 10, midY); ui.ctx.lineTo(w - 18, midY + 4); ui.ctx.stroke();
+        ui.ctx.fillText("t (s)", w - 30, midY + 16);
+
+        ui.ctx.beginPath(); ui.ctx.moveTo(30, h - 10); ui.ctx.lineTo(30, 15);
+        ui.ctx.lineTo(26, 23); ui.ctx.moveTo(30, 15); ui.ctx.lineTo(34, 23); ui.ctx.stroke();
+        ui.ctx.fillText("u, i, W", 35, 25); ui.ctx.fillText("0", 18, midY + 14);
+
+        if (graphData.length === 0) return;
+
+        const TIME_WINDOW = maxDataPoints * speedFactorNormal * dt; 
+        let tEnd = Math.max(time, TIME_WINDOW);
+        let tStart = tEnd - TIME_WINDOW;
+        let getX = t => 30 + (t - tStart) / TIME_WINDOW * (w - 50);
+
+        let maxUc = U0 * 1.1; 
+        let maxI = (U0 * Math.sqrt(C / L)) * 1.1 || 0.001;
+        let maxW = (0.5 * C * U0 * U0) * 1.1 || 0.0001;
+
+        let sUc = (h/2 - 20) / maxUc; 
+        let sI = (h/2 - 20) / maxI; 
+        let sW = (h/2 - 20) / maxW; 
+
+        const drawLine = (key, scale, color, lineWidth) => {
+            ui.ctx.beginPath(); ui.ctx.strokeStyle = color; ui.ctx.lineWidth = lineWidth;
+            let started = false;
+            for(let i=0; i<graphData.length; i++) {
+                if (graphData[i].t < tStart) continue; 
+                let px = getX(graphData[i].t), py = midY - graphData[i][key] * scale;
+                if(!started) { ui.ctx.moveTo(px, py); started = true; } 
+                else { ui.ctx.lineTo(px, py); }
+            } ui.ctx.stroke();
+        };
+
+        if (ui.chkPlotUc.checked) drawLine('uc', sUc, colorC, 2.5);
+        if (ui.chkPlotI.checked) drawLine('i', sI, colorI, 2.5);
+        if (ui.chkPlotWc.checked) drawLine('wc', sW, colorWc, 1.8);
+        if (ui.chkPlotWl.checked) drawLine('wl', sW, colorWl, 1.8);
+        if (ui.chkPlotWtot.checked) drawLine('wtot', sW, colorW, 2.5);
+    }
+
+    function loop() {
+        if (!isPaused && simState === 2) {
+            let currentSpeed = ui.chkSlow.checked ? speedFactorSlow : speedFactorNormal;
+            for(let k=0; k<currentSpeed; k++) physicsStep();
+            
+            let uc = q / C; let wc = 0.5 * q * q / C; let wl = 0.5 * L * i * i;
+            graphData.push({ t: time, uc: uc, i: i, wc: wc, wl: wl, wtot: wc + wl });
+            
+            const TIME_WINDOW = maxDataPoints * speedFactorNormal * dt; 
+            while(graphData.length > 0 && graphData[0].t < time - TIME_WINDOW) {
+                graphData.shift();
+            }
+
+            render(); drawGraph();
+        }
+        reqAnimFrame = requestAnimationFrame(loop);
+    }
+
+    ui.btnCharge.addEventListener('click', () => {
+        simState = 1; isPaused = false; q = C * U0; i = 0; time = 0; graphData = [];
+        ui.switchLever.style.transform = "rotate(-35deg)";
+        ui.btnSwitch.disabled = false; ui.btnCharge.disabled = true; ui.btnPlay.disabled = true;
+        ui.simStatus.innerText = "Trạng thái: Đã nạp đầy tụ C"; ui.simStatus.style.color = colorC;
+        
+        let uc = q / C; let wc = 0.5 * q * q / C;
+        graphData.push({ t: time, uc: uc, i: i, wc: wc, wl: 0, wtot: wc }); 
+        
+        render(); drawGraph();
+    });
+
+    ui.btnSwitch.addEventListener('click', () => {
+        simState = 2; ui.switchLever.style.transform = "rotate(0deg)";
+        ui.btnSwitch.disabled = true; ui.btnPlay.disabled = false;
+        ui.simStatus.innerText = "Trạng thái: Đang dao động"; ui.simStatus.style.color = "var(--color-success)";
+        if(!reqAnimFrame) loop();
+    });
+
+    ui.btnPlay.addEventListener('click', () => {
+        isPaused = !isPaused;
+        ui.btnPlay.innerText = isPaused ? "▶ Tiếp Tục" : "⏸ Tạm Dừng";
+        ui.btnPlay.style.background = isPaused ? "#ff9800" : "var(--color-success)";
+        ui.simStatus.innerText = isPaused ? "Trạng thái: Tạm dừng" : "Trạng thái: Đang dao động";
+    });
+
+    ui.btnReset.addEventListener('click', () => {
+        simState = 0; isPaused = false; q = 0; i = 0; time = 0; graphData = [];
+        ui.switchLever.style.transform = "rotate(-35deg)";
+        ui.btnCharge.disabled = false; ui.btnSwitch.disabled = true; ui.btnPlay.disabled = true;
+        ui.btnPlay.innerText = "⏸ Tạm Dừng"; ui.btnPlay.style.background = "var(--color-success)";
+        ui.simStatus.innerText = "Trạng thái: Mạch hở"; ui.simStatus.style.color = "#fff";
+        if(reqAnimFrame) { cancelAnimationFrame(reqAnimFrame); reqAnimFrame = null; }
+        
+        ui.dispUL.innerText = "0.00 V";
+        render(); drawGraph();
+    });
+
+    ui.btnLC.addEventListener('click', () => setMode('LC'));
+    ui.btnRLC.addEventListener('click', () => setMode('RLC'));
+
+    function setMode(newMode) {
+        mode = newMode;
+        ui.btnLC.classList.toggle('active', mode === 'LC'); ui.btnRLC.classList.toggle('active', mode === 'RLC');
+        
+        // Cập nhật tọa độ nối liền nét dây
+        if (mode === 'RLC') {
+            ui.groupR.classList.remove('hidden'); ui.resistorNode.classList.remove('hidden');
+            ui.wirePath.setAttribute("d", "M 100 170 L 100 200 L 220 200 M 280 200 L 400 200 L 400 180 M 400 120 L 400 100 L 280 100 M 220 100 L 100 100 L 100 130");
+        } else {
+            ui.groupR.classList.add('hidden'); ui.resistorNode.classList.add('hidden');
+            ui.wirePath.setAttribute("d", "M 100 170 L 100 200 L 400 200 L 400 180 M 400 120 L 400 100 L 280 100 M 220 100 L 100 100 L 100 130");
+        }
+        pathLength = ui.electronPath.getTotalLength(); initElectrons(); ui.btnReset.click();
+    }
+
+    [ui.slL, ui.slC, ui.slU0, ui.slR].forEach(slider => slider.addEventListener('input', updateDerivedParameters));
+    
+    [ui.chkPlotUc, ui.chkPlotI, ui.chkPlotWc, ui.chkPlotWl, ui.chkPlotWtot, ui.chkCharges, ui.chkArrow].forEach(chk => {
+        chk.addEventListener('change', () => { if (graphData.length > 0 || simState !== 0) { render(); drawGraph(); } });
+    });
+
+    updateDerivedParameters(); render(); drawGraph();
+</script>
+</body>
+</html>
