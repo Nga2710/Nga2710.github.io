@@ -1,0 +1,3587 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#F5F5F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trắc nghiệm</title>
+  <link rel="stylesheet" href="tncss.css">
+</head>
+<body>
+<div id="elem">
+  <div id="inputStr" class="">
+
+    <header>
+      Nạp Trắc Nghiệm
+    </header>
+    <div class="help" onclick="help()">
+      ?
+    </div>
+    <div style="display: flex">
+      <textarea disabled style="" id="text" placeholder="Dán nội dung ôn tập vào đây theo hướng dẫn"></textarea>
+
+    </div>
+    <div class="centered" style="">
+      <button onclick="run()">Bắt đầu kiểm tra</button>
+      <br> Cài đặt:<br>
+      <div>
+        <input id="showAnIn" type="checkbox" style=""><label for="showAnIn">Hiển thị câu trả lời ngay khi chọn</label>
+        <br>
+        <input id="shuffleQ" type="checkbox" style=""><label for="shuffleQ">Xáo trộn câu hỏi</label>
+        <br>
+        <input id="shuffleA" type="checkbox" style=""><label for="shuffleA">Xáo trộn câu trả lời</label>
+        <br><input checked id="autoStr" type="checkbox" style=""><label for="autoStr">Tự động cuộn</label>
+        <br>
+      </div>
+    
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="scroll-percentage" id="scrollPercentage">0%</div>
+
+  <div id="main" class="hide">
+    <span style="color: green">Good Luck!</span>
+    <div class="" id="container">
+      Đang xử lí câu hỏi..
+    </div>
+    <br>
+    <div class="container">
+
+      <div id="timer">
+        Thời gian làm bài: <span id="time">00:00:00</span>
+      </div>
+      <pre id="result"></pre>
+      <button id="start" onclick="calculateScore()">Nộp bài</button>
+      <button id="reload" style="" class="hide" onclick="reload()">Làm lại những câu sai</button>
+      <div class="floating-buttons hide" id="floating-buttons">
+        <button id="prevButton">Prev</button><br>
+        <button id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <br>
+  <sub>Web tạo bởi Thanh Ngà, không được sao chép khi chưa có sự cho phép!</sub>
+  <script>
+    var inputElement = document.getElementById('text');
+    inputElement.value = `
+Câu 1. Thuật ngữ "kinh tế- chính trị" được sử dụng lần đầu tiên vào năm nào?
+A. 1610
+B. 1612
+/C. 1615
+D. 1618
+Câu 2. Ai là người đầu tiên đưa ra khái niệm "kinh tế- chính trị"?
+/A. Antoine Montchretiên
+B. Francois Quesney
+C. Tomas Mun
+D. William Petty
+Câu 3. Ai là người được C. Mác coi là sáng lập ra kinh tế chính trị tư sản cổ điển?
+A. A. Smith
+B. D. Ricardo
+/C. W.Petty
+D. R.T.Mathus
+Câu 4. Ai là người được coi là nhà kinh tế thời kỳ công trường thủ công?
+A. W. Petty
+/B. A. Smith
+C. D.Ricardo
+D. R.T.Mathus
+Câu 5. D.Ricardo là nhà kinh tế của thời kỳ nào?
+A. Thời kỳ tích luỹ nguyên thuỷ TBCN
+B. Thời kỳ hiệp tác giản đơn
+C. Thời kỳ công trường thủ công
+/D. Thời kỳ đại công nghiệp cơ khí
+Câu 6. Kinh tế- chính trị Mác - Lênin đã kế thừa và phát triển trực tiếp những thành tựu của:
+A. Chủ nghĩa trọng thương
+B. Chủ nghĩa trọng nông
+/C. Kinh tế chính trị cổ điển Anh
+D. Kinh tế- chính trị tầm thường
+Câu 7. Học thuyết kinh tế nào của C.Mác được coi là hòn đá tảng?
+A. Học thuyết giá trị lao động
+/B. Học thuyết giá trị thặng dư
+C. Học thuyết tích luỹ tư sản
+D. Học thuyết tái sản xuất tư bản xã hội
+Câu 8. Đối tượng nghiên cứu của kinh tế - chính trị Mác-Lênin là:
+A. Sản xuất của cải vật chất
+B. Quan hệ xã hội giữa người với người
+/C. Quan hệ sản xuất trong mối quan hệ tác động qua lại với lực lượng sản xuất và kiến trúc thượng tầng.
+D. Quá trình sản xuất, phân phối, trao đổi, tiêu dùng.
+Câu 9. Hãy chọn phương án đúng về đặc điểm của quy luật kinh tế:
+A. Mang tính khách quan
+B. Mang tính chủ quan
+C. Phát huy tác dụng thông qua hoạt động kinh tế của con người
+/D. Cả a và c
+Câu 10. Chọn phương án đúng về quy luật kinh tế và chính sách kinh tế:
+A. Quy luật kinh tế là cơ sở của chính sách kinh tế
+B. Chính sách kinh tế là hoạt động chủ quan của nhà nước trên cơ sở nhận thức và vận dụng các quy luật khách quan.
+C. Quy luật kinh tế và chính sách kinh tế đều phụ thuộc vào các điều kiện khách quan.
+/D. Cả a, b, c
+Câu 11. Để nghiên cứu kinh tế- chính trị Mác- Lênin có thể sử dụng nhiều phương pháp, phương pháp nào quan trọng nhất?
+/A. Trừu tượng hoá khoa học
+B. Phân tích và tổng hợp
+C. Mô hình hoá
+D. Điều tra thống kê
+Câu 12. Khi nghiên cứu phương thức sản xuất TBCN, C.Mác bắt đầu từ:
+A. Sản xuất của cải vật chất
+B. Lưu thông hàng hoá
+C. Sản xuất giá trị thặng dư
+/D. Sản xuất hàng hoá giản đơn và hàng hoá
+Câu 13. Trừu tượng hoá khoa học là:
+A. Gạt bỏ những bộ phận phức tạp của đối tượng nghiên cứu.
+B. Gạt bỏ các hiện tượng ngẫu nhiên, bề ngoài, chỉ giữ lại những mối liên hệ phổ biến mang tính bản chất.
+C. Quá trình đi từ cụ thể đến trừu tượng và ngược lại.
+/D. Cả b và c
+Câu 14. Chức năng nhận thức của kinh tế- chính trị là nhằm:
+A. Phát hiện bản chất của các hiện tượng và quá trình kinh tế.
+B. Sự tác động giữa quan hệ sản xuất với lực lượng sản xuất và kiến trúc thượng tầng.
+C. Tìm ra các quy luật kinh tế
+/D. Cả a, b, c
+Câu 15. Chức năng phương pháp luận của kinh tế- chính trị Mác- Lênin thể hiện ở:
+A. Trang bị phương pháp để xem xét thế giới nói chung
+B. Là nền tảng lý luận cho các khoa học kinh tế ngành
+C. Là cơ sở lý luận cho các khoa học nằm giáp ranh giữa các tri thức các ngành khác nhau.
+/D. Cả b và c
+Câu 16. Chức năng tư tưởng của kinh tế- chính trị Mác – Lê nin thể hiện ở:
+A. Góp phần xây dựng thế giới quan cách mạng của giai cấp công nhân
+B. Tạo niềm tin vào thắng lợi trong cuộc đấu tranh xoá bỏ áp bức bóc lột
+C. Là vũ khí tư tưởng của giai cấp công nhân và nhân dân lao động trong công cuộc xây dựng CNXH
+/D. Cả a, b và c 
+Câu 17. Bản chất khoa học và cách mạng của kinh tế - chính trị Mác- Lênin thể hiện ở chức năng nào?
+A. Nhận thức
+B. Tư tưởng
+C. Phương pháp luận
+/D. Cả a, b và c 
+Câu 18. Hoạt động nào của con người được coi là cơ bản nhất và là cơ sở của đời sống xã hội?
+A. Hoạt động chính trị
+B. Hoạt động khoa học
+/C. Hoạt động sản xuất của cải vật chất
+D. Hoạt động nghệ thuật, thể thao
+Câu 19. Để xem xét, giải thích nguồn gốc sâu xa của các hiện tượng kinh tế- xã hội phải xuất phát từ:
+A. Từ hệ tư tưởng của giai cấp thống trị
+B. Từ các hoạt động kinh tế
+C. Từ truyền thống lịch sử
+/D. Từ ý thức xã hội
+Câu 20. Quá trình sản xuất là sự kết hợp của các yếu tố:
+A. Sức lao động với công cụ lao động
+B. Lao động với tư liệu lao động
+/C. Sức lao động với đối tượng lao động và tư liệu lao động
+D. Lao động với đối tượng lao động và tư liệu lao động
+Câu 21. "Những thời đại kinh tế khác nhau không phải ở chỗ chúng sản xuất ra cái gì, mà là ở chỗ chúng sản xuất bằng cách nào, với những tư liệu lao động nào". Câu nói trên là của ai?
+A. A. Smith
+B. D.Ricardo
+/C. C.Mác
+D. Ph.Ăng ghen
+Câu 22. Sức lao động là:
+A. Toàn bộ thể lực và trí lực trong một con người đang sống và được vận dụng để sản xuất ra giá trị sử dụng nào đó.
+B. Khả năng lao động, được tiêu dùng trong quá trình sản xuất.
+C. Hoạt động có mục đích của con người để tạo ra của cải.
+/D. Cả a và b.
+Câu 23. Lao động sản xuất có đặc trưng cơ bản là:
+A. Hoạt động cơ bản nhất, là phẩm chất đặc biệt của con người
+B. Là hoạt động có mục đích, có ý thức của con người
+C. Là sự tiêu dùng sức lao động trong hiện thực
+/D. Cả a, b và c
+Câu 24. Lao động sản xuất có vai trò gì đối với con người?
+A. Tạo ra của cải vật chất để nuôi sống con người
+B. Phát triển, hoàn thiện con người cả về thể lực và trí lực
+C. Giúp con người tích luỹ kinh nghiệm, chế tạo ra công cụ sản xuất ngày càng tinh vi
+/D. Cả a, b, c.
+Câu 25. Đối tượng lao động là:
+A. Các vật có trong tự nhiên
+/B. Những vật mà lao động của con người tác động vào nhằm thay đổi nó cho phù hợp với mục đích của con người
+C. Những vật dùng để truyền dẫn sức lao động của con người
+D. Cả a, b, c
+Câu 26. Chọn ý đúng trong các ý dưới đây:
+A. Mọi nguyên liệu đều là đối tượng lao động
+B. Mọi đối tượng lao động đều là nguyên liệu
+C. Nguyên liệu là đối tượng lao động của các ngành công nghiệp chế biến
+/D. Cả a và c đều đúng.
+Câu 27. Tư liệu lao động gồm có:
+A. Công cụ lao động
+B. Các vật để chứa đựng, bảo quản
+C. Kết cấu hạ tầng sản xuất
+/D. Cả a, b, c
+Câu 28. Trong tư liệu lao động, bộ phận nào quyết định đến năng suất lao động?
+/A. Công cụ lao động
+B. Nguyên vật liệu cho sản xuất
+C. Các vật chứa đựng, bảo quản
+D. Kết cấu hạ tầng sản xuất
+Câu 29. Bộ phận nào của tư liệu lao động được coi là tiêu chí phản ánh đặc trưng phát triển của một thời đại kinh tế
+/A. Công cụ lao động
+B. Kết cấu hạ tầng sản xuất
+C. Nhà cửa, kho bãi ... để chứa đựng, bảo quản
+D. Cả a và b
+Câu 30. Chọn ý đúng trong các ý dưới đây:
+A. Một vật là đối tượng lao động cũng có thể là tư liệu lao động
+B. Một vật là tư liệu lao động cũng có thể là đối tượng lao động
+C. Đối tượng lao động và tư liệu lao động kết hợp với nhau là tư liệu sản xuất
+/D. Cả a, b, c đều đúng
+Câu 31. Trong tư liệu lao động, bộ phận nào cần được phát triển đi trước một bước so với đầu tư sản xuất trực tiếp?
+A. Công cụ sản xuất
+B. Các bộ phận chứa đựng, bảo quản
+/C. Kết cấu hạ tầng sản xuất
+D. Cả a và c
+Câu 32. Trong nền sản xuất lớn hiện đại, yếu tố nào giữ vai trò quyết định của quá trình lao động sản xuất?
+/A. Sức lao động
+B. Tư liệu sản xuất hiện đại
+C. Công cụ sản xuất tiên tiến
+D. Đối tượng lao động
+Câu 33. Phương thức sản xuất là sự thống nhất của:
+A. Tồn tại xã hội và ý thức xã hội
+B. Cơ sở hạ tầng và kiến trúc thượng tầng
+/C. Lực lượng sản xuất và quan hệ sản xuất
+D. Cơ cấu kinh tế và kết cấu giai cấp xã hội
+Câu 34. Lực lượng sản xuất biểu hiện:
+/A. Quan hệ con người với tự nhiên
+B. Quan hệ con người với con người
+C. Quan hệ con người với tự nhiên và quan hệ người với người
+D. Cả a, b, c
+Câu 35. Trong thời đại ngày nay, lực lượng sản xuất bao gồm các yếu tố nào?
+A. Người lao động
+B. Tư liệu sản xuất
+C. Khoa học công nghệ
+/D. Cả a, b, c
+Câu 36. Yếu tố chủ thể của lực lượng sản xuất là:
+A. Tư liệu sản xuất hiện đại
+/B. Con người với kỹ năng, kỹ xảo và tri thức được tích luỹ lại
+C. Khoa học công nghệ tiên tiến
+D. Cả b và c
+Câu 37. Quan hệ sản xuất biểu hiện:
+A. Quan hệ giữa người với tự nhiên
+/B. Quan hệ kinh tế giữa người với người trong quá trình sản xuất
+C. Quan hệ giữa người với người trong xã hội
+D. Cả a, b, c
+Câu 38. Quan hệ sản xuất bao gồm:
+A. Quan hệ về sở hữu tư liệu sản xuất
+B. Quan hệ về tổ chức quản lý sản xuất xã hội
+C. Quan hệ về phân phối sản phẩm xã hội
+/D. Cả a, b, c 
+Câu 39. Quan hệ nào giữ vai trò quyết định trong quan hệ sản xuất:
+/A. Quan hệ sở hữu
+B. Quan hệ tổ chức quản lý
+C. Quan hệ phân phối
+D. Không quan hệ nào quyết định
+Câu 40. Quan hệ sản xuất được hình thành do:
+A. ý muốn chủ quan của con người
+B. Do giai cấp thống trị quy định thành pháp luật
+/C. Do tính chất và trình độ phát triển của lực lượng sản xuất
+D. Cả a, b, c
+Câu 41. Lực lượng sản xuất và quan hệ sản xuất có quan hệ với nhau thế nào?
+A. Tác động qua lại với nhau
+B. Lực lượng sản xuất quyết định quan hệ sản xuất
+C. QHSX có tác động tích cực trở lại đối với lực lượng sản xuất
+/D. Cả a, b và c
+Câu 42. Khi nào QHSX được xem là phù hợp với tính chất và trình độ phát triển của lực lượng sản xuất?
+/A. Thúc đẩy lực lượng sản xuất phát triển
+B. Cải thiện đời sống nhân dân
+C. Tạo điều kiện thực hiện công bằng xã hội
+D. Cả a, b, c
+Câu 43. Các phương thức sản xuất nối tiếp nhau trong lịch sử theo trình tự nào?
+A. Cộng sản nguyên thuỷ- phong kiến- chiếm hữu nô lệ- tư bản – chủ nghĩa cộng sản
+/B. Cộng sản nguyên thuỷ- chiếm hữu nô lệ- phong kiến- tư bản- chủ nghĩa cộng sản
+C. Chiếm hữu nô lệ - cộng sản nguyên thuỷ - phong kiến - tư bản - chủ nghĩa cộng sản
+D. Cộng sản nguyên thuỷ - chiếm hữu nô lệ - tư bản - phong kiến - chủ nghĩa cộng sản
+Câu 44. Tái sản xuất là:
+A. Là quá trình sản xuất
+/B. Là quá trình sản xuất được lặp đi lặp lại và phục hồi không ngừng.
+C. Là sự khôi phục lại sản xuất
+D. Cả a, b, c
+Câu 45. Căn cứ vào đâu để phân chia thành tái sản xuất cá biệt và tái sản xuất xã hội?
+/A. Căn cứ vào phạm vi sản xuất
+B. Căn cứ vào tốc độ sản xuất
+C. Căn cứ vào tính chất sản xuất
+D. Căn cứ vào nội dung sản xuất
+Câu 46. Căn cứ vào đâu để chia ra thành tái sản xuất giản đơn và tái sản xuất mở rộng?
+A. Căn cứ vào phạm vi
+B. Căn cứ vào nội dung
+C. Căn cứ vào tính chất
+/D. Căn cứ vào quy mô
+Câu 47. Loại tái sản xuất nào làm tăng sản phẩm chủ yếu do tăng năng suất lao động và hiệu quả sử dụng các nguồn lực?
+A. Tái sản xuất giản đơn
+B. Tái sản xuất mở rộng
+C. Tái sản xuất mở rộng theo chiều rộng
+/D. Tái sản xuất mở rộng theo chiều sâu
+Câu 48. Chọn sai về tái sản xuất giản đơn và tái sản xuất mở rộng?
+A. Tái sản xuất giản đơn là đặc trưng của nền sản xuất nhỏ
+/B. Tái sản xuất giản đơn là việc tổ chức sản xuất đơn giản, không phức tạp
+C. Tái sản xuất mở rộng là đặc trưng của nền sản xuất lớn
+D. Sản phẩm thặng dư là nguồn gốc của tái sản xuất mở rộng
+Câu 49. Chọn ý sai về tái sản xuất mở rộng theo chiều rộng và tái sản xuất mở rộng theo chiều sâu?
+A. Đều làm cho sản phẩm tăng lên
+/B. Cả hai hình thức tái sản xuất đều dựa trên cơ sở tăng năng suất lao động và hiệu quả sử dụng các yếu tố đầu vào
+C. Tái sản xuất mở rộng theo chiều sâu sử dụng tài nguyên hiệu quả hơn và gây ra ô nhiễm ít hơn tái sản xuất mở rộng theo chiều rộng.
+D. Cả b và c
+Câu 50. Xác định đúng trình tự các khâu của quá trình tái sản xuất
+A. Sản xuất - trao đổi - phân phối - tiêu dùng
+/B. Sản xuất - phân phối - trao đổi - tiêu dùng
+C. Phân phối - trao đổi - sản xuất - tiêu dùng
+D. Trao đổi - tiêu dùng - phân phối - sản xuất
+Câu 51. Trong 4 khâu của quá trình tái sản xuất, khâu nào giữ vai trò quyết định?
+/A. Sản xuất
+B. Phân phối
+C. Trao đổi
+D. Tiêu dùng
+Câu 52. Trong các khâu của quá trình tái sản xuất, khâu nào là mục đích và là động lực?
+A. Sản xuất
+B. Phân phối
+C. Trao đổi
+/D. Tiêu dùng
+Câu 53. Chọn ý đúng về quan hệ giữa sản xuất với phân phối
+A. Tồn tại độc lập với nhau
+B. Phân phối thụ động, do sản xuất quyết định
+C. Phân phối quyết định đến quy mô, cơ cấu của sản xuất
+/D. Sản xuất quyết định phân phối, phân phối có tác động tích cực đối với sản xuất.
+Câu 54. Nội dung của tái sản xuất xã hội bao gồm:
+A. Tái sản xuất của cải vật chất và QHSX
+B. Tái sản xuất sức lao động và tư liệu sản xuất
+C. Tái sản xuất tư liệu tiêu dùng và môi trường sinh thái
+/D. Tái sản xuất sức lao động, của cải vật chất, QHSX và môi trường sinh thái
+Câu 55. Tiêu chí nào là quan trọng nhất để phân biệt các hình thái kinh tế - xã hội?
+A. Lực lượng sản xuất
+/B. Quan hệ sản xuất
+C. Tồn tại xã hội
+D. Kiến trúc thượng tầng
+Câu 56. Tăng trưởng kinh tế là:
+A. Tăng năng suất lao động
+B. Tăng hiệu quả của sản xuất
+/C. Tăng quy mô sản lượng của nền kinh tế trong một thời kỳ nhất định
+D. Sự phát triển kinh tế và tiến bộ xã hội
+Câu 57. Chỉ số nào được sử dụng để tính tốc độ tăng trưởng kinh tế?
+A. Mức tăng năng suất lao động
+B. Mức tăng vốn đầu tư
+C. Mức tăng GDP/người
+/D. Mức tăng GNP hoặc GDP năm sau so với năm trước
+Câu 58. Để tăng trưởng kinh tế cao, kinh tế học hiện đại nêu ra các nhân tố nào?
+A. Vốn, khoa học công nghệ và con người
+B. Đất đai, tư bản và cơ cấu kinh tế
+C. Cơ cấu kinh tế, thể chế chính trị và vai trò của nhà nước
+/D. Cả a và c
+Câu 59. Chọn ý đúng về phát triển kinh tế
+A. Phát triển kinh tế là tăng trưởng kinh tế bền vững
+B. Phát triển kinh tế là tăng trưởng kinh tế, hoàn thiện cơ cấu kinh tế và thể chế kinh tế.
+C. Phát triển kinh tế là tăng trưởng kinh tế và nâng cao chất lượng cuộc sống
+/D. Phát triển kinh tế là tăng trưởng kinh tế gắn liền với hoàn thiện cơ cấu kinh tế, thể chế kinh tế và nâng cao chất lượng cuộc sống.
+Câu 60. Thế nào là tăng trưởng kinh tế bền vững?
+A. Là sự tăng trưởng ổn định lâu dài và tốc độ rất cao
+B. Là sự tăng trưởng tương đối cao, ổn định trong thời gian tương đối dài
+C. Sự tăng trưởng gắn liền với bảo vệ môi trường sinh thái và tiến bộ xã hội
+/D. Cả b và c
+Câu 61. Trong các nhân tố tăng trưởng kinh tế, Đảng ta xác định nhân tố nào là cơ bản của tăng trưởng nhanh và bền vững?
+A. Vốn
+/B. Con người
+C. Khoa học và công nghệ
+D. Cơ cấu kinh tế, thể chế kinh tế và vai trò nhà nước
+Câu 62. Tăng trưởng kinh tế có vai trò thế nào?
+A. Là điều kiện để khắc phục tình trạng đói nghèo, lạc hậu
+B. Để tạo thêm việc làm, giảm thất nghiệp
+C. Để củng cố an ninh, quốc phòng
+/D. Cả a, b và c
+Câu 63. Các nhân tố nào có ảnh hưởng đến phát triển kinh tế?
+A. Lực lượng sản xuất
+B. Quan hệ sản xuất
+C. Kiến trúc thượng tầng
+/D. Cả a, b, c
+Câu 64. Phát triển kinh tế bao gồm những nội dung nào dưới đây?
+A. Sự gia tăng của GNP, hoặc GDP và GNP hoặc GDP trên đầu người.
+B. Cơ cấu kinh tế thay đổi theo hướng: tỷ trọng của công nghiệp và dịch vụ trong GNP tăng lên còn của nông nghiệp trong GNP giảm xuống.
+C. Chất lượng cuộc sống của đại đa số dân cư tăng lên cả về mặt vật chất, tinh thần và môi trường sinh thái được bảo vệ.
+/D. Cả a, b, c
+Câu 65. Tiến bộ xã hội được thể hiện ở những mặt nào?
+A. Tiến bộ về kinh tế
+B. Tiến bộ về chính trị, xã hội
+C. Đời sống văn hoá, tinh thần ngày càng được nâng cao
+/D. Cả a, b, c đều đúng
+Câu 66. Liên hợp quốc dùng chỉ số HDI làm tiêu chí đánh giá sự phát triển, sự tiến bộ của mỗi quốc gia. Chỉ số HDI gồm những tiêu chí cơ bản nào?
+A. Mức thu nhập bình quân (GDP/người)
+B. Thành tựu giáo dục
+C. Tuổi thọ bình quân
+/D. Cả a, b và c
+Câu 67. Phát triển kinh tế và tiến bộ xã hội có quan hệ với nhau:
+A. Phát triển kinh tế là cơ sở vật chất cho tiến bộ xã hội
+B. Tiến bộ xã hội thúc đẩy tăng trưởng và phát triển kinh tế
+C. Thực chất là quan hệ giữa sự phát triển lực lượng sản xuất với phát triển QHSX và kiến trúc thượng tầng
+/D. Cả a, b và c
+Câu 68. Chọn ý đúng về tăng trưởng kinh tế và phát triển kinh tế
+A. Muốn phát triển kinh tế thì cần phải tăng trưởng kinh tế
+B. Có thể có tăng trưởng kinh tế nhưng không có phát triển kinh tế
+C. Những nhân tố làm tăng trưởng kinh tế đều làm phát triển kinh tế
+/D. Cả a, b, c đều đúng
+Câu 69. Chọn các nội dung đúng về xã hội hoá sản xuất. Xã hội hoá sản xuất bao gồm:
+A. Xã hội hoá sản xuất về kinh tế- kỹ thuật
+B. Xã hội hoá sản xuất về kinh tế - tổ chức
+C. Xã hội hoá sản xuất về kinh tế - xã hội
+/D. Cả a, b, c
+Câu 70. Sản xuất hàng hoá xuất hiện dựa trên:
+A. Phân công lao động cá biệt và chế độ tư hữu về tư liệu sản xuất
+B. Phân công lao động chung và chế độ sở hữu khác nhau về TLSX
+C. Phân công lao động và sự tách biệt về kinh tế giữa những người sản xuất
+/D. Phân công lao động xã hội và chế độ tư hữu hoặc những hình thức sở hữu khác nhau về TLSX
+Câu 71. Hàng hoá là:
+A. Sản phẩm của lao động để thoả mãn nhu cầu của con người
+/B. Sản phẩm của lao động có thể thoả mãn nhu cầu nào đó của con người thông qua mua bán
+C. Sản phẩm ở trên thị trường
+D. Sản phẩm được sản xuất ra để đem bán
+Câu 72. Giá trị của hàng hoá được quyết định bởi:
+A. Sự khan hiếm của hàng hoá
+B. Sự hao phí sức lao động của con người
+/C. Lao động trừu tượng của người sản xuất kết tỉnh trong hàng hoá
+D. Công dụng của hàng hoá
+Câu 73. Quy luật giá trị có tác dụng:
+A. Điều tiết sản xuất và lưu thông hàng hoá
+B. Cải tiến kỹ thuật, tăng năng suất lao động và phân hoá những người sản xuất
+C. Điều tiết sản xuất, phân hoá giàu nghèo
+/D. Cả a và b
+Câu 74. Sản xuất hàng hoá tồn tại:
+A. Trong mọi xã hội
+B. Trong chế độ nô lệ, phong kiến, TBCN
+/C. Trong các xã hội, có phân công lao động xã hội và sự tách biệt về kinh tế giữa những người sản xuất
+D. Chỉ có trong CNTB
+Câu 75. Giá cả hàng hoá là:
+A. Giá trị của hàng hoá
+B. Quan hệ về lượng giữa hàng và tiền
+C. Tổng của chi phí sản xuất và lợi nhuận
+/D. Biểu hiện bằng tiền của giá trị hàng hoá
+Câu 76. Quy luật giá trị là:
+A. Quy luật riêng của CNTB
+/B. Quy luật cơ bản của sản xuất và trao đổi hàng hoá
+C. Quy luật kinh tế chung của mọi xã hội
+D. Quy luật kinh tế của thời kỳ quá độ lên CNXH
+Câu 77. Yếu tố quyết định đến giá cả hàng hoá là:
+/A. Giá trị của hàng hoá
+B. Quan hệ cung cầu về hàng hoá
+C. Giá trị sử dụng của hàng hoá
+D. Mốt thời trang của hàng hoá
+Câu 78. Lao động trừu tượng là:
+A. Là phạm trù riêng của CNTB
+/B. Là phạm trù của mọi nền kinh tế hàng hoá
+C. Là phạm trù riêng của kinh tế thị trường
+D. Là phạm trù chung của mọi nền kinh tế
+Câu 79. Lao động cụ thể là:
+A. Là phạm trù lịch sử
+B. Lao động tạo ra giá trị của hàng hoá
+/C. Tạo ra giá trị sử dụng của hàng hoá
+D. Biểu hiện tính chất xã hội của người sản xuất hàng hoá
+Câu 80. Lượng giá trị xã hội của hàng hoá được quyết định bởi:
+A. Hao phí vật tư kỹ thuật
+B. Hao phí lao động cần thiết của người sản xuất hàng hoá
+C. Hao phí lao động sống của người sản xuất hàng hoá
+/D. Thời gian lao động xã hội cần thiết
+Câu 81. Lượng giá trị của đơn vị hàng hoá thay đổi:
+A. Tỷ lệ thuận với năng suất lao động
+B. Tỷ lệ nghịch với cường độ lao động
+/C. Tỷ lệ nghịch với năng suất lao động, không phụ thuộc vào cường độ lao động
+D. a và b
+Câu 82. Lượng giá trị của đơn vị hàng hoá thay đổi:
+A. Tỷ lệ nghịch với thời gian lao động xã hội cần thiết và năng suất lao động
+B. Tỷ lệ thuận với thời gian lao động xã hội cần thiết
+C. Tỷ lệ nghịch với năng suất lao động
+/D. Cả b và c
+Câu 83. Lượng giá trị của đơn vị hàng hoá:
+A. Tỷ lệ thuận với cường độ lao động
+B. Tỷ lệ nghịch với cường độ lao động
+/C. Không phụ thuộc vào cường độ lao động
+D. Cả a, b và c
+Câu 84. Chọn ý đúng về tăng năng suất lao động: Khi tăng năng suất lao động thì:
+A. Số lượng hàng hoá làm ra trong 1 đơn vị thời gian tăng
+B. Tổng giá trị của hàng hoá không thay đổi
+C. Giá trị 1 đơn vị hàng hoá giảm xuống
+/D. Cả a, b và c
+Câu 85. Chọn ý đúng về tăng cường độ lao động: khi cường độ lao động tăng lên thì:
+/A. Số lượng hàng hoá làm ra trong một đơn vị thời gian tăng lên
+B. Số lượng lao động hao phí trong thời gian đó không thay đổi
+C. Giá trị 1 đơn vị hàng hoá giảm đi
+D. Cả a, b và c
+Câu 86. Khi đồng thời tăng năng suất lao động và cường độ lao động lên 2 lần thì ý nào dưới đây là đúng?
+A. Tổng số hàng hoá tăng lên 4 lần, tổng số giá trị hàng hoá tăng lên 4 lần
+B. Tổng số giá trị hàng hoá tăng 2 lần, tổng số hàng hoá tăng 2 lần
+/C. Giá trị 1 hàng hoá giảm 2 lần, tổng số giá trị hàng hoá tăng 2 lần
+D. Tổng số hàng hoá tăng lên 2 lần, giá trị 1 hàng hoá giảm 2 lần.
+Câu 87. Hai hàng hoá trao đổi được với nhau vì:
+A. Chúng cùng là sản phẩm của lao động
+B. Có lượng thời gian hao phí lao động xã hội cần thiết để sản xuất ra chúng bằng nhau
+C. Có lượng hao phí vật tư kỹ thuật bằng nhau
+/D. Cả a và b
+Câu 88. Giá trị sử dụng là gì?
+A. Là công dụng của vật có thể thoả mãn nhu cầu nào đó của con người
+B. Là tính hữu ích của vật
+C. Là thuộc tính tự nhiên của vật
+/D. Cả a, b và c
+Câu 89. Số lượng giá trị sử dụng phụ thuộc các nhân tố nào?
+A. Những điều kiện tự nhiên
+B. Trình độ khoa học công nghệ
+C. Chuyên môn hoá sản xuất
+/D. Cả a, b và c
+Câu 90. Yếu tố nào được xác định là thực thể của giá trị hàng hoá?
+A. Lao động cụ thể
+/B. Lao động trừu tượng
+C. Lao động giản đơn
+D. Lao động phức tạp
+Câu 91. Giá trị hàng hoá được tạo ra từ đâu?
+/A. Từ sản xuất
+B. Từ phân phối
+C. Từ trao đổi
+D. Cả sản xuất, phân phối và trao đổi
+Câu 92. Tính chất hai mặt của lao động sản xuất hàng hoá là:
+A. Lao động tư nhân và lao động xã hội
+B. Lao động giản đơn và lao động phức tạp
+/C. Lao động cụ thể và lao động trừu tượng
+D. Lao động quá khứ và lao động sống
+Câu 93. Ai là người phát hiện ra tính chất hai mặt của lao động sản xuất hàng hoá?
+A. A.Smith
+B. D.Ricardo
+/C. C.Mác
+D. Ph. Ăng ghen
+Câu 94. Lao động cụ thể là:
+A. Là những việc làm cụ thể
+B. Là lao động có mục đích cụ thể
+C. Là lao động ở các ngành nghề cụ thể
+/D. Là lao động ngành nghề, có mục đích riêng, đối tượng riêng, công cụ lao động riêng và kết quả riêng
+Câu 95. Lao động cụ thể là:
+/A. Nguồn gốc của của cải
+B. Nguồn gốc của giá trị
+C. Nguồn gốc của giá trị trao đổi
+D. Cả a, b và c
+Câu 96. "Lao động là cha, còn đất là mẹ của mọi của cải". Câu nói này là của ai?
+/A. W.Petty
+B. A.Smith
+C. D. Ricardo
+D. C.Mác
+Câu 97. "Lao động là cha, còn đất là mẹ của mọi của cải". Khái niệm lao động trong câu này là lao động gì?
+A. Lao động giản đơn
+B. Lao động phức tạp
+/C. Lao động cụ thể
+D. Lao động trừu tượng
+Câu 98. Lao động trừu tượng là gì?
+A. Là lao động không cụ thể
+B. Là lao động phức tạp
+C. Là lao động có trình độ cao, mất nhiều công đào tạo
+/D. Là sự hao phí sức lao động của người sản xuất hàng hoá nói chung không tính đến những hình thức cụ thể.
+Câu 99. Lao động trừu tượng là nguồn gốc:
+A. Của tính hữu ích của hàng hoá
+/B. Của giá trị hàng hoá
+C. Của giá trị sử dụng
+D. Cả a, b, c
+Câu 100. Thế nào là lao động giản đơn?
+A. Là lao động làm công việc đơn giản
+B. Là lao động làm ra các hàng hoá chất lượng không cao
+C. Là lao động chỉ làm một công đoạn của quá trình tạo ra hàng hoá
+/D. Là lao động không cần trải qua đào tạo cũng có thể làm được
+Câu 101. Thế nào là lao động phức tạp?
+A. Là lao động tạo ra các sản phẩm chất lượng cao, tinh vi
+B. Là lao động có nhiều thao tác phức tạp
+/C. Là lao động phải trải qua đào tạo, huấn luyện mới làm được
+D. Cả a, b, c
+Câu 102. ý nào sau đây là ý không đúng về lao động phức tạp:
+A. Trong cùng một thời gian lao động, lao động phức tạp tạo ra nhiều giá trị hơn lao động giản đơn
+B. Lao động phức tạp là lao động giản đơn nhân bội lên
+/C. Lao động phức tạp là lao động trí tuệ của người lao động có trình độ cao
+D. Lao động phức tạp là lao động trải qua đào tạo, huấn luyện
+Câu 103. Chọn phương án đúng trong các phương án sau đây:
+A. Lao động cụ thể được thực hiện trước lao động trừu tượng
+/B. Lao động cụ thể tạo ra tính hữu ích của sản phẩm
+C. Lao động trừu tượng chỉ có ở người có trình độ cao, còn người có trình độ thấp chỉ có lao động cụ thể.
+D. Cả a, b, c đều đúng
+Câu 104. Chọn các ý đúng trong các sau đây:
+A. Lao động của người kỹ sư có trình độ cao thuần tuý là lao động trừu tượng
+B. Lao động của người không qua đào tạo chỉ là lao động cụ thể
+/C. Lao động của mọi người sản xuất hàng hoá đều có lao động cụ thể và lao động trừu tượng
+D. Cả a, b, c đều đúng
+Câu 105. Công thức tính giá trị hàng hoá là: c+v+m. ý nào là không đúng trong các ý sau:
+A. Lao động cụ thể bảo toàn và chuyển giá trị TLSX (c) sang sản phẩm
+B. Lao động trừu tượng tạo ra giá trị mới (v+m)
+/C. Lao động trừu tượng tạo nên toàn bộ giá trị (c+v+m)
+D. Cả a, b và c
+Câu 106. Thế nào là năng suất lao động (NSLĐ)? Chọn đúng:
+A. Là hiệu quả, khả năng của lao động cụ thể
+B. NSLĐ được tính bằng số sản phẩm làm ra trong một đơn vị thời gian
+C. NSLĐ được tính bằng thời gian hao phí để sản xuất ra một đơn vị sản phẩm
+/D. Cả a, b, c
+Câu 107. Thế nào là tăng NSLĐ? Chọn các ý đúng dưới đây:
+A. Số sản phẩm làm ra trong một đơn vị thời gian tăng lên khi các điều khác không đổi
+B. Thời gian để làm ra một sản phẩm giảm xuống, khi các điều kiện khác không đổi
+C. Tổng số sản phẩm làm ra trong một đơn vị thời gian tăng lên còn tổng số giá trị không thay đổi
+/D. Cả a, b, c
+Câu 108. Quan hệ giữa tăng NSLĐ với giá trị hàng hoá. Chọn các ý đúng:
+A. NSLĐ tăng lên thì giá trị đơn vị hàng hoá giảm
+B. NSLĐ tăng lên thì lượng giá trị mới (v+m) của đơn vị hàng hoá giảm xuống tuyệt đối
+/C. Cả a, b đều đúng
+D. Cả a, b đều sai
+Câu 109. Khi NSLĐ tăng lên thì phần giá trị cũ (c) trong một hàng hoá thay đổi thế nào?
+A. Có thể giảm xuống
+B. Có thể tăng lên
+/C. Có thể không thay đổi
+D. Cả a, b, c
+Câu 110. Các nhân tố nào ảnh hưởng đến NSLĐ?
+A. Trình độ chuyên môn của người lao động
+B. Trình độ kỹ thuật và công nghệ sản xuất
+C. Các điều kiện tự nhiên
+/D. Cả a, b, c
+Câu 111. Tăng NSLĐ và tăng cường độ lao động giống nhau ở:
+A. Đều làm giá trị đơn vị hàng hoá giảm
+/B. Đều làm tăng số sản phẩm sản xuất ra trong một thời gian
+C. Đều làm tăng lượng lao động hao phí trong 1 đơn vị thời gian
+D. Cả a, b, c
+Câu 112. Chọn các ý đúng về tăng NSLĐ và tăng cường độ lao động:
+A. Tăng NSLĐ làm cho số sản phẩm làm ra trong một đơn vị thời gian tăng lên, còn giá trị 1 đơn vị hàng hoá thay đôi
+B. Tăng cường độ lao động làm cho số sản phẩm làm ra trong 1 đơn vị thời gian tăng lên, còn giá trị 1 đơn vị hàng hoá không thay đổi
+C. Tăng NSLĐ dựa trên cơ sở cải tiến kỹ thuật, nâng cao trình độ tay nghề người lao động, còn tăng cường độ lao động thuần tuý là tăng lượng lao động hao phí trong 1 đơn vị thời gian
+/D. Cả a, b, c
+Câu 113. Các nhân tố nào làm tăng sản phẩm cho xã hội?
+A. Tăng NSLĐ
+B. Tăng số người lao động
+C. Tăng cường độ lao động
+/D. Cả a, b và c
+Câu 114. Nhân tố nào là cơ bản, lâu dài để tăng sản phẩm cho xã hội?
+/A. Tăng NSLĐ
+B. Tăng cường độ lao động
+C. Tăng số người lao động
+D. Kéo dài thời gian lao động
+Câu 115. Quan hệ tăng NSLĐ với giá trị hàng hoá. Chọn các ý đúng dưới đây:
+A. Tăng NSLĐ thì tổng giá trị hàng hoá không thay đổi
+B. Tăng NSLĐ thì giá trị 1 đơn vị hàng hoá thay đổi
+C. Giá trị 1 đơn vị hàng hoá tỷ lệ nghịch với NSLÐ
+/D. Cả a, b, c
+Câu 116. Quan hệ tăng CĐLĐ với giá trị hàng hoá. Chọn các ý đúng:
+A. Tăng CĐLĐ thì tổng giá trị hàng hoá tăng lên và giá trị 1 đơn vị hàng hoá cũng tăng lên tương ứng
+B. Giá trị 1 đơn vị hàng hoá tỷ lệ thuận với CĐLĐ
+/C. Tăng CĐLĐ thì giá trị 1 đơn vị hàng hoá không thay đổi
+D. Cả a, b, c đều đúng
+Câu 117. Giá trị cá biệt của hàng hoá do:
+A. Hao phí lao động giản đơn trung bình quyết định
+B. Hao phí lao động của ngành quyết định
+/C. Hao phí lao động cá biệt của người sản xuất quyết định
+D. Hao phí lao động cá biệt của người sản xuất nhiều hàng hoá quyết định
+Câu 118. Hai mặt của nền sản xuất xã hội là:
+A. Cơ sở hạ tầng và kiến trúc thượng tầng
+/B. Lực lượng sản xuất và quan hệ sản xuất
+C. Sản xuất và tiêu dùng sản phẩm xã hội
+D. Tích luỹ và cải thiện đời sống
+Câu 119. Giá cả của hàng hoá được quyết định bởi:
+A. Giá trị của hàng hoá
+B. Cung cầu và cạnh tranh
+C. Giá trị của tiền tệ trong lưu thông
+/D. Cả a, b, c
+Câu 120. Các cặp phạm trù nào thuộc về lý luận tái sản xuất xã hội:
+A. Lực lượng sản xuất và QHSX
+B. Tồn tại xã hội và ý thức xã hội
+/C. Tăng trưởng và phát triển kinh tế
+D. Cả a, b, c
+Câu 121. Mâu thuẫn cơ bản của sản xuất hàng hoá giản đơn là:
+A. Giữa giá trị với giá trị sử dụng
+B. Giữa lao động giản đơn với lao động phức tạp
+C. Giữa lao động cụ thể với lao động trừu tượng
+/D. Giữa lao động tư nhân với lao động xã hội
+Câu 122. "Tiền tệ là bánh xe vĩ đại của lưu thông". Câu nói này của ai?
+/A. A.SMith
+B. D.Ricardo
+C. C. Mác
+D. W.Petty
+Câu 123. Tiền có 5 chức năng. Chức năng nào không đòi hỏi có tiền vàng?
+A. Chức năng thước đo giá trị
+/B. Chức năng phương tiện lưu thông và phương tiện thanh toán
+C. Chức năng phương tiện cất trữ
+D. Cả a và c
+Câu 124. Sản xuất và lưu thông hàng hoá chịu sự chi phối của những quy luật kinh tế nào?
+A. Quy luật giá trị
+B. Quy luật cạnh tranh và quy luật cung cầu
+C. Quy luật lưu thông tiền tệ
+/D. Cả a, b và c
+Câu 125. Quy luật giá trị có yêu cầu gì?
+A. Sản xuất và lưu thông hàng hoá phải dựa trên cơ sở hao phí lao động xã hội cần thiết
+B. Lưu thông hàng hoá dựa trên nguyên tắc ngang giá
+C. Hao phí lao động cá biệt phải phù hợp với mức hao phí lao động xã hội cần thiết
+/D. Cả a, b, c
+Câu 126. Lưu thông hàng hoá dựa trên nguyên tắc ngang giá. Điều này được hiểu như thế nào là đúng?
+A. Giá cả của từng hàng hoá luôn luôn bằng giá trị của nó
+/B. Giá cả có thể tách rời giá trị và xoay quanh giá trị của nó
+C. ∑ giá trị = ∑ giá cả
+D. Cả b và c
+Câu 127. Quy luật giá trị tồn tại ở riêng:
+A. Nền sản xuất hàng hoá giản đơn
+B. Nền sản xuất TBCN
+C. Trong nền sản xuất vật chất nói chung
+/D. Trong nền kinh tế hàng hoá
+Câu 128. Điều kiện ra đời của CNTB là:
+A. Tập trung khối lượng tiền tệ đủ lớn vào một số người để lập ra các xí nghiệp
+B. Xuất hiện một lớp người lao động tự do nhưng không có TLSX và các của cải khác buộc phải đi làm thuê
+C. Phải thực hiện tích luỹ tư bản
+/D. Cả a, b
+Câu 129. Quy luật giá trị hoạt động tự phát có thể dẫn đến sự hình thành QHSX TBCN không? Chọn câu trả lời đúng nhất:
+A. Có
+B. Không
+/C. Có nhưng rất chậm chạp
+Câu 130. Chủ nghĩa tư bản ra đời khi:
+A. Sản xuất hàng hoá đã phát triển cao
+B. Phân công lao động đã phát triển cao
+C. Trong xã hội xuất hiện giai cấp bóc lột và bị bóc lột
+/D. Tư liệu sản xuất tập trung vào một số ít người còn đa số người bị mất hết TLSX
+Câu 131. Sự phát triển đại công nghiệp cơ khí ở Anh bắt đầu từ:
+A. Các ngành công nghiệp nặng
+B. Các ngành công nghiệp chế tạo máy
+/C. Các ngành công nghiệp nhẹ
+D. Các ngành sản xuất máy động lực
+Câu 132. Cuộc cách mạng kỹ thuật ở nước Anh bắt đầu từ:
+/A. Máy công tác
+B. Máy phát lực
+C. Máy truyền lực
+D. Cả a, b, c đồng thời
+Câu 133. Tư bản là:
+A. Tiền và máy móc thiết bị
+B. Tiền có khả năng đẻ ra tiền
+/C. Giá trị mang lại giá trị thặng dư bằng cách bóc lột lao động làm thuê
+D. Công cụ sản xuất và nguyên vật liệu
+Câu 134. Quan hệ cung cầu thuộc khâu nào của quá trình tái sản xuất xã hội?
+/A. Sản xuất và tiêu dùng
+B. Tiêu dùng
+C. Trao đổi
+D. Phân phối và trao đổi
+Câu 135. Quan hệ giữa tăng trưởng kinh tế, phát triển kinh tế và tiến bộ xã hội là:
+A. Đồng nghĩa
+B. Độc lập với nhau
+C. Trái ngược nhau
+/D. Có liên hệ với nhau và làm điều kiện cho nhau
+Câu 136. Người sáng lập ra chủ nghĩa Mác là:
+A. Các Mác
+/B. C.Mác và Ph.Ăng ghen
+C. C.Mác và V.I. Lênin
+D. C.Mác, Ph. Ăng ghen và V.I. Lênin
+Câu 137. Tiền tệ là:
+A. Thước đo giá trị của hàng hoá
+B. Phương tiện để lưu thông hàng hoá và để thanh toán
+/C. Là hàng hoá đặc biệt đóng vai trò là vật ngang giá chung
+D. Là vàng, bạc
+Câu 138. Chọn các ý đúng về lao động và sức lao động:
+A. Sức lao động chỉ là khả năng, còn lao động là sức lao động đã được tiêu dùng
+B. Sức lao động là hàng hoá, còn lao động không là hàng hoá
+C. Sức lao động có giá trị, còn lao động không có giá trị
+/D. Cả a, b và c
+Câu 139. Sức lao động trở thành hàng hoá một cách phổ biến từ khi nào?
+A. Từ khi có sản xuất hàng hoá
+B. Từ xã hội chiếm hữu nô lệ
+C. Từ khi có kinh tế thị trường
+/D. Từ khi có CNTB
+Câu 140. Điều kiện tất yếu để sức lao động trở thành hàng hoá là:
+A. Người lao động tự nguyện đi làm thuê
+B. Người lao động được tự do thân thể
+C. Người lao động hoàn toàn không có TLSX và của cải gì
+/D. Cả b và c
+Câu 141. Việc mua bán nô lệ và mua bán sức lao động quan hệ với nhau thế nào? Chọn ý đúng:
+/A. Hoàn toàn khác nhau
+B. Có quan hệ với nhau
+C. Giống nhau về bản chất, chỉ khác về hình thức
+D. Cả b và c
+Câu 142. Tích luỹ nguyên thuỷ là gì?
+A. Tích luỹ có trước sự ra đời của CNTB
+B. Nhằm tạo ra hai điều kiện cho CNTB ra đời nhanh hơn
+C. Tích luỹ nguyên thuỷ được thực hiện bằng bạo lực
+/D. Cả a, b, c
+Câu 143. Tích luỹ nguyên thuỷ được thực hiện bằng các biện pháp gì?
+A. Tước đoạt người sản xuất nhỏ, nhất là nông dân
+B. Chinh phục, bóc lột thuộc địa
+C. Trao đổi không ngang giá, bất bình đẳng
+/D. Cả a, b và c
+Câu 144. Nhân tố nào là cơ bản thúc đẩy CNTB ra đời nhanh chóng:
+A. Sự tác động của quy luật giá trị
+B. Sự phát triển mạnh mẽ của phương tiện giao thông vận tải nhờ đó mở rộng giao lưu buôn bán quốc tế
+C. Những phát kiến lớn về địa lý
+/D. Tích luỹ nguyên thuỷ
+Câu 145. Tích luỹ nguyên thuỷ và tích luỹ tư bản khác nhau như thế nào?
+A. Tích luỹ nguyên thuỷ có trước, tích luỹ tư bản có sau
+B. Tích luỹ nguyên thuỷ tạo điều kiện cho CNTB ra đời, tích luỹ tư bản mở rộng phạm vi thống trị và bóc lột lao động làm thuê
+C. Tích luỹ nguyên thuỷ thực hiện bằng bạo lực, tích luỹ tư bản thực hiện bằng biện pháp kinh tế là chủ yếu
+/D. Cả a, b, c
+Câu 146. Sự hoạt động của quy luật giá trị được biểu hiện:
+A. Giá cả thị trường xoay quanh giá trị xã hội của hàng hoá
+B. Giá cả thị trường xoay quanh giá cả sản xuất
+C. Giá cả thị trường xoay quanh giá cả độc quyền
+/D. Cả a, b, c
+Câu 147. Quan hệ giữa giá cả và giá trị. Chọn các ý đúng:
+A. Giá trị là cơ sở của giá cả, là yếu tố quyết định giá cả
+B. Giá cả là hình thức biểu hiện bằng tiền của giá trị
+C. Giá cả thị trường còn chịu ảnh hưởng của cung - cầu, giá trị của tiền
+/D. Cả a, b và c
+Câu 148. Tiền tệ có mấy chức năng khi chưa có quan hệ kinh tế quốc tế:
+A. Hai chức năng
+B. Ba chức năng
+/C. Bốn chức năng
+D. Năm chức năng
+Câu 149. Bản chất tiền tệ là gì? Chọn các ý đúng:
+A. Là hàng hoá đặc biệt, làm vật ngang giá cho các hàng hoá khác
+B. Thể hiện lao động xã hội kết tinh trong hàng hoá
+C. Phản ánh quan hệ kinh tế giữa những người sản xuất hàng hoá với nhau
+/D. Cả a, b, c
+Câu 150. Cặp phạm trù nào là phát hiện riêng của C.Mác?
+A. Lao động giản đơn và lao động phức tạp
+/B. Lao động cụ thể và lao động trừu tượng
+C. Lao động tư nhân và lao động xã hội
+D. Lao động quá khứ và lao động sống
+Câu 151. Ai là người đầu tiên chia tư bản sản xuất thành tư bản bất biến (c) và tư bản khả biến (v)?
+A. A.Smith
+B. D.Ricardo
+/C. C.Mác
+D. F.Quesnay
+Câu 152. Chọn ý đúng về quan hệ cung - cầu đối với giá trị, giá cả:
+A. Quyết định giá trị và giá cả hàng hoá
+B. Chỉ quyết định đến giá cả và có ảnh hưởng đến giá trị
+C. Không có ảnh hưởng đến giá trị và giá cả
+/D. Có ảnh hưởng tới giá cả thị trường
+Câu 153. Kinh tế chính trị và kinh tế học có quan hệ gì với nhau?
+A. Có cùng một nguồn gốc
+B. Mỗi môn có thế mạnh riêng
+C. Có quan hệ với nhau, có thể bổ sung cho nhau
+/D. Cả a, b và c
+Câu 154. Khi tăng vốn đầu tư cho sản xuất sẽ có tác động đến sản lượng, việc làm và giá cả. Chọn các ý đúng dưới đây:
+A. Sản lượng tăng
+B. Thất nghiệp giảm
+C. Giá cả không thay đổi
+/D. Cả a, b
+Câu 155. Chọn các ý không đúng về sản phẩm và hàng hoá:
+/A. Mọi sản phẩm đều là hàng hoá
+B. Mọi hàng hoá đều là sản phẩm
+C. Mọi sản phẩm đều là kết quả của sản xuất
+D. Không phải mọi sản phẩm đều là hàng hoá
+Câu 156. Lao động sản xuất là:
+A. Hoạt động có mục đích của con người
+B. Sự tác động của con người vào tự nhiên
+C. Các hoạt động vật chất của con người
+/D. Sự kết hợp TLSX với sức lao động
+Câu 157. Sản phẩm xã hội gồm có:
+A. Toàn bộ chi phí về TLSX
+B. Sản phẩm cần thiết
+C. Sản phẩm thặng dư
+/D. Cả a, b và c
+Câu 158. Sản phẩm cần thiết là:
+A. Sản phẩm thiết yếu của xã hội
+B. Sản phẩm để thoả mãn nhu cầu tối thiểu của con người
+C. Phần sản phẩm xã hội để tái sản xuất sức lao động
+/D. Cả a, b, c
+Câu 159. Mức độ giàu có của xã hội phụ thuộc chủ yếu vào:
+A. Tài nguyên thiên nhiên
+/B. Trình độ khoa học công nghệ
+C. Tổng sản phẩm quốc gia (GNP)
+D. Khối lượng sản phẩm thặng dư
+Câu 160. Đối tượng nghiên cứu của kinh tế chính trị Mác- Lênin là:
+A. Nguồn gốc của cải để làm giàu cho xã hội
+B. Nền sản xuất của cải vật chất
+C. Phương thức sản xuất TBCN và thời kỳ quá độ lên CNXH
+/D. QHSX trong sự tác động qua lại với lực lượng sản xuất và kiến trúc thượng tầng
+Câu 161. Sản xuất hàng hoá ra đời khi:
+A. Có sự phân công lao động xã hội
+B. Có sự giao lưu, buôn bán
+C. Có chế độ tư hữu hoặc các hình thức sở hữu khác nhau về TLSX
+/D. Cả a và c
+Câu 162. Chọn phương án đúng về quy luật kinh tế:
+A. Quy luật kinh tế là quy luật xã hội do con người đặt ra
+B. Là quy luật khách quan phát sinh tác dụng qua hoạt động kinh tế của con người
+C. Quy luật kinh tế có tính lịch sử
+/D. Cả b và c
+Câu 163. Giá trị của hàng hoá được quyết định bởi:
+A. Công dụng của hàng hoá
+B. Quan hệ cung - cầu về hàng hoá
+/C. Lao động xã hội của người sản xuất hàng hoá
+D. Cả a, b, c
+Câu 164. Giá cả của hàng hoá là:
+A. Sự thoả thuận giữa người mua và người bán
+/B. Sự biểu hiện bằng tiền của giá trị
+C. Số tiền người mua phải trả cho người bán
+D. Giá tiền đã in trên sản phẩm hoặc người bán quy định
+Câu 165. Nhân tố nào có ảnh hưởng đến số lượng giá trị của đơn vị hàng hoá? Chọn đúng nhất trong các ý sau:
+A. Năng suất lao động
+B. Cường độ lao động
+C. Các điều kiện tự nhiên
+/D. Cả a và c
+Câu 166. Tư bản bất biến (c) là:
+A. Giá trị của nó chuyển dần vào sản phẩm qua khấu hao
+B. Giá trị của nó lớn lên trong quá trình sản xuất
+/C. Giá trị của nó không thay đổi về lượng và được chuyển nguyên vẹn sang sản phẩm
+D. Giá trị của nó không thay đổi và được chuyển ngay sang sản phẩm sau một chu kỳ sản xuất
+Câu 167. Chọn các đúng về hàng hoá sức lao động:
+A. Nó tồn tại trong con người
+B. Có thể mua bán nhiều lần
+C. Giá trị sử dụng của nó có khả năng tạo ra giá trị mới
+/D. Cả a, b, c
+Câu 168. Việc mua bán sức lao động và mua bán nô lệ khác nhau ở đặc điểm nào?
+A. Bán nô lệ là bán con người, còn bán sức lao động là bán khả năng lao động của con người
+B. Bán sức lao động thì người lao động là người bán, còn bán nô lệ thì nô lệ bị người khác bán
+C. Bán sức lao động và bán nô lệ là không có gì khác nhau
+/D. Cả a và b
+Câu 169. Tư bản là:
+A. Khối lượng tiền tệ lớn, nhờ đó có nhiều lợi nhuận
+B. Máy móc, thiết bị, nhà xưởng và công nhân làm thuê
+C. Toàn bộ tiền và của cải vật chất
+/D. Giá trị mang lại giá trị thặng dư bằng cách bóc lột lao động làm thuê
+Câu 170. Tư bản cố định có vai trò gì?
+A. Là nguồn gốc của giá trị thặng dư
+B. Là điều kiện để giảm giá trị hàng hoá
+C. Là điều kiện để tăng năng suất lao động
+/D. Cả b, c
+Câu 171. Tư bản bất biến (c) và tư bản khả biến (v) thuộc phạm trù tư bản nào?
+/A. Tư bản tiền tệ
+B. Tư bản sản xuất
+C. Tư bản hàng hoá
+D. Tư bản lưu thông
+Câu 172. Tư bản cố định và tư bản lưu động thuộc phạm trù tư bản nào?
+/A. Tư bản sản xuất
+B. Tư bản tiền tệ
+C. Tư bản bất biến
+D. Tư bản ứng trước
+Câu 173. Tư bản là:
+A. Tư liệu sản xuất
+B. Là phạm trù vĩnh viễn
+/C. Là giá trị mang lại giá trị thặng dư bằng cách bóc lột lao động làm thuê
+D. Cả a, b và c.
+Câu 174. Tư bản cố định là:
+A. Các TLSX chủ yếu như nhà xưởng, máy móc...
+B. Tư bản cố định là tư bản bất biến
+C. Giá trị của nó chuyển dần sang sản phẩm
+/D. Cả a, c
+Câu 175. Tư bản lưu động là:
+A. Sức lao động, nguyên vật liệu, nhiên liệu...
+B. Tham gia từng phần vào sản xuất
+C. Giá trị của nó chuyển hết sang sản phẩm sau một chu kỳ sản xuất
+/D. Cả a, b và c
+Câu 176. Tư bản khả biến là:
+A. Tư bản luôn luôn biến đổi
+B. Sức lao động của công nhân làm thuê
+C. Là nguồn gốc của giá trị thặng dư
+/D. Cả b và c
+Câu 177. Chọn các ý không đúng về các cặp phạm trù tư bản:
+A. Chia tư bản thành tư bản bất biến và tư bản khả biến để tìm nguồn gốc giá trị thặng dư
+B. Chia tư bản thành tư bản cố định và tư bản lưu động để biết phương thức chuyển giá trị của chúng sang sản phẩm
+/C. Tư bản cố định cũng là tư bản bất biến, tư bản lưu động cũng là tư bản khả biến
+D. Cả a, b đều đúng
+Câu 178. Chọn các ý đúng về mua bán sức lao động:
+A. Bán chịu
+B. Giá cả < giá trị do sức lao động tạo ra
+C. Mua, bán có thời hạn
+/D. Cả a, b và c
+Câu 179. Khi nào sức lao động trở thành hàng hoá một cách phổ biến?
+A. Trong nền sản xuất hàng hoá giản đơn
+/B. Trong nền sản xuất hàng hoá TBCN
+C. Trong xã hội chiếm hữu nô lệ
+D. Trong nền sản xuất lớn hiện đại
+Câu 180. Giá trị hàng hoá sức lao động gồm:
+A. Giá trị các tư liệu tiêu dùng để tái sản xuất sức lao động của công nhân và nuôi gia đình anh ta
+B. Chi phí để thoả mãn nhu cầu văn hoá, tinh thần
+C. Chi phí đào tạo người lao động
+/D. Cả a, b, c
+Câu 181. Chọn các ý đúng trong các nhận định dưới đây:
+A. Người bán và người mua sức lao động đều bình đẳng về mặt pháp lý
+B. Sức lao động được mua và bán theo quy luật giá trị
+C. Thị trường sức lao động được hình thành và phát triển từ phương thức sản xuất TBCN
+/D. Cả a, b và c.
+Câu 182. Chọn các ý đúng trong các nhận định sau:
+A. Tiền tệ là sản vật cuối cùng của lưu thông hàng hoá và là hình thức biểu hiện đầu tiên của tư bản
+B. Tư bản được biểu hiện ở tiền, nhưng bản thân tiền không phải là tư bản
+C. Mọi tư bản mới đều nhất thiết phải mang hình thái tiền tệ
+/D. Cả a, b, c đều đúng
+Câu 183. Mục đích trực tiếp của nền sản xuất TBCN là:
+A. Sản xuất ra ngày càng nhiều của cải vật chất
+B. Mở rộng phạm vi thống trị của QHSX TBCN
+/C. Tạo ra ngày càng nhiều giá trị thặng dư
+D. Làm cho lao động ngày càng lệ thuộc vào tư bản
+Câu 184. Các cách diễn tả giá trị hàng hoá dưới đây, cách nào đúng?
+A. Giá trị hàng hoá = c + v + m
+B. Giá trị hàng hoá = giá trị cũ + giá trị mới
+C. Giá trị hàng hoá = k + p
+/D. Cả a, b và c
+Câu 185. Các cách diễn tả dưới đây có cách nào sai không?
+A. Giá trị mới của sản phẩm = v + m
+/B. Giá trị của sản phẩm mới = v + m
+C. Giá trị của TLSX = c
+D. Giá trị của sức lao động = v
+Câu 186. Khi tăng NSLĐ, cơ cấu giá trị một hàng hoá thay đổi. Trường hợp nào dưới đây không đúng?
+A. C có thể giữ nguyên, có thể tăng, có thể giảm
+B. (v+m) giảm
+C. (c+v+m) giảm
+/D. (c+v+m) không đổi
+Câu 187. Khi nào tiền tệ biến thành tư bản?
+A. Có lượng tiền tệ đủ lớn
+B. Dùng tiền đầu tư vào sản xuất kinh doanh
+/C. Sức lao động trở thành hàng hoá
+D. Dùng tiền để buôn bán mua rẻ, bán đắt.
+Câu 188. Chọn các ý đúng trong các ý dưới đây:
+A. Giá trị thặng dư cũng là giá trị
+B. Giá trị thặng dư và giá trị giống nhau về chất, chỉ khác nhau về lượng trong 1 hàng hoá
+C. Giá trị thặng dư là lao động thặng dư kết tinh
+/D. Cả a, b và c
+Câu 189. Chọn định nghĩa chính xác về tư bản:
+A. Tư bản là giá trị mang lại giá trị thặng dư
+B. Tư bản là tiền và TLSX của nhà tư bản để tạo ra giá trị thặng dư
+/C. Tư bản là giá trị đem lại giá trị thặng dư bằng cách bóc lột lao động làm thuê
+D. Tư bản là tiền đẻ ra tiền
+Câu 190. Giá trị của TLSX đã tiêu dùng tham gia vào tạo ra giá trị của sản phẩm mới. Chọn các ý đúng dưới dây:
+A. Tham gia tạo thành giá trị mới của sản phẩm
+B. Không tham gia tạo thành giá trị mới của sản phẩm
+C. Chỉ tham gia vào tạo thành giá trị của sản phẩm mới
+/D. Cả b và c
+Câu 191. Trong quá trình sản xuất giá trị thặng dư, giá trị TLSX đã tiêu dùng sẽ như thế nào? Trường hợp nào sai?
+A. Được tái sản xuất
+B. Không được tái sản xuất
+C. Được bù đắp
+/D. Được lao động cụ thể của người sản xuất hàng hoá bảo tồn và chuyển vào giá trị của sản phẩm mới
+Câu 192. Tư bản bất biến (c) và tư bản khả biến (v) có vai trò thế nào trong quá trình sản xuất giá trị thặng dư? Chọn các ý không đúng dưới đây:
+A. Tư bản bất biến (c) là điều kiện để sản xuất giá trị thặng dư
+B. Tư bản khả biến là nguồn gốc của giá trị thặng dư
+/C. Cả c và v có vai trò ngang nhau trong quá trình tạo ra giá trị thặng dư
+D. Cả a và b
+Câu 193. Cho biết ý nghĩa của việc phát hiện ra tính chất hai mặt của lao động sản xuất hàng hoá của C.Mác. Chọn các ý đúng dưới đây:
+A. Chia tư bản thành tư bản bất biến và khả biến
+B. Giải thích quá trình chuyển giá trị cũ sang sản phẩm và tạo ra giá trị mới của sản phẩm
+C. Hình thành công thức giá trị hàng hoá = c + v + m
+/D. Cả a, b, c
+Câu 194. Các công thức tính tỷ suất giá trị thặng dư dưới đây, công thức nào đúng?
+A. m' = (m / v) x 100%
+B. m' = (Thời gian lao động thặng dư / Thời gian lao động cần thiết) x 100 (%)
+C. m' = (Lao động thặng dư / Lao động cần thiết) x 100 (%)
+/D. Cả a, b và c
+Câu 195. Muốn tăng khối lượng giá trị thặng dư, nhà tư bản có thể sử dụng nhiều cách. Chọn các ý đúng dưới đây:
+A. Kéo dài thời gian lao động trong ngày khi thời gian lao động cần thiết không đổi
+B. Tăng cường độ lao động khi ngày lao động không đổi
+C. Giảm giá trị sức lao động khi ngày lao động không đổi
+/D. Cả a, b và c
+Câu 196. Tỷ suất giá trị thặng dư (m') phản ánh điều gì? Chọn ý đúng:
+/A. Trình độ bóc lột của tư bản đối với công nhân làm thuê
+B. Hiệu quả của tư bản
+C. Chỉ cho nhà tư bản biết nơi đầu tư có lợi
+D. Cả a, b và c
+Câu 197. Phương pháp sản xuất giá trị thặng dư tuyệt đối và phương pháp sản xuất giá trị thặng dư tương đối có điểm nào giống nhau?
+A. Đều làm cho công nhân tốn sức lao động nhiều hơn
+/B. Đều làm tăng tỷ suất giá trị thặng dư
+C. Đều làm giảm giá trị sức lao động của công nhân
+D. Cả a, b và c
+Câu 198. Phương pháp sản xuất giá trị thặng dư tuyệt đối là:
+/A. Kéo dài thời gian của ngày lao động, còn thời gian lao động cần thiết không thay đổi
+B. Tiết kiệm chi phí sản xuất
+C. Sử dụng kỹ thuật tiên tiến, cải tiến tổ chức quản lý
+D. Cả a, b, c
+Câu 199. Từ định nghĩa phương pháp sản xuất giá trị thặng dư tuyệt đối hãy xác định phương án đúng dưới đây:
+A. Độ dài ngày lao động bằng ngày tự nhiên
+B. Độ dài ngày lao động lớn hơn không
+C. Độ dài ngày lao động bằng thời gian lao động cần thiết
+/D. Độ dài ngày lao động lớn hơn thời gian lao động cần thiết
+Câu 200. Các luận điểm dưới đây, luận điểm nào sai?
+A. Các Phương thức sản xuất trước CNTB bóc lột sản phẩm thặng dư trực tiếp
+/B. Bóc lột sản phẩm thặng dư chỉ có ở CNTB
+C. Sản xuất giá trị thặng dư tuyệt đối là hình thái chung nhất của sản xuất giá trị thặng dư
+D. Sản xuất giá trị thặng dư tuyệt đối là điểm xuất phát để sản xuất giá trị thặng dư tương đối
+Câu 201. Khi xem xét phương pháp sản xuất giá trị thặng dư tuyệt đối, những ý nào dưới đây không đúng?
+A. Giá trị sức lao động không đổi
+/B. Thời gian lao động cần thiết thay đổi
+C. Ngày lao động thay đổi
+D. Thời gian lao động thặng dư thay đổi
+Câu 202. Trong phương pháp sản xuất giá trị thặng dư tuyệt đối, người lao động muốn giảm thời gian lao động trong ngày còn nhà tư bản lại muốn kéo dài thời gian lao động trong ngày. Giới hạn tối thiểu của ngày lao động là bao nhiêu?
+A. Đủ bù đắp giá trị sức lao động của công nhân
+B. Bằng thời gian lao động cần thiết
+C. Do nhà tư bản quy định
+/D. Lớn hơn thời gian lao động cần thiết
+Câu 203. Phương pháp sản xuất giá trị thặng dư tuyệt đối có những hạn chế. Chọn ý đúng trong các nhận xét dưới đây:
+A. Gặp phải sự phản kháng quyết liệt của công nhân
+B. Năng suất lao động không thay đổi
+C. Không thoả mãn khát vọng giá trị thặng dư của nhà tư bản
+/D. Cả a, b và c
+Câu 204. Những nhận xét dưới đây về phương pháp sản xuất giá trị thặng dư tuyệt đối, nhận xét nào là không đúng?
+A. Chủ yếu áp dụng ở giai đoạn đầu của CNTB khi kỹ thuật còn thủ công lạc hậu
+B. Giá trị sức lao động không thay đổi
+/C. Ngày lao động không thay đổi
+D. Thời gian lao động thặng dư thay đổi
+Câu 205. Những ý kiến dưới đây về phương pháp sản xuất giá trị thặng dư tương đối, ý kiến nào đúng?
+A. Ngày lao động không đổi
+B. Thời gian lao động cần thiết và giá trị sức lao động thay đổi
+C. Hạ thấp giá trị sức lao động
+/D. Cả a, b, c đều đúng
+Câu 206. Nhận xét về giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch, ý nào dưới đây là đúng?
+A. Đều dựa trên cơ sở tăng NSLĐ
+B. Giá trị thặng dư tương đối dựa trên cơ sở tăng NSLĐ xã hội còn giá trị thặng dư siêu ngạch dựa trên cơ sở tăng NSLĐ cá biệt.
+C. Giá trị thặng dư siêu ngạch có thể chuyển hoá thành giá trị thặng dư tương đối.
+/D. Cả a, b, c đều đúng
+Câu 207. Chọn các ý đúng về đặc điểm của giá trị thặng dư siêu ngạch trong sản xuất công nghiệp:
+A. Không cố định ở doanh nghiệp nào.
+B. Chỉ có ở doanh nghiệp có năng suất cá biệt cao hơn năng suất lao động xã hội
+C. Là động lực trực tiếp, mạnh mẽ của các nhà tư bản
+/D. Cả a, b và c
+Câu 208. Giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch giống nhau ở những điểm nào?
+A. Đều dựa trên tiền đề tăng NSLĐ.
+B. Rút ngắn thời gian lao động cần thiết
+C. Kéo dài thời gian lao động thặng dư.
+/D. Cả a, b và c.
+Câu 209. Chọn các ý kiến đúng khi nhận xét giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch:
+A. Giá trị thặng dư tương đối do toàn bộ giai cấp tư sản thu được
+B. Giá trị thặng dư siêu ngạch chỉ một số nhà tư bản đi đầu trong ứng dụng tiến bộ kỹ thuật, giảm giá trị cá biệt.
+C. Giá trị thặng dư tương đối phản ánh trực tiếp quan hệ giai cấp tư sản và giai cấp công nhân, còn giá trị thặng dư siêu ngạch là động lực trực tiếp của các nhà tư bản.
+/D. Cả a, b, c
+Câu 210. Vai trò của máy móc trong quá trình tạo ra giá trị thặng dư, chọn ý đúng:
+A. Máy móc là nguồn gốc của giá trị thặng dư
+/B. Máy móc là tiền đề vật chất cho việc tạo ra giá trị thặng dư
+C. Máy móc và sức lao động đều tạo ra giá trị thặng dư
+D. Máy móc là yếu tố quyết định để tạo ra giá trị thặng dư
+Câu 211. Nền kinh tế tri thức được xem là:
+A. Một phương thức sản xuất mới
+B. Một hình thái kinh tế - xã hội mới
+C. Một giai đoạn mới của CNTB hiện đại
+/D. Một nấc thang phát triển của lực lượng sản xuất
+Câu 212. Quá trình tái sản xuất xã hội gồm có mấy khâu?
+A. Hai khâu : sản xuất - tiêu dùng
+B. Ba khâu: sản xuất - phân phối - tiêu dùng
+/C. Bốn khâu: sản xuất - phân phối -trao đổi - tiêu dùng
+D. Năm khâu: sản xuất - lưu thông - phân phối - trao đổi - tiêu dùng
+Câu 213. Tiền công TBCN là:
+A. Giá trị của lao động
+B. Sự trả công cho lao động
+/C. Giá trị sức lao động
+D. Giá cả của sức lao động
+Câu 214. Nếu nhà tư bản trả công theo đúng giá trị sức lao động thì có còn bóc lột giá trị thặng dư không?
+A. Không
+/B. Có
+C. Bị lỗ vốn
+D. Hoà vốn
+Câu 215. Việc sản xuất và trao đổi hàng hoá dựa trên cơ sở nào?
+A. Hao phí thời gian lao động cần thiết
+B. Hao phí thời gian lao động của người sản xuất kém nhất
+/C. Hao phí thời gian lao động xã hội cần thiết
+D. Hao phí lao động quá khứ và lao động sống của người sản xuất
+Câu 216. Giá trị thặng dư là gì?
+A. Lợi nhuận thu được của người sản xuất kinh doanh
+B. Giá trị của tư bản tự tăng lên.
+/C. Phần giá trị mới dôi ra ngoài giá trị sức lao động do người công nhân làm thuê tạo ra.
+D. Hiệu số giữa giá trị hàng hoá với chi phí sản xuất TBCN
+Câu 217. Nguồn vốn nào dưới đây mà ta có nghĩa vụ phải trả?
+A. FDI.
+/B. ODA
+C. Cả FDI và ODA
+D. Vốn liên doanh của nước ngoài
+Câu 218. Sự phân chia tư bản thành tư bản bất biến và tư bản khả biến là để biết:
+A. Đặc điểm chuyển giá trị của từng loại tư bản vào sản phẩm.
+B. Vai trò của lao động quá khứ và lao động sống trong việc tạo ra giá trị sử dụng
+/C. Nguồn gốc của giá trị thặng dư
+D. Cả a, b, c
+Câu 219. Chọn ý không đúng về lợi nhuận:
+/A. Là hình thức biến tướng của giá trị thặng dư
+B. Là giá trị thặng dư được coi là con đẻ của tư bản ứng trước
+C. Là hiệu số giữa tổng doanh thu trừ đi tổng chi phí
+D. Cả a và b.
+Câu 220. Cơ sở chung của giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch là:
+A. Tăng NSLĐ
+B. Tăng NSLĐ xã hội
+C. Tăng NSLĐ cá biệt
+/D. Giảm giá trị sức lao động
+Câu 221. Chọn các ý không đúng về lợi nhuận và giá trị thặng dư.
+A. Bản chất của lợi nhuận là giá trị thặng dư
+/B. Lợi nhuận và giá trị thặng dư luôn luôn bằng nhau
+C. Giá trị thặng dư được hình thành từ sản xuất còn lợi nhuận hình thành trên thị trường
+D. Cả a và c
+Câu 222. Chọn các ý đúng về tỷ suất lợi nhuận và tỷ suất giá trị thặng dư
+A. p' < m'
+B. m' nói lên thực chất mức độ bóc lột
+C. p' chỉ ra nơi đầu tư có lợi cho nhà tư bản
+/D. Cả a, b và c
+Câu 223. Chi phí TBCN là:
+A. Tổng số tiền nhà tư bản ứng ra
+B. Số tiền nhà tư bản mua máy móc, nguyên vật liệu
+C. Chi phí về TLSX và sức lao động
+/D. Chi phí tư bản (c) và (v)
+Câu 224. Chọn các ý đúng về tư bản bất biến, tư bản khả biến, tư bản cố định, tư bản lưu động:
+A. Tư bản bất biến không thay đổi về lượng trong quá trình sản xuất.
+B. Tư bản cố định là một bộ phận của tư bản bất biến
+C. Tư bản khả biến là một bộ phận của tư bản lưu động.
+/D. Cả a, b và c
+Câu 225. Chọn các ý đúng trong các nhận xét dưới đây:
+A. Phạm trù tư bản bất biến rộng hơn phạm trù tư bản cố định
+B. Phạm trù tư bản khả biến hẹp hơn phạm trù tư bản lưu động.
+C. Tư bản cố định không thay đổi về lượng trong quá trình sản xuất.
+/D. Cả a, b, c đều đúng.
+Câu 226. Các công thức tính giá cả dưới đây, công thức nào đúng?
+A. Giá cả hàng hoá = c + v + m
+B. Giá cả thị trường = c + v + p
+C. Giá cả sản xuất = c + v + p
+/D. Cả a, b và c
+Câu 227. Ngày lao động là 8h, tỷ suất giá trị thặng dư m' = 100% nhà tư bản tăng ngày lao động lên 1h và giá trị sức lao động giảm đi 25%. Vậy tỷ suất giá trị thặng dư mới là bao nhiêu?
+A. 150%
+/B. 200%
+C. 250%
+D. 300%
+Câu 228. Tiền công thực tế là gì?
+A. Là tổng số tiền nhận được thực tế trong 1 tháng.
+B. Là số tiền trong sổ lương + tiền thưởng + các nguồn thu nhập khác nghĩa.
+/C. Là số lượng hàng hoá và dịch vụ mua được bằng tiền công danh nghĩa.
+D. Là giá cả của sức lao động.
+Câu 229. Tiền công thực tế thay đổi thế nào? Chọn các ý sai dưới đây:
+A. Tỷ lệ thuận với tiền công danh nghĩa
+B. Tỷ lệ nghịch với giá trị tư liệu tiêu dùng và dịch vụ.
+/C. Biến đổi cùng chiều với lạm phát
+D. Cả a và b
+Câu 230. Hình thức tiền công nào không phải là cơ bản?
+A. Tiền công tính theo thời gian
+B. Tiền công tính theo sản phẩm
+/C. Tiền công danh nghĩa
+D. Cả a và b
+Câu 231. Tiêu chí nào là cơ bản để xác định chính xác tiền công?
+A. Số lượng tiền công
+B. Tiền công tháng
+C. Tiền công ngày
+/D. Tiền công giờ
+Câu 232. Nhân tố nào quyết định trực tiếp tiền công tính theo sản phẩm?
+A. Định mức sản phẩm
+B. Đơn giá sản phẩm
+C. Số lượng sản phẩm
+/D. Cả b và c
+Câu 233. Người lao động nhận khoán công việc, khi hoàn thành nhận được một số lượng tiền thì đó là?
+A. Tiền công tính theo thời gian
+B. Tiền công thực tế
+/C. Tiền công danh nghĩa
+D. Cả a, b, c
+Câu 234. Tiền công tính theo thời gian và tiền công tính theo sản phẩm có quan hệ với nhau thế nào?
+A. Không có quan hệ gì
+B. Hai hình thức tiền công áp dụng cho các loại công việc có đặc điểm khác nhau.
+C. Trả công theo sản phẩm dễ quản lý hơn trả công theo thời gian.
+/D. Tiền công tính theo sản phẩm là hình thức chuyển hoá của tiền công tính theo thời gian.
+Câu 235. Tiền công danh nghĩa phụ thuộc các nhân tố nào?
+A. Trình độ chuyên môn và kinh nghiệm của người lao động
+B. Mức độ phức tạp hay giản đơn của công việc.
+C. Quan hệ cung cầu về hàng hoá sức lao động
+/D. Cả a, b, c
+Câu 236. Sản xuất giá trị thặng dư là quy luật kinh tế tuyệt đối của CNTB; Quy luật này có vai trò thế nào? Chọn ý đúng dưới đây:
+A. Quy định sự vận động của CNTB
+B. Động lực phát triển của CNTB
+C. Là nguyên nhân của các mâu thuẫn cơ bản của CNTB
+/D. Cả a, b, c
+Câu 237. Những ý kiến dưới đây về sản xuất giá trị thặng dư của CNTB ngày nay, nhận xét nào đúng?
+A. Máy móc thiết bị hiện đại thay thế lao động sống nhiều hơn.
+B. Tăng NSLĐ và khối lượng giá trị thặng dư
+C. Tỷ suất giá trị thặng dư tăng lên.
+/D. Cả a, b và c
+Câu 238. Những ý kiến nào dưới đây là sai?
+A. Tích luỹ tư bản là biến một phần giá trị thặng dư thành tư bản.
+B. Nguồn gốc của tích luỹ tư bản là giá trị thặng dư.
+C. Động cơ của tích lỹ tư bản cũng là giá trị thặng dư
+/D. Tích luỹ cơ bản là sự tiết kiệm tư bản
+Câu 239. Đâu là nguồn gốc của tích luỹ tư bản?
+A. Tài sản kế thừa.
+B. Lợi nhuận
+C. Của cải tiết kiệm của nhà tư bản
+/D. Cả a, b và c
+Câu 240. Vì sao các nhà tư bản thực hiện tích luỹ tư bản?
+A. Theo đuổi giá trị thặng dư
+B. Do quy luật giá trị thặng dư chi phối
+C. Do quy luật giá trị và quy luật cạnh tranh chi phối
+/D. Cả a, b, c
+Câu 241. Để có thể tăng quy mô tích luỹ, các nhà tư bản sử dụng nhiều biện pháp. Biện pháp nào đúng?
+A. Tăng m'
+B. Giảm v
+C. Tăng NSLĐ
+/D. Cả a, b và c
+Câu 242. Quy mô tích luỹ tư bản phụ thuộc các nhân tố nào?
+A. Khối lượng giá trị thặng dư
+B. Tỷ lệ phân chia khối lượng giá trị thặng dư thành 2 phần là thu nhập và tích luỹ.
+C. Các yếu tố ảnh hưởng đến khối lượng giá trị thặng dư
+/D. Cả a, b và c
+Câu 243. Quy luật chung của tích luỹ tư bản là gì? ý nào sau đây không đúng:
+/A. Giai cấp tư sản ngày càng giàu có, mâu thuẫn trong CNTB tăng lên.
+B. Cấu tạo hữu cơ của tư bản tăng lên
+C. Tích tụ và tập trung tư bản tăng lên
+D. Quá trình bần cùng hoá giai cấp vô sản.
+Câu 244. Những nhân tố nào dưới đây có ảnh hưởng đến quy mô tích luỹ?
+A. Năng suất lao động và cường độ lao động
+B. Đại lượng tư bản ứng trước.
+C. Sự chênh lệch giữa tư bản sử dụng và tư bản tiêu dùng
+/D. Cả a, b, c
+Câu 245. Tích tụ tư bản là:
+A. Là tăng quy mô tư bản cá biệt bằng cách tư bản hoá giá trị thặng dư
+B. Là kết quả trực tiếp của tích luỹ tư bản
+C. Làm cho tư bản xã hội tăng
+/D. Cả a, b và c
+Câu 246. Tập trung tư bản là gì? ý nào sau đây là sai:
+A. Là sự hợp nhất nhiều tư bản cá biệt nhỏ thành một tư bản cá biệt lớn
+/B. Làm cho tư bản xã hội tăng
+C. Phản ánh quan hệ trực tiếp các nhà tư bản với nhau
+D. Cả a và c
+Câu 247. Tích tụ và tập trung tư bản giống nhau ở:
+A. Có nguồn gốc trực tiếp giống nhau.
+B. Có vai trò quan trọng như nhau
+/C. Đều là tăng quy mô tư bản cá biệt
+D. Đều là tăng quy mô tư bản xã hội
+Câu 248. Tích tụ và tập trung tư bản khác nhau ở:
+A. Nguồn gốc trực tiếp của tư bản tích tụ và tập trung.
+B. Tích tụ tư bản vừa làm tăng quy mô tư bản cá biệt vừa làm tăng quy mô tư bản xã hội.
+C. Tập trung tư bản chỉ làm tăng quy mô tư bản cá biệt, không làm tăng quy mô tư bản xã hội.
+/D. Cả a, b, c
+Câu 249. Tích tụ và tập trung tư bản giống nhau ở những điểm nào?
+A. Tăng quy mô tư bản xã hội
+/B. Tăng quy mô tư bản cá biệt.
+C. Phản ánh mối quan hệ trực tiếp giữa giai cấp tư sản và giai cấp công nhân.
+D. Cả a, b và c
+Câu 250. Cách diễn đạt dưới đây các ý nào đúng?
+A. Tiền công phụ thuộc vào giá trị sức lao động
+B. Giá trị sức lao động phụ thuộc vào giá trị tư liệu tiêu dùng và dịch vụ.
+C. Giá trị tư liệu tiêu dùng và dịch vụ phụ thuộc vào tiền công của người lao động làm việc trong các ngành đó.
+/D. Cả a, b và c
+Câu 251. Nguồn trực tiếp của tập trung tư bản là:
+A. Giá trị thặng dư
+/B. Tư bản có sẵn trong xã hội
+C. Tiền tiết kiệm trong dân cư
+D. Cả a, b, c
+Câu 252. Tích tụ tư bản không có nguồn trực tiếp từ:
+A. Giá trị thặng dư
+B. Lợi nhuận
+/C. Các tư bản cá biệt
+D. Cả a, b, c
+Câu 253. Quan hệ giữa tích tụ và tập trung tư bản. Chọn các ý đúng:
+A. Tích tụ tư bản làm cho cạnh tranh gay gắt hơn dẫn đến tập trung tư bản nhanh hơn.
+B. Tập trung tư bản tạo điều kiện tăng cường bóc lột giá trị thặng dư nên đẩy nhanh tích tụ tư bản.
+C. Cả tích tụ và tập trung tư bản đều thúc đẩy quá trình tích luỹ tư bản.
+/D. Cả a, b, c
+Câu 254. Các quan hệ dưới đây, quan hệ nào thuộc phạm trù cấu tạo kỹ thuật của tư bản?
+/A. Phản ánh mặt hiện vật của tư bản
+B. Phản ánh mặt giá trị của tư bản
+C. Quan hệ giữa tư bản bất biến và tư bản khả biến.
+D. Cả a, b, c
+Câu 255. Các quan hệ dưới đây, quan hệ nào không thuộc phạm trù cấu tạo giá trị của tư bản?
+A. Quan hệ giữa tư bản bất biến và tư bản khả biến.
+/B. Phản ánh mặt hiện vật của tư bản
+C. Tỷ lệ về số lượng giá trị giữa tư bản bất biến và tư bản khả biến để tiến hành sản xuất
+D. Phản ánh mặt giá trị của tư bản
+Câu 256. Các quan hệ dưới đây, hãy nhận dạng quan hệ nào thuộc phạm trù cấu tạo hữu cơ của tư bản?
+A. Quan hệ giữa TLSX và sức lao động sử dụng TLSX đó
+/B. Quan hệ giữa tư bản bất biến và tư bản khả biến
+C. Phản ánh mặt hiện vật của tư bản và mặt giá trị của tư bản
+D. Cả a, b và c
+Câu 257. Khi cấu tạo hữu cơ của tư bản tăng lên thì ý nào dưới đây là không đúng?
+A. Phản ánh sự phát triển của lực lượng sản xuất
+B. C tăng tuyệt đối và tương đối
+/C. V không tăng
+D. V tăng tuyệt đối, giảm tương đối
+Câu 258. Thời gian chu chuyển của tư bản gồm thời gian sản xuất và thời gian lưu thông. Thời gian sản xuất không gồm ?
+A. Thời gian lao động
+/B. Thời gian tiêu thụ hàng hoá
+C. Thời gian dự trữ sản xuất
+D. Thời gian gián đoạn lao động
+Câu 259. Những nhân tố nào có ảnh hưởng đến thời gian sản xuất?
+A. Dự trữ sản xuất
+B. Tính chất của ngành sản xuất
+C. Năng suất lao động
+/D. Cả a, b, c
+Câu 260. Những giải pháp nào giúp cho rút ngắn thời gian sản xuất
+A. Chọn loại sản phẩm
+B. áp dụng kỹ thuật tiên tiến, cải tiến tổ chức sản xuất
+C. Tăng NSLĐ và cường độ lao động
+/D. Cả a, b, c
+Câu 261. Những giải pháp nào có thể rút ngắn thời gian lưu thông
+A. Giảm giá cả
+B. Nâng cao chất lượng hàng hoá
+C. Cải tiến phương thức bán hàng, quảng cáo.
+/D. Cả a, b, c.
+Câu 262. Các yếu tố dưới đây, yếu tố nào không thuộc tư bản bất biến?
+A. Máy móc, thiết bị, nhà xưởng
+B. Kết cấu hạ tầng sản xuất
+/C. Tiền lương, tiền thưởng. 
+D. Điện, nước, nguyên liệu.
+Câu 263. Những yếu tố dưới đây, yếu tố nào không thuộc tư bản cố định
+/A. Nguyên vật liệu, điện, nước dùng cho sản xuất
+B. Các phương tiện vận tải
+C. Máy móc, nhà xưởng
+D. Cả b và c
+Câu 264. Các yếu tố dưới đây, yếu tố nào thuộc tư bản lưu động
+A. Đất đai làm mặt bằng sản xuất
+B. Máy móc, nhà xưởng
+/C. Tiền lương
+D. Cả a và b
+Câu 265. Dựa vào căn cứ nào để chia tư bản thành tư bản bất biến và tư bản khả biến.
+A. Tốc độ chu chuyển của tư bản
+/B. Vai trò các bộ phận tư bản trong quá trình sản xuất giá trị thặng dư
+C. Phương thức chuyển giá trị các bộ phận tư bản sang sản phẩm
+D. Hao mòn hữu hình hoặc vô hình
+Câu 266. Dựa vào căn cứ nào để chia tư bản ra thành tư bản cố định và tư bản lưu động.
+A. Tốc độ chu chuyển chung của tư bản
+/B. Phương thức chuyển giá trị của các bộ phận tư bản sang sản phẩm
+C. Vai trò các bộ phận tư bản trong quá trình sản xuất giá trị thặng dư
+D. Sự thay đổi về lượng trong quá trình sản xuất
+Câu 267. Hãy nhận dạng những dấu hiệu nào không thuộc phạm trù hao mòn hữu hình?
+A. Giảm khả năng sử dụng
+B. Do sử dụng
+C. Tác động của tự nhiên
+/D. Khấu hao nhanh
+Câu 268. Hãy nhận dạng những dấu hiệu nào không thuộc phạm trù hao mòn vô hình:
+/A. Khấu hao nhanh
+B. Xuất hiện các máy móc mới có công suất lớn hơn, giá rẻ hơn
+C. Máy móc bị giảm giá ngay cả khi còn mới
+D. Cả b và c
+Câu 269. Thu nhập quốc dân về mặt hiện vật gồm:
+A. Toàn bộ TLSX và tư liệu tiêu dùng
+/B. Toàn bộ tư liệu tiêu dùng và phần TLSX để tích luỹ mở rộng sản xuất
+C. Toàn bộ TLSX và phần tư liệu tiêu dùng để mở rộng sản xuất
+D. Cả a, b, c
+Câu 270. Thu nhập quốc dân về mặt giá trị gồm:
+A. c + v + m
+/B. Toàn bộ giá trị mới (v+m) tạo ra trong năm
+C. Chỉ có c + v
+D. Cả b và c
+Câu 271. Các nhân tố chủ yếu làm tăng thu nhập quốc dân là:
+A. Tăng thêm TLSX
+B. Tư liệu tiêu dùng
+C. Tăng số lượng lao động và tăng NSLĐ
+/D. Cả a,b và c
+Câu 272. Bản chất của khủng hoảng kinh tế là:
+A. Khủng hoảng sản xuất "thừa" so với nhu cầu xã hội
+/B. Khủng hoảng sản xuất "thừa" so với sức mua có hạn của quần chúng
+C. Là khủng hoảng sản xuất "thiếu hụt" so với sức mua.
+D. Là nền kinh tế rối loạn
+Câu 273. Nguyên nhân của bản chất khủng hoảng kinh tế TBCN là:
+/A. Bắt nguồn từ mâu thuẫn của bản chất của CNTB
+B. Do sản xuất không có kế hoạch
+C. Do chạy theo lợi nhuận
+D. Cả a, b, c
+Câu 274. Chu kỳ khủng hoảng kinh tế có mấy giai đoạn?
+A. Hai giai đoạn
+B. Ba giai đoạn
+/C. Bốn giai đoạn
+D. Năm giai đoạn
+Câu 275. Cuộc khủng hoảng kinh tế đầu tiên nổ ra vào năm nào?
+/A. 1825
+B. 1836
+C. 1839
+D. 1842
+Câu 276. Bạn cho biết cuộc đại khủng hoảng kinh tế của CNTB nổ ra vào thời kỳ nào?
+/A. 1929-1933
+B. 1954-1958
+C. 1960-1963
+D. 1973-1975
+Câu 277. Khủng hoảng kinh tế trong nông nghiệp có đặc điểm gì khác so với trong công nghiệp?
+/A. Không có tính chu kỳ đều đặn và thường kéo dài hơn
+B. Có tính chu kỳ đều đặn hơn
+C. Thời gian khủng hoảng ngắn hơn
+D. Cả b và c
+Câu 278. Nhận xét nào dưới đây là đúng?
+A. Khủng hoảng kinh tế là nguyên nhân gây ra thất nghiệp
+B. Chống khủng hoảng kinh tế phải chấp nhận thất nghiệp
+/C. Khủng hoảng kinh tế là nguyên nhân gia tăng thất nghiệp
+D. Cả a, b và c
+Câu 279. Vai trò của nhà nước đối với khủng hoảng kinh tế
+A. Sự can thiệp của nhà nước tư bản vào kinh tế có thể chống được khủng hoảng kinh tế.
+B. Sự can thiệp của nhà nước vào kinh tế không chống được khủng hoảng kinh tế.
+C. Sự can thiệp của nhà nước vào kinh tế có thể hạn chế tác động phá hoại của khủng hoảng kinh tế
+/D. Cả a + c
+Câu 280. Hình thức nào không phải biểu hiện giá trị thặng dư?
+A. Lợi nhuận
+B. Lợi tức
+C. Địa tô
+/D. Tiền lương
+Câu 281. Chi phí thực tế của xã hội để sản xuất hàng hoá là:
+/A. Chi phí lao động sống và lao động quá khứ
+B. Chi phí tư bản bất biến và tư bản khả biến
+C. Chi phí sức lao động của toàn xã hội
+D. Chi phí về tiền vốn, máy móc, nguyên liệu
+Câu 282. Chi phí thực tế của xã hội tạo ra:
+A. Tạo ra sản phẩm cần thiết và sản phẩm thặng dư
+B. Tạo ra giá trị thặng dư
+/C. Tạo ra giá trị hàng hoá
+D. Cả a, b, c
+Câu 283. Chi phí thực tế của xã hội và chi phí sản xuất TBCN, chọn các ý đúng trong các ý dưới đây:
+A. Chi phí thực tế của xã hội là chi phí về lao động xã hội cần thiết
+B. Chi phí sản xuất TBCN là chi phí tư bản bất biến và khả biến
+C. Chi phí sản xuất TBCN nhỏ hơn chi phí thực tế của xã hội
+/D. Cả a, b, c
+Câu 284. Lợi nhuận có nguồn gốc từ:
+A. Lao động phức tạp
+B. Lao động quá khứ
+C. Lao động cụ thể
+/D. Lao động không được trả công
+Câu 285. Khi hàng hoá bán đúng giá trị thì:
+/A. p = m
+B. p > m
+C. p < m
+D. p = 0
+Câu 286. Tỷ suất lợi nhuận phản ánh:
+A. Trình độ bóc lột của tư bản
+B. Nghệ thuật quản lý của tư bản
+/C. Hiệu quả của tư bản đầu tư
+D. Cả a, b, c
+Câu 287. Giá cả sản xuất được xác định theo công thức nào?
+A. c + v + m
+B. c + v
+C. k + p
+/D. k + p_bar
+Câu 288. Quy luật giá cả sản xuất là biểu hiện hoạt động của:
+/A. Quy luật giá trị
+B. Quy luật giá trị thặng dư
+C. Quy luật cạnh tranh
+D. Quy luật cung - cầu
+Câu 289. Lợi nhuận thương nghiệp có được là do bán hàng hoá với mức giá:
+A. Cao hơn giá trị
+/B. Bằng giá trị
+C. Bằng chi phí sản xuất TBCN
+D. Thấp hơn giá trị
+Câu 290. Chi phí lưu thông thuần tuý gồm những bộ phận nào?
+A. Chi phí xây dựng của hàng
+B. Tiền lương trả nhân viên
+C. Chi phí cho quảng cáo
+/D. Cả a, b, c
+Câu 291. Chi phí nào không thuộc phí lưu thông bổ sung:
+A. Chi phí đóng gói
+B. Chi phí bảo quản
+/C. Chi phí quảng cáo
+D. Chi phí vận chuyển
+Câu 292. Tư bản cho vay không ra đời từ:
+A. Tư bản tiền tệ
+B. Tư bản công nghiệp
+C. Tư bản thương nghiệp
+/D. Cả b và c
+Câu 293. Lợi tức là một phần của:
+A. Lợi nhuận
+B. Lợi nhuận siêu ngạch
+/C. Lợi nhuận bình quân
+D. Lợi nhuận ngân hàng
+Câu 294. Tỷ suất lợi tức phụ thuộc vào:
+A. p'
+B. Sự phân chia p thành lợi tức và lợi nhuận doanh nghiệp
+C. Quan hệ cung cầu về tư bản cho vay
+/D. Cả a, b, c
+Câu 295. Tỷ suất lợi tức là tỷ số tính theo phần trăm giữa tổng số lợi tức và số tư bản tiền tệ cho vay trong thời gian nào?
+A. 1 tháng
+B. 3 tháng
+C. 12 tháng
+/D. Cả a, b, c
+Câu 296. Tín dụng thương mại TBCN sử dụng phương tiện thanh toán là:
+A. Cổ phiếu
+B. Trái phiếu
+/C. Kỳ phiếu
+D. Công trái
+Câu 297. Lợi nhuận ngân hàng được xác định theo:
+A. Tỷ suất lợi nhuận
+/B. Tỷ suất lợi nhuận bình quân
+C. Tỷ suất giá trị thặng dư
+D. Tỷ suất lợi tức
+Câu 298. Lợi nhuận bình quân phụ thuộc vào
+/A. Tỷ suất lợi nhuận bình quân
+B. Tỷ suất lợi nhuận
+C. Tỷ suất giá trị thặng dư
+D. Tỷ suất lợi tức
+Câu 299. Thị giá cổ phiếu phụ thuộc vào
+A. Mệnh giá cổ phiếu và lợi tức cổ phần
+/B. Lợi tức cổ phần và lãi suất tiền gửi ngân hàng
+C. Lãi suất tiền gửi ngân hàng và mệnh giá cổ phiếu
+D. Cả a, b, c
+Câu 300. Công ty cổ phần hình thành bằng cách phát hành:
+/A. Cổ phiếu
+B. Kỳ phiếu
+C. Công trái
+D. Cả a, b, c
+Câu 301. Tư bản giả không tồn tại dưới các hình thức:
+A. Cổ phiếu
+B. Trái phiếu
+C. Công trái
+/D. Cả a và b
+
+Câu 302. Chọn ý đúng về đặc điểm của tư bản giả:
+A. Không có giá trị
+B. Có thể mua bán được
+C. Nó có thể mang lại thu nhập cho người sở hữu nó
+/D. Cả a, b, c
+
+Câu 303. Những nhân tố nào ảnh hưởng đến tỷ suất lợi nhuận?
+A. Tỷ suất giá trị thặng dư
+B. Cấu tạo hữu cơ của tư bản
+C. Tốc độ chu chuyển của tư bản
+/D. Cả a, b, c
+
+Câu 304. Trong các nhân tố ảnh hưởng đến tỷ suất lợi nhuận, nhân tố nào ảnh hưởng thuận chiều?
+A. Cấu tạo hữu cơ của tư bản
+/B. Tốc độ chu chuyển của tư bản
+C. Tư bản bất biến
+D. Cả a, b, c
+
+Câu 305. Nhân tố nào dưới đây có ảnh hưởng ngược chiều với tỷ suất lợi nhuận?
+A. Tỷ suất giá trị thặng dư
+B. Tốc độ chu chuyển của tư bản
+/C. Cấu tạo hữu cơ của tư bản
+D. Cả a và b
+
+Câu 306. Đối tượng mua bán trên thị trường chứng khoán là:
+/A. Cổ phiếu, trái phiếu
+B. Bản quyền phát minh sáng chế
+C. Bất động sản
+D. Cả a, b, c
+
+Câu 307. Địa tô TBCN là phần còn lại sau khi khấu trừ:
+A. Lợi nhuận
+B. Lợi nhuận siêu ngạch
+C. Lợi nhuận độc quyền
+/D. Lợi nhuận bình quân
+
+Câu 308. Trong CNTB, giá cả nông phẩm được xác định theo giá cả của nông phẩm ở loại đất nào?
+A. Đất tốt
+B. Đất trung bình
+/C. Đất xấu
+D. Mức trung bình của các loại đất xấu
+
+Câu 309. Địa tô chênh lệch I thu được trên:
+A. Ruộng đất có độ màu mỡ trung bình
+B. Ruộng đất tốt
+C. Ruộng đất ở vị trí thuận lợi
+/D. Cả a, b, c
+
+Câu 310. Địa tô chênh lệch II thu được trên:
+/A. Ruộng đất đã thâm canh
+B. Ruộng đất có độ màu mỡ trung bình
+C. Ruộng đất có độ màu mỡ tốt
+D. Ở ruộng đất có vị trí thuận lợi
+
+Câu 311. Nguyên nhân có địa tô chênh lệch II là do:
+A. Do độ màu mỡ tự nhiên của đất
+B. Do vị trí thuận lợi của đất
+/C. Do đầu tư thêm mà có
+D. Cả a, b, c
+
+Câu 312. Loại ruộng đất nào chỉ có địa tô tuyệt đối?
+A. Ruộng tốt
+B. Ruộng trung bình
+C. Ruộng có vị trí thuận lợi
+/D. Ruộng xấu
+
+Câu 313. Địa tô tuyệt đối có ở loại ruộng đất nào?
+A. Ruộng đất tốt
+B. Ruộng đất trung bình
+C. Ruộng đất xấu
+/D. Cả a, b, c
+Câu 314. Loại ruộng đất nào có địa tô tuyệt đối và địa tô chênh lệch?
+A. Ruộng đất tốt
+B. Ruộng đất trung bình
+C. Ruộng đất có vị trí thuận lợi
+/D. Cả a, b, c
+
+Câu 315. Giá cả ruộng đất phụ thuộc các nhân tố nào?
+A. Độ màu mỡ của đất
+B. Vị trí của đất
+/C. Mức địa tô của đất
+D. Cả a, b, c
+
+Câu 316. Trong CNTB giá cả đất đai ngày càng tăng lên vì:
+A. Tỷ suất lợi tức có xu hướng giảm
+B. Đất đai ngày càng khan hiếm
+C. Địa tô ngày càng tăng
+/D. Cả a, b, c
+
+Câu 317. Chọn ý đúng trong các ý dưới đây:
+/A. Người cho vay là người sở hữu tư bản
+B. Người cho vay là người sử dụng tư bản
+C. Người đi vay là người sở hữu tư bản
+D. Cả a, b và c
+
+Câu 318. Chọn các ý đúng trong các ý dưới đây:
+A. Tư bản cho vay là tư bản tiềm thế
+B. Tư bản ngân hàng là tư bản tiềm thế
+C. Tư bản ngân hàng là tư bản hoạt động
+/D. Cả a và c
+
+Câu 319. Chọn các ý đúng trong các ý dưới đây:
+A. Địa tô chênh lệch gắn với độc quyền tư hữu ruộng đất
+/B. Địa tô chênh lệch gắn với độc quyền kinh doanh trong nông nghiệp
+C. Địa tô tuyệt đối gắn với độc quyền kinh doanh trong nông nghiệp
+D. Cả a, b, c
+
+Câu 320. Ý nào trong các ý dưới đây không đúng?
+A. Tư bản cho vay là tư bản tiềm thế
+/B. Tư bản ngân hàng là tư bản tiềm thế
+C. Tư bản ngân hàng là tư bản hoạt động
+D. Cả a và c
+
+Câu 321. Khi tỷ suất giá trị thặng dư không đổi thì tỷ suất lợi nhuận phụ thuộc vào:
+A. Cấu tạo kỹ thuật của tư bản
+B. Cấu tạo giá trị của tư bản
+C. Cấu tạo hữu cơ của tư bản
+/D. Cả a, b, c
+
+Câu 322. Tốc độ chu chuyển của tư bản tăng lên thì tỷ suất lợi nhuận sẽ:
+/A. Tăng lên
+B. Giảm xuống
+C. Không đổi
+D. Tùy điều kiện cụ thể
+
+Câu 323. Cạnh tranh trong nội bộ ngành dựa trên:
+A. Trình độ kỹ thuật, tay nghề công nhân
+B. Trang thiết bị kỹ thuật, công nghệ
+C. Khả năng tổ chức quản lý
+/D. Cả a, b, c
+
+Câu 324. Cạnh tranh giữa các ngành xảy ra khi có sự khác nhau về:
+A. Cung cầu các loại hàng hoá
+B. Lợi nhuận khác nhau
+/C. Tỷ suất lợi nhuận
+D. Giá trị thặng dư siêu ngạch
+
+Câu 325. Lợi nhuận bình quân của các ngành khác nhau phụ thuộc vào:
+/A. Tư bản ứng trước
+B. Tỷ suất giá trị thặng dư
+C. Cấu tạo hữu cơ của tư bản
+D. Tỷ suất lợi nhuận bình quân
+Câu 326. Đặc điểm hoạt động của thương nghiệp trước CNTB là:
+A. Mua rẻ, bán đắt
+B. Lừa đảo
+C. Cân, đong, đo đếm không chính xác
+/D. Cả a, b, c
+
+Câu 327. Tư bản thương nghiệp dưới CNTB ra đời từ:
+A. Tư bản cho vay
+/B. Tư bản công nghiệp
+C. Tư bản hàng hoá
+D. Tư bản lưu động
+
+Câu 328. Nguồn tư bản tiền tệ mà ngân hàng huy động được bao gồm:
+A. Tiền tự có của chủ ngân hàng
+B. Tiền nhàn rỗi của các tư bản sản xuất
+C. Tiền của các nhà tư bản thực lợi
+/D. Cả a, b và c
+
+Câu 329. Thị giá cổ phiếu không phụ thuộc vào các yếu tố nào?
+/A. Mệnh giá cổ phiếu
+B. Lợi tức cổ phần
+C. Lãi suất tiền gửi ngân hàng
+D. Cả a, b, c
+Câu 330. Loại chứng khoán nào công ty cổ phần phát hành?
+/A. Cổ phiếu
+B. Công trái
+C. Kỳ phiếu
+D. Tín phiếu
+Câu 331. Ý kiến nào không đúng về đặc điểm của tư bản giả?
+A. Có thể mua bán được
+B. Có thể mang lại thu nhập cho người sở hữu nó
+/C. Giá cả của nó do giá trị quyết định
+D. Cả a và b
+
+Câu 332. Nhân tố nào dưới đây không ảnh hưởng đến tỷ suất lợi nhuận?
+A. Tỷ suất giá trị thặng dư
+B. Cấu tạo hữu cơ của tư bản
+C. Tốc độ chu chuyển của tư bản
+/D. Cạnh tranh
+
+Câu 333. Những đối tượng nào dưới đây không được mua bán trên thị trường chứng khoán?
+A. Cổ phiếu, trái phiếu
+/B. Bất động sản
+C. Công trái, kỳ phiếu
+D. Cả a và c
+
+Câu 334. Những ý kiến nào dưới đây không đúng?
+A. Lợi tức nhỏ hơn lợi nhuận bình quân
+B. Lợi nhuận thương nghiệp bằng lợi nhuận bình quân
+/C. Địa tô là một phần của lợi nhuận bình quân
+D. Cả a và b
+
+Câu 335. Giá cả ruộng đất không phụ thuộc vào:
+/A. Độ màu mỡ của đất
+B. Mức địa tô của đất
+C. Tỷ suất lợi tức tiền gửi ngân hàng
+D. Cả b và c
+
+Câu 336. Mệnh đề nào không đúng dưới đây?
+A. Cổ phiếu và đất tự nhiên đều không có giá trị
+B. Giá cả của đất là địa tô được tư bản hoá
+/C. Giá cổ phiếu chỉ phụ thuộc vào mệnh giá cổ phiếu
+D. Giá cả ruộng đất và cổ phiếu đều phụ thuộc vào tỷ suất lợi tức tiền gửi ngân hàng
+
+Câu 337. Phương thức sản xuất TBCN có những giai đoạn nào?
+/A. CNTB tự do cạnh tranh và CNTB độc quyền
+B. CNTB hiện đại và CNTB độc quyền
+C. CNTB hiện đại và CNTB tự do cạnh tranh
+D. CNTB ngày nay và CNTB độc quyền
+
+Câu 338. Nhà kinh điển nào sau đây nghiên cứu sâu về CNTB độc quyền?
+A. C.Mác
+B. Ph.Ăng ghen
+C. C.Mác và Ăng ghen
+/D. V.I.Lênin
+Câu 339. CNTB độc quyền xuất hiện vào thời kỳ lịch sử nào?
+A. Cuối thế kỷ 17 đầu thế kỷ 18
+B. Cuối thế kỷ 18 đầu thế kỷ 19
+/C. Cuối thế kỷ 19 đầu thế kỷ 20
+D. Từ sau chiến tranh thế giới thứ 2
+
+Câu 340. CNTB độc quyền là:
+A. Một PTSX mới
+/B. Một giai đoạn phát triển của PTSX-TBCN
+C. Một hình thái kinh tế - xã hội
+D. Một nấc thang phát triển của LLSX
+
+Câu 341. Nguyên nhân ra đời của CNTB độc quyền là:
+A. Do cuộc đấu tranh của giai cấp công nhân và nhân dân lao động
+B. Do sự can thiệp của nhà nước tư sản
+C. Do sự tập trung sản xuất dưới tác động của cách mạng - khoa học - công nghệ
+/D. Cả a, b, c
+
+Câu 342. Kết luận sau đây là của ai? "Tự do cạnh tranh đẻ ra tập trung sản xuất và sự tập trung sản xuất này khi phát triển đến mức độ nhất định, lại dẫn tới độc quyền"
+A. C.Mác
+B. Ph. Ăng ghen
+/C. Lênin
+D. Cả C.Mác và Ph. Ăng ghen
+
+Câu 343. Sự hình thành các tổ chức độc quyền dựa trên cơ sở:
+A. Sản xuất nhỏ phân tán
+/B. Tích tụ tập trung sản xuất và sự ra đời của các xí nghiệp quy mô lớn
+C. Sự xuất hiện các thành tựu mới của khoa học
+D. Sự hoàn thiện QHSX - TBCN
+
+Câu 344. Sự ra đời của tư bản tài chính là kết quả của sự phát triển:
+A. Độc quyền ngân hàng
+B. Sự phát triển của thị trường tài chính
+C. Độc quyền công nghiệp
+/D. Quá trình xâm nhập liên kết độc quyền ngân hàng với độc quyền công nghiệp
+
+Câu 345. Vai trò mới của ngân hàng trong giai đoạn CNTB độc quyền là:
+A. Đầu tư tư bản
+/B. Khống chế hoạt động của nền kinh tế TBCN
+C. Trung tâm tín dụng
+D. Trung tâm thanh toán
+
+Câu 346. Chế độ tham dự của tư bản tài chính được thiết lập do:
+A. Quyết định của nhà nước
+B. Yêu cầu tổ chức của các ngân hàng
+C. Yêu cầu của các tổ chức độc quyền công nghiệp
+/D. Số cổ phiếu khống chế nắm công ty mẹ, con, cháu.
+
+Câu 347. Xuất khẩu hàng hoá là đặc điểm của:
+A. Sản xuất hàng hoá giản đơn
+B. Của CNTB
+/C. Của CNTB tự do cạnh tranh
+D. Của CNTB độc quyền
+
+Câu 348. Xuất khẩu hàng hoá là:
+A. Đưa hàng hoá ra nước ngoài
+/B. Đưa hàng hoá ra bán ở nước ngoài để thực hiện giá trị
+C. Xuất khẩu giá trị ra nước ngoài
+D. Cả a, b, c
+
+Câu 349. Xuất khẩu tư bản là:
+A. Đầu tư trực tiếp ra nước ngoài
+B. Cho nước ngoài vay
+C. Mang hàng hoá ra bán ở nước ngoài để thực hiện giá trị
+/D. Cả a và b
+
+Câu 350. Xuất khẩu tư bản là đặc điểm của:
+A. Các nước giàu có
+B. Của CNTB
+/C. Của CNTB độc quyền
+D. Của CNTB tự do cạnh tranh
+
+Câu 351. Mục đích của xuất khẩu tư bản là:
+A. Để giải quyết nguồn tư bản "thừa" trong nước
+/B. Chiếm đoạt giá trị thặng dư và các nguồn lợi khác ở nước nhập khẩu tư bản
+C. Thực hiện giá trị và chiếm các nguồn lợi khác của nước nhập khẩu tư bản
+D. Giúp đỡ các nước nhập khẩu tư bản phát triển.
+Câu 352. Xuất khẩu hàng hoá phát triển mạnh vào giai đoạn nào?
+A. Từ cuối thế kỷ 17
+B. Trong thế kỷ 18
+/C. Cuối thế kỷ 18 - thế kỷ 19
+D. Cuối thế kỷ 19 - đầu thế kỷ 20
+Câu 353. Xuất khẩu tư bản nhà nước nhằm mục đích?
+A. Quân sự
+B. Kinh tế
+C. Chính trị
+/D. Cả a, b, c
+Câu 354. Về kinh tế, xuất khẩu tư bản nhà nước thường hướng vào:
+A. Ngành có lợi nhuận cao
+B. Ngành công nghệ mới
+/C. Ngành kết cấu hạ tầng
+D. Ngành có vốn chu chuyển nhanh
+Câu 355. Về kinh tế, xuất khẩu tư bản nhà nước nhằm mục đích:
+A. Thu nhiều lợi nhuận
+B. Tạo điều kiện cho các nước nhập khẩu tư bản phát triển
+C. Khống chế kinh tế các nước nhập khẩu tư bản.
+/D. Tạo môi trường thuận lợi cho xuất khẩu tư bản tư nhân.
+Câu 356. Xuất khẩu tư bản tư nhân thường hướng vào ngành:
+A. Vốn chu chuyển nhanh
+/B. Vốn chu chuyển nhanh, lợi nhuận cao
+C. Lợi nhuận cao, vốn chu chuyển chậm
+D. Kết cấu hạ tầng sản xuất, xã hội
+Câu 357. Các tổ chức độc quyền của các quốc gia cạnh tranh trên thị trường quốc tế dẫn đến:
+A. Thôn tính nhau
+B. Đấu tranh không khoan nhượng
+C. Thoả hiệp với nhau hình thành các tổ chức độc quyền quốc tế
+/D. Cả a, b, c
+Câu 358. Trong giai đoạn CNTB độc quyền có những hình thức cạnh tranh nào? Chọn phương án trả lời đúng nhất trong các phương án sau:
+A. Cạnh tranh giữa tổ chức độc quyền với xí nghiệp ngoài độc quyền
+B. Cạnh tranh giữa các tổ chức độc quyền với nhau
+C. Cạnh tranh trong nội bộ tổ chức độc quyền
+/D. Cả a, b, c
+Câu 359. Vì sao trong CNTB độc quyền cạnh tranh không bị thủ tiêu?
+A. Vì các tổ chức độc quyền cạnh tranh với nhau
+B. Vì tổ chức độc quyền cạnh tranh với các công ty ngoài độc quyền
+C. Vì các xí nghiệp trong nội bộ tổ chức độc quyền cạnh tranh với nhau
+/D. Vì cạnh tranh là quy luật khách quan của kinh tế hàng hoá
+Câu 360. Các cường quốc đế quốc xâm chiếm thuộc địa nhằm:
+A. Đảm bảo nguồn nguyên liệu
+B. Khống chế thị trường
+C. Thực hiện mục đích kinh tế - chính trị - quân sự
+/D. Cả a, b, c
+Câu 361. Các cuộc xâm chiếm thuộc địa của các nước đế quốc diễn ra mạnh mẽ vào thời kỳ nào?
+A. Thế kỷ 17
+B. Thế kỷ 18
+/C. Cuối thế kỷ 18 - đầu thế kỷ 19
+D. Cuối thế kỷ 19 - đầu thế kỷ 20
+Câu 362. Cuối thế kỷ 19 đầu thế kỷ 20 các nước đế quốc có thuộc địa nhiều nhất xếp theo thứ tự nào là đúng?
+A. Anh - Nga - Pháp - Mỹ
+/B. Anh - Pháp - Nga - Mỹ
+C. Pháp - Anh - Nga - Mỹ
+D. Nga - Anh - Mỹ - Pháp
+Câu 363. Chọn mệnh đề đúng trong các mệnh đề dưới đây?
+A. Độc quyền là con đẻ của cạnh tranh, đối lập với cạnh tranh và thủ tiêu cạnh tranh
+/B. Độc quyền là con đẻ của cạnh tranh, đối lập với cạnh tranh nhưng không thủ tiêu cạnh tranh.
+C. Cạnh tranh sinh ra độc quyền, chúng không đối lập nhau.
+D. Cả a, b, c
+Câu 364. Biện pháp canh tranh mà tổ chức độc quyền thường sử dụng đối với các xí nghiệp độc quyền:
+/A. Thương lượng
+B. Thôn tính
+C. Phân chia thị trường, nguồn nguyên liệu...
+D. Độc chiếm nguồn nguyên liệu, sức lao động...
+Câu 365. Kết quả canh tranh trong nội bộ ngành:
+/A. Hình thành giá trị thị trường
+B. Hình thành tỷ suất lợi nhuận bình quân
+C. Hình thành giá cả sản xuất
+D. Hình thành lợi nhuận bình quân
+Câu 366. Mục đích cạnh tranh trong nội bộ tổ chức độc quyền là:
+A. Giành thị phần
+B. Giành tỷ lệ sản xuất cao hơn
+/C. Cả a và b
+D. Thôn tính nhau
+Câu 367. Kết quả cạnh tranh giữa các tổ chức độc quyền trong cùng một ngành là:
+A. Một sự thoả hiệp
+B. Một bên phá sản
+C. Hai bên cùng phát triển
+/D. Một sự thoả hiệp hoặc một bên phá sản
+Câu 368. Khi CNTB độc quyền ra đời sẽ:
+A. Phủ định các quy luật trong giai đoạn CNTB tự do cạnh tranh
+B. Phủ định các quy luật kinh tế của sản xuất hàng hoá
+/C. Làm cho các quy luật kinh tế của sản xuất hàng hoá và của CNTB có hình thức biểu hiện mới
+D. Không làm thay đổi các quy luật kinh tế nói chung.
+Câu 369. Các tổ chức độc quyền sử dụng loại giá cả nào?
+A. Giá cả chính trị
+B. Giá cả độc quyền cao
+C. Giá cả độc quyền thấp
+/D. Cả b, c 
+Câu 370. Trong giai đoạn CNTB độc quyền:
+A. Quy luật giá trị không còn hoạt động
+/B. Quy luật giá trị vẫn hoạt động
+C. Quy luật giá trị lúc hoạt động, lúc không hoạt động
+D. Quy luật giá trị hoạt động kém hiệu quả
+Câu 371. Các tổ chức độc quyền sử dụng giá cả độc quyền để:
+A. Chiếm đoạt giá trị thặng dư của người khác
+B. Khống chế thị trường
+C. Gây thiệt hại cho các đối thủ cạnh tranh
+/D. Củng cố vai trò tổ chức độc quyền
+Câu 372. Trong thời kỳ CNTB độc quyền quan hệ giá trị và giá cả hàng hoá sẽ thế nào nếu xét toàn bộ hệ thống kinh tế TBCN?
+A. Tổng giá cả > tổng giá trị
+B. Tổng giá cả < tổng giá trị
+/C. Tổng giá cả = tổng giá trị
+D. Tổng giá cả ≠ tổng giá trị
+Câu 373. Trong giai đoạn CNTB độc quyền quy luật giá trị có biểu hiện mới, thành:
+A. Quy luật giá cả sản xuất
+/B. Quy luật giá cả độc quyền
+C. Quy luật lợi nhuận độc quyền
+D. Quy luật lợi nhuận bình quân
+Câu 374. Trong giai đoạn CNTB tự do cạnh tranh, quy luật giá trị có hình thức biểu hiện là gì?
+A. Quy luật giá cả thị trường
+B. Quy luật giá cả độc quyền
+C. Quy luật lợi nhuận bình quân
+/D. Quy luật giá cả sản xuất
+Câu 375. Trong giai đoạn CNTB tự do cạnh tranh, quy luật giá trị thặng dư biểu hiện thành:
+A. Quy luật giá cả sản xuất
+B. Quy luật tích luỹ tư bản
+/C. Quy luật tỷ suất lợi nhuận bình quân
+D. Quy luật lợi nhuận độc quyền cao
+Câu 376. Trong giai đoạn CNTB độc quyền, quy luật giá trị thặng dư biểu hiện thành:
+A. Quy luật giá cả độc quyền
+/B. Quy luật lợi nhuận độc quyền cao
+C. Quy luật lợi nhuận bình quân
+D. Quy luật giá cả sản xuất
+Câu 377. Nguyên nhân hình thành tỷ suất lợi nhuận bình quân:
+A. Do cạnh tranh
+B. Do chạy theo giá trị thặng dư
+/C. Do cạnh tranh giữa các ngành
+D. Do cạnh tranh trong nội bộ ngành
+Câu 378. Nguyên nhân hình thành lợi nhuận độc quyền là:
+A. Do cạnh tranh nội bộ ngành
+B. Do sự thèm khát giá trị thặng dư của các nhà tư bản
+/C. Do địa vị độc quyền đem lại
+D. Cả a, b, c
+Câu 379. Chọn các ý sai về quan hệ giá cả độc quyền với giá trị:
+A. Giá cả độc quyền cao > giá trị
+B. Giá cả độc quyền thấp < giá trị
+/C. Giá cả độc quyền thoát ly giá trị
+D. Giá cả độc quyền vẫn dựa trên cơ sở giá trị
+Câu 380. Nguồn gốc của lợi nhuận độc quyền cao là:
+A. Lao động không công của công nhân trong xí nghiệp độc quyền
+B. Phần lao động không công của công nhân trong xí nghiệp ngoài độc quyền.
+C. Phần giá trị thặng dư của các xí nghiệp tư bản vừa, nhỏ
+/D. Cả a, b, c
+Câu 381. Nguyên nhân ra đời của CNTB độc quyền nhà nước là do:
+A. Trình độ xã hội hoá cao của lực lượng sản xuất
+B. Do mâu thuẫn cơ bản của CNTB
+C. Xu hướng quốc tế hoá kinh tế
+/D. Cả a, b, c
+Câu 382. Nhà nước tư sản đảm nhận đầu tư vào ngành nào?
+A. Đầu tư lớn, thu hồi vốn nhanh, lợi nhuận ít
+B. Đầu tư lớn, thu hồi vốn chậm, lợi nhuận cao
+C. Đầu tư không lớn, thu hồi vốn nhanh, lợi nhuận cao
+/D. Đầu tư lớn, thu hồi vốn chậm, lợi nhuận ít
+Câu 383. Trình độ xã hội hoá lực lượng sản xuất phát triển cao đặt ra:
+/A. Nhà nước can thiệp vào kinh tế với vai trò quản lý chung
+B. Nhà nước không nên can thiệp vào kinh tế
+C. Nhà nước chỉ nên đóng vai trò "người gác cổng"
+D. Nhà nước chỉ nên can thiệp vào kinh tế đối ngoại
+Câu 384. Trong thời kỳ CNTB độc quyền:
+A. Mâu thuẫn giữa giai cấp tư sản và vô sản không thay đổi
+B. Mâu thuẫn trên có phần dịu đi
+/C. Mâu thuẫn trên ngày càng sâu sắc hơn
+D. Đời sống của giai cấp công nhân và nhân dân lao động dần dần được cải thiện hơn
+Câu 385. Sự xuất hiện của CNTB độc quyền nhà nước làm cho:
+A. Mâu thuẫn giai cấp vô sản và tư sản giảm đi
+/B. Làm cho mâu thuẫn trên sâu sắc hơn
+C. Làm hạn chế tác động tiêu cực của độc quyền
+D. Cả a, b, c
+Câu 386. Bản chất của CNTB độc quyền nhà nước là:
+/A. Sự kết hợp tổ chức độc quyền tư nhân và nhà nước tư sản
+B. Nhà nước tư sản can thiệp vào kinh tế, chi phối độc quyền
+C. Các tổ chức độc quyền phụ thuộc vào nhà nước
+D. Sự thoả hiệp giữa nhà nước và tổ chức độc quyền
+Câu 387. Sự ra đời của CNTB độc quyền nhà nước nhằm mục đích:
+A. Phục vụ lợi ích của CNTB
+B. Phục vụ lợi ích của tổ chức độc quyền tư nhân
+C. Phục vụ lợi ích của nhà nước tư sản
+/D. Phục vụ lợi ích của tổ chức độc quyền tư nhân và cứu nguy cho CNTB
+Câu 388. Trong cơ chế của CNTB độc quyền nhà nước thì:
+A. Tổ chức độc quyền phụ thuộc vào nhà nước.
+/B. Nhà nước phụ thuộc vào tổ chức độc quyền
+C. Nhà nước không phụ thuộc vào tổ chức độc quyền
+D. Nhà nước chi phối tổ chức độc quyền
+Câu 389. CNTB độc quyền nhà nước là:
+/A. Một quan hệ kinh tế, chính trị, xã hội
+B. Một chính sách trong giai đoạn độc quyền
+C. Một kiểu tổ chức kinh tế - xã hội
+D. Một cơ chế điều tiết của nhà nước tư sản
+Câu 390. Trong lịch sử hình thức can thiệp phi kinh tế là của nhà nước nào?
+A. Phong kiến
+B. CNTB tự do cạnh tranh
+C. CNTB độc quyền
+/D. Cả a, b, c
+Câu 391. Sở hữu độc quyền nhà nước là sự kết hợp của:
+A. Sở hữu nhà nước và sở hữu tư nhân TBCN
+/B. Sở hữu nhà nước và sở hữu độc quyền tư nhân
+C. Sở hữu của nhà nước tư sản
+D. Sở hữu của nhiều nước tư bản
+Câu 392. Sở hữu nhà nước được hình thành bằng cách:
+A. Xây dựng xí nghiệp nhà nước bằng ngân sách
+B. Quốc hữu hoá
+C. Mua cổ phần của doanh nghiệp tư nhân
+/D. Cả a, b, c
+Câu 393. Cơ chế kinh tế của CNTB độc quyền nhà nước gồm:
+A. Cơ chế thị trường và độc quyền tư nhân
+B. Độc quyền tư nhân và sự điều tiết của nhà nước
+/C. Cơ chế thị trường, độc quyền tư nhân và sự can thiệp của nhà nước
+D. Cơ chế thị trường và sự điều tiết của nhà nước
+Câu 394. Nhà nước can thiệp vào các khâu nào của quá trình sản xuất?
+A. Sản xuất
+B. Sản xuất và tiêu dùng
+C. Phân phối và trao đổi
+/D. Sản xuất - phân phối - trao đổi - tiêu dùng
+Câu 395. Quan hệ cung cầu có ảnh hưởng đến:
+A. Giá trị hàng hoá
+/B. Giá cả hàng hoá
+C. Giá trị thặng dư
+D. Cả a, b, c
+Câu 396. Quan hệ cung cầu có ảnh hưởng đến:
+/A. Tỷ suất lợi nhuận
+B. Tỷ suất giá trị thặng dư
+C. Khối lượng giá trị thặng dư
+D. Cả a, b, c
+Câu 397. Tỷ suất lợi tức phụ thuộc vào các nhân tố nào?
+A. Ý chí của người cho vay
+B. Yêu cầu bức thiết của người vay
+C. Tỷ suất lợi nhuận bình quân
+/D. Cả a, b và c
+Câu 398. Tỷ suất lợi tức thay đổi trong phạm vi nào?
+/A. Lớn hơn không và nhỏ hơn tỷ suất lợi nhuận bình quân (0 < z' < p̄')
+B. Bằng tỷ suất lợi nhuận bình quân (z' = p̄')
+C. Lớn hơn tỷ suất lợi nhuận bình quân (z' > p̄')
+D. Cả a, b và c
+Câu 399. Sự phân chia giá trị thặng dư giữa tư bản công nghiệp và tư bản thương nghiệp dựa vào đâu?
+A. Khối lượng giá trị thặng dư
+B. Tỷ suất giá trị thặng dư
+C. Tỷ suất lợi nhuận
+/D. Tỷ suất lợi nhuận bình quân
+Câu 400. Giá cả thị trường của hàng hoá xoay quanh yếu tố nào?
+/A. Giá trị thị trường
+B. Giá trị của hàng hoá
+C. Giá cả sản xuất
+D. Quan hệ cung cầu hàng hoá
+Câu 401. Đâu là sự khác nhau giữa địa tô phong kiến và địa tô TBCN?
+A. Địa tô phong kiến dựa trên cưỡng bức siêu kinh tế
+B. Địa tô TBCN dựa trên quan hệ kinh tế
+C. Địa tô phong kiến là toàn bộ sản phẩm thặng dư của nông dân
+/D. Cả a, b và c
+
+Câu 402. Cổ phiếu và trái phiếu đều là hình thức đầu tư. Chọn ý kiến đúng dưới đây:
+A. Đều là đầu tư trực tiếp, dài hạn
+B. Đều là đầu tư gián tiếp, ngắn hạn
+/C. Cổ phiếu là đầu tư trực tiếp còn trái phiếu là đầu tư gián tiếp
+D. Cả a, b và c
+
+Câu 403. Cổ phiếu và trái phiếu là hình thức đầu tư. Chọn các ý đúng dưới đây:
+A. Mua cổ phiếu và trái phiếu đều có thời hạn, hết thời hạn người sở hữu chúng được thanh toán
+B. Lãi cổ phiếu và trái phiếu đều phụ thuộc kết quả kinh doanh của công ty
+/C. Cổ phiếu và trái phiếu đều có thể đem bán
+D. Cả a, b và c
+
+Câu 404. Các ý nào dưới đây không đúng?
+A. Cổ phiếu và trái phiếu là hàng hoá của thị trường chứng khoán
+B. Lãi cổ phiếu phụ thuộc kết quả kinh doanh của công ty còn lãi của trái phiếu là đại lượng cố định
+C. Người mua trái phiếu không là cổ đông
+/D. Cổ phiếu và trái phiếu đều được thanh toán gốc và lãi khi đến kỳ hạn.
+
+Câu 405. Chọn ý kiến đúng về giá cả ruộng đất và giá cả hàng hoá thông thường
+A. Đều là sự biểu hiện bằng tiền của giá trị hàng hoá
+/B. Đều chịu sự ảnh hưởng của quan hệ cung cầu
+C. Giá trị của chúng đều do lao động xã hội hao phí quyết định
+D. Cả a, b, c
+
+Câu 406. Mua bán ruộng đất và mua bán cổ phiếu có điểm gì giống nhau:
+A. Đều không dựa trên cơ sở giá trị
+B. Đều do quan hệ cung cầu chi phối
+C. Đều phụ thuộc vào tỷ suất lợi tức tiền gửi ngân hàng
+/D. Cả a, b, c
+
+Câu 407. Giá trị xã hội của hàng hoá công nghiệp và nông nghiệp giống nhau ở chỗ dựa trên:
+A. Hao phí lao động của người sản xuất hàng hoá
+/B. Hao phí lao động xã hội cần thiết
+C. Hao phí lao động xã hội trong điều kiện sản xuất trung bình
+D. Hao phí lao động xã hội trong điều kiện sản xuất khó khăn nhất
+
+Câu 408. Khi lạm phát phi mã xảy ra, hình thức sử dụng tiền nào có lợi nhất?
+A. Cất ở nhà
+B. Gửi ngân hàng
+C. Đầu tư vào sản xuất kinh doanh
+/D. Mua hàng hoá hoặc vàng cất giữ
+
+Câu 409. Khi lạm phát phi mã xảy ra, hình thức sử dụng tiền nào không có lợi?
+A. Đầu tư sản xuất kinh doanh
+B. Gửi ngân hàng
+C. Cất ở nhà
+/D. Cả a, b và c
+
+Câu 410. Những tiến trình có tính quy luật để chuyển kinh tế hàng hoá giản đơn lên kinh tế TBCN là gì?
+A. Cách mạng trong nông nghiệp và trong lực lượng lao động
+B. Chuyển từ tư hữu nhỏ sang tư hữu lớn TBCN
+C. Nhà nước đóng vai trò "bà đỡ"
+/D. Cả a, b và c
+
+Câu 411. Quy luật giá trị biểu hiện sự vận động thông qua sự vận động của:
+/A. Giá cả hàng hoá
+B. Giá cả sản xuất
+C. Giá cả độc quyền
+D. Cả a, b và c
+
+Câu 412. ý kiến nào đúng về hậu quả của lạm phát?
+A. Phân phối lại các nguồn thu nhập giữa các tầng lớp dân cư.
+B. Người giữ tiền, người cho vay bị thiệt, người giữ hàng hoá người đi vay có lợi.
+C. Tiền lương thực tế giảm.
+/D. Cả a, b và c
+
+Câu 413. Trong các mệnh đề dưới đây hãy chọn các mệnh đề đúng:
+A. Giá trị hàng hoá do lao động sống và lao động quá khứ hợp thành.
+B. Lao động sống tạo ra giá trị thặng dư
+C. Lao động sống là nguồn gốc của giá trị thặng dư và giá trị
+/D. Cả a, b và c
+
+Câu 414. Tiêu chí nào là quan trọng nhất để đánh giá hiệu quả kinh tế?
+A. GNP
+B. GDP
+C. GNP hoặc GDP trên đầu người
+/D. Năng suất lao động
+
+Câu 415. Chọn câu trả lời chính xác nhất về CNTB ngày nay; CNTB ngày nay là:
+A. CNTB độc quyền
+B. CNTB độc quyền nhà nước
+C. CNTB hiện đại
+/D. Giai đoạn ngày nay của CNTB độc quyền
+
+Câu 416. Đặc điểm của CNTB ngày nay được biểu hiện ở:
+A. Sự xuất hiện các hình thức độc quyền mới
+B. Biểu hiện mới của CNTB độc quyền
+C. Biểu hiện mới của CNTB độc quyền nhà nước
+/D. Biểu hiện mới về kinh tế của CNTB độc quyền và CNTB độc quyền nhà nước
+
+Câu 417. Hình thức độc quyền nào mới có trong CNTB ngày nay?
+A. Công -xoóc-xi-om
+B. Công -xoóc-xi-om, con sơn.
+C. Conglomeret.
+/D. Conglomeret và con sơn.
+
+Câu 418. Đặc điểm của Con -sơn là:
+/A. Độc quyền đa ngành, có hàng trăm công ty quan hệ với nhau, phân bố ở nhiều nước
+B. Độc quyền trong 1 ngành, quy mô rất lớn, ở nhiều nước
+C. Độc quyền đa ngành, quy mô lớn, trong một nước
+D. Độc quyền đơn ngành, quy mô lớn, ở nhiều nước
+
+Câu 419. Nguyên nhân xuất hiện độc quyền đa ngành là:
+A. Sự điều tiết của nhà nước.
+B. Đối phó với luật chống độc quyền
+C. Do kinh doanh đơn ngành dễ bị phá sản trong điều kiện cạnh tranh quyết liệt
+/D. Cả b và c
+
+Câu 420. Conglomeret là:
+A. Tổ chức độc quyền đa ngành có hàng trăm doanh nghiệp.
+/B. Kết hợp vài ba chục hãng vừa và nhỏ không có sự liên quan nào về sản xuất và dịch vụ cho sản xuất
+C. Tổ chức độc quyền gồm hàng trăm doanh nghiệp có quan hệ chặt chẽ nhau về sản xuất và dịch vụ.
+D. Kết hợp nhiều doanh nghiệp vừa và nhỏ có quan hệ chặt chẽ về sản xuất và dịch vụ.
+
+Câu 421. Trong CNTB ngày nay xuất hiện nhiều doanh nghiệp vừa và nhỏ. Nguyên nhân là:
+A. Lực lượng sản xuất phát triển cho phép chuyên môn hoá sản xuất sâu.
+B. Các doanh nghiệp vừa và nhỏ thích ứng nhanh với biến động của thị trường.
+C. Doanh nghiệp vừa và nhỏ dễ đổi mới trang thiết bị kỹ thuật.
+/D. Cả a, b và c
+
+Câu 422. Hình thức tổ chức và cơ chế thống trị của tư bản tài chính trong CNTB ngày nay thay đổi là do:
+/A. Lực lượng sản xuất phát triển, nhiều ngành mới xuất hiện
+B. ý muốn thống trị của tư bản tài chính
+C. Mục đích thu lợi nhuận độc quyền
+D. Sự điều tiết của nhà nước
+
+Câu 423. Hình thức tồn tại của các tập đoàn tư bản tài chính của CNTB ngày nay thường dưới dạng:
+A. Công - nông nghiệp - dịch vụ
+/B. Công - nông - thương - tín - dịch vụ, hoặc công nghiệp - quân sự - dịch vụ quốc phòng.
+C. Công - nông nghiệp - dịch vụ kết hợp với quân sự - dịch vụ quốc phòng.
+D. Cả a, b và c
+
+Câu 424. Trong CNTB ngày nay, các trùm tài chính thống trị nền kinh tế thông qua:
+A. "Chế độ tham dự"
+B. "Chế độ uỷ nhiệm"
+/C. Kết hợp "chế độ tham dự" với "chế độ uỷ nhiệm"
+D. Các tổ chức tài chính quốc tế
+
+Câu 425. Trong CNTB ngày nay, xuất khẩu tư bản chủ yếu theo hướng:
+A. Nước TB phát triển xuất khẩu sang các nước kém phát triển.
+/B. Các nước tư bản phát triển xuất khẩu lẫn nhau
+C. Các nước kém phát triển xuất khẩu lẫn nhau
+D. Cả a và b
+Câu 426. Chủ thể xuất khẩu tư bản của CNTB ngày nay chủ yếu là:
+A. Các nhà tư bản tư nhân
+B. Các tổ chức độc quyền tư nhân trong một nước
+/C. Các tổ chức độc quyền xuyên quốc gia
+D. Nhà nước tư sản.
+Câu 427. Hình thức xuất khẩu chủ yếu của CNTB ngày nay là:
+A. Đầu tư trực tiếp
+B. Đầu tư gián tiếp
+C. Đầu tư trực tiếp kết hợp đầu tư gián tiếp.
+/D. Xuất khẩu tư bản kết hợp xuất khẩu hàng hoá
+Câu 428. Cơ chế kinh tế của CNTB độc quyền nhà nước gồm:
+A. Thị trường
+B. Độc quyền tư nhân
+C. Sự điều tiết của nhà nước
+/D. Cả a,b và c
+Câu 429. Nguyên nhân hình thành các công ty xuyên quốc gia là:
+A. Cạnh tranh quốc tế
+B. Lực lượng sản xuất phát triển cao làm xuất hiện quá trình quốc tế hoá kinh tế.
+C. Do sự điều tiết của các nước TBCN
+/D. Cả a, b, c
+Câu 430. Hệ thống kinh tế thế giới của CNTB hình thành từ khi nào?
+/A. Có phương thức sản xuất TBCN 
+B. Xuất hiện CNTB độc quyền
+C. Xuất hiện CNTB độc quyền nhà nước
+D. Xuất hiện các công ty xuyên quốc gia.
+Câu 431. Trong CNTB ngày nay, những cơ quan nào nằm trong bộ máy điều tiết kinh tế của CNTB?
+A. Cơ quan lập pháp
+B. Cơ quan hành pháp
+C. Cơ quan tư pháp
+/D. Cả a, b, c
+Câu 432. Chọn các ý đúng dưới đây: trong CNTB độc quyền:
+A. Do độc quyền thống trị nên không còn cạnh tranh.
+B. Vẫn còn cạnh tranh nhưng cạnh tranh đỡ gay gắt hơn.
+C. Chỉ còn cạnh tranh giữa các ngành, không còn cạnh tranh trong nội bộ ngành.
+/D. Cạnh tranh có những hình thức mới.
+Câu 433. Chỉ số phát triển con người (HDI) gồm những tiêu chí:
+A. Tuổi thọ, GDP, trình độ dân trí
+B. Tuổi thọ bình quân, tỷ lệ người biết chữ, GDP/người.
+C. GDP/người, thành tựu giáo dục, tỷ lệ người cao tuổi.
+/D. Tuổi thọ trung bình, thành tựu giáo dục, GDP/người.
+Câu 434. Ai là người đầu tiên phát hiện phạm trù cấu tạo hữu cơ của tư bản?
+A. A.Smith
+B. D.Ricardo
+/C. C.Mác
+D. Ph.Ăng ghen
+Câu 435. Ai là người đầu tiên hình thành công thức tính giá trị của hàng hoá (giá trị hàng hoá = c + v + m)?
+/A. C.Mác
+B. W.Petty
+C. A.Smith
+D. D.Ricardo
+Câu 436. Ai là người nghiên cứu giá trị thặng dư trước lợi nhuận, tiền công, địa tô?
+A. W.Petty
+B. A.Smith
+C. D.Ricardo
+/D. C.Mác
+Câu 437. Nếu lao động là hàng hoá thì mệnh đề nào dưới đây đúng?
+A. Giá trị mới do công nhân tạo ra bằng giá trị sức lao động
+B. Khi nhà tư bản trả công cho công nhân bằng giá trị sức lao động sẽ không có bóc lột.
+C. Lợi nhuận của nhà tư bản là kết quả của mua rẻ, bán đắt, gian lận.
+/D. Cả a, b, c
+Câu 438. Lợi nhuận là:
+A. Tỷ lệ phần lãi trên tổng số tư bản
+B. Là tiền công mà doanh nhân tự trả cho mình
+C. Là hình thức biến tướng của giá trị thặng dư.
+/D. Là hiệu số giữa giá trị hàng hoá và chi phí sản xuất
+Câu 439. Khi đồng nội tệ được định giá cao quá mức thì hoạt động xuất nhập khẩu sẽ:
+/A. Khuyến khích nhập khẩu, hạn chế xuất khẩu
+B. Hạn chế nhập khẩu, khuyến khích xuất khẩu
+C. Khuyến khích cả xuất và nhập khẩu
+D. Hạn chế nhập khẩu, khuyến khích tiêu dùng hàng nội địa
+Câu 440. Khi đồng nội tệ được định giá thấp sẽ:
+/A. Hạn chế nhập khẩu, khuyến khích xuất khẩu
+B. Khuyến khích nhập khẩu, hạn chế xuất khẩu
+C. Hạn chế cả xuất và nhập khẩu
+D. Khuyến khích cả xuất và nhập khẩu
+Câu 441. Trong các mệnh đề dưới đây, mệnh đề nào không đúng?
+A. Quy luật kinh tế là quy luật khách quan
+/B. Quy luật kinh tế cũng giống các quy luật tự nhiên
+C. Quy luật kinh tế phát huy tác dụng thông qua hoạt động kinh tế của con người.
+D. Cả a, b và c đều không đúng
+Câu 442. Kinh tế chính trị Mác- Lênin không nghiên cứu gì?
+/A. Sản xuất của cải vật chất
+B. Quan hệ xã hội giữa người với người
+C. Lịch sử phát triển của lực lượng sản xuất
+D. Cả a, b và c.
+Câu 443. Khi nghiên cứu phương thức sản xuất TBCN, C.Mác bắt đầu từ:
+A. Nền sản xuất của cải vật chất
+B. Công thức chung của tư bản
+/C. Sản xuất hàng hoá giản đơn và hàng hoá
+D. Quá trình sản xuất giá trị thặng dư
+Câu 444. Mệnh đề nào dưới đây đúng?
+/A. Mọi nguyên liệu đều là đối tượng lao động
+B. Mọi đối tượng lao động đều là nguyên liệu
+C. Nguyên liệu là đối tượng lao động của ngành công nghiệp khai thác.
+D. Cả a, b, c đều sai
+Câu 445. Yếu tố nào không phải là tư liệu lao động?
+A. Công cụ lao động
+/B. Nguyên vật liệu
+C. Kết cấu hạ tầng sản xuất
+D. Các vật để chứa đựng, bảo quản
+Câu 446. Các ý nào dưới đây không đúng?
+A. Một vật là đối tượng lao động cũng có thể là tư liệu lao động
+/B. Một vật là tư liệu lao động không thể là đối tượng lao động
+C. Đối tượng lao động và tư liệu lao động thuộc phạm trù TLSX
+D. Sự phân biệt đối tượng lao động và tư liệu lao động là tương đối.
+Câu 447. Yếu tố nào dưới đây được coi là căn cứ để phân chia tái sản xuất xã hội thành tái sản xuất giản đơn và tái sản xuất mở rộng?
+A. Phạm vi
+B. Nội dung
+C. Tính chất
+/D. Quy mô
+Câu 448. Các ý nào dưới đây không đúng?
+A. Tái sản xuất giản đơn là đặc trưng của nền sản xuất nhỏ
+/B. Tái sản xuất giản đơn là việc tổ chức sản xuất đơn giản không phức tạp
+C. Tái sản xuất mở rộng là đặc trưng của nền sản xuất lớn
+D. Sản phẩm thặng dư là nguồn gốc của tái sản xuất mở rộng
+Câu 449. Mệnh đề nào đúng trong các mệnh đề sau:
+A. Sản xuất và phân phối tồn tại độc lập với nhau
+B. Phân phối thu động do sản xuất quyết định
+C. Phân phối quyết định đến quy mô và cơ cấu của sản xuất
+/D. Sản xuất quyết định phân phối, phân phối có tác động tích cực trở lại đối với sản xuất
+Câu 450. ý kiến nào đúng về lao động trừu tượng?
+A. Là phạm trù riêng của CNTB
+/B. Là phạm trù của mọi nền kinh tế hàng hoá
+C. Là phạm trù riêng của kinh tế thị trường
+D. Là phạm trù chung của mọi nền kinh tế
+Câu 451. Yếu tố nào quyết định đến giá cả hàng hoá?
+/A. Giá trị của hàng hoá
+B. Giá trị sử dụng của hàng hoá
+C. Quan hệ cung cầu về hàng hoá
+D. Cả b, c
+Câu 452. Lượng giá trị của đơn vị hàng hóa thay đổi phụ thuộc vào nhiều yếu tố. ý kiến nào dưới đây đúng?
+A. Thay đổi tỷ lệ thuận với năng suất lao động, không phụ thuộc vào cường độ lao động
+B. Thay đổi tỷ lệ nghịch với cường độ lao động, không phụ thuộc vào năng suất lao động
+/C. Thay đổi tỷ lệ nghịch với năng suất lao động, không phụ thuộc cường độ lao động
+D. Phụ thuộc cả năng suất lao động và cường độ lao động
+Câu 453. Khi tăng NSLĐ sẽ xảy ra các trường hợp sau đây. Trường hợp nào không đúng?
+A. Số lượng hàng hoá làm ra trong một đơn vị thời gian tăng lên
+/B. Tổng giá trị của hàng hoá cũng tăng
+C. Tổng giá trị của hàng hoá không đổi
+D. Giá trị 1 đơn vị hàng hoá giảm
+Câu 454. Khi tăng cường độ lao động sẽ xảy ra các trường hợp dưới đây. Trường hợp nào dưới đây là đúng?
+/A. Số lượng hàng hoá làm ra trong một đơn vị thời gian tăng
+B. Số lượng lao động hao phí trong thời gian đó không đổi
+C. Giá trị 1 đơn vị hàng hoá tăng lên
+D. Cả a, b và c
+Câu 455. Khi đồng thời tăng NSLĐ và CĐLĐ lên 2 lần thì ý nào dưới đây là đúng?
+/A. Tổng số hàng hoá tăng 4 lần
+B. Tổng số giá trị hàng hoá tăng 4 lần
+C. Giá trị 1 đơn vị hàng hoá giảm 4 lần
+D. Giá trị 1 đơn vị hàng hoá không đổi
+Câu 456. Cặp phạm trù nào dưới đây là phát hiện riêng của C.Mác?
+A. Lao động tư nhân và lao động xã hội
+B. Lao động giản đơn và lao động phức tạp
+/C. Lao động cụ thể và lao động trừu tượng
+D. Lao động quá khứ và lao động sống
+Câu 457. ý kiến nào đúng về phạm trù lao động trừu tượng?
+A. Là lao động không cụ thể
+B. Là lao động có trình độ cao, mất nhiều công đào tạo
+/C. Là sự hao phí sức lao động của người sản xuất hàng hoá nói chung không kể đến các hình thức cụ thể.
+D. Cả a, b
+Câu 458. ý kiến nào đúng về phạm trù lao động giản đơn?
+A. Là lao động làm ra các sản phẩm chất lượng thấp
+B. Là lao động làm ở một công đoạn của quá trình tạo ra hàng hoá
+/C. Là lao động không cần qua đào tạo cũng có thể làm được.
+D. Cả a và b
+Câu 459. ý kiến nào đúng về phạm trù lao động phức tạp?
+A. Lao động phức tạp tạo ra sản phẩm tinh vi, chất lượng cao
+B. Lao động có nhiều thao tác, quy trình phức tạp.
+/C. Lao động phải trải qua đào tạo, huấn luyện mới làm được
+D. Là sự kết hợp nhiều lao động giản đơn với nhau
+Câu 460. Trong các mệnh đề dưới đây, mệnh đề nào đúng?
+/A. Lao động cụ thể tạo ra tính hữu ích của sản phẩm.
+B. Lao động cụ thể được thực hiện trước lao động trừu tượng
+C. Lao động trừu tượng có ở người có trình độ cao còn lao động cụ thể có ở người có trình độ thấp
+D. Cả a, b và c đều sai
+Câu 461. ý kiến nào dưới đây đúng?
+A. Lao động cụ thể có trước lao động trừu tượng
+B. Lao động của người kỹ sư giỏi thuần tuý là lao động trừu tượng
+C. Lao động của người không qua đào tạo, học tập thuần tuý là lao động cụ thể
+/D. Lao động của mọi người sản xuất hàng hoá đều bao gồm lao động cụ thể và lao động trừu tượng
+Câu 462. Nhân tố nào trong các nhân tố dưới đây không ảnh hưởng đến NSLĐ?
+A. Trang thiết bị kỹ thuật và công nghệ
+B. Trình độ tay nghề của người lao động
+C. Các điều kiện tự nhiên
+/D. Cường độ lao động
+Câu 463. Nhận xét về sự giống nhau giữa tăng NSLĐ và tăng cường độ lao động, ý kiến nào dưới đây đúng?
+A. Đều làm giá trị của đơn vị hàng hoá giảm
+B. Đều làm giá trị 1 đơn vị hàng hoá không thay đổi
+/C. Đều làm cho số sản phẩm sản xuất ra trong một đơn vị thời gian tăng lên
+D. Đều làm tăng lượng lao động hao phí trong một đơn vị sản phẩm
+Câu 464. ý kiến nào không đúng về quan hệ giữa tăng NSLĐ với giá trị hàng hoá?
+/A. Tăng NSLĐ làm cho giá trị của tổng số hàng hoá làm ra trong 1 đơn vị thời gian thay đổi.
+B. Tăng NSLĐ thì giá trị 1 đơn vị hàng hoá thay đổi
+C. Giá trị 1 đơn vị hàng hoá tỷ lệ nghịch với NSLĐ
+D. Cả b, c
+Câu 465. Khi so sánh sức lao động và lao động ý kiến nào sau đây không đúng?
+A. Sức lao động là khả năng lao động còn lao động là sức lao động đã được tiêu dùng.
+B. Sức lao động là hàng hoá còn lao động không là hàng hoá
+/C. Cả sức lao động và lao động đều là hàng hoá
+D. Cả a, b
+Câu 466. ý kiến nào dưới đây đúng về bản chất của tiền tệ?
+A. Tiền tệ là tiền do nhà nước phát hành, vàng, ngoại tệ
+B. Là phương tiện để trao đổi hàng hoá và để thanh toán
+/C. Là hàng hoá đặc biệt đóng vai trò là vật ngang giá chung
+D. Là thước đo giá trị của hàng hoá
+Câu 467. ý kiến nào dưới đây đúng về ảnh hưởng của cung cầu.
+A. Chỉ quyết định giá cả và có ảnh hưởng đến giá trị
+B. Không có ảnh hưởng đến giá trị và giá cả
+/C. Có ảnh hưởng đến giá cả thị trường.
+D. Cả a, c
+Câu 468. Nội dung nào không thuộc phạm trù sản phẩm xã hội?
+/A. Toàn bộ chi phí về TLSX của xã hội
+B. Toàn bộ của cải của xã hội
+C. Toàn bộ sản phẩm cần thiết của xã hội
+D. Toàn bộ sản phẩm thặng dư của xã hội
+Câu 469. Sản phẩm xã hội cần thiết là:
+A. Sản phẩm thiết yếu của xã hội
+B. Sản phẩm để thoả mãn nhu cầu tối thiểu của con người
+/C. Sản phẩm xã hội để tái sản xuất sức lao động
+D. Sản phẩm xã hội để tái sản xuất mở rộng.
+Câu 470. Tư bản bất biến là:
+A. Tư bản mà giá trị của nó chuyển dần vào sản phẩm qua khấu hao
+B. Là tư bản cố định
+C. Tư bản mà giá trị của nó lớn lên trong quá trình sản xuất.
+/D. Tư bản mà giá trị của nó không thay đổi về lượng và được chuyển nguyên vẹn sang sản phẩm
+Câu 471. Những nhận xét dưới đây về tư bản cố định, nhận xét nào không đúng?
+/A. Là nguồn gốc của giá trị thặng dư
+B. Là điều kiện tăng NSLĐ
+C. Là điều kiện để giảm giá trị hàng hoá
+D. Là bộ phận chủ yếu của tư bản bất biến
+Câu 472. ý kiến nào dưới đây không đúng về hàng hoá sức lao động
+A. Bán chịu
+/B. Giá cả = giá trị mới do sức lao động tạo ra
+C. Mua bán có thời hạn
+D. Giá trị sử dụng quyết định giá trị
+Câu 473. Các nhận định dưới đây nhận định nào đúng trong CNTB:
+A. Tư bản có trước lao động làm thuê
+B. Lao động làm thuê có trước tư bản
+C. Tư bản và lao động làm thuê làm tiền đề cho nhau
+/D. Cả a, b và c
+Câu 474. Nhận định nào dưới đây không đúng?
+A. Người bán và người mua sức lao động đều bình đẳng về mặt pháp lý
+/B. Sức lao động được mua bán không theo quy luật giá trị
+C. Thị trường sức lao động được hình thành và phát triển trong CNTB
+D. Sức lao động về mặt là hàng hoá gắn với kết quả sử dụng nó lại phủ định cơ sở quy luật giá trị.
+Câu 475. Nhận định nào dưới đây không đúng.
+A. Tiền tệ là sản vật cuối cùng của lưu thông hàng hoá và là hình thức biểu hiện đầu tiên của tư bản
+B. Tư bản được biểu hiện ở tiền còn bản thân tiền không phải là tư bản.
+/C. Khi có khối lượng tiền lớn nó sẽ thành tư bản
+D. Cả a, b đều đúng
+Câu 476. Các cách diễn đạt giá trị hàng hoá dưới đây cách nào đúng:
+/A. Giá trị hàng hoá = giá trị TLSX + giá trị mới
+B. Giá trị hàng hoá = giá trị cũ + giá trị sức lao động
+C. Giá trị hàng hoá = giá trị TLSX + giá trị thặng dư
+D. Cả a, b và c
+Câu 477. Các nhận xét dưới đây nhận xét nào đúng?
+A. Giá trị thặng dư cũng là giá trị
+B. Giá trị thặng dư và giá trị có cùng nguồn gốc và bản chất
+C. Giá trị thặng dư là giá trị mới do công nhân làm thuê tạo ra
+/D. Cả a, b và c đều đúng
+Câu 478. Giá trị của TLSX đã tiêu dùng tham gia vào giá trị của sản phẩm mới. Nhận xét nào dưới đây không đúng.
+/A. Tham gia tạo thành giá trị mới của sản phẩm
+B. Tham gia tạo thành giá trị của sản phẩm mới
+C. Không tham gia tạo thành giá trị mới của sản phẩm.
+D. Cả b, c đều đúng
+Câu 479. Trong quá trình sản xuất, giá trị tư liệu sản xuất đã tiêu dùng sẽ như thế nào? ý kiến nào dưới đây không đúng?
+A. Được tái sản xuất
+/B. Không được tái sản xuất
+C. Được bù đắp
+D. Được lao động cụ thể của người sản xuất hàng hoá bảo tồn và chuyển vào giá trị của sản phẩm mới.
+Câu 480. Trong các nhận xét dưới đây về vai trò của tư bản bất biến trong quá trình sản xuất giá trị thặng dư, nhận xét nào đúng?
+/A. Tư bản bất biến là điều kiện không thể thiếu để sản xuất giá trị thặng dư
+B. Tư bản bất biến và tư bản khả biến đều là nguồn gốc của giá trị thặng dư
+C. Tư bản bất biến chuyển dần giá trị sang sản phẩm mới
+D. Cả a, b, c đều sai
+Câu 481. Nhận xét nào dưới đây không đúng về tỷ suất giá trị thặng dư. Tỷ suất giá trị thặng dư phản ánh:
+A. Trình độ bóc lột của tư bản đối với lao động làm thuê
+/B. Hiệu quả của tư bản
+C. Ngày lao động chia thành 2 phần: lao động cần thiết và lao động thặng dư theo tỷ lệ nào.
+D. Cả a, b, c
+Câu 482. Sản xuất giá trị thặng dư tuyệt đối và giá trị thặng dư tương đối giống nhau ở điểm nào?
+A. Đều làm cho công nhân tốn sức lao động nhiều hơn
+/B. Đều làm tăng tỷ suất giá trị thặng dư
+C. Đều làm giảm giá trị sức lao động của công nhân
+D. Đều giảm thời gian lao động tất yếu
+Câu 483. Đặc điểm nào dưới đây thuộc phạm trù giá trị thặng dư tuyệt đối
+/A. Kéo dài ngày lao động còn thời gian lao động cần thiết không đổi
+B. Sử dụng kỹ thuật tiên tiến, cải tiến tổ chức quản lý.
+C. Tăng năng suất lao động
+D. Cả a, b, c
+Câu 484. Khi xem xét phương pháp sản xuất giá trị thặng dư tuyệt đối, ý kiến nào dưới đây là đúng?
+/A. Giá trị sức lao động không thay đổi
+B. Thời gian lao động cần thiết thay đổi
+C. Ngày lao động không thay đổi
+D. Cả a, b, c
+Câu 485. Các luận điểm dưới đây, luận điểm nào không đúng?
+A. Các PTSX trước CNTB bóc lột sản phẩm thặng dư trực tiếp
+/B. Bóc lột sản phẩm thặng dư chỉ có ở CNTB
+C. Sản xuất giá trị thặng dư tuyệt đối là hình thái chung nhất của sản xuất giá trị thặng dư
+D. Sản xuất giá trị thặng dư tuyệt đối là điểm xuất phát để sản xuất giá trị thặng dư tương đối.
+Câu 486. Những ý kiến dưới đây về sản xuất giá trị thặng dư tương đối, ý kiến nào không đúng?
+A. Ngày lao động không đổi
+/B. Giá trị sức lao động không đổi
+C. Hạ thấp giá trị sức lao động
+D. Tỷ suất giá trị thặng dư thay đổi
+Câu 487. Sản xuất giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch không giống nhau ở điểm nào?
+/A. Đều dựa trên tiền đề tăng NSLĐ xã hội
+B. Đều rút ngắn thời gian lao động cần thiết
+C. Ngày lao động không thay đổi
+D. Đều dựa trên tiền đề tăng NSLĐ
+Câu 488. Nhận xét nào dưới đây đúng về tiền công TBCN
+A. Tiền công là giá trị của lao động
+B. Là số tiền nhà tư bản trả cho công nhân làm thuê
+/C. Là giá cả sức lao động
+D. Cả a và b
+Câu 489. Khái niệm nào về lợi nhuận dưới đây không đúng?
+/A. Lợi nhuận là hình thức biến tướng của giá trị thặng dư
+B. Là giá trị thặng dư được coi là con đẻ của tư bản ứng trước
+C. Là hiệu số giữa tổng doanh thu trừ đi tổng chi phí
+D. Cả a, b, c
+Câu 490. Trong các nhận định dưới đây về lợi nhuận và giá trị thặng dư, nhận định nào đúng?
+/A. Bản chất của lợi nhuận là giá trị thặng dư
+B. Lợi nhuận và giá trị thặng dư luôn luôn bằng nhau
+C. Lợi nhuận và giá trị thặng dư phụ thuộc vào quan hệ cung cầu
+D. Cả a, b và c
+Câu 491. ý kiến nào dưới đây về tiền công thực tế là đúng
+A. Tiền công thực tế là số tiền thực tế nhận được
+B. Là số tiền trong sổ lương + tiền thưởng và các nguồn thu nhập khác
+/C. Là số hàng hoá và dịch vụ mua được bằng tiền công danh nghĩa
+D. Cả a và b
+Câu 492. Tiền công thực tế thay đổi theo chiều hướng khác nhau. Chiều hướng nào dưới đây không đúng?
+A. Tỷ lệ thuận với tiền công danh nghĩa
+/B. Tỷ lệ thuận với lạm phát
+C. Tỷ lệ nghịch với giá trị tư liệu tiêu dùng và dịch vụ
+D. Tỷ lệ nghịch với lạm phát
+Câu 493. Ai là người nêu ra lý thuyết về thời đại mới?
+A. C.Mác
+B. Ph. Ăng ghen
+/C. V.I.Lênin
+D. J.Stalin
+Câu 494. Thời đại mới - thời kỳ quá độ lên CNXH trên phạm vi toàn thế giới, bắt đầu từ:
+A. Từ CM tháng II năm 1917
+/B. Từ sau CM tháng 10 năm 1917 thành công
+C. Từ khi bắt đầu thực hiện chính sách kinh tế mới (NEP) 1921
+D. Từ sau khi Liên Xô kết thúc thời kỳ quá độ
+Câu 495. V.I.Lênin chia PTSX-CSCN thành mấy giai đoạn?
+/A. Hai giai đoạn: CNXH và CNCS
+B. Ba giai đoạn: TKQĐ, CNXH và CNCS
+C. Bốn giai đoạn TKQĐ, CNXH, CNXH phát triển và CNCS
+Câu 496. Thời kỳ quá độ lên CNXH là tất yếu đối với:
+A. Các nước bỏ qua CNTB lên CNXH
+B. Các nước TBCN kém phát triển lên CNXH
+/C. Tất cả các nước xây dựng CNXH
+Câu 497. Thực chất của TKQĐ lên CNXH là gì?
+A. Là cuộc cải biến cách mạng về kinh tế
+B. Là cuộc cải biến cách mạng về chính trị
+C. Là cuộc cải biến cách mạng về tư tưởng và văn hoá
+/D. Cả a, b và c
+Câu 498. "Vậy thì danh từ quá độ có nghĩa là gì? áp dụng vào kinh tế phải chẳng nó có nghĩa là: trong chế độ hiện nay có cả những nhân tố, những bộ phận, những mảng của CNTB lẫn CNXH đó sao". Câu nói này của ai?
+A. C.Mác
+B. Ph.Ăng ghen
+/C. V.I.Lênin
+D. J.Stalin
+Câu 499. V.I.Lênin nêu ra mấy thành phần kinh tế trong TKQĐ ở nước Nga?
+A. Hai thành phần
+B. Ba thành phần
+C. Bốn thành phần
+/D. Năm thành phần
+Câu 500. Trong TKQĐ lên CNXH có những mâu thuẫn cơ bản nào?
+/A. Mâu thuẫn giữa CNXH với CNTB
+B. Mâu thuẫn giữa CNXH với trình tự phát triển tiểu tư sản
+C. Mâu thuẫn giữa giai cấp công nhân và nhân dân lao động với giai cấp tư sản.
+D. Cả a, b và c
+Câu 501. Thời kỳ quá độ ở Liên Xô bắt đầu và kết thúc năm nào?
+A. Từ 1917 - 1929
+B. Từ 1917 - 1932
+C. Từ 1917-1936
+/D. Từ 1917 - 1938
+Câu 502. Kế hoạch xây dựng CNXH của Lênin gồm những nội dung gì?
+A. Phát triển LLSX, CNH đất nước
+B. Xây dựng QHSX XHCN
+C. Tiến hành CM tư tưởng, văn hoá
+/D. Cả A, B và C
+Câu 503. Tư tưởng về quá độ lên CNXH bỏ qua TBCN do ai nêu ra?
+A. C.Mác
+B. Ph.Ăng ghen
+/C. V.I.Lênin
+D. Cả A, B và C
+Câu 504. "Phân tích cho đến cùng thì NSLĐ là cái quan trọng nhất, căn bản nhất cho sự thắng lợi của chế độ xã hội mới". Câu nói này của ai?
+A. C.Mác
+B. Ph.Ăng ghen
+/C. V.I.Lênin
+D. J.Stalin
+Câu 505. Tư tưởng quá độ bỏ qua chế độ TBCN lên CNXH lần đầu tiên thể hiện trong văn kiện nào của Đảng CSVN?
+/A. Năm 1930 trong cương lĩnh do đồng chí Trần Phú soạn thảo
+B. Năm 1951 trong văn kiện Đại hội II
+C. Năm 1960 trong văn kiện Đại hội III
+D. Năm 1976 trong văn kiện Đại hội IV
+Câu 506. Nước ta quá độ lên CNXH là tất yếu lịch sử vì:
+A. Phù hợp quy luật phát triển khách quan của lịch sử loài người.
+B. Phù hợp với đặc điểm thời đại
+C. Do cách mạng nước ta phát triển theo con đường độc lập dân tộc gắn liền với CNXH
+/D. Cả A, B, C
+Câu 507. Thời kỳ quá độ lên CNXH ở nước ta bắt đầu từ khi nào?
+A. Sau Cách mạng tháng 8 - 1945
+B. Sau khi miền Bắc được giải phóng (1954)
+/C. Sau đại thắng mùa xuân 1975
+Câu 508. Tiến lên CNXH bỏ qua chế độ TBCN là bỏ qua:
+A. Bỏ qua tất cả cái gì có trong CNTB
+B. Bỏ qua sự thống trị của QHSX TBCN
+C. Bỏ qua sự thống trị của kiến trúc thượng tầng TBCN
+/D. Cả B và C
+Câu 509. Tiến lên CNXH bỏ qua chế độ TBCN, nhưng không thể bỏ qua:
+A. Những thành tựu văn minh mà nhân loại đạt được trong CNTB, đặc biệt là KHCN.
+B. Những thành tựu của kinh tế thị trường
+C. Những tính quy luật của sự phát triển LLSX
+/D. Cả A, B và C
+Câu 510. Trong TKQĐ lên CNXH ở nước ta có những nhiệm vụ kinh tế cơ bản nào?
+A. Phát triển LLSX, thực hiện CNH, HĐH đất nước
+B. Xây dựng QHSX mới theo định hướng XHCN
+C. Mở rộng và nâng cao hiệu quả kinh tế đối ngoại.
+/D. Cả A, B, C
+Câu 511. Nội dung nhiệm vụ phát triển LLSX gồm có:
+A. Xây dựng cơ sở vật chất - kỹ thuật cho CNXH
+B. Tiến hành CNH, HĐH đất nước
+C. Xây dựng con người, đào tạo lực lượng lao động mới
+/D. Cả A, B và C
+Câu 512. QHSX mới theo định hướng XHCN đang được xây dựng ở nước ta là thế nào?
+A. Phải tuân theo quy luật: QHSX phù hợp với tính chất và trình độ phát triển của LLSX
+B. Đa dạng hoá về sở hữu, nhiều thành phần kinh tế
+C. Dựa trên nhiều phương thức tổ chức sản xuất kinh doanh, nhiều hình thức phân phối
+/D. Cả A, B, C
+Câu 513. Đường lối CNH ở nước ta lần đầu tiên được đề ra ở Đại hội nào của Đảng?
+A. Đại hội II
+/B. Đại hội III
+C. Đại hội IV
+D. Đại hội V
+Câu 514. Những quan điểm mới về CNH-HĐH đất nước được đề ra ở Đại hội nào của Đảng?
+A. Đại hội VI
+/B. Đại hội VII
+C. Đại hội VIII
+D. Đại hội IX
+Câu 515. Chủ trương "đẩy mạnh CNH, HĐH đất nước" được đề ra ở Đại hội nào của Đảng?
+A. Đại hội VI
+B. Đại hội VII
+/C. Đại hội VIII
+D. Đại hội IX
+Câu 516. Mô hình kinh tế thị trường định hướng XHCN ở nước ta được chính thức nêu ra ở Đại hội nào của Đảng CSVN?
+A. Đại hội VI
+B. Đại hội VII
+C. Đại hội VIII
+/D. Đại hội IX
+Câu 517. Phạm trù chiếm hữu là:
+A. Hành vi chưa xuất hiện trong xã hội nguyên thuỷ
+/B. Biểu hiện quan hệ giữa người với tự nhiên trong quá trình sản xuất ra của cải vật chất.
+C. Là quan hệ giữa người với người trong việc chiếm hữu của cải.
+D. Là phạm trù lịch sử
+Câu 518. Phạm trù sở hữu:
+A. Là điều kiện trước tiên của hoạt động sản xuất vật chất
+B. Là biểu hiện quan hệ giữa người với tự nhiên trong quá trình sản xuất
+/C. Là hình thức xã hội của chiếm hữu trong một xã hội nhất định.
+D. Là phạm trù vĩnh viễn
+Câu 519. Chọn mệnh đề đúng dưới đây:
+A. Khái niệm sở hữu đồng nghĩa với khái niệm chiếm hữu
+/B. Người sở hữu có thể là người chiếm hữu
+C. Người sở hữu đương nhiên là người chiếm hữu
+D. Người chiếm hữu đương nhiên là người sở hữu
+Câu 520. Sở hữu tồn tại thế nào?
+A. Tồn tại độc lập
+B. Tồn tại thông qua các thành phần kinh tế
+C. Tồn tại thông qua các hình thức tổ chức sản xuất kinh doanh
+/D. Cả B và C
+Câu 521. Thế nào là quan hệ sở hữu:
+/A. Là quan hệ giữa người với người, giữa các giai cấp về đối tượng sở hữu
+B. Là quan hệ giữa chủ thể sở hữu với đối tượng sở hữu
+C. Là quan hệ giữa các chủ thể sở hữu với nhau.
+D. Cả A, B và C
+Câu 522. Thế nào là chế độ sở hữu:
+A. Là quan hệ giữa người với tự nhiên trong quá trình sản xuất của cải vật chất
+B. Là hình thức xã hội của chiếm hữu trong một xã hội
+C. Là quan hệ giữa người với người trong việc chiếm hữu TLSX
+/D. Là phạm trù sở hữu được thể chế hoá thành quyền sở hữu được thực hiện thông qua một cơ chế nhất định.
+Câu 523. Chọn mệnh đề đúng dưới đây:
+A. Trong mỗi PTSX có 1 loại hình sở hữu TLSX đặc trưng
+B. Mỗi PTSX có 1 hình thức sở hữu TLSX
+C. Mỗi PTSX có nhiều hình thức sở hữu TLSX
+/D. Cả A và C
+Câu 524. Chọn phương án đúng:
+/A. Sự thay đổi của các hình thức sở hữu là quá trình lịch sử tự nhiên
+B. Sự biến đổi các hình thức sở hữu do con người quy định
+C. Các hình thức sở hữu TLSX do nhà nước đặt ra
+D. Cả A, B, C đều đúng
+Câu 525. Sở hữu xét về mặt pháp lý là
+A. Quy định về quyền kế thừa, thế chấp đối tượng sở hữu
+B. Quy định về quyền chuyển nhượng, cho thuê đối tượng sở hữu
+/C. Thể chế hoá về mặt pháp luật quan hệ giữa người với người về đối tượng sở hữu.
+D. Mang lại thu nhập cho chủ sở hữu
+Câu 526. Trong TKQĐ ở nước ta, sở hữu nhà nước giữ vai trò gì?
+A. Thống trị trong cơ cấu sở hữu ở nước ta
+B. Nền tảng trong cơ cấu sở hữu ở nước ta
+/C. Chủ đạo trong cơ cấu sở hữu ở nước ta
+D. Quan trọng trong cơ cấu sở hữu ở nước ta
+Câu 527. Trong TKQĐ ở nước ta, sở hữu nhà nước được thiết lập:
+A. Đối với lĩnh vực kết cấu hạ tầng, tài nguyên, các tài sản quốc gia
+B. ở các lĩnh vực then chốt của nền kinh tế
+C. ở các lĩnh vực cung ứng hàng hoá, dịch vụ thông thường.
+/D. Cả A, B và C
+Câu 528. Trong TKQĐ ở nước ta sở hữu tư nhân:
+A. Bị xoá bỏ
+B. Bị hạn chế
+C. Là hình thức sở hữu thống trị
+/D. Tồn tại đan xen với các hình thức sở hữu khác.
+Câu 529. Sở hữu tư nhân ở nước ta gồm có:
+A. Sở hữu cá thể
+B. Sở hữu tiểu chủ
+C. Sở hữu tư bản tư nhân
+/D. Cả A, B, C
+Câu 530. Chọn ý đúng trong các ý dưới đây:
+A. Sở hữu là mục đích của cách mạng XHCN
+/B. Là hình thức, là phương tiện để phát triển LLSX, nâng cao đời sống nhân dân
+C. Công hữu càng nhiều thì tính chất XHCN càng cao
+D. Sở hữu nhà nước là sở hữu toàn dân
+Câu 531. Chọn ý không đúng về việc xác lập sở hữu công cộng TLSX:
+A. Là quá trình lâu dài, từ thấp đến cao và luôn luôn phù hợp với trình độ LLSX
+/B. Cần tiến hành nhanh thông qua quốc hữu hoá
+C. Làm cho sở hữu công cộng có năng suất, chất lượng và hiệu quả cao hơn so với sở hữu tư nhân
+D. Cả A và C.
+Câu 532. Nguyên nhân tồn tại nhiều thành phần kinh tế trong TKQĐ ở nước ta là do:
+A. Do trình độ LLSX còn nhiều thang bậc khác nhau, còn nhiều quan hệ sở hữu về TLSX
+B. Do xã hội cũ để lại
+C. Do quá trình cải tạo và xây dựng QHSX mới
+/D. Cả A, B và C
+Câu 533. Thành phần kinh tế là khu vực kinh tế, kiểu quan hệ kinh tế dựa trên:
+A. Một hình thức sở hữu nhất định về TLSX
+B. Một QHSX nhất định
+C. Một trình độ nhất định của LLSX
+/D. Cả A, B và C
+Câu 534. Cơ cấu kinh tế nhiều thành phần có vai trò gì?
+A. Cho phép khai thác, sử dụng có hiệu quả các yếu tố sản xuất các nguồn lực và tiềm năng của nền kinh tế
+B. Thúc đẩy kinh tế hàng hoá phát triển, khoa học, công nghệ phát triển nhanh.
+C. Làm cho NSLĐ tăng, kinh tế tăng trưởng nhanh và hiệu quả.
+/D. Cả A, B và C
+Câu 535. Chọn các ý đúng về sở hữu và thành phần kinh tế:
+A. Một hình thức sở hữu hình thành 1 thành phần kinh tế
+/B. Một hình thức sở hữu có thể hình thành nhiều thành phần kinh tế
+C. Một thành phần kinh tế chỉ tồn tại thông qua 1 hình thức tổ chức sản xuất kinh doanh
+D. Cả A, B, C
+Câu 536. Thành phần kinh tế nhà nước hình thành bằng cách:
+A. Nhà nước đầu tư xây dựng
+B. Quốc hữu hoá kinh tế tư bản tư nhân.
+C. Góp cổ phần khống chế với các doanh nghiệp thuộc các thành phần kinh tế khác
+/D. Cả A, B, C
+Câu 537. Thành phần kinh tế nhà nước bao gồm:
+A. Các DNNN, các tổ chức kinh tế của nhà nước
+B. Các tài sản thuộc sở hữu toàn dân.
+C. Các quỹ dự trữ quốc gia, quỹ bảo hiểm nhà nước.
+/D. Cả A, B, C
+Câu 538. Phạm trù kinh tế nhà nước:
+A. Trùng với phạm trù kinh tế quốc doanh
+/B. Rộng hơn phạm trù DNNN
+C. Hẹp hơn phạm trù DNNN
+D. Trùng với phạm trù DNNN
+Câu 539. Trong thành phần kinh tế nhà nước thực hiện nguyên tắc phân phối nào?
+A. Theo lao động
+B. Theo hiệu quá sản xuất kinh doanh
+C. Ngoài thù lao lao động thông qua các quỹ phúc lợi xã hội và tập thể.
+/D. Cả A, B, C
+Câu 540. Kinh tế nhà nước giữ vai trò chủ đạo. Biểu hiện nào dưới đây không đúng về vai trò chủ đạo:
+/A. Chiếm tỷ trọng lớn
+B. Nắm các ngành then chốt, các lĩnh vực quan trọng
+C. Là nhân tố chính thúc đẩy tăng trưởng kinh tế nhanh và bền vững, có tác dụng chi phối các thành phần kinh tế khác.
+D. Đi đầu trong ứng dụng tiến bộ KHCN, là công cụ để định hướng và điều tiết kinh tế vĩ mô.
+(Để đảm bảo hiển thị đủ nội dung không bị giới hạn độ dài, mình xin tiếp tục các câu tiếp theo)
+Câu 541. Thành phần kinh tế tập thể bao gồm các hình thức tổ chức sản xuất kinh doanh nào?
+A. Các HTX cổ phần, HTX dịch vụ đầu vào đầu ra.
+B. Kinh tế trang trại.
+C. Tổ, nhóm HTX và HTX
+/D. Cả A, B, C
+Câu 542. Các HTX kiểu mới được xây dựng và hoạt động theo nguyên tắc:
+A. Tự nguyện, cùng có lợi
+B. Bình đẳng, quản lý dân chủ
+C. Có sự lãnh đạo của Đảng và quản lý của nhà nước
+/D. Cả A, B, C
+Câu 543. Trong kinh tế tập thể thực hiện nguyên tắc phân phối nào?
+A. Theo lao động
+B. Vốn đóng góp
+C. Mức độ tham gia dịch vụ
+/D. Cả A, B, C
+Câu 544. Kinh tế tiểu chủ có đặc điểm:
+A. Chưa sử dụng lao động làm thuê
+/B. Có sử dụng lao động làm thuê nhưng rất nhỏ
+C. Chỉ dựa vào lao động bản thân và gia đình
+D. Cả A, B, C
+Câu 545. Hình thức tổ chức sản xuất kinh doanh điển hình của kinh tế cá thể tiểu chủ là:
+/A. Kinh tế hộ gia đình
+B. Kinh tế trang trại
+C. Công ty trách nhiệm 1 thành viên
+D. Cả A, B, C
+Câu 546. Điểm giống nhau cơ bản của kinh tế cá thể và tiểu chủ là:
+A. Sử dụng lao động bản thân và gia đình
+B. Chưa sử dụng lao động làm thuê
+/C. Dựa trên cơ sở tư hữu nhỏ về TLSX
+D. Có sử dụng một số lao động làm thuê
+Câu 547. Điểm khác nhau cơ bản giữa kinh tế cá thể và kinh tế tiểu chủ là ở:
+/A. Kinh tế cá thể chỉ sử dụng lao động bản thân và gia đình.
+B. Kinh tế tiểu chủ có sử dụng lao động làm thuê nhưng không đáng kể
+C. Kinh tế cá thể có thể trở thành kinh tế tiểu chủ
+D. Kinh tế tiểu chủ có thể trở thành kinh tế cá thể
+Câu 548. Thành phần kinh tế tư bản tư nhân dựa trên:
+A. Sở hữu tư nhân về TLSX
+B. Chế độ tư hữu nhỏ về TLSX
+/C. Chế độ tư hữu lớn về TLSX
+D. Sử dụng lao động làm thuê
+Câu 549. Thành phần kinh tế tư bản nhà nước gồm:
+A. Hình thức liên doanh giữa nhà nước với tư bản tư nhân trong nước
+B. Hình thức liên doanh giữa nhà nước với tư bản tư nhân nước ngoài.
+C. Xí nghiệp 100% vốn nước ngoài
+/D. Cả A, B, C
+Câu 550. Sử dụng thành phần kinh tế tư bản nhà nước có lợi gì?
+A. Huy động và sử dụng được nguồn vốn lớn có hiệu quả
+B. Học tập được kinh nghiệm quản lý tiên tiến.
+C. Tiếp nhận được kỹ thuật công nghệ hiện đại
+/D. Cả A, B, C
+Câu 551. Thành phần kinh tế có vốn đầu tư nước ngoài bao gồm:
+A. Kinh tế nhà nước với tư nhân nước ngoài
+B. Giữa tư nhân trong nước với nước ngoài
+C. Kinh tế nhà nước với các nước XHCN
+/D. Các DN có 100% vốn nước ngoài. 
+Câu 552. Các thành phần kinh tế vừa thống nhất vừa mâu thuẫn với nhau. Chúng thống nhất vì:
+A. Đều chịu sự chi phối của kinh tế thị trường có sự quản lý của nhà nước.
+B. Đều nằm trong 1 hệ thống phân công lao động xã hội
+C. Do kinh tế nhà nước giữ vai trò chủ đạo và chi phối.
+/D. Cả A, B, C
+Câu 553. Các thành phần kinh tế mâu thuẫn với nhau vì:
+A. Dựa trên các hình thức sở hữu khác nhau.
+B. Có lợi ích kinh tế khác nhau
+C. Có xu hướng vận động khác nhau
+/D. Cả A, B, C
+Câu 554. Các thành phần kinh tế cùng hoạt động trong TKQĐ. Chúng quan hệ với nhau thế nào?
+A. Tự nguyện hợp tác với nhau
+B. Đấu tranh loại trừ nhau
+C. Cạnh tranh với nhau
+/D. Cả A, B, C
+Câu 555. Nền kinh tế nhiều thành phần vận động theo định hướng XHCN. Các công cụ để điều tiết sự vận động đó là:
+A. Nhà nước điều tiết vĩ mô.
+B. Các chính sách tài chính tiền tệ.
+C. Vai trò chủ đạo của kinh tế nhà nước.
+/D. Cả A, B, C
+Câu 556. Trong các luận điểm dưới đây, luận điểm nào không đúng?
+A. CNH là tất yếu đối với mọi nước lạc hậu
+B. CNH là tất yếu đối với các nước nghèo, kém phát triển
+/C. CNH là tất yếu đối với mọi nước đi lên CNXH.
+D. CNH là tất yếu đối với các nước chưa có nền sản xuất lớn, hiện đại.
+Câu 557. Thực chất của CNH ở nước ta là gì?
+/A. Thay lao động thủ công lạc hậu bằng lao động sử dụng máy móc có NSLĐ xã hội cao.
+B. Tái sản xuất mở rộng
+C. Cải thiện, nâng cao đời sống nhân dân.
+D. Cả A, B, C
+Câu 558. Nước nào tiến hành CNH đầu tiên trên thế giới?
+A. Mỹ
+/B. Anh
+C. Đức
+D. Pháp
+Câu 559. Đâu là động lực của công nghiệp hoá, hiện đại hoá?
+A. Con người
+B. Mở rộng quan hệ kinh tế quốc tế
+/C. Khoa học - công nghệ
+D. Hiệu quả kinh tế - xã hội
+Câu 560. Đâu là tiêu chuẩn cơ bản để xác định phương án phát triển, lựa chọn dự án đầu tư và công nghệ trong quá trình công nghiệp hoá, hiện đại hoá?
+A. Tăng NSLĐ
+/B. Hiệu quả kinh tế - xã hội
+C. Kết hợp kinh tế với an ninh, quốc phòng
+D. Nâng cao đời sống nhân dân.
+Câu 561. Cơ cấu kinh tế nào là quan trọng nhất?
+/A. Cơ cấu thành phần kinh tế
+B. Cơ cấu vùng kinh tế
+C. Cơ cấu ngành kinh tế
+D. Cả B và C
+Câu 562. Nông nghiệp theo nghĩa rộng là gì?
+A. Là các hoạt động kinh tế ngoài trời
+B. Là ngành sản xuất mà đối tượng lao động là tự nhiên
+C. Là sự kết hợp giữa chăn nuôi với trồng trọt
+/D. Là ngành nông nghiệp, lâm nghiệp và ngư nghiệp
+Câu 563. Nông nghiệp trong TKQĐ ở nước ta có vai trò gì?
+A. Cung cấp lương thực, thực phẩm cho xã hội
+B. Cung cấp nguyên liệu cho công nghiệp
+C. Là thị trường của công nghiệp, dịch vụ
+/D. Cả A, B, C
+Câu 564. Trong kinh tế nông nghiệp, nông thôn hiện nay có sự tham gia của nhiều thành phần kinh tế, trong đó chủ yếu là:
+A. Kinh tế nhà nước
+B. Kinh tế tập thể
+C. Kinh tế cá thể, tiểu chủ
+/D. Cả A, B, C
+Câu 565. Để đẩy mạnh ứng dụng tiến bộ KHCN trong nông nghiệp, nông thôn cần thực hiện những nội dụng nào dưới đây:
+A. Cơ giới hoá
+B. Điện khí hoá
+C. Thuỷ lợi hoá
+/D. Cả A, B, C
+Câu 566. Công nghệ sinh học có tác dụng gì đối với nông nghiệp?
+A. Tăng NSLĐ, tiết kiệm tài nguyên, bảo vệ môi trường
+B. Nâng cao chất lượng sản phẩm
+C. Tạo ra sản phẩm mới cho nông nghiệp
+/D. Cả A, B, C
+Câu 567. Chính sách thuế nông nghiệp của nhà nước dựa trên cơ sở nào?
+A. Lý luận địa tô của C.Mác
+B. Chiến lược phát triển kinh tế của đất nước
+C. Điều kiện cụ thể của từng vùng
+/D. Cả A, B, C
+Câu 568. Đâu là đặc trưng chủ yếu của kinh tế thị trường?
+A. Các chủ thể kinh tế có tính độc lập, tự chủ cao, giá cả do thị trường quyết định
+B. Nền kinh tế vận động theo các quy luật của kinh tế thị trường
+C. Có sự điều tiết của nhà nước.
+/D. Cả A, B, C
+Câu 569. Mục tiêu hàng đầu của phát triển kinh tế thị trường ở nước ta là gì?
+A. Để tăng trưởng kinh tế nhanh và bền vững
+B. Giải phóng LLSX, huy động mọi nguồn lực cho công nghiệp hoá, hiện đại hoá, cải thiện đời sống nhân dân
+C. Để phù hợp xu thế quốc tế hoá, khu vực hoá kinh tế
+/D. Cả A, B, C
+Câu 570. Sự khác biệt cơ bản giữa kinh tế thị trường định hướng XHCN với kinh tế thị trường TBCN là:
+A. Có sự điều tiết của nhà nước XHCN
+B. Nền kinh tế nhiều thành phần
+/C. Vai trò chủ đạo của kinh tế nhà nước
+D. Có nhiều hình thức sở hữu TLSX
+Câu 571. Hãy chọn câu trả lời chính xác nhất trong các câu dưới đây: ở nước ta hiện nay tồn tại nhiều hình thức phân phối thu nhập vì:
+/A. Còn tồn tại nhiều hình thức sở hữu TLSX
+B. Còn tồn tại nhiều thành phần kinh tế và hình thức tổ chức sản xuất kinh doanh
+C. Do LLSX có nhiều trình độ khác nhau.
+D. Còn tồn tại nhiều kiểu QHSX khác nhau
+Câu 572. Trong các nguyên tắc phân phối dưới đây, nguyên tắc nào là chủ yếu nhất ở nước ta hiện nay?
+/A. Phân phối theo lao động
+B. Phân phối theo giá trị sức lao động
+C. Phân phối theo kết quả sản xuất kinh doanh
+D. Phân phối theo vốn hay tài sản.
+Câu 573. Sự khác nhau chủ yếu giữa kinh tế thị trường TBCN và kinh tế thị trường định hướng XHCN là gì?
+A. Mục đích trực tiếp của nền kinh tế thị trường
+B. Chế độ công hữu giữ vai trò khác nhau trong 2 mô hình kinh tế thị trường
+C. Vị trí của nguyên tắc phân phối theo lao động
+/D. Cả A, B, C
+Câu 574. Sự quản lý của nhà nước trong kinh tế thị trường định hướng XHCN và kinh tế thị trường TBCN khác nhau. Sự khác nhau đó chủ yếu do:
+/A. Mục tiêu phát triển kinh tế - xã hội
+B. Bản chất của nhà nước
+C. Các công cụ quản lý vĩ mô
+D. Cả A, B, C
+Câu 575. Tìm câu trả lời chính xác nhất cho câu hỏi dưới đây về cơ chế thị trường. Cơ chế thị trường là:
+A. Cơ chế điều tiết nền kinh tế tự phát
+B. Cơ chế điều tiết nền kinh tế theo các quy luật kinh tế
+/C. Cơ chế điều tiết nền kinh tế theo các quy luật của kinh tế thị trường.
+D. Cơ chế thị trường do "bàn tay vô hình" chi phối.
+Câu 576. Cơ chế kế hoạch tập trung bao cấp có đặc trưng chủ yếu gì?
+A. Nhà nước quản lý nền kinh tế bằng mệnh lệnh hành chính
+B. Cơ quan hành chính can thiệp quá sâu vào hoạt động kinh doanh của các doanh nghiệp.
+C. Coi thường quan hệ hàng hoá - tiền tệ
+/D. Cả A, B, C
+Câu 577. Trong các phạm trù kinh tế dưới đây, phạm trù nào được coi là tín hiệu của cơ chế thị trường?
+A. Cung - cầu hàng hoá
+/B. Giá cả thị trường
+C. Sức mua của tiền
+D. Thông tin thị trường
+Câu 578. Giá cả thị trường có chức năng gì?
+A. Thông tin
+B. Phân bố các nguồn lực kinh tế
+C. Thúc đẩy tiến bộ khoa học công nghệ
+/D. Cả A, B, C
+Câu 579. Những nhân tố khách quan nào ảnh hưởng tới giá cả thị trường?
+A. Giá trị thị trường của hàng hoá
+B. Cung cầu hàng hoá và sức mua của tiền
+C. Cạnh tranh trên thị trường
+/D. Cả A, B, C
+Câu 580. Cung - cầu là quy luật kinh tế. Thế nào là cầu?
+A. Là nhu cầu của thị trường về hàng hoá.
+B. Là nhu cầu của người mua hàng hoá
+C. Là sự mong muốn, sở thích của người tiêu dùng.
+/D. Nhu cầu của xã hội về hàng hoá được biểu hiện trên thị trường ở một mức giá nhất định.
+Câu 581. Thế nào là cung hàng hoá?
+A. Là số lượng hàng hoá xã hội sản xuất ra.
+B. Là toàn bộ số hàng hoá đem bán trên thị trường.
+/C. Toàn bộ hàng hoá đem bán trên thị trường và có thể đưa nhanh đến thị trường ở một mức giá nhất định.
+D. Là toàn bộ khả năng cung cấp hàng hoá cho thị trường.
+Câu 582. ý kiến nào là đúng nhất về cạnh tranh trong các ý sau:
+A. Là cuộc đấu tranh giữa những người sản xuất
+B. Là cuộc đấu tranh giữa những người sản xuất với người tiêu dùng
+/C. Là cuộc đấu tranh giữa các chủ thể hành vi kinh tế
+D. Cả A, B, C
+Câu 583. Cạnh tranh có vai trò:
+A. Phân bố các nguồn lực kinh tế một cách hiệu quả.
+B. Kích thích tiến bộ khoa học - công nghệ.
+C. Đào thải các nhân tố yếu kém, lạc hậu, trì trệ.
+/D. Cả A, B, C
+Câu 584. Mục đích của cạnh tranh là gì? Chọn câu trả lời đúng nhất trong câu trả lời sau:
+A. Nhằm thu lợi nhuận nhiều nhất
+B. Nhằm mua, bán hàng hoá với giá cả có lợi nhất.
+C. Giành các điều kiện sản xuất thuận lợi nhất.
+/D. Giành lợi ích tối đa cho mình.
+Câu 585. Hiện nay trong nền kinh tế thị trường ở nước ta, nhà nước có chức năng kinh tế gì?
+A. Đảm bảo ổn định kinh tế - xã hội; tạo lập khuôn khổ pháp luật cho hoạt động kinh tế.
+B. Định hướng phát triển kinh tế và điều tiết các hoạt động kinh tế làm cho kinh tế tăng trưởng ổn định, hiệu quả.
+C. Hạn chế, khắc phục mặt tiêu cực của cơ chế thị trường.
+/D. Cả A, B, C
+Câu 586. Hiện nay ở Việt Nam, nhà nước sử dụng các công cụ gì để điều tiết vĩ mô kinh tế thị trường?
+A. Hệ thống pháp luật
+B. Kế hoạch hoá
+C. Lực lượng kinh tế của nhà nước, chính sách tài chính, tiền tệ, các công cụ điều tiết kinh tế đối ngoại.
+/D. Cả A, B, C
+Câu 587. Xác định các câu trả lời đúng về sự điều tiết vĩ mô của nhà nước là nhằm:
+A. Hạn chế tác động tiêu cực của cơ chế thị trường
+B. Phát huy tác động tích cực của cơ chế thị trường
+C. Đảm bảo cho nền kinh tế hoạt động có hiệu quả
+/D. Cả A, B, C
+Câu 588. Trong nền kinh tế thị trường định hướng XHCN ở Việt Nam, nội dung quản lý kinh tế nhà nước là:
+A. Quyết định chiến lược phát triển kinh tế - xã hội
+B. Xây dựng kế hoạch để thực hiện mục tiêu chiến lược
+C. Tổ chức thực hiện kế hoạch
+/D. Cả A, B, C
+Câu 589. Các công cụ để nhà nước điều tiết hoạt động kinh tế đối ngoại là:
+A. Thuế xuất nhập khẩu
+B. Đảm bảo tín dụng xuất khẩu, trợ cấp xuất khẩu
+C. Tỷ giá hối đoái, hạn ngạch
+/D. Cả A, B, C
+Câu 590. Trong TKQĐ lên CNXH ở nước ta, tài chính có vai trò gì dưới đây?
+A. Điều tiết kinh tế
+B. Xác lập và tăng cường các quan hệ kinh tế - xã hội
+C. Tích tụ và tích luỹ vốn, cung ứng vốn cho các nhu cầu xây dựng và bảo vệ đất nước.
+/D. Cả A, B, C
+Câu 591. Nguồn gốc của địa tô TBCN là gì?
+A. Do độ màu mỡ của đất đem lại
+B. Do độc quyền tư hữu ruộng đất
+/C. Là một phần giá trị thặng dư do lao động tạo ra
+D. Là số tiền người thuê đất trả cho chủ sở hữu đất
+Câu 592. Nguồn gốc của lợi nhuận thương nghiệp là:
+A. Là kết quả của hoạt động buôn bán.
+/B. Là một phần giá trị thặng dư do công nhân làm thuê tạo ra
+C. Là khoản chênh lệch giữa giá mua và giá bán
+D. Là kết quả của mua rẻ, bán đắt, trốn thuế.
+Câu 593. Tính tất yếu khách quan của kế hoạch hoá nền kinh tế được bắt nguồn từ:
+A. Sự phát triển của kinh tế thị trường
+/B. Tính chất xã hội hoá nền sản xuất
+C. Sự phát triển của QHSX
+D. Trình độ phân công lao động phát triển
+Câu 594. Tính cân đối của nền kinh tế là:
+A. Sự cân đối giữa tích luỹ với tiêu dùng
+B. Sự cân đối giữa sản xuất với tiêu dùng
+C. Sự cân đối giữa sản xuất TLSX với sản xuất tư liệu tiêu dùng
+/D. Là sự tương quan theo những tỷ lệ nhất định giữa nhu cầu xã hội và khả năng đáp ứng nhu cầu đó.
+Câu 595. Nội dung đổi mới kế hoạch hoá ở nước ta hiện nay là gì?
+A. Kế hoạch hoá vĩ mô và vi mô
+B. Kế hoạch hoá định hướng dự báo thay cho kế hoạch hoá pháp lệnh
+C. Kết hợp kế hoạch với thị trường
+/D. Cả A, B, C
+Câu 596. Mục đích kế hoạch hoá hiện nay ở nước ta là gì?
+A. Xây dựng cơ chế thị trường định hướng XHCN.
+B. Tạo thế và lực để chủ động hội nhập kinh tế thế giới có hiệu quả
+C. Phát triển kinh tế ổn định và hiệu quả cao.
+/D. Cả A, B, C.
+Câu 597. Tài chính là một quan hệ kinh tế:
+A. Biểu hiện ở sự hình thành các quỹ tiền tệ
+B. Biểu hiện ở lĩnh vực phân phối các quỹ tiền tệ
+C. Là quan hệ hàng hoá - tiền tệ
+/D. Biểu hiện ở sự hình thành, phân phối và sử dụng các quỹ tiền tệ trong nền kinh tế.
+Câu 598. Các quan hệ nào dưới đây không thuộc quan hệ tài chính?
+A. Doanh nghiệp hoặc cá nhân nộp thuế, lệ phí cho nhà nước.
+B. Doanh nghiệp trả lương cho công nhân viên
+C. Cá nhân gửi tiền vào ngân hàng
+/D. Cá nhân mua hàng hoá, dịch vụ
+Câu 599. Các quan hệ nào dưới đây không thuộc phạm trù tài chính:
+A. Việc mua bán cổ phiếu trên thị trường tiền tệ
+B. Cá nhân mua công trái Chính phủ
+C. Doanh nghiệp vay vốn ngân hàng
+/D. Doanh nghiệp bán hàng hoá, dịch vụ cho người tiêu dùng.
+Câu 600. Những yếu tố nào dưới đây thuộc ngân sách nhà nước?
+A. Các khoản thu từ thuế, phí, lệ phí
+B. Các khoản thu từ kinh tế nhà nước
+C. Các khoản viện trợ và nhà nước vay để bù đắp bội chi
+/D. Cả A, B, C
+Câu 601. Tài chính có chức năng nào dưới đây:
+A. Phân phối tổng sản phẩm quốc dân trong quá trình tái sản xuất
+B. Phân phối các nguồn lực của nền kinh tế
+/C. Phân phối các quỹ tiền tệ và giám đốc hoạt động của các chủ thể kinh tế
+D. Phân phối các khoản viện trợ và vay nước ngoài.
+Câu 602. Chính sách tài chính thường sử dụng công cụ nào là chủ yếu để điều tiết nền kinh tế?
+A. Chính sách thuế
+B. Thuế thu nhập
+C. Chi tiêu của Chính phủ cho đầu tư phát triển kinh tế - xã hội
+/D. Cả A và C
+Câu 603. Yếu tố nào là chủ yếu nhất trong tổng thu của ngân sách nhà nước?
+A. Các khoản thu từ kinh tế nhà nước
+B. Các khoản đóng góp của các tổ chức và cá nhân.
+/C. Các khoản thu từ thuế
+D. Các nguồn viện trợ, tài trợ
+Câu 604. Bảo hiểm là một hình thức tài chính, nó xuất hiện do yêu cầu nào dưới đây?
+A. Giải quyết rủi ro có thể xảy ra trong sản xuất
+B. Đảm bảo tuổi già, thất nghiệp
+C. Đảm bảo sức khoẻ, tai nạn lao động
+/D. Cả A, B, C
+Câu 605. Thị trường tài chính là gì?
+/A. Là nơi mua bán các quỹ tiền tệ trong nền kinh tế.
+B. Là thị trường khoa học – công nghệ, bản quyền
+C. Là thị trường bất động sản
+D. Cả A, B, C
+Câu 606. Chức năng giám đốc của tài chính là:
+A. Giám đốc bằng biện pháp tổ chức, pháp luật các hoạt động kinh tế
+/B. Giám đốc bằng đồng tiền các hoạt động kinh tế
+C. Sử dụng các đòn bẩy kinh tế để điều tiết hoạt động kinh tế
+D. Sử dụng các chính sách tài chính để điều tiết kinh tế
+Câu 607. Cơ quan, tổ chức nào là chủ thể giám đốc tài chính?
+/A. Cơ quan nhà nước
+B. Các tổ chức tài chính
+C. Các chủ thể kinh tế trong nền kinh tế
+D. Các tổ chức quần chúng
+Câu 608. Đối tượng giám đốc tài chính là:
+A. Các hoạt động sản xuất kinh doanh
+B. Các hoạt động kinh tế có liên quan đến các quan hệ phân phối tài chính
+C. Các hoạt động kinh tế tài chính
+/D. Cả A, B, C
+Câu 609. Bộ phận nào giữ vai trò quyết định trong hệ thống tài chính:
+/A. Ngân sách nhà nước
+B. Ngân sách và tài chính doanh nghiệp
+C. Tài chính các doanh nghiệp
+D. Hệ thống tín dụng
+Câu 610. Quỹ tài chính của các hộ gia đình được hình thành từ đâu?
+A. Tiền lương của các thành viên gia đình
+B. Từ các hoạt động kinh tế của gia đình
+C. Từ tiền lương và các hoạt động sản xuất kinh doanh của gia đình.
+/D. Từ tổng thu nhập của các thành viên gia đình
+Câu 611. Quỹ tài chính gia đình được hình thành từ:
+A. Từ các hoạt động của các thành viên trong gia đình.
+B. Từ tiền lương, lợi nhuận, lợi tức của gia đình
+C. Từ tiền lương và các khoản thu nhập khác của cả gia đình.
+/D. Cả A và B
+Câu 612. Quỹ tài chính của các tổ chức xã hội được hình thành từ:
+/A. Chủ yếu từ ngân sách nhà nước và các nguồn thu khác
+B. Từ các hoạt động từ thiện
+C. Từ sự quyên góp, ủng hộ của dân cư
+D. Từ sự đóng góp, ủng hộ của nước ngoài.
+Câu 613. Thị trường tài chính bao gồm:
+A. Thị trường tiền tệ
+B. Thị trường chứng khoán
+C. Thị trường vốn
+/D. Cả A, B, C
+Câu 614. Lưu thông tiền tệ là gì? Chọn câu trả lời đúng dưới đây.
+A. Là sự di chuyển các quỹ tiền tệ trong nền kinh tế
+/B. Là sự vận động của tiền lấy trao đổi hàng hoá làm tiền đề
+C. Là sự mua bán các quỹ tiền tệ
+D. Là sự vay, cho vay tiền tệ.
+Câu 615. Sự vận động của tiền tệ chịu sự tác động của các quy luật kinh tế nào?
+A. Quy luật giá trị
+B. Quy luật lưu thông tiền tệ
+C. Quy luật cung - cầu về tiền tệ
+/D. Cả A, B, C
+Câu 616. Quan hệ nào dưới đây thuộc về tín dụng?
+A. Vay mượn tiền tệ do ngân hàng làm môi giới.
+B. Quan hệ giữa chủ thể sở hữu và chủ thể sử dụng nguồn vốn nhàn rỗi trong nền kinh tế
+/C. Quan hệ giữa chủ thể sở hữu và chủ thể sử dụng vốn nhàn rỗi theo nguyên tắc hoàn trả có kỳ hạn gốc và lãi.
+D. Quan hệ giữa chủ thể sở hữu và chủ thể sử dụng vốn nhàn rỗi theo nguyên tắc hoàn trả gốc và lãi.
+Câu 617. Chức năng của tín dụng là:
+A. Phân phối lại vốn
+B. Phân phối vốn từ người chưa sử dụng tiền đến người cần sử dụng tiền ngay.
+/C. Phân phối lại vốn và giám đốc các hoạt động kinh tế
+D. Giám sát hoạt động kinh tế của người vay vốn.
+Câu 618. Tín dụng nhà nước được thực hiện thế nào?
+A. Nhà nước phát hành công trái để vay tiền của dân
+B. Nhà nước vay Chính phủ nước ngoài bằng tiền tệ
+C. Nhà nước phát hành công trái bằng thóc, vàng, tiền để vay dân hoặc vay nước ngoài bằng tiền tệ
+/D. Cả A, B, C.
+Câu 619. Đặc điểm tín dụng nhà nước là:
+A. Thời hạn ngắn, lãi suất cao
+/B. Thời hạn dài, lãi suất thấp
+C. Thời hạn ngắn, lãi suất cao
+D. Thời hạn và lãi suất do quan hệ cung - cầu quy định
+Câu 620. Chức năng nào của tín dụng quan trọng nhất?
+A. Chức năng phân phối
+B. Chức năng giám đốc
+/C. Hai chức năng quan trọng như nhau
+D. Tuỳ điều kiện cụ thể mà hai chức năng trên có vai trò khác nhau.
+Câu 621. Tín dụng có vai trò gì?
+A. Góp phần giảm tiền nhàn rỗi, tăng hiệu quả sử dụng vốn
+B. Tăng tốc độ chu chuyển của tiền, hạn chế lạm phát
+C. Góp phần giao lưu tiền tệ trong nước và nước ngoài.
+/D. Cả A, B, C
+Câu 622. Lợi tức tín dụng gồm có:
+A. Lợi tức tiền gửi
+B. Lợi tức tiền vay
+C. Lợi tức tiền vay trừ lợi tức tiền gửi
+/D. Lợi tức tiền gửi và lợi tức tiền vay
+Câu 623. Tỷ suất lợi tức biến động thế nào?
+A. 0 < tỷ suất lợi tức ( Tỷ suất lợi nhuận bình quân
+/B. 0 < tỷ suất lợi tức < Tỷ suất lợi nhuận bình quân
+C. 0 ( tỷ suất lợi tức < Tỷ suất lợi nhuận bình quân
+D. 0 ( tỷ suất lợi tức ( Tỷ suất lợi nhuận bình quân
+Câu 624. Đâu là chủ thể giám đốc của tín dụng?
+A. Người cho vay
+B. Các cơ quan nhà nước
+C. Người cho vay và các tổ chức kinh doanh tín dụng.
+/D. Cả A, B, C
+Câu 625. Các tổ chức tín dụng có vai trò gì trong kinh tế thị trường
+A. Là chủ thể giám đốc của tín dụng
+B. Là đối tượng giám đốc của tín dụng
+/C. Là chủ thể giám đốc các hoạt động kinh tế của doanh nghiệp.
+D. Cả A và B
+Câu 626. Một trong các chức năng đặc biệt của ngân hàng nhà nước là chức năng:
+/A. Phát hành tiền
+B. Trợ cấp vốn cho các doanh nghiệp nhà nước
+C. Kinh doanh tiền
+D. Cho vay tiền đối với các hoạt động sản xuất kinh doanh
+Câu 627. Nghiệp vụ chính của ngân hàng thương mại là:
+A. Huy động vốn
+B. Cho vay vốn
+C. Thanh toán
+/D. Cả A, B, C
+Câu 628. Động lực quan trọng nhất của sự phát triển kinh tế là:
+/A. Lợi ích kinh tế
+B. Lợi ích chính trị xã hội
+C. Lợi ích văn hoá, tinh thần
+D. Cả B và C
+Câu 629. Nhân tố nào quyết định lợi ích kinh tế?
+/A. Quan hệ sở hữu
+B. Quan hệ phân phối
+C. Quan hệ trao đổi
+D. Quan hệ tiêu dùng
+Câu 630. Câu nói: " ở đâu không có lợi ích chung, ở đó không có sự thống nhất về mục đích" là của ai?
+A. C.Mác
+/B. Ph.Ăng ghen
+C. V.I.Lênin
+D. Hồ Chí Minh
+Câu 631. Hệ thống lợi ích kinh tế do nhân tố nào quyết định
+/A. QHSX
+B. LLSX
+C. KTTT
+D. PTSX
+Câu 632. Cơ cấu lợi ích nào dưới đây thuộc thành phần kinh tế nhà nước
+/A. Lợi ích nhà nước, lợi ích tập thể, lợi ích cá nhân
+B. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+C. Lợi ích chủ doanh nghiệp, lợi ích cá nhân, lợi ích xã hội
+D. Lợi ích tập thể, lợi ích xã hội, lợi ích cá nhân.
+Câu 633. Cơ cấu lợi ích trong thành phần kinh tế tập thể là gì?
+/A. Lợi ích tập thể, lợi ích xã hội, lợi ích cá nhân.
+B. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+C. Lợi ích cá nhân, lợi ích xã hội, lợi ích tập thể
+D. Lợi ích chủ doanh nghiệp, lợi ích cá nhân, lợi ích xã hội
+Câu 634. Cơ cấu lợi ích trong thành phần kinh tế tư bản nhà nước là
+A. Lợi ích cá nhân, lợi ích xã hội, lợi ích tập thể
+B. Lợi ích chủ doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+/C. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+D. Lợi ích nhà nước, lợi ích tập thể, lợi ích cá nhân.
+Câu 635. Cơ cấu lợi ích trong thành phần kinh tế cá thể, tiểu chủ:
+A. Lợi ích nhà nước, lợi ích tập thể, lợi ích cá nhân.
+B. Lợi ích tập thể, lợi ích xã hội, lợi ích cá nhân.
+/C. Lợi ích cá nhân, lợi ích xã hội.
+D. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+Câu 636. Cơ cấu lợi ích trong thành phần kinh tế tư bản tư nhân là:
+A. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân
+B. Lợi ích cá nhân, lợi ích xã hội, lợi ích tập thể
+C. Lợi ích nhà nước, lợi ích tập thể, lợi ích cá nhân.
+/D. Lợi ích chủ doanh nghiệp, lợi ích cá nhân, lợi ích xã hội
+Câu 637. Cơ cấu lợi ích trong thành phần kinh tế có vốn đầu tư nước ngoài là:
+A. Lợi ích nhà nước, lợi ích tập thể, lợi ích cá nhân.
+B. Lợi ích tập thể, lợi ích xã hội, lợi ích cá nhân.
+/C. Lợi ích chủ đầu tư nước ngoài, lợi ích nhà nước, lợi ích người lao động
+D. Lợi ích doanh nghiệp, lợi ích xã hội, lợi ích cá nhân.
+Câu 638. Quan hệ nào có vai trò quyết định đến phân phối?
+/A. Quan hệ sở hữu TLSX
+B. Quan hệ tổ chức quản lý
+C. Quan hệ xã hội, đạo đức.
+D. Cả A, B, C
+Câu 639. Tính chất của quan hệ phân phối do nhân tố nào quyết định?
+/A. Quan hệ sản xuất
+B. Lực lượng sản xuất
+C. Kiến trúc thượng tầng
+D. Hạ tầng cơ sở
+Câu 640. Quan hệ phân phối có tính lịch sử. Yếu tố nào quy định tính lịch sử đó?
+A. Phương thức sản xuất
+B. Lực lượng sản xuất
+/C. Quan hệ sản xuất
+D. Kiến trúc thượng tầng
+Câu 641. Trong TKQĐ ở nước ta tồn tại nhiều nguyên tắc phân phối. Vì trong TKQĐ còn:
+A. Nhiều hình thức sở hữu TLSX
+B. Nhiều thành phần kinh tế
+C. Nhiều hình thức kinh doanh
+/D. Cả A, B, C
+Câu 642. Vì sao trong thành phần kinh tế dựa trên sở hữu công cộng phải thực hiện phân phối theo lao động?
+A. Vì mọi người bình đẳng đối với TLSX
+B. Vì LLSX phát triển chưa cao
+C. Vì còn phân biệt các loại lao động
+/D. Cả A, B, C
+Câu 643. Phân phối theo lao động căn cứ vào số lượng, chất lượng lao động làm cơ sở. Chất lượng lao động biểu hiện ở đâu?
+A. Thời gian lao động
+B. Năng suất lao động
+C. Cường độ lao động
+/D. Cả A, B, C
+Câu 644. Số lượng lao động biểu hiện ở tiêu chí nào?
+/A. Thời gian lao động
+B. Chất lượng sản phẩm
+C. Năng suất lao động
+D. Cả A, B, C
+Câu 645. Trong kinh tế cá thể tồn tại nguyên tắc phân phối nào?
+A. Theo giá trị sức lao động
+/B. Theo vốn và năng lực kinh doanh
+C. Theo lao động
+D. Ngoài thù lao lao động
+Câu 646. Nguồn gốc tiền lương của người lao động ở đâu?
+/A. Trong quỹ lương của doanh nghiệp
+B. Quỹ tiêu dùng tập thể
+C. Quỹ bảo hiểm xã hội
+D. Quỹ phúc lợi xã hội
+Câu 647. Quỹ phúc lợi xã hội được hình thành từ các nguồn nào?
+A. Sự đóng góp của doanh nghiệp và cá nhân
+B. Từ nhà nước
+C. Từ cá nhân và tổ chức nước ngoài
+/D. Cả A, B, C
+Câu 648. Hình thức thu nhập lợi tức ứng với nguyên tắc phân phối nào?
+A. Theo vốn
+B. Theo lao động
+/C. Theo vốn cho vay
+D. Cả A và C
+Câu 649. Trong quan hệ kinh tế đối ngoại phải dựa trên nguyên tắc bình đẳng. Hiểu thế nào là đúng về nguyên tắc bình đẳng?
+A. Là quan hệ giữa các quốc gia độc lập có chủ quyền
+B. Có quyền như nhau trong tự do kinh doanh, tự chủ kinh tế.
+C. Không phân biệt nước giàu, nước nghèo.
+/D. Cả A, B, C
+Câu 650. Dựa vào tiêu chí nào để đánh giá hiệu quả xây dựng QHSX mới ở nước ta?
+A. Thúc đẩy lực lượng sản xuất phát triển, cải thiện đời sống.
+B. LLSX phát triển, thực hiện công bằng xã hội
+C. LLSX phát triển, QHSX phát triển vững chắc
+/D. LLSX phát triển, cải thiện đời sống, thực hiện công bằng xã hội
+Câu 651. Mô hình kinh tế khái quát trong TKQĐ ở nước ta là:
+A. Kinh tế thị trường có sự quản lý của nhà nước
+B. Kinh tế nhiều thành phần theo định hướng XHCN
+/C. Kinh tế thị trường định hướng XHCN
+D. Kinh tế nhiều thành phần có sự quản lý của nhà nước
+Câu 652. Nền tảng của nền kinh tế quốc dân theo định hướng XHCN là
+/A. Kinh tế nhà nước
+B. Kinh tế quốc doanh và tập thể
+C. Kinh tế quốc doanh, tập thể và CNTB nhà nước
+D. Cả A, B, C
+Câu 653. Chủ trương trong quan hệ quốc tế của Việt Nam là:
+A. Việt Nam sẵn sàng là bạn của các nước trong cộng đồng quốc tế.
+B. Việt Nam muốn là bạn, là đối tác của các nước trong cộng đồng quốc tế
+/C. Việt Nam sẵn sàng là bạn, là đối tác tin cậy của các nước trong cộng đồng quốc tế
+D. Việt Nam sẵn sàng là bạn tin cậy của các nước trong cộng đồng quốc tế
+Câu 654. Mối quan hệ giữa nội lực và ngoại lực trong phát triển kinh tế là:
+A. Nội lực là chính
+B. Ngoại lực trong thời kỳ đầu là chính để phá vỡ "cái vòng luẩn quẩn"
+/C. Nội lực là chính, ngoại lực là rất quan trọng trong thời kỳ đầu.
+D. Nội lực và ngoại lực quan trọng như nhau
+Câu 655. Thành phần kinh tế tư bản nhà nước ở Việt Nam hiện nay thể hiện ở:
+A. Các doanh nghiệp liên doanh
+B. Các liên doanh giữa Việt Nam với nước ngoài
+/C. Các liên doanh giữa kinh tế nhà nước với kinh tế tư bản tư nhân
+D. Các liên doanh giữa nhà nước với các thành phần kinh tế khác.
+Câu 656. Tỷ giá hối đoái thuộc về:
+A. Chính sách tài chính
+B. Chính sách tiền tệ
+/C. Chính sách kinh tế đối ngoại
+D. Cả A, B, C
+Câu 657. Trong chế độ phong kiến có hình thức địa tô nào?
+A. Tô hiện vật
+B. Tô tiền
+C. Tô lao dịch
+/D. Cả A, B, C
+Câu 658. Phân công lao động xã hội và phân công lao động quốc tế là:
+/A. Hai khái niệm giống nhau về bản chất, khác nhau về phạm vi
+B. Hai khái niệm giống nhau hoàn toàn
+C. Hai khái niệm khác nhau về nội dung
+D. Cả A, B, C đều sai
+Câu 659. Đầu tư nước ngoài và xuất khẩu tư bản là:
+A. Hai hình thức đầu tư khác nhau
+B. Một hình thức đầu tư, khác nhau về tên gọi
+C. Giống nhau về mục đích, khác nhau về phương thức
+/D. Tên gọi của đầu tư nước ngoài trong những điều kiện khác nhau
+Câu 660. Bản chất tiền công TBCN là giá cả sức lao động. Đó là loại tiền công gì?
+A. Tiền công theo thời gian
+B. Tiền công theo sản phẩm
+/C. Tiền công danh nghĩa
+D. Tiền công thực tế
+Câu 661. Khối lượng giá trị thặng dư phản ánh gì?
+A. Trình độ bóc lột của tư bản đối với lao động làm thuê
+B. Phạm vi bóc lột của tư bản đối với lao động làm thuê
+/C. Quy mô bóc lột của tư bản đối với lao động làm thuê
+D. Khả năng bóc lột của tư bản
+Câu 662. Điều kiện để có tái sản xuất mở rộng TBCN là:
+A. Phải đổi mới máy móc, thiết bị
+B. Phải tăng quy mô tư bản khả biến
+/C. Phải có tích luỹ tư bản
+D. Phải cải tiến tổ chức, quản lý
+Câu 663. Chi phí lưu thông của tư bản thương nghiệp gồm có:
+A. Chi phí đóng gói, vận chuyển, bảo quản
+/B. Chi phí lưu thông thuần tuý, chi phí lưu thông bổ sung
+C. Chi phí lưu thông thuần tuý, khuyến mãi, quảng cáo
+D. Cả A, B, C
+Câu 664. Nguồn gốc của địa tô TBCN là:
+A. Là tiền cho thuê đất
+B. Do giá trị sử dụng của đất (độ màu mỡ, vị trí) mang lại.
+C. Là một phần của lợi nhuận bình quân
+/D. Là một phần giá trị thặng dư do công nhân tạo ra.
+Câu 665. Địa tô tuyệt đối là:A. Địa tô có trên đất xấu nhấtB. Địa tô có trên đất ở vị trí xa đường giao thông, thị trường.
+C. Địa tô trên đất có điều kiện sản xuất khó khăn nhất
+/D. Địa tô có trên tất cả các loại đất cho thuê.
+Câu 666. Địa tô chênh lệch I và chênh lệch II khác nhau ở:
+A. Địa tô chênh lệch I có trên ruộng đất tốt và trung bình về màu mỡ.
+B. Địa tô chênh lệch II có trên ruộng đất có vị trí thuận lợi.
+/C. Địa tô chênh lệch I do độ màu mỡ tự nhiên của đất mang lại, địa tô chênh lệch II do độ màu mỡ nhân tạo đem lại.
+D. Địa tô chênh lệch II có thể chuyển thành địa tô chênh lệch I.
+Câu 667. Trong các cách diễn đạt dưới đây, cách nào không đúng?
+A. Trên ruộng đất tốt, sau khi đã thâm canh có địa tô: Tuyệt đối + chênh lệch I + chênh lệch II.
+B. Trên loại đất có vị trí thuận lợi có địa tô: tuyệt đối + chênh lệch I.
+C. Trên loại đất xấu nhưng ở vị trí thuận lợi có địa tô: tuyệt đối + chênh lệch I.
+/D. Trên loại đất xấu không có địa tô tuyệt đối.
+Câu 668. Ngân hàng thương mại cổ phần là ngân hàng mà:
+A. Vốn của nó do các tư nhân đóng góp
+B. Vốn của nó do các cổ đông đóng góp
+/C. Là ngân hàng tư nhân được thành lập theo nguyên tắc công ty cổ phần
+D. Là ngân hàng có niêm yết cổ phiếu ở sở giao dịch chứng khoán.
+Câu 669. Kinh tế tư nhân, kinh tế cá thể và kinh tế tư bản tư nhân giống nhau ở điểm cơ bản nào?
+A. Sử dụng lao động làm thuê, tuy mức độ khác nhau.
+/B. Tư hữu TLSX, tuy mức độ khác nhau
+C. Sử dụng lao động bản thân và gia đình là chủ yếu.
+D. Bóc lột giá trị thặng dư ở mức độ khác nhau.
+Câu 670. Thị trường nào dưới đây không thuộc thị trường tài chính?
+A. Thị trường tiền tệ
+/B. Thị trường khoa học, phát minh sáng chế
+C. Thị trường vốn
+D. Cả A và C
+Câu 671. Sự vận động của tiền tệ không chịu sự tác động trực tiếp của quy luật nào dưới đây:
+A. Quy luật giá trị
+B. Quy luật cung - cầu về tiền tệ
+/C. Quy luật cạnh tranh
+D. Cả A, B, C
+Câu 672. "Khuyến khích làm giàu hợp pháp, đi đôi với xoá đói giảm nghèo" là:
+/A. Một trong những giải pháp thực hiện mục tiêu công bằng xã hội trong phân phối thu nhập.
+B. Một trong những mục tiêu phân phối thu nhập trong TKQĐ
+C. Một trong những nội dung của chính sách xóa đói giảm nghèo.
+D. Một trong những giải pháp để thực hiện công bằng xã hội
+Câu 673. Phân phối theo lao động là nguyên tắc cơ bản, áp dụng cho:
+A. Thành phần kinh tế nhà nước
+B. Thành phần kinh tế nhà nước, kinh tế tập thể và kinh tế tư bản nhà nước
+C. Cho tất cả các thành phần kinh tế trong TKQĐ
+/D. Chỉ áp dụng cho các thành phần dựa trên sở hữu công cộng về TLSX.
+Câu 674. Phân phối theo vốn kết hợp với phân phối theo lao động được áp dụng ở thành phần kinh tế nào?
+A. Trong các HTX
+B. Cho kinh tế tập thể và kinh tế nhà nước.
+/C. Cho kinh tế tập thể.
+D. Cho kinh tế tập thể và kinh tế tư bản nhà nước.
+Câu 675. Trong quan hệ kinh tế đối ngoại, việc "đảm bảo ổn định về môi trường chính trị, kinh tế xã hội" là:
+A. Điều kiện để thu hút vốn đầu tư nước ngoài.
+B. Để phát triển kinh tế có vốn đầu tư nước ngoài và kinh tế tư bản nhà nước.
+/C. Giải pháp chủ yếu nhằm mở rộng, nâng cao hiệu quả kinh tế đối ngoại.
+D. Để thu hút khách du lịch nước ngoài.
+Câu 676. Khi nào tỷ suất lợi nhuận bằng tỷ suất giá trị thặng dư?
+A. Khi cung = cầu
+B. Khi mua và bán hàng hoá đều đúng giá trị.
+C. Cả A và B
+/D. Không khi nào.
+Câu 677. Khi nào lợi nhuận bằng giá trị thặng dư?
+A. Khi cung = cầu
+/B. Khi mua và bán hàng hoá đều đúng giá trị.
+C. Cả A và B
+D. Không khi nào.
+Câu 678. Quá trình công nghiệp hoá, hiện đại hoá làm cho cơ cấu lao động chuyển dịch, ý nào dưới đây không đúng?
+A. Lao động nông nghiệp giảm tuyệt đối và tương đối, lao động công nghiệp tăng tuyệt đối và tương đối.
+/B. Lao động nông nghiệp chỉ giảm tuyệt đối, lao động công nghiệp chỉ tăng tương đối.
+C. Lao động ngành dịch vụ tăng nhanh hơn các ngành sản xuất vật chất.
+D. Tỷ trọng lao động trí tuệ trong nền kinh tế tăng lên.
+Câu 679. Tư bản cố định thuộc phạm trù tư bản nào?
+/A. Tư bản sản xuất
+B. Tư bản lưu thông
+C. Tư bản khả biến
+D. Cả A, B, C
+Câu 680. Tư bản khả biến thuộc phạm trù tư bản nào?
+A. Tư bản sản xuất
+B. Tư bản lưu động
+/C. Tư bản ứng trước
+D. Cả A, B, C
+Câu 681. Trong cùng một thời gian lao động khi số lượng sản phẩm tăng lên còn giá trị một đơn vị hàng hoá và các điều khác không thay đổi thì đó là kết quả của:
+A. Tăng NSLĐ
+/B. Tăng cường độ lao động
+C. Của cả tăng NSLĐ và tăng CĐLĐ
+D. Cả A và B đều không đúng
+Câu 682. Khi nào nền kinh tế được gọi là nền kinh tế tri thức
+A. Khi tổng sản phẩm các ngành kinh tế tri thức chiếm khoảng 70% tổng sản phẩm trong nước (GDP).
+B. Khi các ngành kinh tế tri thức chiếm 70% số ngành kinh tế
+C. Khi tri thức góp phần tạo ra khoảng 70% của GDP
+/D. Cả A, B, C
+Câu 683. Hàng hoá sức lao động và hàng hoá thông thường khác nhau cơ bản nhất ở:
+A. Giá trị của chúng.
+B. Giá trị sử dụng của chúng
+C. Việc mua bán chúng
+/D. Cả A, B, C
+Câu 684. Xét về lôgíc và lịch sử thì sản xuất hàng hoá xuất hiện từ khi nào?
+A. Xã hội chiếm hữu nô lệ
+/B. Cuối xã hội nguyên thuỷ, đầu xã hội nô lệ
+C. Cuối xã hội nô lệ, đầu xã hội phong kiến
+D. Trong xã hội phong kiến.
+Câu 685. Kinh tế thị trường nói chung và kinh tế thị trường định hướng XHCN quan hệ với nhau thế nào?
+A. Khác nhau hoàn toàn
+B. Giống nhau về bản chất chỉ khác về hình thức
+/C. Vừa có đặc điểm chung vừa có đặc điểm riêng
+D. Nội dung giống nhau, chỉ khác nhau về bản chất nhà nước.
+Câu 686. Nền sản xuất công nghiệp khác nền sản xuất nông nghiệp ở những đặc điểm chủ yếu nào?
+A. Tập trung hoá
+B. Tiêu chuẩn hoá
+/C. Đồng bộ hoá
+D. Cả A, B, C
+Câu 687. Một cá nhân nhận được số lượng tiền, hàng hoá hoặc dịch vụ trong một khoảng thời gian nhất định, được gọi là:
+A. Tiền công
+B. Gồm cả tiền công theo thời gian và tiền công theo sản phẩm.
+C. Gồm cả tiền công danh nghĩa và tiền công thực tế.
+/D. Thu nhập.
+Câu 688. Thuật ngữ chỉ mối liên hệ chặt chẽ giữa lý thuyết kinh tế với khía cạnh thực tiễn của hoạt động chính trị gọi là:
+A. Học thuyết kinh tế
+/B. Kinh tế chính trị
+C. Kinh tế vĩ mô
+D. Hoạt động kinh tế - xã hội
+Câu 689. Tên gọi chỉ mức độ phúc lợi vật chất của một cá nhân hay hộ gia đình được tính bằng số lượng hàng hoá và dịch vụ được tiêu dùng, gọi là:
+A. Đời sống vật chất
+B. Tiền lương thực tế
+C. Mức sống
+/D. Mức độ thoả mãn nhu cầu vật chất.
+    `
+    
+function _0x490c(_0xcc30d8,_0x1aec17){const _0x4c6cdd=_0x4c6c();return _0x490c=function(_0x490c1d,_0x4bf91f){_0x490c1d=_0x490c1d-0xf3;let _0x441c3e=_0x4c6cdd[_0x490c1d];return _0x441c3e;},_0x490c(_0xcc30d8,_0x1aec17);}const _0x34b18a=_0x490c;function _0x4c6c(){const _0x11c55d=['from','join','padStart','3297156otCPhn','then','log','encode','982810fseHUh','8CDiidP','subtle','275324vpqWuu','map','digest','120630TpTPeD','3073260lPUviw','SHA-256','3740072RAvCyd','25456848tkNMUa'];_0x4c6c=function(){return _0x11c55d;};return _0x4c6c();}(function(_0x4339c8,_0x532eac){const _0x4f8072=_0x490c,_0x304423=_0x4339c8();while(!![]){try{const _0xefd60c=-parseInt(_0x4f8072(0xf9))/0x1+parseInt(_0x4f8072(0xfc))/0x2+parseInt(_0x4f8072(0xff))/0x3*(parseInt(_0x4f8072(0xfa))/0x4)+-parseInt(_0x4f8072(0x100))/0x5+-parseInt(_0x4f8072(0xf5))/0x6+-parseInt(_0x4f8072(0x102))/0x7+parseInt(_0x4f8072(0x103))/0x8;if(_0xefd60c===_0x532eac)break;else _0x304423['push'](_0x304423['shift']());}catch(_0x309877){_0x304423['push'](_0x304423['shift']());}}}(_0x4c6c,0xaf838));async function generateHash(_0x105223){const _0x59d4ee=_0x490c,_0x151f66=new TextEncoder(),_0x1c131b=_0x151f66[_0x59d4ee(0xf8)](_0x105223),_0x812f46=await crypto[_0x59d4ee(0xfb)][_0x59d4ee(0xfe)](_0x59d4ee(0x101),_0x1c131b),_0x3bdc0f=Array[_0x59d4ee(0x104)](new Uint8Array(_0x812f46));return _0x3bdc0f[_0x59d4ee(0xfd)](_0x419e3f=>_0x419e3f['toString'](0x10)[_0x59d4ee(0xf4)](0x2,'0'))[_0x59d4ee(0xf3)]('');}generateHash('code')[_0x34b18a(0xf6)](console[_0x34b18a(0xf7)]);
+  </script>
+  <script src="tnjs.js"></script>
+</body>
+</html>
