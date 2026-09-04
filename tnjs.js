@@ -161,7 +161,16 @@ function run() {
     return questions.join('\n');
   }
   
-  let questionStrings = ("\n" + replaceLinksToImages(inputString.replace(/\t/g, "\x20").replace(/\x20([A-Z])\./g, '\n$1.').replace(/\x20\/([A-Z])\./g, '\n\/$1.').replace(/\.([A-Z])\./g, '\n.$1')).split('\n').filter(line => line.trim() !== '').join('\n')).split('\nCâu ')
+// Chuẩn hóa xuống dòng và khoảng trắng
+  let cleanInput = inputString
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
+
+  let questionStrings = ("\n" + replaceLinksToImages(cleanInput)
+    .split('\n')
+    .filter(line => line.trim() !== '')
+    .join('\n')
+  ).split('\nCâu ');
   questionStrings.shift()
   if (shuffleQ) questionStrings = shuffleArray(questionStrings)
   amount = questionStrings.length
@@ -190,7 +199,7 @@ function run() {
   timerInterval = setInterval(updateTime,
     10);
   
- /* if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
+  /*if (window.location.hostname !== "\u006e\u0067\u0061\u0032\u0037\u0031\u0030\u002e\u0067\u0069\u0074\u0068\u0075\u0062\u002e\u0069\u006f") {
     document.body.innerHTML = "\u003c\u0068\u0031\u003e\u004c\u1ed7\u0069\u0020\u0074\u0072\u0079\u0020\u0063\u1ead\u0070\u003c\u002f\u0068\u0031\u003e";
     throw new Error("Hey!");
   }*/
@@ -611,7 +620,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     modal.appendChild(button);
     modal.appendChild(message);
     overlay.appendChild(modal);
-     //  document.body.appendChild(overlay);
+       //document.body.appendChild(overlay);
 
     // CSS cho hiệu ứng mờ dần
     const style = document.createElement("style");
