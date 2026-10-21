@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sơ Đồ Lớp Học - Solid UI Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Font chữ -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body, html { 
+            margin: 0; padding: 0; 
+            height: 100%; width: 100%;
+            overflow: hidden; 
+            background-color: #0f172a; 
+            font-family: 'Nunito', sans-serif;
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        .writing-vertical { 
+            writing-mode: vertical-rl; 
+            text-orientation: mixed;
+        }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
+        button:focus, input:focus { outline: none; }
+        
+        @keyframes pulse-danger {
+            0%, 100% { box-shadow: inset 0 0 0 0 rgba(220, 38, 38, 0); }
+            50% { box-shadow: inset 0 0 15px 5px rgba(153, 27, 27, 0.4); }
+        }
+        .animate-danger { animation: pulse-danger 1.5s infinite; }
+        input::placeholder { color: #94a3b8; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <!-- KHUNG ỨNG DỤNG CHÍNH -->
+    <div id="app" class="w-full h-[100dvh] p-1 flex items-center justify-center">
+        <!-- Lưới CSS Grid 6x5 -->
+        <div id="grid-container" class="w-full h-full grid grid-cols-[1fr_1fr_48px_1fr_1fr] grid-rows-6 gap-[4px] relative max-w-3xl mx-auto">
+            
+            <!-- Hành lang (Cột 3, trải dài 6 hàng) -->
+            <div id="aisle" class="col-start-3 row-start-1 row-span-6 bg-slate-200 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-between py-2 shadow-[inset_0_2px_8px_rgba(0,0,0,0.1)] z-10">
+                
+                <div class="text-[10px] font-black text-slate-500 tracking-widest writing-vertical rotate-180 uppercase mt-2">
+                    Hành Lang
+                </div>
+                
+                <!-- Đồng hồ trung tâm -->
+                <div class="flex flex-col items-center w-full px-0.5 bg-white/80 py-1.5 rounded-lg shadow-sm border border-slate-300 my-1">
+                    <span id="clock-hm" class="text-[13px] font-black text-blue-700 leading-none">00:00</span>
+                    <span id="clock-s" class="text-[9px] text-slate-500 font-bold mt-0.5">00</span>
+                </div>
+
+                <div class="flex flex-col gap-1 w-full px-1 mb-1">
+                    <!-- Nút Cài đặt (Settings) -->
+                    <button id="settings-btn" class="text-[14px] py-1.5 w-full rounded-lg transition-all shadow-sm bg-slate-800 text-white hover:bg-slate-700 active:scale-95 flex justify-center items-center border-b-2 border-slate-900 mb-1">
+                        <i class="ph-bold ph-gear"></i>
+                    </button>
+
+                    <!-- Nút chuyển lớp -->
+                    <button class="class-toggle-btn text-[12px] py-2.5 w-full rounded-lg font-black transition-all shadow-md" data-class="11">11</button>
+                    <button class="class-toggle-btn text-[12px] py-2.5 w-full rounded-lg font-black transition-all shadow-md" data-class="12">12</button>
+                </div>
+            </div>
+            <!-- Ô học sinh render tự động ở đây -->
+        </div>
+    </div>
+
+    <!-- MODAL CÀI ĐẶT & QUẢN LÝ -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border-2 border-slate-200 transform scale-95 transition-transform duration-200" id="settings-box">
+            <!-- Header Modal -->
+            <div class="bg-slate-100 px-4 py-3 border-b-2 border-slate-200 flex justify-between items-center">
+                <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                    <i class="ph-fill ph-sliders-horizontal text-blue-600"></i> Quản lý lớp
+                </h3>
+                <button id="close-modal-btn" class="p-1 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+                    <i class="ph-bold ph-x text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Body Modal -->
+            <div class="p-4 space-y-4">
+                <!-- Cài thời gian -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">⏱️ Thời gian đếm ngược (Phút)</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="setting-time" value="15" class="w-full bg-slate-50 border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-black focus:border-blue-500 focus:bg-white transition-colors">
+                        <button id="save-time-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 rounded-lg shadow-sm active:scale-95 transition-transform">Lưu</button>
+                    </div>
+                </div>
+
+                <hr class="border-slate-200 border-t-2">
+
+                <!-- Các nút tác vụ nhanh (Mass Actions) -->
+                <div class="space-y-2">
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-700 font-bold rounded-lg active:scale-95 transition-transform" data-action="reset-timer">
+                        <i class="ph-bold ph-arrow-counter-clockwise text-blue-600 text-lg"></i> Khôi phục đồng hồ toàn lớp
+                    </button>
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-red-50 hover:bg-red-100 border-2 border-red-200 text-red-700 font-bold rounded-lg active:scale-95 transition-transform" data-action="reset-status">
+                        <i class="ph-bold ph-trash text-red-500 text-lg"></i> Xóa điểm danh toàn lớp
+                    </button>
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-700 font-bold rounded-lg active:scale-95 transition-transform" data-action="reset-note">
+                        <i class="ph-bold ph-eraser text-amber-500 text-lg"></i> Xóa sạch ghi chú toàn lớp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DỮ LIỆU SƠ ĐỒ LỚP ---
+        const CLASS_DATA = {
+            '12': [
+                ['Lê Duy', 'Đạt', 'Nam', 'Huy'],
+                ['Thái', 'Thành', 'Thanh Nhi (NCT)', ''],
+                ['Hạnh', 'Long', 'Ngọc', ''],
+                ['Ngọc Ngân', 'Ngọc Nhi (NH)', 'Đồng', 'Tuấn'],
+                ['Kiệt', 'Hân', 'Linh', 'Khoa'],
+                ['Trâm', 'Phương', 'Q Duy', '']
+            ],
+            '11': [
+                ['Trân', 'Đạt', 'Phúc', 'Chấn'],
+                ['Thư', 'Giang', 'Vân Anh', 'Hường'],
+                ['Khiết Minh', 'Vân', 'Minh Anh', 'An'],
+                ['Tiến', 'Trâm', 'TRIPLE_RIGHT', ''],
+                ['P.Anh', 'Nghi', 'Hạnh', 'Ly'],
+                ['Khánh', 'Minh (Chuột)', 'Khoa', 'Trang']
+            ]
+        };
+        const CLASS_11_TRIPLE = ['Tươi', 'Vy', 'Phương'];
+        
+        let DEFAULT_TIME_SECONDS = 900; // Mặc định 15 phút
+        const globalState = {}; 
+        let currentClass = '11';
+        let audioCtx = null;
+
+        // Cấu hình Nền Cell dựa trên trạng thái
+        const STATUS_BG = [
+            'bg-slate-50 border-slate-300',      // 0: Trống
+            'bg-emerald-100 border-emerald-400', // 1: Có làm
+            'bg-rose-100 border-rose-400',       // 2: Vắng
+            'bg-amber-100 border-amber-400'      // 3: Vắng làm
+        ];
+
+        // Khởi tạo state
+        function initGlobalState() {
+            ['11', '12'].forEach(cls => {
+                CLASS_DATA[cls].forEach((row, r) => {
+                    initStateCell(`${cls}_${r}_0`, row[0]);
+                    initStateCell(`${cls}_${r}_1`, row[1]);
+                    if (row[2] === 'TRIPLE_RIGHT') {
+                        CLASS_11_TRIPLE.forEach((name, i) => initStateCell(`${cls}_${r}_3_${i}`, name));
+                    } else {
+                        initStateCell(`${cls}_${r}_2`, row[2]);
+                        initStateCell(`${cls}_${r}_3`, row[3]);
+                    }
+                });
+            });
+        }
+        function initStateCell(key, name) {
+            globalState[key] = { name, status: 0, timeLeft: DEFAULT_TIME_SECONDS, isRunning: false, isFinished: false, note: '' };
+        }
+
+        // --- 2. LOGIC RENDER UI ---
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = (secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('grid-container');
+            Array.from(container.children).forEach(child => { if (child.id !== 'aisle') child.remove(); });
+
+            // Cập nhật CSS cho nút Hành lang
+            document.querySelectorAll('.class-toggle-btn').forEach(btn => {
+                if (btn.dataset.class === currentClass) {
+                    btn.className = 'class-toggle-btn text-[12px] py-2 w-full rounded-lg font-black shadow-md transition-all bg-blue-600 text-white transform scale-105 border-b-4 border-blue-800';
+                } else {
+                    btn.className = 'class-toggle-btn text-[12px] py-2 w-full rounded-lg font-black shadow-sm transition-all bg-slate-100 text-slate-500 border-b-4 border-slate-300 hover:bg-slate-300 active:scale-95';
+                }
+            });
+
+            // Render Bàn học
+            CLASS_DATA[currentClass].forEach((row, r) => {
+                const gridRow = r + 1; 
+                container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_0`, 1, gridRow));
+                container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_1`, 2, gridRow));
+
+                if (row[2] === 'TRIPLE_RIGHT') {
+                    let specialHTML = `<div class="col-start-4 col-span-2 flex gap-[4px] w-full" style="grid-row: ${gridRow}; min-width: 0;">`;
+                    CLASS_11_TRIPLE.forEach((_, i) => specialHTML += getCellHTML(`${currentClass}_${r}_3_${i}`, null, null, true));
+                    specialHTML += `</div>`;
+                    container.insertAdjacentHTML('beforeend', specialHTML);
+                } else {
+                    container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_2`, 4, gridRow));
+                    container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_3`, 5, gridRow));
+                }
+            });
+        }
+
+        function getCellHTML(key, colStart, rowStart, isFlexItem = false) {
+            const state = globalState[key];
+            const isEmp = !state.name;
+            const styleProps = isFlexItem ? '' : `grid-column: ${colStart}; grid-row: ${rowStart};`;
+            const flexClass = isFlexItem ? 'flex-1 min-w-0' : '';
+            
+            // Layout kích thước theo dạng đơn hay nhóm 3
+            const textSize = isFlexItem ? 'text-[9px]' : 'text-[11px] sm:text-[12px]';
+            const timeSize = isFlexItem ? 'text-[11px]' : 'text-[13px] sm:text-[15px]';
+            const padding = isFlexItem ? 'p-1' : 'p-1.5';
+            const radioH = isFlexItem ? 'h-3.5' : 'h-4 sm:h-5';
+            const radioIcon = isFlexItem ? 'text-[8px]' : 'text-[10px] sm:text-[11px]';
+
+            // Xử lý UI Màu sắc Ô 
+            let cellClass = state.isFinished 
+                ? 'bg-red-500 border-red-700 animate-danger shadow-lg' 
+                : STATUS_BG[state.status] + ' shadow-sm';
+                
+            let timerColor = state.isFinished ? 'text-red-800' : (state.isRunning ? 'text-blue-700' : 'text-slate-800');
+            let playIcon = state.isRunning ? 'ph-pause-circle' : 'ph-play-circle';
+            let playColor = state.isFinished ? 'text-red-400 opacity-50' : (state.isRunning ? 'text-amber-500' : 'text-blue-500');
+
+            // --- TẠO THANH CHỌN RADIO NHANH ---
+            const radioActive = "opacity-100 shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)]";
+            const radioInact = "opacity-40 hover:opacity-70 bg-slate-100";
+            
+            const r0 = state.status === 0 ? `${radioActive} bg-slate-400 text-white` : `${radioInact} text-slate-500`;
+            const r1 = state.status === 1 ? `${radioActive} bg-emerald-500 text-white` : `${radioInact} text-emerald-600`;
+            const r2 = state.status === 2 ? `${radioActive} bg-rose-500 text-white`   : `${radioInact} text-rose-600`;
+            const r3 = state.status === 3 ? `${radioActive} bg-amber-500 text-white`  : `${radioInact} text-amber-600`;
+
+            return `
+                <div data-key="${key}" class="student-cell flex flex-col justify-between overflow-hidden border-2 rounded-xl transition-all duration-200 ${cellClass} ${isEmp ? 'opacity-30 pointer-events-none' : ''} ${flexClass} ${padding}" style="${styleProps}">
+                    
+                    <!-- Phần Trên: Tên & Thanh Radio (Xếp dọc để vừa khung) -->
+                    <div class="flex flex-col mb-1 gap-1 w-full">
+                        <span class="font-black ${textSize} leading-tight truncate text-slate-800">${state.name || 'Trống'}</span>
+                        
+                        <!-- Thanh Radio (Pill) chia đều 4 ô -->
+                        <div class="flex w-full bg-white/60 rounded-md overflow-hidden border border-white/50 shadow-sm">
+                            <button data-status="0" class="status-radio flex-1 ${radioH} flex justify-center items-center transition-all ${r0}">
+                                <i class="ph-bold ph-minus ${radioIcon}"></i>
+                            </button>
+                            <button data-status="1" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r1}">
+                                <i class="ph-bold ph-check ${radioIcon}"></i>
+                            </button>
+                            <button data-status="2" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r2}">
+                                <i class="ph-bold ph-x ${radioIcon}"></i>
+                            </button>
+                            <button data-status="3" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r3}">
+                                <i class="ph-bold ph-warning ${radioIcon}"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Phần Giữa: Đồng Hồ (Layout ngang cực rõ) -->
+                    <div class="flex flex-row items-center justify-between bg-white/80 rounded-lg px-1 py-1 w-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] mt-auto mb-1 border border-white/50">
+                        <button class="play-btn active:scale-75 transition-transform flex items-center justify-center">
+                            <i class="ph-fill ${playIcon} ${playColor} text-[18px] sm:text-[20px] drop-shadow-sm"></i>
+                        </button>
+                        
+                        <span class="time-display font-mono ${timeSize} font-black tracking-tighter ${timerColor}">
+                            ${state.isFinished ? 'HẾT!' : formatTime(state.timeLeft)}
+                        </span>
+                        
+                        <button class="reset-btn active:scale-75 transition-transform flex items-center justify-center">
+                            <i class="ph-bold ph-arrow-counter-clockwise ${state.isFinished ? 'text-red-600' : 'text-slate-400'} text-[14px] sm:text-[16px] hover:text-slate-800"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Phần Dưới: Ghi chú -->
+                    <input type="text" class="note-input w-full text-[10px] px-1.5 py-1 border-none bg-white/50 focus:bg-white rounded-md outline-none text-slate-800 font-semibold shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] transition-colors placeholder:text-[9px]" placeholder="Ghi chú..." value="${state.note}">
+                </div>
+            `;
+        }
+
+        // Thay thế HTML ô để cập nhật siêu mượt
+        function updateCellDOM(key) {
+            const cell = document.querySelector(`[data-key="${key}"]`);
+            if (!cell) return;
+            const input = cell.querySelector('.note-input');
+            const isFocused = document.activeElement === input;
+            
+            const isFlexItem = cell.classList.contains('flex-1');
+            const colStart = cell.style.gridColumn;
+            const rowStart = cell.style.gridRow;
+            
+            cell.outerHTML = getCellHTML(key, colStart, rowStart, isFlexItem);
+
+            // Giữ focus cho input khi gõ
+            if (isFocused) {
+                const newCell = document.querySelector(`[data-key="${key}"]`);
+                const newInput = newCell.querySelector('.note-input');
+                newInput.focus();
+                const val = newInput.value;
+                newInput.value = '';
+                newInput.value = val;
+            }
+        }
+
+        // --- 3. ĐỘNG CƠ THỜI GIAN & AUDIO ---
+        setInterval(() => {
+            for (let key in globalState) {
+                const state = globalState[key];
+                if (state.isRunning && state.timeLeft > 0) {
+                    state.timeLeft--;
+                    if (state.timeLeft === 0) {
+                        state.isRunning = false;
+                        state.isFinished = true;
+                        playBeep();
+                    }
+                    updateCellDOM(key);
+                }
+            }
+        }, 1000);
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock-hm').textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('clock-s').textContent = now.toLocaleTimeString('vi-VN', { second: '2-digit' });
+        }, 1000);
+
+        function playBeep() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        // --- 4. MODAL & EVENT DELEGATION ---
+        
+        // Điều khiển Modal
+        const modal = document.getElementById('settings-modal');
+        const box = document.getElementById('settings-box');
+        
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            document.getElementById('setting-time').value = Math.floor(DEFAULT_TIME_SECONDS / 60);
+            modal.classList.remove('hidden');
+            // Timeout nhỏ để render animation mượt
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+            }, 10);
+        });
+
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Lưu thời gian mới
+        document.getElementById('save-time-btn').addEventListener('click', () => {
+            const mins = parseInt(document.getElementById('setting-time').value);
+            if(mins > 0) {
+                DEFAULT_TIME_SECONDS = mins * 60;
+                // Nháy xanh báo hiệu thành công
+                const btn = document.getElementById('save-time-btn');
+                btn.textContent = 'Đã lưu!';
+                btn.classList.add('bg-emerald-500');
+                setTimeout(() => { 
+                    btn.textContent = 'Lưu'; 
+                    btn.classList.remove('bg-emerald-500'); 
+                }, 1000);
+            }
+        });
+
+        // Xử lý Mass Actions trong Setting
+        document.querySelectorAll('.mass-action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.currentTarget.dataset.action;
+                for(let key in globalState) {
+                    if (action === 'reset-timer') {
+                        globalState[key].timeLeft = DEFAULT_TIME_SECONDS;
+                        globalState[key].isRunning = false;
+                        globalState[key].isFinished = false;
+                    } else if (action === 'reset-status') {
+                        globalState[key].status = 0;
+                    } else if (action === 'reset-note') {
+                        globalState[key].note = '';
+                    }
+                }
+                renderGrid();
+                closeModal();
+            });
+        });
+
+        // Xử lý tương tác trên ô học sinh (Event Delegation)
+        document.body.addEventListener('click', (e) => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                audioCtx.resume();
+            }
+            
+            // Chuyển lớp
+            const btnClass = e.target.closest('.class-toggle-btn');
+            if (btnClass) {
+                currentClass = btnClass.dataset.class;
+                renderGrid();
+                return;
+            }
+
+            // Tương tác trong Cell
+            const cell = e.target.closest('.student-cell');
+            if (!cell) return;
+            const key = cell.dataset.key;
+            const state = globalState[key];
+
+            // Click Nút Radio (Pill)
+            const radioBtn = e.target.closest('.status-radio');
+            if (radioBtn) {
+                state.status = parseInt(radioBtn.dataset.status);
+                updateCellDOM(key);
+                return;
+            }
+
+            // Đồng hồ: Play/Pause
+            if (e.target.closest('.play-btn')) {
+                if (!state.isFinished) {
+                    state.isRunning = !state.isRunning;
+                    updateCellDOM(key);
+                }
+            }
+            // Đồng hồ: Reset
+            else if (e.target.closest('.reset-btn')) {
+                state.timeLeft = DEFAULT_TIME_SECONDS; // Lấy theo setting hiện hành
+                state.isRunning = false;
+                state.isFinished = false;
+                updateCellDOM(key);
+            }
+        });
+
+        // Cập nhật state Ghi chú
+        document.body.addEventListener('input', (e) => {
+            if (e.target.classList.contains('note-input')) {
+                const key = e.target.closest('.student-cell').dataset.key;
+                globalState[key].note = e.target.value;
+            }
+        });
+
+        // Khởi động
+        initGlobalState();
+        renderGrid();
+        
+    </script>
+</body>
+</html>
