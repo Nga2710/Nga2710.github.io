@@ -2,6 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+      <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sơ Đồ Lớp Học - Vertical Aisle</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,6 +53,62 @@
             0%, 100% { transform: scale(1.15); box-shadow: 0 0 40px rgba(236,72,153,1); }
             50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(236,72,153,0.7); }
         }
+
+        /* Bố cục dọc: đưa hành lang và công cụ lên đầu, giữ nguyên toàn bộ xử lý JavaScript. */
+        @media (orientation: portrait) {
+            #app { height: 100dvh; min-height: 0; padding: 4px; align-items: stretch; justify-content: stretch; }
+            #grid-container { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; grid-template-rows: 82px repeat(6, minmax(0, 1fr)) !important; gap: 4px !important; width: 100%; height: 100%; max-width: none; margin: 0; }
+            #aisle { grid-column: 1 / -1 !important; grid-row: 1 !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 5px; min-width: 0; min-height: 0; padding: 4px !important; border-radius: 12px; }
+            #aisle > div:first-child { width: 62px !important; min-width: 62px; flex: 0 0 62px; margin: 0 !important; padding: 5px 2px !important; }
+            #clock-hm { font-size: 13px !important; }
+            #clock-s { font-size: 9px !important; }
+            #class-note { width: auto !important; min-width: 0; min-height: 0; height: 100%; flex: 1 1 0%; margin: 0 !important; padding: 4px !important; font-size: 9px !important; line-height: 1.15; }
+            #default-aisle-controls { width: auto !important; min-width: 0; flex: 0 0 auto; flex-direction: row !important; align-items: center; justify-content: flex-end; gap: 3px !important; margin: 0 !important; }
+            #default-aisle-controls > div:first-child { width: auto !important; flex-direction: row !important; align-items: center; gap: 3px !important; }
+            #default-aisle-controls > div:nth-child(2) { display: none !important; }
+            #default-aisle-controls button { width: auto !important; min-width: 27px; min-height: 32px; padding: 5px 6px !important; border-radius: 7px !important; font-size: 12px !important; }
+            #default-aisle-controls button i { font-size: 16px !important; }
+            #default-aisle-controls .class-toggle-btn { min-width: 25px; padding: 6px 5px !important; font-size: 11px !important; }
+            #spin-aisle-controls { width: auto !important; min-width: 0; flex: 1 1 auto; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 3px !important; margin: 0 !important; padding: 3px !important; border-width: 1px !important; }
+            #spin-aisle-controls > div:first-child { display: none !important; }
+            #spin-aisle-controls > div { width: auto !important; min-width: 0; flex-direction: row !important; align-items: center; gap: 3px !important; margin: 0 !important; }
+            #spin-aisle-controls button { width: auto !important; min-width: 28px; padding: 5px 6px !important; font-size: 9px !important; line-height: 1.1; white-space: nowrap; }
+            #spin-count-btn { min-width: 32px !important; }
+            #exec-spin-btn { min-width: 38px !important; }
+            #exec-spin-btn i { font-size: 22px !important; }
+            #cancel-spin-btn { flex: 0 0 auto; margin: 0 !important; }
+            #grid-container > .student-cell { grid-column: auto !important; grid-row: auto !important; min-width: 0; min-height: 0; padding: 3px !important; border-radius: 8px !important; border-width: 1.5px !important; }
+            #grid-container > div[style*="min-width: 0"] { grid-column: span 2 !important; grid-row: auto !important; min-width: 0 !important; min-height: 0; gap: 2px !important; }
+            .student-cell .status-radio { height: 13px !important; min-height: 13px; }
+            .student-cell .status-radio i { font-size: 9px !important; }
+            .student-cell .play-btn i { font-size: 15px !important; }
+            .student-cell .reset-btn i { font-size: 11px !important; }
+            .student-cell .time-display { font-size: 11px !important; line-height: 1.1; }
+            .student-cell .note-input { min-width: 0; height: 15px; font-size: 8px !important; line-height: 1; padding: 1px 3px !important; }
+            #winner-box { max-height: calc(100dvh - 28px); overflow-y: auto; }
+            #winner-box > div { min-height: 180px !important; padding-top: 24px !important; padding-bottom: 24px !important; }
+            #settings-box, #report-box { max-height: calc(100dvh - 20px); overflow-y: auto; }
+        }
+        @media (orientation: portrait) and (max-height: 700px) {
+            #grid-container { grid-template-rows: 70px repeat(6, minmax(0, 1fr)) !important; gap: 3px !important; }
+            #app { padding: 3px; }
+            #aisle { gap: 3px; padding: 3px !important; }
+            #aisle > div:first-child { width: 55px !important; min-width: 55px; flex-basis: 55px; padding: 4px 1px !important; }
+            #default-aisle-controls { gap: 2px !important; }
+            #default-aisle-controls > div:first-child { gap: 2px !important; }
+            #default-aisle-controls button { min-width: 24px; min-height: 29px; padding: 4px !important; }
+            #default-aisle-controls .class-toggle-btn { min-width: 23px; padding: 5px 3px !important; }
+            #class-note { font-size: 8px !important; }
+            #grid-container > .student-cell { padding: 2px !important; }
+            .student-cell .status-radio { height: 11px !important; min-height: 11px; }
+            .student-cell .note-input { height: 13px; font-size: 7px !important; }
+        }
+        @media (orientation: landscape) and (max-height: 520px) {
+            #app { padding: 3px; }
+            #grid-container { gap: 3px !important; }
+            #aisle { padding-top: 2px; padding-bottom: 2px; }
+        }
+
     </style>
 </head>
 <body>
