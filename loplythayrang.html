@@ -108,10 +108,120 @@
         #app { display: flex !important; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         #attendance-view { position: fixed; inset: 0; z-index: 25; background: #f1f5f9; color: #0f172a; display: flex; flex-direction: column; font-family: 'Nunito', sans-serif; user-select: text; transform: translateX(100%); pointer-events: none; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         
+        /* BỐ CỤC 3 TRANG THEO TRỤC NGANG: SƠ ĐỒ ← TRANG CHÍNH → DANH SÁCH */
+        #app { position:fixed !important; inset:0; z-index:20; display:flex !important; transition:transform .3s cubic-bezier(.4,0,.2,1); transform:translateX(-100%); pointer-events:none; }
+        #attendance-view { position:fixed; inset:0; z-index:25; height:100dvh; height:100svh; background:#f1f5f9; color:#0f172a; display:flex; flex-direction:column; font-family:'Nunito',sans-serif; user-select:text; transform:translateX(0); pointer-events:auto; transition:transform .3s cubic-bezier(.4,0,.2,1); overflow:hidden; }
+        #attendance-list-view { position:fixed; inset:0; z-index:24; height:100dvh; height:100svh; background:#f1f5f9; color:#0f172a; display:flex; flex-direction:column; font-family:'Nunito',sans-serif; user-select:text; transform:translateX(100%); pointer-events:none; transition:transform .3s cubic-bezier(.4,0,.2,1); overflow:hidden; }
+        body.page-grid #app { transform:translateX(0); pointer-events:auto; }
+        body.page-grid #attendance-view { transform:translateX(100%); pointer-events:none; }
+        body.page-grid #attendance-list-view { transform:translateX(200%); pointer-events:none; }
+        body.page-home #app { transform:translateX(-100%); pointer-events:none; }
+        body.page-home #attendance-view { transform:translateX(0); pointer-events:auto; }
+        body.page-home #attendance-list-view { transform:translateX(100%); pointer-events:none; }
+        body.page-list #app { transform:translateX(-200%); pointer-events:none; }
+        body.page-list #attendance-view { transform:translateX(-100%); pointer-events:none; }
+        body.page-list #attendance-list-view { transform:translateX(0); pointer-events:auto; }
+        #attendance-view *, #attendance-list-view * { box-sizing:border-box; }
+        #attendance-view .att-top { flex-shrink:0; }
+        #attendance-view .att-toolbar { flex-shrink:0; }
+        #attendance-view .att-foot { flex-shrink:0; }
+        #attendance-list-view .att-list-top { flex-shrink:0; }
+        #attendance-list-view .att-legend { flex-shrink:0; }
+        #attendance-list-view .att-table-wrap { flex:1; min-height:0; }
+        #attendance-list-view .att-foot { flex-shrink:0; }
+        .att-class-picker { display:flex; align-items:center; gap:8px; }
+        .att-class-picker > label { font-size:11px; font-weight:900; color:#64748b; text-transform:uppercase; }
+        .att-class-switch { display:inline-flex; align-items:center; gap:4px; padding:4px; border-radius:10px; background:#e2e8f0; }
+        .att-class-choice { border:0; border-radius:7px; background:transparent; color:#475569; font:900 12px 'Nunito',sans-serif; min-height:34px; padding:7px 13px; cursor:pointer; transition:background .15s,color .15s,transform .15s; }
+        .att-class-choice.active { color:white; background:#0f766e; box-shadow:0 2px 5px #0f766e30; }
+        .att-class-choice:active { transform:scale(.97); }
+        .att-home-card { flex:1; min-height:0; margin:14px; padding:clamp(18px,4vh,44px) 22px; border:1px solid #dbe4ee; border-radius:24px; background:radial-gradient(circle at 50% 0%,#e0f2fe 0,transparent 48%),linear-gradient(135deg,#fff 0%,#f8fafc 100%); box-shadow:0 14px 40px #0f172a0d; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; overflow:auto; }
+        .att-home-icon { width:66px; height:66px; display:flex; align-items:center; justify-content:center; border-radius:20px; background:#ccfbf1; color:#0f766e; font-size:36px; margin-bottom:14px; }
+        .att-home-eyebrow { color:#0f766e; font-size:11px; font-weight:900; letter-spacing:.19em; margin-bottom:8px; }
+        .att-home-card h1 { margin:0; color:#0f172a; font-size:clamp(32px,5.1vw,64px); line-height:1.06; font-weight:900; letter-spacing:-.045em; }
+        .att-home-description { max-width:620px; margin:14px 0 20px; color:#64748b; font-size:clamp(13px,1.6vw,16px); line-height:1.6; font-weight:700; }
+        .att-home-shortcuts { width:min(700px,100%); display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .att-home-shortcut { min-width:0; display:flex; align-items:center; gap:11px; text-align:left; padding:12px 14px; border:1px solid #e2e8f0; border-radius:14px; background:#ffffffdc; }
+        .att-shortcut-key { width:36px; height:36px; flex:0 0 36px; display:flex; align-items:center; justify-content:center; border-radius:10px; color:#0f766e; background:#ccfbf1; font-size:19px; }
+        .att-home-shortcut strong { display:block; color:#0f172a; font-size:13px; font-weight:900; }
+        .att-home-shortcut small { display:block; margin-top:3px; color:#64748b; font-size:10px; font-weight:700; line-height:1.4; }
+        .att-home-hint { margin:18px 0 0; color:#64748b; font-size:11px; font-weight:800; }
+        .att-home-hint i { color:#0f766e; font-size:15px; vertical-align:-2px; }
+        .att-home-stats { width:min(920px,100%); margin:8px 0 16px; padding:12px; border:1px solid #dbe4ee; border-radius:16px; background:#ffffffdf; text-align:left; }
+        .att-home-stats-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; margin-bottom:9px; }
+        .att-home-stats-head strong { color:#0f172a; font-size:12px; font-weight:900; letter-spacing:.04em; }
+        .att-home-stats-head span { color:#64748b; font-size:10px; font-weight:800; }
+        .att-home-stats-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:7px; }
+        .att-home-stat { min-width:0; padding:9px 8px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc; }
+        .att-home-stat span { display:block; min-height:27px; color:#475569; font-size:10px; line-height:1.3; font-weight:900; }
+        .att-home-stat strong { display:block; margin-top:4px; color:#0f172a; font-size:21px; line-height:1.1; font-weight:900; }
+        .att-home-stat.stat-green strong { color:#047857; }
+        .att-home-stat.stat-red strong { color:#b91c1c; }
+        .att-home-stat.stat-yellow strong { color:#92400e; }
+        .att-home-stat.stat-blue strong { color:#1d4ed8; }
+        .att-home-nav-btn { width:100%; font-family:'Nunito',sans-serif; color:#0f172a; cursor:pointer; transition:transform .15s,border-color .15s,box-shadow .15s; }
+        .att-home-nav-btn:hover { transform:translateY(-2px); border-color:#99f6e4; box-shadow:0 6px 18px #0f766e12; }
+        .att-home-nav-btn:active { transform:scale(.985); }
+        .att-list-nav { display:flex; align-items:center; padding:max(7px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 7px max(10px,env(safe-area-inset-left)); background:#f8fafc; border-bottom:1px solid #e2e8f0; flex-shrink:0; }
+        .att-list-nav .att-btn { min-height:34px; padding:6px 11px; font-size:11px; }
+        .att-list-foot { justify-content:flex-start; min-height:34px; padding-top:6px; padding-bottom:max(8px,env(safe-area-inset-bottom)); font-weight:900; }
+        .att-list-top { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:16px 20px; background:linear-gradient(120deg,#0f172a,#172554 65%,#0f766e); color:white; box-shadow:0 8px 24px #0f172a20; }
+        .att-list-title { display:flex; align-items:center; gap:9px; font-size:clamp(21px,3vw,30px); font-weight:900; letter-spacing:-.5px; }
+        .att-list-title i { color:#6ee7b7; }
+        .att-list-sub { margin-top:4px; font-size:11px; font-weight:700; color:#cbd5e1; }
+        .att-list-current { padding:8px 12px; border:1px solid #ffffff2a; border-radius:10px; background:#ffffff12; color:#ecfeff; font-size:12px; font-weight:900; }
+        .settings-menu-dialog { width:min(520px,100%); max-height:calc(100dvh - 24px); overflow:auto; display:flex; flex-direction:column; gap:12px; }
+        .settings-menu-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:10px; border-bottom:1px solid #e2e8f0; }
+        #att-data-settings-title { font-size:22px; line-height:1.2; font-weight:900; color:#0f172a; }
+        .settings-menu-subtitle { color:#64748b; font-size:11px; font-weight:700; margin-top:4px; }
+        .settings-close-btn { flex:0 0 36px; width:36px; height:36px; border:0; border-radius:9px; background:#f1f5f9; color:#475569; font-size:22px; cursor:pointer; }
+        .settings-action { width:100%; min-height:44px; justify-content:flex-start; white-space:normal; text-align:left; }
+        .settings-daily-stats { padding:12px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:12px; }
+        .settings-section-title { font-size:12px; font-weight:900; color:#334155; margin-bottom:9px; }
+        .settings-daily-stats .att-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+        .settings-daily-stats .att-stat { margin:0; padding:8px; text-align:left; font-size:10px; }
+        .settings-daily-stats .att-stat b { display:block; margin:4px 0 0; font-size:17px; }
+        #att-data-settings-modal #fab-fullscreen { position:static !important; inset:auto !important; width:100% !important; height:auto !important; min-height:44px; border-radius:8px !important; padding:10px 12px !important; background:#e0f2fe !important; color:#075985 !important; box-shadow:none !important; border:1px solid #bae6fd !important; backdrop-filter:none !important; display:flex; flex-direction:row; gap:9px; align-items:center; justify-content:flex-start; font:900 12px 'Nunito',sans-serif; }
+        #att-data-settings-modal #fab-fullscreen.active { background:#d1fae5 !important; color:#047857 !important; border-color:#6ee7b7 !important; }
+        #att-data-settings-modal #fab-fullscreen i { font-size:18px; }
+        @media(max-width:650px) {
+          #attendance-view .att-top { padding-top:max(10px,env(safe-area-inset-top)); padding-bottom:10px; }
+          #attendance-view .att-toolbar { padding:8px 10px; gap:7px; }
+          .att-class-picker { gap:5px; }
+          .att-class-picker > label { font-size:9px; }
+          .att-class-choice { min-height:32px; padding:6px 9px; font-size:11px; }
+          .att-home-card { margin:7px; padding:18px 13px; border-radius:17px; }
+          .att-home-icon { width:49px; height:49px; border-radius:15px; font-size:28px; margin-bottom:9px; }
+          .att-home-eyebrow { font-size:9px; letter-spacing:.12em; }
+          .att-home-card h1 { font-size:clamp(31px,8vw,45px); }
+          .att-home-description { margin:9px 0 14px; font-size:12px; }
+          .att-home-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+          .att-home-shortcut { padding:8px 7px; gap:7px; }
+          .att-shortcut-key { width:30px; height:30px; flex-basis:30px; border-radius:8px; font-size:16px; }
+          .att-home-shortcut strong { font-size:11px; }
+          .att-home-shortcut small { font-size:9px; }
+          .att-home-hint { margin-top:12px; font-size:10px; }
+          .att-home-stats { margin:5px 0 10px; padding:8px; border-radius:12px; }
+          .att-home-stats-head { margin-bottom:7px; }
+          .att-home-stats-head strong { font-size:10px; }
+          .att-home-stats-head span { font-size:9px; }
+          .att-home-stats-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+          .att-home-stat { padding:7px; }
+          .att-home-stat span { min-height:0; font-size:9px; }
+          .att-home-stat strong { font-size:17px; }
+          .att-home-stat:last-child { grid-column:1 / -1; }
+          #attendance-list-view .att-legend { gap:7px; padding:7px 10px; font-size:9px; }
+          #attendance-view .att-foot, #attendance-list-view .att-foot { padding-bottom:max(8px,env(safe-area-inset-bottom)); }
+          .settings-menu-dialog { padding:14px; gap:9px; }
+        }
+        @media(max-height:650px) and (orientation:landscape) {
+          .att-home-card { padding:10px 18px; }
+          .att-home-icon { width:40px; height:40px; font-size:24px; margin-bottom:5px; }
+          .att-home-description { margin:6px 0 10px; }
+          .att-home-hint { margin-top:8px; }
+        }
+
         /* CHẾ ĐỘ DANH SÁCH (LIST MODE) */
-        body.list-mode #app { display: none !important; }
-        body.list-mode #attendance-view { transform: translateX(0); pointer-events: auto; }
-        
         #attendance-view *{box-sizing:border-box}
         .att-top{background:linear-gradient(120deg,#0f172a,#172554 65%,#0f766e);color:white;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 8px 24px #0f172a20}
         .att-title{font-size:clamp(20px,3vw,30px);font-weight:900;letter-spacing:-.5px}.att-sub{font-size:12px;color:#cbd5e1;margin-top:3px}
@@ -353,50 +463,84 @@
 }
     </style>
 </head>
-<body>
+<body class="page-home">
 
-    <!-- BẢNG ĐIỂM DANH TOÀN BỘ (LIST MODE) -->
-    <section id="attendance-view">
+    <!-- TRANG CHÍNH: LỚP LÝ THẦY RẠNG -->
+    <section id="attendance-view" aria-label="Trang chính Lớp Lý Thầy Rạng">
       <header class="att-top">
-        <div><div class="att-title">Lớp Lý Thầy Rạng <span style="color:#6ee7b7">●</span></div><div class="att-sub">BẢNG ĐIỂM DANH · LỊCH HỌC THỨ 2 · THỨ 4 · THỨ 6</div></div>
+        <div>
+          <div class="att-title">Lớp Lý Thầy Rạng <span style="color:#6ee7b7">●</span></div>
+          <div class="att-sub">QUẢN LÝ LỚP HỌC · LỊCH HỌC THỨ 2 · THỨ 4 · THỨ 6</div>
+        </div>
         <div class="att-actions">
           <div class="att-mobile-tools">
-            <button class="att-btn att-mobile-tools-toggle" id="att-mobile-tools-toggle" type="button" aria-expanded="false" aria-controls="att-mobile-tools-menu"><i class="ph-bold ph-list"></i> Báo cáo &amp; Random ▾</button>
+            <button class="att-btn att-mobile-tools-toggle" id="att-mobile-tools-toggle" type="button" aria-expanded="false" aria-controls="att-mobile-tools-menu"><i class="ph-bold ph-list"></i> Báo cáo ▾</button>
             <div class="att-mobile-tools-menu" id="att-mobile-tools-menu" aria-hidden="true">
               <button class="att-btn primary" id="att-export-day"><i class="ph-bold ph-image"></i> Ảnh ngày</button>
               <button class="att-btn" id="att-export-all"><i class="ph-bold ph-images"></i> Ảnh toàn bộ</button>
               <button class="att-btn" id="att-export-general"><i class="ph-bold ph-file-text"></i> Báo cáo tổng quát ngày</button>
-              <button class="att-btn" id="att-open-random"><i class="ph-bold ph-dice-five"></i> Random học sinh</button>
             </div>
           </div>
-          <button class="att-btn" id="att-open-stats"><i class="ph-bold ph-chart-bar"></i> Thống kê</button>
           <button class="att-btn" id="att-open-settings"><i class="ph-bold ph-gear"></i> Cài đặt</button>
         </div>
       </header>
       <div class="att-toolbar">
-        <div style="display:flex;align-items:center;gap:8px"><label for="att-class">Lớp</label><select id="att-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></div>
+        <div class="att-class-picker">
+          <label>Chọn lớp</label>
+          <div class="att-class-switch" role="group" aria-label="Chọn lớp">
+            <button type="button" class="att-class-choice active" data-class="11" aria-pressed="true">Lớp 11</button>
+            <button type="button" class="att-class-choice" data-class="12" aria-pressed="false">Lớp 12</button>
+          </div>
+        </div>
+        <select id="att-class" aria-hidden="true" tabindex="-1" style="display:none"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select>
         <select id="att-date" aria-hidden="true" tabindex="-1" style="display:none"></select>
         <span id="att-current-date" class="att-current-date">Ngày đang chọn: —</span>
-        <button class="att-btn" id="att-nearest-date"><i class="ph-bold ph-calendar-blank"></i> Tự về ngày gần nhất</button>
-        <div class="att-stats"><div class="att-stat">Chưa điểm danh<b id="stat-unmarked">0</b></div><div class="att-stat stat-green">Có mặt + làm bài<b id="stat-present-homework">0</b></div><div class="att-stat stat-red">Có mặt, chưa làm bài<b id="stat-present-nohomework">0</b></div><div class="att-stat stat-yellow">Vắng<b id="stat-absent">0</b></div><div class="att-stat stat-blue">Vắng + nộp bài<b id="stat-absent-homework">0</b></div></div>
+        <button class="att-btn" id="att-nearest-date"><i class="ph-bold ph-calendar-blank"></i> Ngày gần nhất</button>
       </div>
-      <div class="att-legend"><span><i class="att-dot" style="background:#fff;border:1px solid #cbd5e1"></i> Chưa điểm danh</span><span><i class="att-dot" style="background:#a7f3d0"></i> Có mặt và làm bài</span><span><i class="att-dot" style="background:#fecaca"></i> Có mặt nhưng không làm bài</span><span><i class="att-dot" style="background:#fde68a"></i> Vắng</span><span><i class="att-dot" style="background:#bfdbfe"></i> Vắng nhưng đã nộp bài</span></div>
-      <div class="att-table-wrap"><table id="attendance-table"><thead id="att-thead"></thead><tbody id="att-tbody"></tbody></table></div>
-      <footer class="att-foot"><span id="att-save-state">● Tự động lưu đang bật</span></footer>
+      <main class="att-home-card">
+        <div class="att-home-icon"><i class="ph-fill ph-student"></i></div>
+        <div class="att-home-eyebrow">TRANG CHÍNH · QUẢN LÝ LỚP HỌC</div>
+        <h1>Lớp Lý Thầy Rạng</h1>
+        <p class="att-home-description">Chọn lớp, theo dõi ngày học gần nhất và mở nhanh các công cụ điểm danh.</p>
+        <section class="att-home-stats" aria-label="Thống kê hôm nay">
+          <div class="att-home-stats-head">
+            <strong><i class="ph-bold ph-chart-bar" style="color:#0f766e"></i> THỐNG KÊ HÔM NAY</strong>
+            <span id="home-stats-date">Ngày đang chọn</span>
+          </div>
+          <div class="att-home-stats-grid">
+            <div class="att-home-stat"><span>Chưa điểm danh</span><strong id="home-stat-unmarked">0</strong></div>
+            <div class="att-home-stat stat-green"><span>Có mặt + làm bài</span><strong id="home-stat-present-homework">0</strong></div>
+            <div class="att-home-stat stat-red"><span>Có mặt, chưa làm bài</span><strong id="home-stat-present-nohomework">0</strong></div>
+            <div class="att-home-stat stat-yellow"><span>Vắng</span><strong id="home-stat-absent">0</strong></div>
+            <div class="att-home-stat stat-blue"><span>Vắng + nộp bài</span><strong id="home-stat-absent-homework">0</strong></div>
+          </div>
+        </section>
+        <div class="att-home-shortcuts">
+          <button type="button" id="home-go-grid" class="att-home-shortcut att-home-nav-btn">
+            <span class="att-shortcut-key"><i class="ph-bold ph-arrow-left"></i></span>
+            <span><strong>Sơ đồ lớp</strong><small>Quay sang trái</small></span>
+          </button>
+          <button type="button" id="home-go-list" class="att-home-shortcut att-home-nav-btn">
+            <span class="att-shortcut-key"><i class="ph-bold ph-arrow-right"></i></span>
+            <span><strong>Danh sách điểm danh</strong><small>Chuyển sang phải</small></span>
+          </button>
+        </div>
+      </main>
+      <footer class="att-foot"><span id="att-save-state">● Tự động lưu đang bật</span><span>Đã lưu tự động</span></footer>
     </section>
 
-    <!-- NÚT NỔI CHUYỂN ĐỔI (FAB) -->
-    <button id="fab-toggle" title="Chuyển đổi Màn hình chính / Danh sách điểm danh">
-        <i class="ph-bold ph-list-numbers" id="fab-icon"></i>
-    </button>
-    
-    <!-- NÚT NỔI TOÀN MÀN HÌNH -->
-    <button id="fab-fullscreen" title="Toàn màn hình & Giữ sáng">
-        <i class="ph-bold ph-corners-out" id="fullscreen-icon"></i>
-    </button>
-    
+    <!-- TRANG PHỤ BÊN PHẢI: DANH SÁCH ĐIỂM DANH -->
+    <section id="attendance-list-view" aria-label="Danh sách điểm danh">
+      <nav class="att-list-nav" aria-label="Điều hướng danh sách điểm danh">
+        <button type="button" class="att-btn" id="att-list-home-btn"><i class="ph-bold ph-house"></i> Trang chủ</button>
+      </nav>
+      <div class="att-legend"><span><i class="att-dot" style="background:#fff;border:1px solid #cbd5e1"></i> Chưa điểm danh</span><span><i class="att-dot" style="background:#a7f3d0"></i> Có mặt và làm bài</span><span><i class="att-dot" style="background:#fecaca"></i> Có mặt nhưng không làm bài</span><span><i class="att-dot" style="background:#fde68a"></i> Vắng</span><span><i class="att-dot" style="background:#bfdbfe"></i> Vắng nhưng đã nộp bài</span></div>
+      <div class="att-table-wrap"><table id="attendance-table"><thead id="att-thead"></thead><tbody id="att-tbody"></tbody></table></div>
+      <footer class="att-foot att-list-foot"><span id="att-list-current">Lớp 11</span></footer>
+    </section>
+
     <div class="att-toast" id="att-toast">Đã lưu</div>
-    
+
     <!-- MODALS BẢNG ĐIỂM DANH -->
     <div id="att-status-modal" class="att-modal-backdrop" role="dialog" aria-modal="true">
       <div class="att-status-dialog">
@@ -429,7 +573,6 @@ Lớp 12:</textarea>
           <button id="att-report-export" class="att-btn primary" style="flex:1;white-space:normal">Xuất báo cáo PNG</button>
           <button id="att-report-cancel" class="att-btn" style="flex:1">Hủy</button>
         </div>
-        <p style="font-size:11px;color:#64748b;line-height:1.5;margin-top:10px">Ảnh gồm học sinh và trạng thái của cả hai lớp trong ngày đang chọn; cuối báo cáo sẽ ghi “Báo cáo được tạo bởi Thanh Ngà”.</p>
       </div>
     </div>
 
@@ -451,13 +594,25 @@ Lớp 12:</textarea>
       </div>
     </div>
 
-    <div id="att-data-settings-modal" class="att-modal-backdrop" role="dialog" aria-modal="true">
-      <div class="att-status-dialog" style="width:min(440px,100%)">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
-          <div id="att-data-settings-title" style="font-size:19px;font-weight:900">Cài đặt dữ liệu</div>
-          <button id="att-data-settings-close" aria-label="Đóng cài đặt dữ liệu" style="border:0;background:#f1f5f9;border-radius:9px;width:36px;height:36px;font-size:21px;cursor:pointer">×</button>
+    <div id="att-data-settings-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-data-settings-title">
+      <div class="att-status-dialog settings-menu-dialog">
+        <div class="settings-menu-heading">
+          <div><div id="att-data-settings-title">Cài đặt</div><div class="settings-menu-subtitle">Thống kê và công cụ hệ thống</div></div>
+          <button id="att-data-settings-close" aria-label="Đóng cài đặt" class="settings-close-btn">×</button>
         </div>
-        <button class="att-btn danger" id="att-clear-all-data" style="width:100%;min-height:48px;white-space:normal">Sao lưu raw &amp; xóa toàn bộ dữ liệu</button>
+        <button class="att-btn primary settings-action" id="att-open-stats"><i class="ph-bold ph-chart-bar"></i> Thống kê tổng hợp học sinh</button>
+        <section class="settings-daily-stats" aria-label="Thống kê của lớp đang chọn">
+          <div class="settings-section-title">Thống kê trong ngày đang chọn</div>
+          <div class="att-stats">
+            <div class="att-stat">Chưa điểm danh<b id="stat-unmarked">0</b></div>
+            <div class="att-stat stat-green">Có mặt + làm bài<b id="stat-present-homework">0</b></div>
+            <div class="att-stat stat-red">Có mặt, chưa làm bài<b id="stat-present-nohomework">0</b></div>
+            <div class="att-stat stat-yellow">Vắng<b id="stat-absent">0</b></div>
+            <div class="att-stat stat-blue">Vắng + nộp bài<b id="stat-absent-homework">0</b></div>
+          </div>
+        </section>
+        <button id="fab-fullscreen" class="att-btn settings-action settings-fullscreen" title="Toàn màn hình và giữ sáng"><i class="ph-bold ph-corners-out" id="fullscreen-icon"></i><span>Toàn màn hình &amp; giữ sáng</span></button>
+        <button class="att-btn danger settings-action" id="att-clear-all-data"><i class="ph-bold ph-database"></i> Sao lưu và xóa toàn bộ dữ liệu</button>
       </div>
     </div>
 
@@ -478,6 +633,7 @@ Lớp 12:</textarea>
                 <!-- BẢNG ĐIỀU KHIỂN BÌNH THƯỜNG -->
                 <div id="default-aisle-controls" class="flex flex-col gap-1.5 w-[90%] mb-1">
                     <div class="flex flex-col gap-1.5 w-full">
+                        <button id="grid-home-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-emerald-600 text-white hover:bg-emerald-500 active:scale-90 flex justify-center items-center border-b-2 border-emerald-800" title="Về trang chủ"><i class="ph-bold ph-house"></i></button>
                         <button id="settings-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-slate-800 text-white hover:bg-slate-700 active:scale-90 flex justify-center items-center border-b-2 border-slate-900" title="Cài đặt đồng hồ"><i class="ph-bold ph-gear"></i></button>
                         <button id="report-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-blue-600 text-white hover:bg-blue-500 active:scale-90 flex justify-center items-center border-b-2 border-blue-800" title="Tạo Copy Báo Cáo"><i class="ph-bold ph-file-text"></i></button>
                         <button id="enter-spin-mode-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-purple-600 text-white hover:bg-purple-500 active:scale-90 flex justify-center items-center border-b-2 border-purple-800" title="Quay Số"><i class="ph-bold ph-magic-wand"></i></button>
@@ -769,17 +925,25 @@ Lớp 12:</textarea>
             if(!d) return;
             let counts = [0,0,0,0,0];
             getStudents(currentClass).forEach(n => counts[status(d, n)]++);
-            $('stat-unmarked').textContent = counts[0];
-            $('stat-present-homework').textContent = counts[1];
-            $('stat-present-nohomework').textContent = counts[2];
-            $('stat-absent').textContent = counts[3];
-            $('stat-absent-homework').textContent = counts[4];
+            const statPairs = [
+                ['stat-unmarked', 'home-stat-unmarked', counts[0]],
+                ['stat-present-homework', 'home-stat-present-homework', counts[1]],
+                ['stat-present-nohomework', 'home-stat-present-nohomework', counts[2]],
+                ['stat-absent', 'home-stat-absent', counts[3]],
+                ['stat-absent-homework', 'home-stat-absent-homework', counts[4]]
+            ];
+            statPairs.forEach(([settingsId, homeId, value]) => {
+                if ($(settingsId)) $(settingsId).textContent = value;
+                if ($(homeId)) $(homeId).textContent = value;
+            });
         }
         function updateCurrentDateLabel() {
             const d = dates.find(x => dateKey(x) === $('att-date').value) || parseDateKey(store.selectedDate||'');
             if(d) {
                 const textStr = `${weekdayLong(d)} ${fmt(d)}/${d.getFullYear()}`;
                 $('att-current-date').textContent = `Ngày đang chọn: ${textStr}`;
+                if ($('att-list-current')) $('att-list-current').textContent = `Lớp ${currentClass}`;
+                if ($('home-stats-date')) $('home-stats-date').textContent = textStr;
                 const gridDate = $('grid-date-display');
                 if(gridDate) gridDate.textContent = `${fmt(d)}`;
             }
@@ -950,49 +1114,107 @@ if (Array.isArray(row[3])) {
         }
 
         // ==========================================
-        // PHẦN 6: CHUYỂN ĐỔI CHẾ ĐỘ & GESTURES
+        // PHẦN 6: ĐIỀU HƯỚNG 3 TRANG & GESTURES
         // ==========================================
+        let activePage = 'home';
         let isListMode = false;
-        
-        function toggleMode() {
-            isListMode = !isListMode;
-            document.body.classList.toggle('list-mode', isListMode);
-            
-            const fabIcon = $('fab-icon');
-            if (isListMode) {
-                fabIcon.className = 'ph-bold ph-squares-four';
-                $('att-class').value = currentClass;
+
+        function setPage(page) {
+            const validPages = ['grid', 'home', 'list'];
+            if (!validPages.includes(page)) return;
+            if (page !== 'grid' && isSelectionMode) exitSelectionMode();
+            activePage = page;
+            isListMode = page === 'list';
+            document.body.classList.remove('page-grid', 'page-home', 'page-list', 'list-mode');
+            document.body.classList.add('page-' + page);
+            $('att-class').value = currentClass;
+            document.querySelectorAll('.att-class-choice').forEach(button => {
+                const selected = button.dataset.class === currentClass;
+                button.classList.toggle('active', selected);
+                button.setAttribute('aria-pressed', String(selected));
+            });
+            if (page === 'list' || page === 'home') {
                 renderAttendanceList();
-            } else {
-                fabIcon.className = 'ph-bold ph-list-numbers';
-                $('att-class').value = currentClass;
+            }
+            if (page === 'grid') {
                 const dateVal = $('att-date').value || store.selectedDate || dateKey(nearestDate(getDates()));
                 syncAttendanceToSeatMap(currentClass, dateVal);
                 renderGrid();
             }
         }
-        
-        $('fab-toggle').addEventListener('click', toggleMode);
 
-        // CẢM ỨNG VUỐT (SWIPE)
+        $('home-go-grid').addEventListener('click', () => setPage('grid'));
+        $('home-go-list').addEventListener('click', () => setPage('list'));
+        $('grid-home-btn').addEventListener('click', () => setPage('home'));
+        $('att-list-home-btn').addEventListener('click', () => setPage('home'));
+
+        function applyClassChange(cls) {
+            currentClass = String(cls || '11');
+            $('att-class').value = currentClass;
+            document.querySelectorAll('.att-class-choice').forEach(button => {
+                const selected = button.dataset.class === currentClass;
+                button.classList.toggle('active', selected);
+                button.setAttribute('aria-pressed', String(selected));
+            });
+            const dateVal = $('att-date').value || store.selectedDate || dateKey(nearestDate(getDates()));
+            renderAttendanceList();
+            syncAttendanceToSeatMap(currentClass, dateVal);
+            renderGrid();
+            if ($('att-stats-modal').classList.contains('show')) renderStats();
+        }
+
+        function modalIsOpen() {
+            return !!document.querySelector('.att-modal-backdrop.show, #settings-modal:not(.hidden), #report-modal:not(.hidden), #winner-modal:not(.hidden)');
+        }
+
+        // Thứ tự không gian: sơ đồ lớp (trái) ← trang chính → danh sách điểm danh (phải).
+        function navigateByDirection(direction) {
+            if (modalIsOpen() || isSpinning) return;
+            if (direction < 0) {
+                if (activePage === 'list') setPage('home');
+                else if (activePage === 'home') setPage('grid');
+            } else {
+                if (activePage === 'grid') setPage('home');
+                else if (activePage === 'home') setPage('list');
+            }
+        }
+
+        document.addEventListener('keydown', event => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
+            const target = event.target;
+            if (target && (target.matches('input, textarea, select, [contenteditable="true"]') || target.isContentEditable)) return;
+            if (modalIsOpen()) return;
+            event.preventDefault();
+            navigateByDirection(event.key === 'ArrowLeft' ? -1 : 1);
+        });
+
+        // Trên điện thoại vuốt trái để sang trang bên phải, vuốt phải để quay lại.
         let touchStartX = 0;
         let touchStartY = 0;
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, {passive: true});
-        
-        document.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            const dx = touchEndX - touchStartX;
-            const dy = touchEndY - touchStartY;
-            
-            if (Math.abs(dy) < 50) {
-                if (dx < -80 && !isListMode) { toggleMode(); } // Vuốt trái -> Sang List
-                else if (dx > 80 && isListMode) { toggleMode(); } // Vuốt phải -> Về Grid
+        let touchStartTarget = null;
+        let touchStartTableScrollLeft = 0;
+        document.addEventListener('touchstart', event => {
+            if (!event.changedTouches || !event.changedTouches.length) return;
+            touchStartX = event.changedTouches[0].clientX;
+            touchStartY = event.changedTouches[0].clientY;
+            touchStartTarget = event.target;
+            const startTable = touchStartTarget && touchStartTarget.closest ? touchStartTarget.closest('.att-table-wrap') : null;
+            touchStartTableScrollLeft = startTable ? startTable.scrollLeft : 0;
+        }, {passive:true});
+        document.addEventListener('touchend', event => {
+            if (!event.changedTouches || !event.changedTouches.length || modalIsOpen() || isSpinning) return;
+            const touch = event.changedTouches[0];
+            const dx = touch.clientX - touchStartX;
+            const dy = touch.clientY - touchStartY;
+            if (Math.abs(dx) < 75 || Math.abs(dy) > 60) return;
+            // Giữ thao tác cuộn ngang của bảng; chỉ vuốt phải khi bảng đã ở mép trái mới quay về trang chính.
+            const inTable = touchStartTarget && touchStartTarget.closest && touchStartTarget.closest('.att-table-wrap');
+            if (inTable) {
+                if (dx > 0 && touchStartTableScrollLeft <= 2) navigateByDirection(-1);
+                return;
             }
-        }, {passive: true});
+            navigateByDirection(dx < 0 ? 1 : -1);
+        }, {passive:true});
 
         // ==========================================
         // PHẦN 7: SỰ KIỆN TỔNG HỢP & ÂM THANH
@@ -1060,13 +1282,13 @@ if (Array.isArray(row[3])) {
                 return;
             }
 
+            const dateHeader = e.target.closest('[data-date-action]');
+            if (dateHeader && activePage === 'list') { selectDate(dateHeader.dataset.dateAction, true); return; }
+
+            const classChoice = e.target.closest('.att-class-choice');
+            if (classChoice) { applyClassChange(classChoice.dataset.class); return; }
             const btnClass = e.target.closest('.class-toggle-btn');
-            if (btnClass) {
-                currentClass = btnClass.dataset.class; 
-                $('att-class').value = currentClass;
-                syncAttendanceToSeatMap(currentClass, $('att-date').value || store.selectedDate || dateKey(nearestDate(getDates()))); 
-                renderGrid(); return; 
-            }
+            if (btnClass) { applyClassChange(btnClass.dataset.class); setPage('grid'); return; }
 
             if (cell) {
                 const key = cell.dataset.key; const state = globalState[key];
@@ -1085,7 +1307,7 @@ if (Array.isArray(row[3])) {
             }
             
             let b = e.target.closest('[data-student]');
-            if(b && isListMode) {
+            if(b && activePage === 'list') {
                 let dkey = b.dataset.date;
                 selectDate(dkey, true);
                 let pickedName = b.dataset.student;
@@ -1261,27 +1483,23 @@ if (Array.isArray(row[3])) {
             }).catch(err => alert("Lỗi Copy."));
         });
         
-        $('att-class').addEventListener('change', e => { 
-            currentClass = e.target.value; 
-            renderAttendanceList(); 
-            syncAttendanceToSeatMap(currentClass, $('att-date').value || store.selectedDate || dateKey(nearestDate(getDates()))); 
-            renderGrid();
-        });
+        $('att-class').addEventListener('change', e => applyClassChange(e.target.value));
         $('att-date').addEventListener('change', e => { selectDate(e.target.value, true); });
 
-        // KHỞI CHẠY GIAO DIỆN MẶC ĐỊNH LÀ SƠ ĐỒ (MÀN HÌNH CHÍNH)
-        renderAttendanceList(); 
-        // Khi tải xong, vẽ luôn lưới
-        syncAttendanceToSeatMap(currentClass, store.selectedDate || dateKey(nearestDate(getDates())));
+        // Mỗi lần tải lại trang, chọn lại buổi học gần ngày hiện tại; không giữ ngày cũ đã lưu.
+        dates = getDates();
+        store.selectedDate = dateKey(nearestDate(dates));
+        $('att-class').value = currentClass;
+        save();
+        renderAttendanceList();
+        syncAttendanceToSeatMap(currentClass, store.selectedDate);
         renderGrid();
-        
-        const attendanceScroller = document.querySelector('.att-table-wrap');
-        function syncControls() {
-            if (attendanceScroller && attendanceScroller.scrollTop > 5) {
-                closeMobileTools(); $('attendance-view').classList.add('controls-hidden');
-            } else { $('attendance-view').classList.remove('controls-hidden'); }
-        }
-        if (attendanceScroller) attendanceScroller.addEventListener('scroll', syncControls, { passive: true });
+        document.querySelectorAll('.att-class-choice').forEach(button => {
+            const selected = button.dataset.class === currentClass;
+            button.classList.toggle('active', selected);
+            button.setAttribute('aria-pressed', String(selected));
+        });
+        setPage('home');
         
         const mobileToolsToggle=$('att-mobile-tools-toggle');
         const mobileToolsMenu=$('att-mobile-tools-menu');
@@ -1318,13 +1536,13 @@ if (Array.isArray(row[3])) {
             if(!confirm('Đã yêu cầu tải file JSON sao lưu. Nhấn OK để xóa dữ liệu trong ứng dụng.')){toast('Đã hủy xóa.');return;}
 
             Object.keys(globalState).forEach(k=>{ const st=globalState[k]; if(st){st.status=0;st.timeLeft=DEFAULT_TIME_SECONDS;st.isRunning=false;st.isFinished=false;st.note='';} });
-            store={records:{},extraWeeks:0};
+            store={records:{},extraWeeks:0,selectedDate:dateKey(nearestDate(getDates()))};
             try{localStorage.removeItem(KEY);}catch(e){}
             $('att-class').value='11'; currentClass='11';
             $('att-save-state').textContent='Đã xóa dữ liệu sau khi sao lưu';
             renderGrid(); renderAttendanceList();
             $('att-data-settings-modal').classList.remove('show');
-            if(isListMode) toggleMode();
+            if(activePage === 'list') setPage('home');
             toast('Đã xóa toàn bộ dữ liệu động.');
         });
         
@@ -1364,11 +1582,6 @@ if (Array.isArray(row[3])) {
         $('att-open-settings').addEventListener('click', () => $('att-data-settings-modal').classList.add('show'));
         $('att-data-settings-close').addEventListener('click', () => $('att-data-settings-modal').classList.remove('show'));
         
-        $('att-open-random').addEventListener('click',()=>{
-             if(isListMode) toggleMode();
-             if(isSelectionMode) exitSelectionMode();
-             $('enter-spin-mode-btn').click();
-        });
 
         async function ensureReportFonts(){ try { if(document.fonts&&document.fonts.ready) await document.fonts.ready; } catch(e) {} }
         function canvasText(ctx,text,x,y,maxWidth){let str=String(text??'');if(maxWidth&&ctx.measureText(str).width>maxWidth){while(str.length>1&&ctx.measureText(str+'…').width>maxWidth)str=str.slice(0,-1);str+='…'}ctx.fillText(str,x,y)}
@@ -1386,19 +1599,96 @@ if (Array.isArray(row[3])) {
              [['Có mặt + làm bài',counts[1],'#d1fae5'],['Có mặt, chưa làm',counts[2],'#fee2e2'],['Vắng',counts[3],'#fef3c7'],['Vắng + nộp bài',counts[4],'#dbeafe']].forEach((z,i)=>{let xx=sx+i*(cardW+10);roundedRect(x,xx,sy,cardW,44,9,z[2]);x.fillStyle='#334155';x.font='bold 12px "Nunito", sans-serif';x.fillText(z[0],xx+12,sy+17);x.fillStyle='#0f172a';x.font='900 19px "Nunito", sans-serif';x.fillText(String(z[1]),xx+12,sy+37)});
              let y=top,nameX=34,numW=64,nameW=600,statusW=268;roundedRect(x,nameX,y,w-68,38,7,'#dbeafe');x.fillStyle='#1e293b';x.font='900 14px "Nunito", sans-serif';x.fillText('STT',nameX+15,y+24);x.fillText('HỌ TÊN HỌC SINH',nameX+numW,y+24);x.fillText('TRẠNG THÁI',nameX+numW+nameW,y+24);
              students.forEach((n,i)=>{let yy=y+38+i*rowH,st=status(d,n);x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(nameX,yy,w-68,rowH);x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(nameX,yy+rowH);x.lineTo(w-34,yy+rowH);x.stroke();x.fillStyle='#64748b';x.font='bold 13px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),nameX+15,yy+27);x.fillStyle='#0f172a';x.font='bold 15px "Nunito", sans-serif';canvasText(x,n,nameX+numW,yy+27,nameW-20);let bx=nameX+numW+nameW+10,by=yy+8;roundedRect(x,bx,by,statusW-20,28,7,COLORS[st][0]);x.fillStyle=COLORS[st][1];x.font='900 13px "Nunito", sans-serif';x.fillText(LABELS[st],bx+12,by+19)});
-             x.fillStyle='#64748b';x.font='12px "Nunito", sans-serif';x.fillText('Báo cáo tạo bởi Thanh Ngà · '+new Date().toLocaleString('vi-VN'),34,h-22);downloadCanvas(c,`diem-danh-lop-${currentClass}-${dateKey(d)}.png`)
+             x.fillStyle='#64748b';x.font='12px "Nunito", sans-serif';x.fillText('Báo cáo được tạo bởi Thanh Ngà · '+new Date().toLocaleString('vi-VN'),34,h-22);downloadCanvas(c,`diem-danh-lop-${currentClass}-${dateKey(d)}.png`)
         });
         
         $('att-export-all').addEventListener('click',async()=>{
              await ensureReportFonts();
-             let students=getStudents(currentClass),nameW=235,dateW=88,margin=24,top=116,rowH=38,headH=66,w=margin*2+nameW+dates.length*dateW,h=top+headH+students.length*rowH+54;
-             if(w>14000||h>14000){toast('Bảng quá lớn!');return}
-             let c=document.createElement('canvas');c.width=w;c.height=h;let x=c.getContext('2d');x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);x.fillStyle='#0f172a';x.font='900 27px "Nunito", sans-serif';x.fillText('ĐIỂM DANH TOÀN BỘ — LỚP '+currentClass,margin,39);x.fillStyle='#475569';x.font='14px "Nunito", sans-serif';x.fillText('Từ '+fmt(dates[0])+' đến '+fmt(dates[dates.length-1])+' · '+dates.length+' buổi · '+students.length+' học sinh',margin,68);
-             let y=top;x.fillStyle='#dbeafe';x.fillRect(margin,y,nameW,headH);x.strokeStyle='#cbd5e1';x.strokeRect(margin,y,nameW,headH);x.fillStyle='#1e293b';x.font='900 13px "Nunito", sans-serif';x.fillText('HỌ TÊN',margin+12,y+36);
-             dates.forEach((d,j)=>{let xx=margin+nameW+j*dateW;x.fillStyle='#eaf0f8';x.fillRect(xx,y,dateW,headH);x.strokeStyle='#cbd5e1';x.strokeRect(xx,y,dateW,headH);x.fillStyle='#475569';x.font='bold 11px "Nunito", sans-serif';x.textAlign='center';x.fillText(weekday(d),xx+dateW/2,y+19);x.fillStyle='#0f172a';x.font='900 13px "Nunito", sans-serif';x.fillText(fmt(d),xx+dateW/2,y+39);x.fillStyle='#64748b';x.font='10px "Nunito", sans-serif';x.fillText(String(d.getFullYear()),xx+dateW/2,y+54);x.textAlign='left'});
-             students.forEach((n,i)=>{let yy=y+headH+i*rowH;x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(margin,yy,nameW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(margin,yy,nameW,rowH);x.fillStyle='#64748b';x.font='bold 11px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),margin+9,yy+23);x.fillStyle='#0f172a';x.font='bold 12px "Nunito", sans-serif';canvasText(x,n,margin+37,yy+23,nameW-47);
-               dates.forEach((d,j)=>{let xx=margin+nameW+j*dateW,st=status(d,n);x.fillStyle=COLORS[st][0];x.fillRect(xx,yy,dateW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,dateW,rowH);x.fillStyle=COLORS[st][1];x.font='900 14px "Nunito", sans-serif';x.textAlign='center';x.fillText(['—','✓','×','✕','◇'][st],xx+dateW/2,yy+24);x.textAlign='left'});
+             const students=getStudents(currentClass), margin=24, nameW=230, dateW=88, top=142, rowH=38, headH=68;
+             const statCols=[
+               {key:'work',label:'Có làm bài',width:76,color:'#047857',bg:'#d1fae5'},
+               {key:'presentNoWork',label:'Có mặt, chưa làm',width:88,color:'#b91c1c',bg:'#fee2e2'},
+               {key:'absent',label:'Vắng',width:58,color:'#92400e',bg:'#fef3c7'},
+               {key:'submitted',label:'Vắng + nộp bài',width:82,color:'#1d4ed8',bg:'#dbeafe'},
+               {key:'attended',label:'Tổng đã điểm danh',width:84,color:'#334155',bg:'#e2e8f0'}
+             ];
+             const statsW=statCols.reduce((sum,col)=>sum+col.width,0);
+             const w=margin*2+nameW+statsW+dates.length*dateW;
+             const h=top+headH+students.length*rowH+62;
+             if(w>14000||h>14000||w*h>120000000){toast('Bảng quá lớn để xuất ảnh!');return;}
+             const totals=[0,0,0,0,0];
+             const perStudent=[];
+             students.forEach((name,studentIndex)=>{
+               const counts={work:0,presentNoWork:0,absent:0,submitted:0,attended:0};
+               dates.forEach(d=>{
+                 const st=status(d,name);
+                 totals[st]++;
+                 if(st===1){counts.work++;counts.attended++;}
+                 else if(st===2){counts.presentNoWork++;counts.attended++;}
+                 else if(st===3){counts.absent++;counts.attended++;}
+                 else if(st===4){counts.submitted++;counts.attended++;}
+               });
+               perStudent[studentIndex]=counts;
              });
+             const summaryItems=[
+               ['Chưa điểm danh',totals[0],'#f1f5f9','#475569'],
+               ['Có mặt + làm bài',totals[1],'#d1fae5','#047857'],
+               ['Có mặt, chưa làm',totals[2],'#fee2e2','#b91c1c'],
+               ['Vắng',totals[3],'#fef3c7','#92400e'],
+               ['Vắng + nộp bài',totals[4],'#dbeafe','#1d4ed8']
+             ];
+             const c=document.createElement('canvas'); c.width=w; c.height=h;
+             const x=c.getContext('2d');
+             x.fillStyle='#f8fafc'; x.fillRect(0,0,w,h);
+             x.fillStyle='#0f172a'; x.font='900 27px "Nunito", sans-serif';
+             x.fillText('ĐIỂM DANH TOÀN BỘ — LỚP '+currentClass,margin,36);
+             x.fillStyle='#475569'; x.font='14px "Nunito", sans-serif';
+             x.fillText('Từ '+fmt(dates[0])+'/'+dates[0].getFullYear()+' đến '+fmt(dates[dates.length-1])+'/'+dates[dates.length-1].getFullYear()+' · '+dates.length+' buổi · '+students.length+' học sinh',margin,63);
+             const summaryGap=7, summaryY=78, summaryW=Math.min(156,(w-margin*2-summaryGap*4)/5), summaryH=48;
+             summaryItems.forEach((item,i)=>{
+               const sx=margin+i*(summaryW+summaryGap);
+               roundedRect(x,sx,summaryY,summaryW,summaryH,7,item[2]);
+               x.fillStyle=item[3]; x.font='800 9px "Nunito", sans-serif';
+               canvasText(x,item[0],sx+8,summaryY+16,summaryW-16);
+               x.font='900 19px "Nunito", sans-serif'; x.fillText(String(item[1]),sx+8,summaryY+38);
+             });
+             let y=top;
+             x.fillStyle='#dbeafe'; x.fillRect(margin,y,nameW,headH); x.strokeStyle='#cbd5e1'; x.strokeRect(margin,y,nameW,headH);
+             x.fillStyle='#1e293b'; x.font='900 13px "Nunito", sans-serif'; x.fillText('HỌ TÊN HỌC SINH',margin+12,y+36);
+             let statX=margin+nameW;
+             statCols.forEach(col=>{
+               x.fillStyle=col.bg; x.fillRect(statX,y,col.width,headH); x.strokeStyle='#cbd5e1'; x.strokeRect(statX,y,col.width,headH);
+               x.fillStyle=col.color; x.font='900 10px "Nunito", sans-serif'; x.textAlign='center';
+               const labelLines=wrapCanvasLines(x,col.label,col.width-10); const lineH=13;
+               const firstY=y+(headH-(labelLines.length*lineH))/2+10;
+               labelLines.forEach((line,idx)=>x.fillText(line,statX+col.width/2,firstY+idx*lineH));
+               x.textAlign='left'; statX+=col.width;
+             });
+             dates.forEach((d,j)=>{
+               let xx=margin+nameW+statsW+j*dateW;
+               x.fillStyle='#eaf0f8';x.fillRect(xx,y,dateW,headH);x.strokeStyle='#cbd5e1';x.strokeRect(xx,y,dateW,headH);
+               x.fillStyle='#475569';x.font='bold 11px "Nunito", sans-serif';x.textAlign='center';x.fillText(weekday(d),xx+dateW/2,y+19);
+               x.fillStyle='#0f172a';x.font='900 13px "Nunito", sans-serif';x.fillText(fmt(d),xx+dateW/2,y+39);
+               x.fillStyle='#64748b';x.font='10px "Nunito", sans-serif';x.fillText(String(d.getFullYear()),xx+dateW/2,y+54);x.textAlign='left';
+             });
+             students.forEach((name,i)=>{
+               const yy=y+headH+i*rowH;
+               x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(margin,yy,nameW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(margin,yy,nameW,rowH);
+               x.fillStyle='#64748b';x.font='bold 11px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),margin+9,yy+23);
+               x.fillStyle='#0f172a';x.font='bold 12px "Nunito", sans-serif';canvasText(x,name,margin+37,yy+23,nameW-47);
+               const person=perStudent[i]; let sx=margin+nameW;
+               statCols.forEach(col=>{
+                 x.fillStyle=i%2?'#f8fafc':'#ffffff';x.fillRect(sx,yy,col.width,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(sx,yy,col.width,rowH);
+                 x.fillStyle=col.color;x.font='900 13px "Nunito", sans-serif';x.textAlign='center';x.fillText(String(person[col.key]),sx+col.width/2,yy+24);x.textAlign='left';sx+=col.width;
+               });
+               dates.forEach((d,j)=>{
+                 let xx=margin+nameW+statsW+j*dateW,st=status(d,name);
+                 x.fillStyle=COLORS[st][0];x.fillRect(xx,yy,dateW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,dateW,rowH);
+                 x.fillStyle=COLORS[st][1];x.font='900 14px "Nunito", sans-serif';x.textAlign='center';x.fillText(['—','✓','×','✕','◇'][st],xx+dateW/2,yy+24);x.textAlign='left';
+               });
+             });
+             x.fillStyle='#64748b';x.font='700 13px "Nunito", sans-serif';x.textAlign='center';
+             x.fillText('Báo cáo được tạo bởi Thanh Ngà',w/2,h-22);x.textAlign='left';
              downloadCanvas(c,`diem-danh-toan-bo-${currentClass}.png`);
         });
 
@@ -1475,7 +1765,7 @@ if (Array.isArray(row[3])) {
                  }
                });
              }
-             x.fillStyle='#64748b';x.font='700 16px "Nunito", sans-serif';x.textAlign='center';x.fillText('Báo cáo tạo bởi Thanh Ngà',W/2,H-25);x.textAlign='left';
+             x.fillStyle='#64748b';x.font='700 16px "Nunito", sans-serif';x.textAlign='center';x.fillText('Báo cáo được tạo bởi Thanh Ngà',W/2,H-25);x.textAlign='left';
              downloadCanvas(c,`bao-cao-tong-quat-${dateKey(d)}-9x16.png`); $('att-report-modal').classList.remove('show');
         });
 
@@ -1503,7 +1793,7 @@ if (Array.isArray(row[3])) {
              $('att-stats-table').querySelector('thead').innerHTML=`<tr>${all?'<th>Lớp</th>':''}<th style="text-align:left">Học sinh</th><th class="stat-col-work">Có làm bài</th><th class="stat-col-present-no-work">Có mặt, chưa làm</th><th class="stat-col-absent">Vắng</th><th class="stat-col-submitted">Vắng + nộp bài</th><th>Tổng buổi đã điểm danh</th></tr>`;
              $('att-stats-table').querySelector('tbody').innerHTML=data.map(r=>`<tr>${all?`<td><b>${r.cls}</b></td>`:''}<th><span style="display:inline-block;min-width:27px;color:#94a3b8;font-size:10px">${String(r.index).padStart(2,'0')}</span>${escapeHtml(r.name)}</th><td class="stat-col-work"><b>${r.work}</b></td><td class="stat-col-present-no-work"><b>${r.presentNoWork}</b></td><td class="stat-col-absent"><b>${r.absent}</b></td><td class="stat-col-submitted"><b>${r.submitted}</b></td><td><b>${r.attended}</b></td></tr>`).join('');
         }
-        $('att-open-stats').addEventListener('click', () => { renderStats(); $('att-stats-modal').classList.add('show'); });
+        $('att-open-stats').addEventListener('click', () => { $('att-data-settings-modal').classList.remove('show'); renderStats(); $('att-stats-modal').classList.add('show'); });
         $('att-stats-class').addEventListener('change', renderStats);
         $('att-stats-close').addEventListener('click', () => $('att-stats-modal').classList.remove('show'));
 
