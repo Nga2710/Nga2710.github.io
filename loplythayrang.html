@@ -267,7 +267,26 @@
           .att-mobile-tools { display:block; position:relative; min-width:0; grid-column:span 2; z-index:35; }
           .att-mobile-tools-toggle { display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; white-space:normal; }
           .att-mobile-tools-menu { display:none; position:absolute; left:0; right:0; top:calc(100% + 5px); z-index:100; padding:8px; gap:7px; flex-direction:column; background:#fff; border:1px solid #cbd5e1; border-radius:13px; box-shadow:0 16px 34px #0f172a35; }
-          .att-mobile-tools-menu.open { display:flex; }
+.att-mobile-tools-menu {
+  display: flex;
+  position: static;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.att-mobile-tools-menu .att-btn {
+  flex: 1 1 calc(33.333% - 8px);
+  min-width: 100px;
+  width: auto;
+  min-height: 42px;
+  justify-content: center;
+  white-space: normal;
+}
           .att-mobile-tools-menu .att-btn { width:100%; min-height:45px; justify-content:flex-start; text-align:left; white-space:normal; font-size:13px; padding:10px 12px; }
           .att-actions > #att-open-stats, .att-actions > #att-open-settings { min-height:42px; white-space:normal; }
         }
@@ -329,7 +348,9 @@
             #fab-fullscreen { bottom: 16px; left: 16px; width: 44px; height: 44px; font-size: 20px; }
             .att-current-date { font-size: 14px; }
         }
-
+#att-mobile-tools-toggle {
+  display: none !important;
+}
     </style>
 </head>
 <body>
@@ -588,7 +609,7 @@ Lớp 12:</textarea>
                 ['Trân', 'Đạt', 'Phúc', 'Chấn'],
                 ['Thư', 'Giang', 'Vân Anh', 'Hường'],
                 ['Khiết Minh', 'Vân', 'Minh Anh', 'An'],
-                ['Tiến', 'Trâm', ['Tươi', 'Vy', 'Phương'], ''], 
+                ['Tiến', 'Trâm', ['Tươi', 'Vy', 'Phương'],""], 
                 ['P.Anh', 'Nghi', 'Hạnh', 'Ly'],
                 ['Khánh', 'H.Minh', 'Khoa', 'Trang']
             ],
@@ -885,11 +906,21 @@ Lớp 12:</textarea>
                     specialHTML += `</div>`; container.insertAdjacentHTML('beforeend', specialHTML);
                 } else { container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_2`, 4, gridRow)); }
                 
-                if(Array.isArray(row[3])) {
-                    let specialHTML = `<div class="col-start-5 flex gap-[4px] w-full" style="grid-row: ${gridRow}; min-width: 0;">`;
-                    row[3].forEach((_, i) => specialHTML += getCellHTML(`${currentClass}_${r}_3_${i}`, null, null, true));
-                    specialHTML += `</div>`; container.insertAdjacentHTML('beforeend', specialHTML);
-                } else { container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_3`, 5, gridRow)); }
+               
+if (Array.isArray(row[3])) {
+    let specialHTML = `<div class="col-start-5 flex gap-[4px] w-full" style="grid-row: ${gridRow}; min-width: 0;">`;
+    row[3].forEach((_, i) => {
+        specialHTML += getCellHTML(`${currentClass}_${r}_3_${i}`, null, null, true);
+    });
+    specialHTML += `</div>`;
+    container.insertAdjacentHTML('beforeend', specialHTML);
+} else if (!(Array.isArray(row[2]) && !row[3])) {
+    container.insertAdjacentHTML(
+        'beforeend',
+        getCellHTML(`${currentClass}_${r}_3`, 5, gridRow)
+    );
+}
+
             });
             
             activeWinnerKeys.forEach(k => { let cell = document.querySelector(`[data-key="${k}"]`); if(cell) cell.classList.add('grid-winner-highlight'); });
