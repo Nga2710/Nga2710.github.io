@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+      <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Lớp Lý Thầy Rạng — v7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body, html { 
+            margin: 0; padding: 0; 
+            height: 100%; width: 100%;
+            overflow: hidden; 
+            background-color: #0f172a; 
+            font-family: 'Nunito', sans-serif;
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        button:focus, input:focus, textarea:focus { outline: none; }
+        
+        @keyframes pulse-danger {
+            0%, 100% { box-shadow: inset 0 0 0 0 rgba(220, 38, 38, 0); }
+            50% { box-shadow: inset 0 0 15px 5px rgba(153, 27, 27, 0.4); }
+        }
+        .animate-danger { animation: pulse-danger 1.5s infinite; }
+        input::placeholder, textarea::placeholder { color: #94a3b8; font-weight: 700; }
+        
+        .selection-mode-active .student-cell { cursor: pointer; transition: all 0.2s ease; }
+        .selection-mode-active .student-cell .play-btn,
+        .selection-mode-active .student-cell .reset-btn,
+        .selection-mode-active .student-cell .status-radio,
+        .selection-mode-active .student-cell .note-input { pointer-events: none; }
+        
+        .grid-selected-spin { border-color: #a855f7 !important; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5) !important; transform: scale(1.02); }
+        .grid-unselected-spin { opacity: 0.3 !important; filter: grayscale(80%); transform: scale(0.98); }
+
+        .grid-spin-highlight {
+            border-color: #a855f7 !important; background-color: #f3e8ff !important;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 1) !important;
+            transform: scale(1.1) !important; z-index: 40 !important; transition: none !important;
+        }
+        .grid-winner-highlight {
+            border-color: #ec4899 !important; background-color: #fce7f3 !important;
+            box-shadow: 0 0 40px rgba(236, 72, 153, 1) !important;
+            transform: scale(1.15) !important; z-index: 50 !important;
+            animation: pulse-winner 1s infinite !important;
+        }
+        @keyframes pulse-winner {
+            0%, 100% { transform: scale(1.15); box-shadow: 0 0 40px rgba(236,72,153,1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(236,72,153,0.7); }
+        }
+
+        /* Bố cục dọc: đưa hành lang và công cụ lên đầu, giữ nguyên toàn bộ xử lý JavaScript. */
+        @media (orientation: portrait) {
+            #app { height: 100dvh; min-height: 0; padding: 4px; align-items: stretch; justify-content: stretch; }
+            #grid-container { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; grid-template-rows: 82px repeat(6, minmax(0, 1fr)) !important; gap: 4px !important; width: 100%; height: 100%; max-width: none; margin: 0; }
+            #aisle { grid-column: 1 / -1 !important; grid-row: 1 !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 5px; min-width: 0; min-height: 0; padding: 4px !important; border-radius: 12px; }
+            #aisle > div:first-child { width: 62px !important; min-width: 62px; flex: 0 0 62px; margin: 0 !important; padding: 5px 2px !important; }
+            #clock-hm { font-size: 13px !important; }
+            #clock-s { font-size: 9px !important; }
+            #default-aisle-controls { width: auto !important; min-width: 0; flex: 0 0 auto; flex-direction: row !important; align-items: center; justify-content: flex-end; gap: 3px !important; margin: 0 !important; }
+            #default-aisle-controls > div:first-child { width: auto !important; flex-direction: row !important; align-items: center; gap: 3px !important; }
+            #default-aisle-controls > div:nth-child(2) { display: none !important; }
+            #default-aisle-controls button { width: auto !important; min-width: 27px; min-height: 32px; padding: 5px 6px !important; border-radius: 7px !important; font-size: 12px !important; }
+            #default-aisle-controls button i { font-size: 16px !important; }
+            #default-aisle-controls .class-toggle-btn { min-width: 25px; padding: 6px 5px !important; font-size: 11px !important; }
+            #spin-aisle-controls { width: auto !important; min-width: 0; flex: 1 1 auto; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 3px !important; margin: 0 !important; padding: 3px !important; border-width: 1px !important; }
+            #spin-aisle-controls > div:first-child { display: none !important; }
+            #spin-aisle-controls > div { width: auto !important; min-width: 0; flex-direction: row !important; align-items: center; gap: 3px !important; margin: 0 !important; }
+            #spin-aisle-controls button { width: auto !important; min-width: 28px; padding: 5px 6px !important; font-size: 9px !important; line-height: 1.1; white-space: nowrap; }
+            #spin-count-btn { min-width: 32px !important; }
+            #exec-spin-btn { min-width: 38px !important; }
+            #exec-spin-btn i { font-size: 22px !important; }
+            #cancel-spin-btn { flex: 0 0 auto; margin: 0 !important; }
+            #grid-container > .student-cell { grid-column: auto !important; grid-row: auto !important; min-width: 0; min-height: 0; padding: 3px !important; border-radius: 8px !important; border-width: 1.5px !important; }
+            #grid-container > div[style*="min-width: 0"] { grid-column: span 2 !important; grid-row: auto !important; min-width: 0 !important; min-height: 0; gap: 2px !important; }
+            .student-cell .status-radio { height: 13px !important; min-height: 13px; }
+            .student-cell .status-radio i { font-size: 9px !important; }
+            .student-cell .play-btn i { font-size: 15px !important; }
+            .student-cell .reset-btn i { font-size: 11px !important; }
+            .student-cell .time-display { font-size: 11px !important; line-height: 1.1; }
+            .student-cell .note-input { min-width: 0; height: 15px; font-size: 8px !important; line-height: 1; padding: 1px 3px !important; }
+            #winner-box { max-height: calc(100dvh - 28px); overflow-y: auto; }
+            #winner-box > div { min-height: 180px !important; padding-top: 24px !important; padding-bottom: 24px !important; }
+            #settings-box, #report-box { max-height: calc(100dvh - 20px); overflow-y: auto; }
+        }
+        @media (orientation: portrait) and (max-height: 700px) {
+            #grid-container { grid-template-rows: 70px repeat(6, minmax(0, 1fr)) !important; gap: 3px !important; }
+            #app { padding: 3px; }
+            #aisle { gap: 3px; padding: 3px !important; }
+            #aisle > div:first-child { width: 55px !important; min-width: 55px; flex-basis: 55px; padding: 4px 1px !important; }
+            #default-aisle-controls { gap: 2px !important; }
+            #default-aisle-controls > div:first-child { gap: 2px !important; }
+            #default-aisle-controls button { min-width: 24px; min-height: 29px; padding: 4px !important; }
+            #default-aisle-controls .class-toggle-btn { min-width: 23px; padding: 5px 3px !important; }
+            #grid-container > .student-cell { padding: 2px !important; }
+            .student-cell .status-radio { height: 11px !important; min-height: 11px; }
+            .student-cell .note-input { height: 13px; font-size: 7px !important; }
+        }
+        @media (orientation: landscape) and (max-height: 520px) {
+            #app { padding: 3px; }
+            #grid-container { gap: 3px !important; }
+            #aisle { padding-top: 2px; padding-bottom: 2px; }
+        }
+
+
+        #attendance-view{position:fixed;inset:0;z-index:25;background:#f1f5f9;color:#0f172a;display:flex;flex-direction:column;font-family:'Nunito',sans-serif;user-select:text}
+        #attendance-view *{box-sizing:border-box}
+        .att-top{background:linear-gradient(120deg,#0f172a,#172554 65%,#0f766e);color:white;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 8px 24px #0f172a20}
+        .att-title{font-size:clamp(20px,3vw,30px);font-weight:900;letter-spacing:-.5px}.att-sub{font-size:12px;color:#cbd5e1;margin-top:3px}
+        .att-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.att-btn{border:1px solid #cbd5e1;background:white;color:#0f172a;border-radius:10px;padding:9px 12px;font-weight:900;font-size:12px;cursor:pointer;transition:.18s;white-space:nowrap}.att-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px #02061720}.att-btn.primary{background:#34d399;border-color:#34d399;color:#052e2b}.att-btn.dark{background:#1e293b;color:white;border-color:#475569}
+        .att-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 18px;background:white;border-bottom:1px solid #e2e8f0}
+        .att-toolbar label{font-size:11px;font-weight:900;color:#64748b;text-transform:uppercase}.att-toolbar select,.att-toolbar input{border:1px solid #cbd5e1;border-radius:9px;padding:8px 10px;background:#f8fafc;color:#0f172a;font-weight:800;max-width:100%}
+        .att-stats{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}.att-stat{padding:7px 10px;border-radius:9px;background:#f1f5f9;font-size:11px;font-weight:900}.att-stat b{font-size:14px;margin-left:4px}
+        .att-legend{padding:8px 18px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;font-weight:800;color:#475569;background:#f8fafc;border-bottom:1px solid #e2e8f0}.att-legend span{display:inline-flex;align-items:center;gap:5px}.att-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+        .att-table-wrap{flex:1;min-height:0;overflow:auto;background:#e2e8f0;padding:12px}
+        #attendance-table{border-collapse:separate;border-spacing:0;background:white;min-width:max-content;width:100%;font-size:12px;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden}
+        #attendance-table th,#attendance-table td{border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;text-align:center;padding:0}
+        #attendance-table thead th{position:sticky;top:0;z-index:4;background:#eaf0f8;color:#334155;font-size:11px;font-weight:900;min-width:74px;height:66px}
+        #attendance-table .att-name-head,#attendance-table .att-name{position:sticky;left:0;z-index:5;min-width:190px;width:190px;text-align:left;padding:9px 12px;background:#fff}
+        #attendance-table .att-name-head{z-index:7;background:#dbeafe}
+        #attendance-table tbody tr:nth-child(even) .att-name{background:#f8fafc}
+        #attendance-table .att-name{font-weight:900;color:#1e293b}
+        #attendance-table .att-index{display:inline-flex;width:23px;height:23px;align-items:center;justify-content:center;border-radius:7px;background:#e2e8f0;color:#64748b;font-size:10px;margin-right:7px}
+        .att-date-head{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;padding:4px}
+        .att-date-head small{font-size:9px;color:#64748b;font-weight:800}
+        .att-cell{width:100%;height:43px;min-width:74px;border:0;cursor:pointer;font-weight:900;font-size:11px;transition:background .15s,transform .15s;display:flex;align-items:center;justify-content:center;gap:4px}
+        .att-cell:hover{filter:brightness(.96);box-shadow:inset 0 0 0 2px #64748b}.att-cell:active{transform:scale(.96)}
+        .att-0{background:#fff;color:#94a3b8}.att-1{background:#d1fae5;color:#047857}.att-2{background:#fee2e2;color:#b91c1c}.att-3{background:#fef3c7;color:#92400e}.att-4{background:#dbeafe;color:#1d4ed8}
+        .att-foot{padding:8px 16px;background:white;border-top:1px solid #cbd5e1;color:#64748b;font-size:11px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+        .att-toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#0f172a;color:#fff;padding:11px 15px;border-radius:10px;box-shadow:0 10px 30px #0003;font-size:12px;font-weight:900;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.att-toast.show{opacity:1;transform:translateY(0)}
+        .att-modal-backdrop{display:none;position:fixed;inset:0;z-index:120;background:rgba(15,23,42,.62);align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+        .att-modal-backdrop.show{display:flex;animation:attFadeIn .14s ease-out}
+        @keyframes attFadeIn{from{opacity:0}to{opacity:1}}
+        .att-status-dialog{width:min(440px,100%);background:#fff;color:#0f172a;border-radius:18px;padding:20px;box-shadow:0 24px 70px #02061750;animation:attPopIn .16s ease-out}
+        @keyframes attPopIn{from{transform:translateY(8px) scale(.98);opacity:.6}to{transform:translateY(0) scale(1);opacity:1}}
+        .att-status-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+        .att-status-option{border:1px solid #e2e8f0;border-radius:12px;padding:12px;text-align:left;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:9px;min-height:50px;transition:transform .12s,border-color .12s}
+        .att-status-option:hover{transform:translateY(-1px);border-color:#94a3b8}
+        .att-status-option .att-opt-dot{width:13px;height:13px;border-radius:4px;flex:none}
+        .att-status-option[data-status="0"]{background:#f8fafc;color:#64748b}.att-status-option[data-status="0"] .att-opt-dot{background:#e2e8f0}
+        .att-status-option[data-status="1"]{background:#ecfdf5;color:#047857}.att-status-option[data-status="1"] .att-opt-dot{background:#34d399}
+        .att-status-option[data-status="2"]{background:#fef2f2;color:#b91c1c}.att-status-option[data-status="2"] .att-opt-dot{background:#f87171}
+        .att-status-option[data-status="3"]{background:#fffbeb;color:#92400e}.att-status-option[data-status="3"] .att-opt-dot{background:#fbbf24}
+        .att-status-option[data-status="4"]{background:#eff6ff;color:#1d4ed8}.att-status-option[data-status="4"] .att-opt-dot{background:#60a5fa}
+        @media(max-width:470px){.att-status-dialog{padding:15px}.att-status-option{padding:10px 8px;font-size:12px;gap:6px}.att-actions{width:100%}.att-actions .att-btn{flex:1}.att-actions .att-btn.dark{flex:1.25}}
+        body.secondary-mode #attendance-view{display:none}body.secondary-mode #app{display:flex!important}
+        #app{display:none!important}body.secondary-mode #app{display:flex!important}
+        @media(max-width:650px){.att-top{padding:12px}.att-toolbar{padding:9px;gap:7px}.att-stats{margin-left:0;width:100%}.att-table-wrap{padding:6px}.att-name-head,#attendance-table .att-name{min-width:145px!important;width:145px!important;padding:7px!important}.att-cell{height:39px;min-width:65px}}
+
+
+        /* Nhận diện thương hiệu + tương tác mượt trên màn hình cảm ứng */
+        :root { color-scheme: light; }
+        html { -webkit-text-size-adjust: 100%; }
+        button, select, input, textarea { touch-action: manipulation; }
+        .att-btn.danger { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+        .att-btn.danger:hover { background:#fecaca; }
+        .att-table-wrap { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+        #attendance-view { height:100dvh; height:100svh; }
+        .att-top, .att-toolbar, .att-legend, .att-foot { padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
+        .att-btn { min-height:38px; -webkit-tap-highlight-color:transparent; }
+        .att-cell { touch-action:manipulation; }
+        @media (max-width:650px) {
+          .att-top { padding-top:max(10px, env(safe-area-inset-top)); align-items:flex-start; gap:10px; }
+          .att-title { font-size:clamp(19px,5.5vw,25px); line-height:1.18; }
+          .att-sub { font-size:10px; line-height:1.45; }
+          .att-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; gap:6px; }
+          .att-actions #att-export-general, .att-actions #att-fullscreen-awake, .att-actions #att-clear-all-data, .att-actions #att-open-random, .att-actions #open-secondary { grid-column:span 2; }
+          .att-actions .att-btn { min-width:0; width:100%; white-space:normal; min-height:40px; padding:8px 7px; font-size:11px; line-height:1.2; }
+          .att-actions #open-secondary { grid-column:span 2; }
+          .att-toolbar { display:flex; flex-wrap:wrap; gap:7px; padding-top:8px; padding-bottom:8px; }
+          .att-toolbar > div:not(.att-stats) { flex:1 1 calc(50% - 7px); min-width:0; }
+          .att-toolbar > div:not(.att-stats) label { font-size:10px; }
+          .att-toolbar select { min-width:0; width:100%; padding:9px 7px; font-size:12px; }
+          .att-toolbar > .att-btn { flex:1 1 calc(50% - 7px); min-width:0; white-space:normal; padding:8px 6px; font-size:11px; line-height:1.2; min-height:39px; }
+          .att-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; width:100%; margin:1px 0 0; }
+          .att-stat { padding:7px 6px; font-size:10px; text-align:center; }
+          .att-stat b { display:block; font-size:15px; margin:2px 0 0; }
+          .att-legend { gap:8px; padding-top:8px; padding-bottom:8px; font-size:10px; }
+          .att-table-wrap { padding:5px; }
+          #attendance-table { font-size:11px; border-radius:8px; }
+          #attendance-table thead th { min-width:66px; height:63px; }
+          #attendance-table .att-name-head, #attendance-table .att-name { min-width:132px!important; width:132px!important; max-width:132px; padding:6px!important; }
+          #attendance-table .att-name { font-size:10px; overflow-wrap:anywhere; line-height:1.25; }
+          #attendance-table .att-index { width:19px; height:19px; margin-right:4px; font-size:9px; }
+          .att-date-head { gap:2px; padding:3px 1px; }
+          .att-date-head small { font-size:9px; }
+          .att-date-head strong { font-size:11px; }
+          .att-cell { min-width:66px; height:42px; font-size:10px; }
+          .att-foot { padding-bottom:max(8px, env(safe-area-inset-bottom)); font-size:10px; }
+          .att-status-dialog { max-height:calc(100dvh - 24px); overflow:auto; padding:15px; }
+          .att-status-option { min-height:48px; }
+          .att-toast { left:10px; right:10px; bottom:max(10px, env(safe-area-inset-bottom)); text-align:center; }
+        }
+        @media (max-width:380px) {
+          .att-actions .att-btn { font-size:10px; }
+          .att-toolbar > .att-btn { flex-basis:100%; }
+          #attendance-table .att-name-head, #attendance-table .att-name { min-width:116px!important; width:116px!important; max-width:116px; }
+          .att-status-options { grid-template-columns:1fr; }
+          .att-status-option[data-status="0"] { grid-column:auto!important; }
+        }
+
+        /* Header ngày luôn dính ở mép trên của vùng cuộn; ngày đang chọn được tô nổi. */
+        .att-table-wrap { position:relative; overflow:auto; isolation:isolate; }
+        #attendance-table { overflow:visible; }
+        #attendance-table thead th { position:sticky; top:0; z-index:8; }
+        #attendance-table thead th.att-name-head { left:0; z-index:12; }
+        #attendance-table thead th.att-date-column { cursor:pointer; user-select:none; -webkit-user-select:none; }
+        #attendance-table thead th.att-date-column:hover { background:#dbeafe; }
+        #attendance-table thead th.att-date-selected { background:#bbf7d0!important; color:#065f46!important; box-shadow:inset 0 -3px #059669; }
+        #attendance-table thead th.att-date-selected small { color:#047857; }
+        .att-current-date { display:inline-flex; align-items:center; min-height:36px; padding:7px 10px; border-radius:9px; background:#e0f2fe; color:#075985; border:1px solid #bae6fd; font-size:11px; line-height:1.25; font-weight:900; }
+        .att-stat.stat-green { background:#d1fae5; color:#047857; }
+        .att-stat.stat-red { background:#fee2e2; color:#b91c1c; }
+        .att-stat.stat-yellow { background:#fef3c7; color:#92400e; }
+        .att-stat.stat-blue { background:#dbeafe; color:#1d4ed8; }
+        .secondary-aisle-actions { display:none; flex-direction:column; align-items:stretch; justify-content:center; gap:6px; width:90%; margin:2px 0 6px; }
+        .secondary-aisle-actions button { width:100%; min-width:0; border:1px solid #94a3b8; border-radius:8px; background:#fff; color:#0f172a; padding:7px 4px; font:900 10px/1.15 'Nunito',sans-serif; cursor:pointer; box-shadow:0 2px 5px #0001; overflow-wrap:anywhere; }
+        .secondary-aisle-actions #save-seat-today { background:#34d399; border-color:#10b981; color:#064e3b; }
+        body.secondary-mode #default-aisle-controls:not(.hidden) { display:flex!important; }
+        body.secondary-mode #spin-aisle-controls:not(.hidden) { display:flex!important; }
+        .att-stats-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 10px}
+        .att-stats-card{border:1px solid #e2e8f0;border-radius:10px;padding:9px;background:#f8fafc;min-width:0}
+        .att-stats-card small{display:block;font-size:10px;line-height:1.25;color:#64748b;font-weight:900}
+        .att-stats-card strong{display:block;font-size:21px;line-height:1.2;margin-top:4px;font-weight:900;color:#0f172a}
+        .att-stats-table-wrap{min-height:0;flex:1;overflow:auto;border:1px solid #e2e8f0;border-radius:10px;-webkit-overflow-scrolling:touch}
+        #att-stats-table{width:100%;min-width:720px;border-collapse:separate;border-spacing:0;font-size:12px;background:white}
+        #att-stats-table th,#att-stats-table td{padding:8px 9px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;text-align:center;white-space:nowrap}
+        #att-stats-table thead th{position:sticky;top:0;background:#dbeafe;color:#1e293b;z-index:2;font-weight:900}
+        #att-stats-table tbody th{text-align:left;font-weight:900;background:#fff;position:sticky;left:0;z-index:1}
+        #att-stats-table tbody tr:nth-child(even) th,#att-stats-table tbody tr:nth-child(even) td{background-color:#f8fafc}
+        #att-stats-table .stat-col-work{color:#047857}#att-stats-table .stat-col-present-no-work{color:#b91c1c}#att-stats-table .stat-col-absent{color:#92400e}#att-stats-table .stat-col-submitted{color:#1d4ed8}
+        @media(max-width:650px){.att-stats-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.att-stats-card{padding:8px}.att-stats-card strong{font-size:18px}.att-stats-table-wrap{max-height:48dvh}#att-stats-table{font-size:11px}#att-stats-table th,#att-stats-table td{padding:7px 8px}}
+        @media(max-width:650px){
+          #attendance-view .att-top,#attendance-view .att-toolbar,#attendance-view .att-legend{max-height:1200px;overflow:hidden;transition:max-height .2s ease,padding .2s ease,opacity .15s ease,border-width .2s ease;opacity:1}
+          #attendance-view.mobile-controls-hidden .att-top,#attendance-view.mobile-controls-hidden .att-toolbar,#attendance-view.mobile-controls-hidden .att-legend{max-height:0!important;padding-top:0!important;padding-bottom:0!important;margin-top:0!important;margin-bottom:0!important;border-top-width:0!important;border-bottom-width:0!important;opacity:0;pointer-events:none}
+        }
+        @media (orientation:portrait) {
+          #secondary-aisle-actions { width:88px; min-width:88px; flex:0 0 88px; height:100%; margin:0 2px 0 0; justify-content:center; gap:4px; }
+          #secondary-aisle-actions button { min-height:29px; padding:3px 2px; font-size:8px; line-height:1.05; border-radius:6px; }
+        }
+        @media (max-width:650px) {
+          .att-current-date { flex:1 1 100%; min-width:0; font-size:10px; min-height:32px; }
+          .att-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        }
+
+
+        /* Menu gọn cho các thao tác ảnh và random trên điện thoại dọc. */
+        .att-mobile-tools { display:contents; }
+        .att-mobile-tools-toggle { display:none; }
+        .att-mobile-tools-menu { display:contents; }
+        @media (max-width:650px) and (orientation:portrait) {
+          .att-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:6px; }
+          .att-mobile-tools { display:block; position:relative; min-width:0; grid-column:span 2; z-index:35; }
+          .att-mobile-tools-toggle { display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; white-space:normal; }
+          .att-mobile-tools-menu { display:none; position:absolute; left:0; right:0; top:calc(100% + 5px); z-index:100; padding:8px; gap:7px; flex-direction:column; background:#fff; border:1px solid #cbd5e1; border-radius:13px; box-shadow:0 16px 34px #0f172a35; }
+          .att-mobile-tools-menu.open { display:flex; }
+          .att-mobile-tools-menu .att-btn { width:100%; min-height:45px; justify-content:flex-start; text-align:left; white-space:normal; font-size:13px; padding:10px 12px; }
+          .att-actions > #open-secondary { grid-column:span 2; grid-row:auto; min-height:46px; font-size:13px; }
+          .att-actions > #att-open-stats, .att-actions > #att-open-settings,
+          .att-actions > #att-fullscreen-awake, .att-actions > #att-add-week,
+          .att-actions > #att-clear-all-data { min-height:42px; white-space:normal; }
+        }
+        @media (max-width:650px) and (orientation:landscape) {
+          .att-mobile-tools { display:contents; }
+          .att-mobile-tools-menu { display:contents; }
+          .att-mobile-tools-toggle { display:none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+        }
+        /* Báo cáo dễ nhập chú thích trên điện thoại */
+        #att-report-modal .att-status-dialog { width:min(680px,100%); }
+        #att-report-note { font-size:16px; line-height:1.6; min-height:150px; }
+        @media(max-width:650px) {
+          #att-report-modal { padding:9px; align-items:center; }
+          #att-report-modal .att-status-dialog { width:100%; max-height:calc(100svh - 18px); padding:15px; border-radius:15px; }
+          #att-report-title { font-size:20px!important; line-height:1.25; }
+          #att-report-note { min-height:150px; max-height:35svh; font-size:16px!important; }
+          #att-report-modal .att-status-dialog > div:last-of-type { gap:7px!important; }
+          #att-report-modal .att-btn { min-height:44px; font-size:13px; }
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <section id="attendance-view">
+      <header class="att-top">
+        <div><div class="att-title">Lớp Lý Thầy Rạng <span style="color:#6ee7b7">●</span></div><div class="att-sub">BẢNG ĐIỂM DANH · LỊCH HỌC THỨ 2 · THỨ 4 · THỨ 6</div></div>
+        <div class="att-actions">
+          <div class="att-mobile-tools">
+            <button class="att-btn att-mobile-tools-toggle" id="att-mobile-tools-toggle" type="button" aria-expanded="false" aria-controls="att-mobile-tools-menu">☰ Báo cáo &amp; Random ▾</button>
+            <div class="att-mobile-tools-menu" id="att-mobile-tools-menu" aria-hidden="true">
+              <button class="att-btn primary" id="att-export-day">Ảnh ngày</button>
+              <button class="att-btn" id="att-export-all">Ảnh toàn bộ</button>
+              <button class="att-btn" id="att-export-general">Báo cáo tổng quát ngày</button>
+              <button class="att-btn" id="att-open-random">🎲 Random học sinh</button>
+            </div>
+          </div>
+          <button class="att-btn" id="att-open-stats">📊 Thống kê</button><button class="att-btn" id="att-open-settings">⚙ Cài đặt</button><button class="att-btn" id="att-fullscreen-awake" aria-pressed="false">⛶ Toàn màn hình + giữ sáng</button><button class="att-btn" id="att-add-week">＋ Thêm 4 tuần</button><button class="att-btn danger" id="att-clear-all-data">Sao lưu raw &amp; xóa toàn bộ</button><button class="att-btn dark" id="open-secondary">Sơ đồ lớp &amp; công cụ ↗</button>
+        </div>
+      </header>
+      <div class="att-toolbar">
+        <div style="display:flex;align-items:center;gap:8px"><label for="att-class">Lớp</label><select id="att-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></div>
+        <select id="att-date" aria-hidden="true" tabindex="-1" style="display:none"></select>
+        <span id="att-current-date" class="att-current-date">Ngày đang chọn: —</span>
+        <button class="att-btn primary" id="att-all-present">Cả lớp: có mặt + làm bài</button><button class="att-btn" id="att-clear-day">Xóa điểm danh ngày</button><button class="att-btn" id="att-nearest-date">Tự về ngày gần nhất</button>
+        <div class="att-stats"><div class="att-stat">Chưa điểm danh<b id="stat-unmarked">0</b></div><div class="att-stat stat-green">Có mặt + làm bài<b id="stat-present-homework">0</b></div><div class="att-stat stat-red">Có mặt, chưa làm bài<b id="stat-present-nohomework">0</b></div><div class="att-stat stat-yellow">Vắng<b id="stat-absent">0</b></div><div class="att-stat stat-blue">Vắng + nộp bài<b id="stat-absent-homework">0</b></div></div>
+      </div>
+      <div class="att-legend"><span><i class="att-dot" style="background:#fff;border:1px solid #cbd5e1"></i> Chưa điểm danh</span><span><i class="att-dot" style="background:#a7f3d0"></i> Có mặt và làm bài</span><span><i class="att-dot" style="background:#fecaca"></i> Có mặt nhưng không làm bài</span><span><i class="att-dot" style="background:#fde68a"></i> Vắng</span><span><i class="att-dot" style="background:#bfdbfe"></i> Vắng nhưng đã nộp bài</span></div>
+      <div class="att-table-wrap"><table id="attendance-table"><thead id="att-thead"></thead><tbody id="att-tbody"></tbody></table></div>
+      <footer class="att-foot"><span id="att-save-state">● Tự động lưu đang bật</span></footer>
+    </section>
+    <div class="att-toast" id="att-toast">Đã lưu</div>
+    <div id="att-status-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-status-title">
+      <div class="att-status-dialog">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div><div style="font-size:17px;font-weight:900" id="att-status-title">Chọn trạng thái</div><div id="att-status-detail" style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.5"></div></div>
+          <button id="att-status-close" aria-label="Đóng" style="border:0;background:#f1f5f9;border-radius:9px;width:32px;height:32px;font-size:20px;cursor:pointer">×</button>
+        </div>
+        <div class="att-status-options">
+          <button class="att-status-option" data-status="1"><span class="att-opt-dot"></span>Có mặt và đã làm bài</button>
+          <button class="att-status-option" data-status="2"><span class="att-opt-dot"></span>Có mặt nhưng không làm bài</button>
+          <button class="att-status-option" data-status="3"><span class="att-opt-dot"></span>Vắng</button>
+          <button class="att-status-option" data-status="4"><span class="att-opt-dot"></span>Vắng nhưng đã nộp bài</button>
+          <button class="att-status-option" data-status="0" style="grid-column:1/-1"><span class="att-opt-dot"></span>Chưa điểm danh / xóa trạng thái</button>
+        </div>
+        <button id="att-status-cancel" class="att-btn" style="width:100%;margin-top:12px">Hủy</button>
+      </div>
+    </div>
+    <div id="att-report-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-report-title">
+      <div class="att-status-dialog" style="width:min(620px,100%);max-height:calc(100dvh - 28px);overflow:auto">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div><div id="att-report-title" style="font-size:18px;font-weight:900">Báo cáo tổng quát trong ngày</div><div id="att-report-date-label" style="font-size:12px;color:#64748b;margin-top:4px">Lớp 11 và lớp 12</div></div>
+          <button id="att-report-close" aria-label="Đóng" style="border:0;background:#f1f5f9;border-radius:9px;width:32px;height:32px;font-size:20px;cursor:pointer">×</button>
+        </div>
+        <label for="att-report-note" style="display:block;font-size:12px;font-weight:900;color:#334155;margin-top:18px;margin-bottom:6px">Chú thích của báo cáo</label>
+        <textarea id="att-report-note" rows="5" placeholder="Nhập chú thích muốn đưa vào báo cáo..." style="width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px;resize:vertical;min-height:140px;font:700 16px/1.5 'Nunito',sans-serif;box-sizing:border-box">Lớp 11:
+Lớp 12:</textarea>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#475569;margin-top:9px"><input id="att-report-preserve-lines" type="checkbox" checked style="width:16px;height:16px;accent-color:#0f766e"> Giữ các lần xuống dòng trong chú thích</label>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button id="att-report-export" class="att-btn primary" style="flex:1;white-space:normal">Xuất báo cáo PNG</button>
+          <button id="att-report-cancel" class="att-btn" style="flex:1">Hủy</button>
+        </div>
+        <p style="font-size:11px;color:#64748b;line-height:1.5;margin-top:10px">Ảnh gồm học sinh và trạng thái của cả hai lớp trong ngày đang chọn; cuối báo cáo sẽ ghi “Báo cáo được tạo bởi Thanh Ngà”.</p>
+      </div>
+    </div>
+
+    <div id="att-stats-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-stats-title">
+      <div class="att-status-dialog" style="width:min(1000px,100%);max-height:calc(100dvh - 24px);overflow:hidden;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <div><div id="att-stats-title" style="font-size:20px;font-weight:900">Thống kê học sinh</div><div style="font-size:12px;color:#64748b;margin-top:4px">Tổng hợp theo từng học sinh qua các buổi học trong lịch, tách riêng lớp 11 và lớp 12.</div></div>
+          <button id="att-stats-close" aria-label="Đóng thống kê" style="border:0;background:#f1f5f9;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer">×</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <label for="att-stats-class" style="font-size:12px;font-weight:900;color:#475569">Lớp thống kê</label>
+          <select id="att-stats-class" style="border:1px solid #cbd5e1;border-radius:9px;padding:8px 10px;background:#f8fafc;font-weight:900"><option value="all">Cả hai lớp</option><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select>
+          <span id="att-stats-period" style="font-size:11px;color:#64748b;font-weight:800"></span>
+        </div>
+        <div id="att-stats-summary" class="att-stats-summary"></div>
+        <div id="att-stats-table-wrap" class="att-stats-table-wrap">
+          <table id="att-stats-table"><thead></thead><tbody></tbody></table>
+        </div>
+        <div style="font-size:11px;color:#64748b;line-height:1.45;margin-top:9px">“Làm bài” đếm các buổi có trạng thái xanh; “Vắng” đếm trạng thái vàng; “Vắng + nộp bài” được thống kê riêng màu xanh nước biển. Chưa điểm danh không được tính là vắng.</div>
+      </div>
+    </div>
+
+    <div id="app" class="w-full h-[100dvh] p-1 flex items-center justify-center">
+        <!-- Đặt lại cột giữa thành 60px để các nút vuông vức và cân đối hơn -->
+        <div id="grid-container" class="w-full h-full grid grid-cols-[1fr_1fr_60px_1fr_1fr] grid-rows-6 gap-[4px] relative max-w-4xl mx-auto">
+            
+            <!-- Hành lang -->
+            <div id="aisle" class="col-start-3 row-start-1 row-span-6 bg-slate-200 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-between py-1 shadow-[inset_0_2px_8px_rgba(0,0,0,0.1)] z-10 overflow-hidden">
+                <div class="flex flex-col items-center w-[90%] bg-white/80 py-1.5 rounded-lg shadow-sm border border-slate-300 mt-1">
+                    <span id="clock-hm" class="text-[14px] font-black text-blue-700 leading-none">00:00</span>
+                    <span id="clock-s" class="text-[10px] text-slate-500 font-bold mt-0.5">00</span>
+                </div>
+                
+                <!-- BẢNG ĐIỀU KHIỂN BÌNH THƯỜNG (XẾP DỌC HOÀN TOÀN) -->
+                <div id="default-aisle-controls" class="flex flex-col gap-1.5 w-[90%] mb-1">
+                    <!-- Nhóm 3 Nút Công Cụ -->
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <button id="settings-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-slate-800 text-white hover:bg-slate-700 active:scale-90 flex justify-center items-center border-b-2 border-slate-900" title="Cài đặt">
+                            <i class="ph-bold ph-gear"></i>
+                        </button>
+                        <button id="report-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-blue-600 text-white hover:bg-blue-500 active:scale-90 flex justify-center items-center border-b-2 border-blue-800" title="Tạo Báo Cáo">
+                            <i class="ph-bold ph-file-text"></i>
+                        </button>
+                        <button id="enter-spin-mode-btn" class="w-full text-[18px] py-1.5 rounded-lg transition-all shadow-sm bg-purple-600 text-white hover:bg-purple-500 active:scale-90 flex justify-center items-center border-b-2 border-purple-800" title="Quay Số">
+                            <i class="ph-bold ph-magic-wand"></i>
+                        </button>
+                    </div>
+
+                    <div class="h-[2px] w-full bg-slate-300 rounded-full my-0.5"></div> <!-- Đường kẻ chia cắt nhẹ -->
+
+                    <!-- Nhóm 2 Nút Chọn Lớp -->
+                    <button class="class-toggle-btn text-[14px] py-1.5 w-full rounded-lg font-black transition-all shadow-md" data-class="11">11</button>
+                    <button class="class-toggle-btn text-[14px] py-1.5 w-full rounded-lg font-black transition-all shadow-md" data-class="12">12</button>
+                </div>
+
+              <!-- BẢNG ĐIỀU KHIỂN CHẾ ĐỘ QUAY SƠ ĐỒ (ĐÃ XẾP DỌC) -->
+                <div id="spin-aisle-controls" class="hidden flex-col gap-1 w-[95%] mb-1 bg-purple-100 p-1 rounded-lg border-2 border-purple-400 shadow-inner">
+                    <div class="text-[9px] font-black text-purple-800 text-center uppercase leading-none mt-1 mb-1"><i class="ph-fill ph-hand-pointing"></i> CHỌN</div>
+                    
+                    <div class="flex flex-col gap-1 w-full">
+                        <button id="sel-all-grid-btn" class="w-full bg-purple-200 hover:bg-purple-300 text-purple-900 text-[10px] font-black py-2 rounded shadow-sm active:scale-90 transition-transform flex items-center justify-center gap-1">
+                            <i class="ph-bold ph-check-square text-[14px]"></i> Tất cả
+                        </button>
+                        <button id="clear-sel-grid-btn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-black py-2 rounded shadow-sm active:scale-90 transition-transform flex items-center justify-center gap-1">
+                            <i class="ph-bold ph-square text-[14px]"></i> Bỏ chọn
+                        </button>
+                    </div>
+
+                    <!-- THAY ĐỔI TỪ ĐÂY: Chuyển sang flex-col để xếp dọc nút số lượng và nút Play -->
+                    <div class="flex flex-col gap-1 w-full mt-1">
+                        <!-- Nút Xoay Vòng số lượng (Bây giờ nằm ở trên) -->
+                        <button id="spin-count-btn" data-count="1" class="w-full py-1.5 bg-white border-2 border-purple-300 rounded shadow-sm text-[14px] font-black text-purple-700 flex items-center justify-center gap-1 active:scale-90 transition-transform select-none">
+                            <span id="spin-count-num" class="text-base text-purple-900">1</span>
+                        </button>
+                        
+                        <!-- Nút Bắt Đầu Quay - Icon Play (Bây giờ nằm ở dưới) -->
+                        <button id="exec-spin-btn" class="w-full py-2 bg-gradient-to-b from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white rounded shadow-md active:scale-90 transition-transform flex items-center justify-center">
+                            <i class="ph-fill ph-play-circle text-[26px]"></i>
+                        </button>
+                    </div>
+                    <!-- ĐẾN ĐÂY -->
+
+                    <button id="cancel-spin-btn" class="w-full mt-1 py-1.5 bg-slate-300 hover:bg-slate-400 text-slate-700 text-[10px] font-bold rounded active:scale-90 transition-transform">Thoát</button>
+                </div>
+                <div id="secondary-aisle-actions" class="secondary-aisle-actions" style="display:none">
+                    <button id="return-attendance" type="button" title="Quay lại bảng điểm danh">← Bảng điểm danh</button>
+                    <button id="save-seat-today" type="button" title="Lưu sơ đồ vào ngày đang chọn">✓ Lưu ngày đã chọn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL WINNER BỰ (HIỂN THỊ KẾT QUẢ) -->
+    <div id="winner-modal" class="hidden fixed inset-0 bg-slate-900/90 z-[60] flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer">
+        <div id="winner-box" class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl shadow-[0_0_50px_rgba(168,85,247,0.6)] p-[3px] transform scale-50 transition-transform duration-500 text-center w-full max-w-2xl relative">
+            <div class="bg-slate-900/60 rounded-[22px] py-10 px-4 backdrop-blur-md flex flex-col items-center justify-center min-h-[250px]">
+                <h2 class="text-white/80 font-bold text-sm sm:text-lg mb-6 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <i class="ph-fill ph-confetti text-pink-400 text-2xl"></i> CHÚC MỪNG <i class="ph-fill ph-confetti text-pink-400 text-2xl"></i>
+                </h2>
+                <div id="winner-names" class="text-white font-black drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] leading-tight break-words text-center w-full px-2"></div>
+                <p class="text-white/40 text-xs mt-10 animate-pulse">(Chạm vào màn hình để đóng)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CÀI ĐẶT -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[50] flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border-2 border-slate-200 transform scale-95 transition-transform duration-200" id="settings-box">
+            <div class="bg-slate-100 px-4 py-3 border-b-2 border-slate-200 flex justify-between items-center">
+                <h3 class="font-black text-slate-800 text-lg flex items-center gap-2"><i class="ph-fill ph-sliders-horizontal text-blue-600"></i> Quản lý lớp</h3>
+                <button class="close-modal-btn p-1 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50" data-target="settings-modal"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">⏱️ Thời gian đếm ngược (Phút)</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="setting-time" value="15" class="w-full bg-slate-50 border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-black focus:border-blue-500">
+                        <button id="save-time-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 rounded-lg active:scale-95 transition-transform">Lưu</button>
+                    </div>
+                </div>
+                <hr class="border-slate-200 border-t-2">
+                <div class="space-y-2">
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-700 font-bold rounded-lg active:scale-95" data-action="reset-timer"><i class="ph-bold ph-arrow-counter-clockwise text-blue-600 text-lg"></i> Khôi phục đồng hồ</button>
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-red-50 hover:bg-red-100 border-2 border-red-200 text-red-700 font-bold rounded-lg active:scale-95" data-action="reset-status"><i class="ph-bold ph-trash text-red-500 text-lg"></i> Xóa điểm danh</button>
+                    <button class="mass-action-btn w-full flex items-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-700 font-bold rounded-lg active:scale-95" data-action="reset-note"><i class="ph-bold ph-eraser text-amber-500 text-lg"></i> Xóa sạch ghi chú</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BÁO CÁO -->
+    <div id="report-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[50] flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border-2 border-slate-200 transform scale-95 transition-transform duration-200" id="report-box">
+            <div class="bg-blue-50 px-4 py-3 border-b-2 border-blue-200 flex justify-between items-center">
+                <h3 class="font-black text-blue-800 text-lg flex items-center gap-2"><i class="ph-fill ph-file-text text-blue-600"></i> Tạo Báo Cáo</h3>
+                <button class="close-modal-btn p-1 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50" data-target="report-modal"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            
+            <div class="p-4 space-y-3">
+                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <div class="font-black text-slate-800 mb-1.5 text-sm">🔰 Lớp 11</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Tờ</label>
+                            <input type="text" id="rep-11-to" placeholder="Ví dụ: 1" class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">LT</label>
+                            <input type="text" id="rep-11-lt" placeholder="1-5" class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">BT</label>
+                            <input type="text" id="rep-11-bt" placeholder="1,2" class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <div class="font-black text-slate-800 mb-1.5 text-sm">🔰 Lớp 12</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Tờ</label>
+                            <input type="text" id="rep-12-to" placeholder="..." class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">LT</label>
+                            <input type="text" id="rep-12-lt" placeholder="..." class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">BT</label>
+                            <input type="text" id="rep-12-bt" placeholder="..." class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500 block mb-1">🔍 Xem trước nội dung Copy:</label>
+                    <textarea id="report-preview-text" class="w-full text-xs font-mono bg-blue-50 border-2 border-blue-200 rounded-lg p-2.5 h-[100px] resize-none text-slate-800 focus:outline-none" readonly></textarea>
+                </div>
+
+                <button id="copy-report-btn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-copy text-lg"></i> COPY BÁO CÁO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DATA & STATE ---
+        const CLASS_DATA = {
+            '12': [['Lê Duy', 'Đạt', 'Nam', 'Huy'],['Thái', 'Thành', 'Thanh Nhi (NCT)', ''],['Hạnh', 'Long', 'Ngọc', ''],['Ngọc Ngân', 'Ngọc Nhi (NH)', 'Đồng', 'Tuấn'],['Kiệt', 'Hân', 'Linh', 'Khoa'],['Trâm', 'Phương', 'Q Duy', '']],
+            '11': [['Trân', 'Đạt', 'Phúc', 'Chấn'],['Thư', 'Giang', 'Vân Anh', 'Hường'],['Khiết Minh', 'Vân', 'Minh Anh', 'An'],['Tiến', 'Trâm', 'TRIPLE_RIGHT', ''],['P.Anh', 'Nghi', 'Hạnh', 'Ly'],['Khánh', 'Minh (Chuột)', 'Khoa', 'Trang']]
+        };
+        const CLASS_11_TRIPLE = ['Tươi', 'Vy', 'Phương'];
+        
+        let DEFAULT_TIME_SECONDS = 900; 
+        const globalState = {}; 
+        const classNotes = { '11': '', '12': '' };
+        let currentClass = '11';
+        let audioCtx = null;
+        let wakeLock = null;
+        let keepScreenAwake = false;
+        
+        let isSpinning = false;
+        let isSelectionMode = false;
+        let selectedForSpin = new Set();
+        let activeWinnerKeys = [];
+
+        const STATUS_BG = ['bg-slate-50 border-slate-300', 'bg-emerald-100 border-emerald-400','bg-rose-100 border-rose-400','bg-amber-100 border-amber-400','bg-sky-100 border-sky-400'];
+
+        function initGlobalState() {
+            ['11', '12'].forEach(cls => {
+                CLASS_DATA[cls].forEach((row, r) => {
+                    initStateCell(`${cls}_${r}_0`, row[0]);
+                    initStateCell(`${cls}_${r}_1`, row[1]);
+                    if (row[2] === 'TRIPLE_RIGHT') CLASS_11_TRIPLE.forEach((name, i) => initStateCell(`${cls}_${r}_3_${i}`, name));
+                    else { initStateCell(`${cls}_${r}_2`, row[2]); initStateCell(`${cls}_${r}_3`, row[3]); }
+                });
+            });
+        }
+        function initStateCell(key, name) { globalState[key] = { name, status: 0, timeLeft: DEFAULT_TIME_SECONDS, isRunning: false, isFinished: false, note: '' }; }
+
+        const requestWakeLock = async () => {
+            try {
+                if (keepScreenAwake && 'wakeLock' in navigator && wakeLock === null) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    wakeLock.addEventListener('release', () => { wakeLock = null; });
+                }
+            } catch (err) {}
+            return !!wakeLock;
+        };
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') requestWakeLock();
+        });
+
+        // --- 2. RENDER LƯỚI ---
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            return `${m}:${(secs % 60).toString().padStart(2, '0')}`;
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('grid-container');
+            Array.from(container.children).forEach(child => { if (child.id !== 'aisle') child.remove(); });
+            const classNote = document.getElementById('class-note'); if (classNote) classNote.value = classNotes[currentClass];
+
+            document.querySelectorAll('.class-toggle-btn').forEach(btn => {
+                if (btn.dataset.class === currentClass) btn.className = 'class-toggle-btn text-[14px] py-1.5 w-full rounded-lg font-black shadow-md transition-all bg-blue-600 text-white transform scale-105 border-b-4 border-blue-800';
+                else btn.className = 'class-toggle-btn text-[14px] py-1.5 w-full rounded-lg font-black shadow-sm transition-all bg-slate-100 text-slate-500 border-b-4 border-slate-300 hover:bg-slate-300 active:scale-95';
+            });
+
+            CLASS_DATA[currentClass].forEach((row, r) => {
+                const gridRow = r + 1; 
+                container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_0`, 1, gridRow));
+                container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_1`, 2, gridRow));
+
+                if (row[2] === 'TRIPLE_RIGHT') {
+                    let specialHTML = `<div class="col-start-4 col-span-2 flex gap-[4px] w-full" style="grid-row: ${gridRow}; min-width: 0;">`;
+                    CLASS_11_TRIPLE.forEach((_, i) => specialHTML += getCellHTML(`${currentClass}_${r}_3_${i}`, null, null, true));
+                    specialHTML += `</div>`;
+                    container.insertAdjacentHTML('beforeend', specialHTML);
+                } else {
+                    container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_2`, 4, gridRow));
+                    container.insertAdjacentHTML('beforeend', getCellHTML(`${currentClass}_${r}_3`, 5, gridRow));
+                }
+            });
+            
+            activeWinnerKeys.forEach(k => {
+                let cell = document.querySelector(`[data-key="${k}"]`);
+                if(cell) cell.classList.add('grid-winner-highlight');
+            });
+        }
+
+        function getCellHTML(key, colStart, rowStart, isFlexItem = false) {
+            const state = globalState[key];
+            const isEmp = !state.name;
+            const styleProps = isFlexItem ? '' : `grid-column: ${colStart}; grid-row: ${rowStart};`;
+            const flexClass = isFlexItem ? 'flex-1 min-w-0' : '';
+            
+            const textSize = isFlexItem ? 'text-[8.5px]' : 'text-[11px] sm:text-[12px]';
+            const timeSize = isFlexItem ? 'text-[11px]' : 'text-[13px] sm:text-[15px]';
+            const radioH = isFlexItem ? 'h-3' : 'h-4 sm:h-5';
+            const radioIcon = isFlexItem ? 'text-[8px]' : 'text-[10px] sm:text-[11px]';
+
+            let cellClass = state.isFinished ? 'bg-red-500 border-red-700 animate-danger shadow-lg' : STATUS_BG[state.status] + ' shadow-sm';
+            let timerColor = state.isFinished ? 'text-red-800' : (state.isRunning ? 'text-blue-700' : 'text-slate-800');
+            let playIcon = state.isRunning ? 'ph-pause-circle' : 'ph-play-circle';
+            let playColor = state.isFinished ? 'text-red-400 opacity-50' : (state.isRunning ? 'text-amber-500' : 'text-blue-500');
+
+            let selectionOverlay = '';
+            if (isSelectionMode && !isEmp) {
+                if (selectedForSpin.has(key)) {
+                    cellClass += ' grid-selected-spin relative z-20';
+                    selectionOverlay = `<div class="absolute -top-1.5 -right-1.5 bg-purple-600 text-white rounded-full w-[16px] h-[16px] flex items-center justify-center text-[10px] font-black shadow-md z-30 ring-2 ring-white"><i class="ph-bold ph-check"></i></div>`;
+                } else {
+                    cellClass += ' grid-unselected-spin';
+                }
+            }
+
+            const rAct = "opacity-100 shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)]";
+            const rInact = "opacity-40 hover:opacity-70 bg-slate-100";
+            const r0 = state.status === 0 ? `${rAct} bg-slate-400 text-white` : `${rInact} text-slate-500`;
+            const r1 = state.status === 1 ? `${rAct} bg-emerald-500 text-white` : `${rInact} text-emerald-600`;
+            const r2 = state.status === 2 ? `${rAct} bg-rose-500 text-white` : `${rInact} text-rose-600`;
+            const r3 = state.status === 3 ? `${rAct} bg-amber-500 text-white` : `${rInact} text-amber-600`;
+            const r4 = state.status === 4 ? `${rAct} bg-sky-500 text-white` : `${rInact} text-sky-600`;
+
+            return `
+                <div data-key="${key}" class="student-cell flex flex-col justify-between overflow-hidden border-2 rounded-xl transition-all duration-200 ${cellClass} ${isEmp ? 'opacity-30 pointer-events-none' : ''} ${flexClass} p-[3px] sm:p-1 relative" style="${styleProps}">
+                    ${selectionOverlay}
+                    <div class="flex flex-col mb-[2px] gap-[2px] w-full">
+                        <span class="font-black ${textSize} leading-tight truncate text-slate-800">${state.name || 'Trống'}</span>
+                        <div class="flex w-full bg-white/60 rounded-md overflow-hidden border border-white/50 shadow-sm">
+                            <button data-status="0" class="status-radio flex-1 ${radioH} flex justify-center items-center transition-all ${r0}"><i class="ph-bold ph-minus ${radioIcon}"></i></button>
+                            <button data-status="1" title="Có mặt và đã làm bài" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r1}"><i class="ph-bold ph-check ${radioIcon}"></i></button>
+                            <button data-status="2" title="Có mặt nhưng không làm bài" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r2}"><i class="ph-bold ph-x ${radioIcon}"></i></button>
+                            <button data-status="3" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r3}" title="Vắng"><i class="ph-bold ph-warning ${radioIcon}"></i></button>
+                            <button data-status="4" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r4}" title="Vắng nhưng đã nộp bài"><i class="ph-bold ph-file-text ${radioIcon}"></i></button>
+                        </div>
+                    </div>
+                    <div class="flex flex-row items-center justify-between bg-white/80 rounded-md px-1 py-0.5 w-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] mt-auto mb-[2px] border border-white/50">
+                        <button class="play-btn active:scale-75 transition-transform"><i class="ph-fill ${playIcon} ${playColor} text-[16px] sm:text-[18px] drop-shadow-sm"></i></button>
+                        <span class="time-display font-mono ${timeSize} font-black tracking-tighter ${timerColor}">${state.isFinished ? 'HẾT!' : formatTime(state.timeLeft)}</span>
+                        <button class="reset-btn active:scale-75 transition-transform"><i class="ph-bold ph-arrow-counter-clockwise ${state.isFinished ? 'text-red-600' : 'text-slate-400'} text-[12px] sm:text-[14px] hover:text-slate-800"></i></button>
+                    </div>
+                    <input type="text" class="note-input w-full text-[9px] px-1 py-[2px] border-none bg-white/50 focus:bg-white rounded-md outline-none text-slate-800 font-bold shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] transition-colors placeholder:text-[8px]" placeholder="Ghi chú..." value="${state.note}">
+                </div>
+            `;
+        }
+
+        function updateCellDOM(key) {
+            const cell = document.querySelector(`[data-key="${key}"]`);
+            if (!cell) return;
+            const input = cell.querySelector('.note-input');
+            const isFocused = document.activeElement === input;
+            const isFlexItem = cell.classList.contains('flex-1');
+            const isWinner = cell.classList.contains('grid-winner-highlight');
+
+            cell.outerHTML = getCellHTML(key, cell.style.gridColumn, cell.style.gridRow, isFlexItem);
+            
+            if(isWinner) document.querySelector(`[data-key="${key}"]`).classList.add('grid-winner-highlight');
+            if (isFocused) {
+                const newCell = document.querySelector(`[data-key="${key}"]`);
+                const newInput = newCell.querySelector('.note-input');
+                newInput.focus();
+                const val = newInput.value; newInput.value = ''; newInput.value = val;
+            }
+        }
+
+        function clearGridHighlights() {
+            activeWinnerKeys.forEach(k => {
+                let cell = document.querySelector(`[data-key="${k}"]`);
+                if(cell) cell.classList.remove('grid-winner-highlight');
+            });
+            activeWinnerKeys = [];
+        }
+
+        // --- 3. ĐỘNG CƠ ÂM THANH & THỜI GIAN ---
+        setInterval(() => {
+            if(isSpinning) return; 
+            for (let key in globalState) {
+                const state = globalState[key];
+                if (state.isRunning && state.timeLeft > 0) {
+                    state.timeLeft--;
+                    if (state.timeLeft === 0) { state.isRunning = false; state.isFinished = true; playAudio('beep'); }
+                    updateCellDOM(key);
+                }
+            }
+            const now = new Date();
+            document.getElementById('clock-hm').textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('clock-s').textContent = now.toLocaleTimeString('vi-VN', { second: '2-digit' });
+        }, 1000);
+
+        function initAudio() {
+            if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); }
+        }
+
+        function playAudio(type) {
+            try {
+                if (!audioCtx) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                
+                if(type === 'beep') {
+                    osc.type = 'square'; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.6);
+                } else if (type === 'tick') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'tada') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+                    osc.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.1);
+                    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.0);
+                    osc.start(); osc.stop(audioCtx.currentTime + 1.0);
+                }
+            } catch (e) {}
+        }
+
+        // --- 4. TẠO BÁO CÁO ---
+        function getCurrentReportDateStr() {
+            const d = new Date();
+            const daysMap = ['Chủ nhật', 'thứ 2', 'thứ 3', 'thứ 4', 'thứ 5', 'thứ 6', 'thứ 7'];
+            const dayName = daysMap[d.getDay()];
+            const dateStr = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+            return `Dạ em gửi báo cáo ${dayName} (${dateStr})`;
+        }
+
+        function generateReportText() {
+            const header = getCurrentReportDateStr();
+            const t11 = document.getElementById('rep-11-to').value || '...';
+            const lt11 = document.getElementById('rep-11-lt').value || '...';
+            const bt11 = document.getElementById('rep-11-bt').value || '...';
+            const t12 = document.getElementById('rep-12-to').value || '...';
+            const lt12 = document.getElementById('rep-12-lt').value || '...';
+            const bt12 = document.getElementById('rep-12-bt').value || '...';
+            return `${header}\nLớp 11: tờ ${t11} LT ${lt11}, BT ${bt11}\nLớp 12: tờ ${t12} LT ${lt12}, BT ${bt12}`;
+        }
+
+        function updateReportPreview() {
+            document.getElementById('report-preview-text').value = generateReportText();
+        }
+
+        document.querySelectorAll('.report-input').forEach(input => {
+            input.addEventListener('input', updateReportPreview);
+        });
+
+        document.getElementById('report-btn').addEventListener('click', () => {
+            updateReportPreview(); 
+            openModal('report-modal');
+        });
+
+        document.getElementById('copy-report-btn').addEventListener('click', () => {
+            const textToCopy = generateReportText();
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const btn = document.getElementById('copy-report-btn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="ph-bold ph-check text-lg"></i> ĐÃ COPY!';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    btn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
+                }, 2000);
+            }).catch(err => { alert("Lỗi Copy."); });
+        });
+
+        // --- 5. CHẾ ĐỘ CHỌN SƠ ĐỒ (ON-GRID SELECTION) ---
+        document.getElementById('enter-spin-mode-btn').addEventListener('click', () => {
+            isSelectionMode = true;
+            clearGridHighlights();
+            document.body.classList.add('selection-mode-active');
+            
+            document.getElementById('default-aisle-controls').classList.add('hidden');
+            document.getElementById('default-aisle-controls').classList.remove('flex');
+            document.getElementById('spin-aisle-controls').classList.remove('hidden');
+            document.getElementById('spin-aisle-controls').classList.add('flex');
+            const classNote = document.getElementById('class-note'); if (classNote) classNote.classList.add('opacity-30', 'pointer-events-none');
+            renderGrid();
+        });
+
+        document.getElementById('sel-all-grid-btn').addEventListener('click', () => {
+            for(let key in globalState) {
+                if(key.startsWith(currentClass + '_') && globalState[key].name) selectedForSpin.add(key);
+            }
+            renderGrid(); playAudio('tick');
+        });
+
+        document.getElementById('clear-sel-grid-btn').addEventListener('click', () => {
+            selectedForSpin.clear(); renderGrid(); playAudio('tick');
+        });
+
+        document.getElementById('spin-count-btn').addEventListener('click', (e) => {
+            let btn = e.currentTarget;
+            let current = parseInt(btn.dataset.count);
+            let next = current >= 6 ? 1 : current + 1;
+            btn.dataset.count = next; btn.textContent = next; playAudio('tick');
+        });
+
+        function exitSelectionMode() {
+            isSelectionMode = false;
+            document.body.classList.remove('selection-mode-active');
+            
+            document.getElementById('spin-aisle-controls').classList.add('hidden');
+            document.getElementById('spin-aisle-controls').classList.remove('flex');
+            document.getElementById('default-aisle-controls').classList.remove('hidden');
+            document.getElementById('default-aisle-controls').classList.add('flex');
+            const classNote = document.getElementById('class-note'); if (classNote) classNote.classList.remove('opacity-30', 'pointer-events-none');
+            renderGrid();
+        }
+        document.getElementById('cancel-spin-btn').addEventListener('click', exitSelectionMode);
+
+        function showBigWinnerModal(winnerKeys) {
+            const winnerModal = document.getElementById('winner-modal');
+            const winnerBox = document.getElementById('winner-box');
+            const winnerNamesDiv = document.getElementById('winner-names');
+            const names = winnerKeys.map(k => globalState[k].name);
+            
+            if (names.length === 1) {
+                winnerNamesDiv.innerHTML = names[0];
+                winnerNamesDiv.className = 'text-white font-black drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] text-[45px] sm:text-6xl md:text-8xl py-4 break-words leading-tight w-full text-center';
+            } else {
+                winnerNamesDiv.innerHTML = names.join('<hr class="border-white/20 my-3 w-2/3 mx-auto">');
+                winnerNamesDiv.className = 'text-white font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] text-3xl sm:text-4xl md:text-5xl py-2 flex flex-col gap-1 break-words w-full text-center';
+            }
+
+            winnerModal.classList.remove('hidden');
+            setTimeout(() => {
+                winnerModal.classList.remove('opacity-0');
+                winnerBox.classList.remove('scale-50'); winnerBox.classList.add('scale-100');
+            }, 50);
+            playAudio('tada');
+        }
+
+        document.getElementById('winner-modal').addEventListener('click', () => {
+            const winnerModal = document.getElementById('winner-modal');
+            const winnerBox = document.getElementById('winner-box');
+            winnerModal.classList.add('opacity-0');
+            winnerBox.classList.remove('scale-100'); winnerBox.classList.add('scale-50');
+            setTimeout(() => winnerModal.classList.add('hidden'), 300);
+            setTimeout(() => clearGridHighlights(), 300);
+        });
+
+        document.getElementById('exec-spin-btn').addEventListener('click', () => {
+            if(isSpinning) return;
+            
+            const poolKeys = Array.from(selectedForSpin).filter(k => k.startsWith(currentClass + '_'));
+            const count = parseInt(document.getElementById('spin-count-btn').dataset.count) || 1;
+
+            if(poolKeys.length === 0) { alert("Chạm vào sơ đồ để chọn ít nhất 1 người!"); return; }
+            if(count > poolKeys.length) { alert(`Chỉ có ${poolKeys.length} người được chọn, không thể gọi ${count} người!`); return; }
+
+            exitSelectionMode(); 
+            isSpinning = true; 
+
+            let spinSpeed = count === 1 ? 30 : 60;
+            let spinSteps = count === 1 ? 25 : 50; 
+            let currentStep = 0;
+            let lastKey = null;
+
+            function doGridSpin() {
+                if (lastKey) {
+                    let cell = document.querySelector(`[data-key="${lastKey}"]`);
+                    if(cell) cell.classList.remove('grid-spin-highlight');
+                }
+
+                if (currentStep >= spinSteps) {
+                    const finalShuffle = [...poolKeys].sort(() => 0.5 - Math.random());
+                    const winners = finalShuffle.slice(0, count);
+                    
+                    winners.forEach(wKey => {
+                        let wCell = document.querySelector(`[data-key="${wKey}"]`);
+                        if(wCell) wCell.classList.add('grid-winner-highlight');
+                        activeWinnerKeys.push(wKey);
+                    });
+                    
+                    setTimeout(() => {
+                        isSpinning = false;
+                        showBigWinnerModal(winners);
+                    }, 1000); 
+                    return;
+                }
+
+                const randomKey = poolKeys[Math.floor(Math.random() * poolKeys.length)];
+                let cell = document.querySelector(`[data-key="${randomKey}"]`);
+                if(cell) cell.classList.add('grid-spin-highlight');
+                lastKey = randomKey;
+                
+                playAudio('tick');
+                currentStep++;
+                
+                if (currentStep > spinSteps - 10) spinSpeed += (count === 1 ? 15 : 25); 
+
+                setTimeout(doGridSpin, spinSpeed);
+            }
+            doGridSpin();
+        });
+
+        // --- 6. EVENT DELEGATION TỔNG HỢP ---
+        document.body.addEventListener('click', (e) => {
+            initAudio();
+            if(isSpinning) return; 
+            
+            if(!isSelectionMode && activeWinnerKeys.length > 0 && !e.target.closest('#winner-box')) {
+                clearGridHighlights();
+            }
+
+            const cell = e.target.closest('.student-cell');
+            
+            if (isSelectionMode) {
+                if (cell) {
+                    const key = cell.dataset.key;
+                    if(globalState[key].name) {
+                        if(selectedForSpin.has(key)) selectedForSpin.delete(key);
+                        else selectedForSpin.add(key);
+                        updateCellDOM(key);
+                        playAudio('tick');
+                    }
+                }
+                return;
+            }
+
+            const btnClass = e.target.closest('.class-toggle-btn');
+            if (btnClass) { currentClass = btnClass.dataset.class; if(window.syncAttendanceToSeatMapForSelectedDate) window.syncAttendanceToSeatMapForSelectedDate(currentClass); renderGrid(); return; }
+
+            if (!cell) return;
+            const key = cell.dataset.key;
+            const state = globalState[key];
+
+            const radioBtn = e.target.closest('.status-radio');
+            if (radioBtn) { state.status = parseInt(radioBtn.dataset.status); updateCellDOM(key); return; }
+
+            if (e.target.closest('.play-btn')) {
+                if (!state.isFinished) { state.isRunning = !state.isRunning; updateCellDOM(key); }
+            } else if (e.target.closest('.reset-btn')) {
+                state.timeLeft = DEFAULT_TIME_SECONDS; state.isRunning = false; state.isFinished = false; updateCellDOM(key);
+            }
+        });
+
+        document.body.addEventListener('input', (e) => {
+            if (e.target.classList.contains('note-input')) {
+                const key = e.target.closest('.student-cell').dataset.key;
+                globalState[key].note = e.target.value;
+            } else if (e.target.id === 'class-note') classNotes[currentClass] = e.target.value;
+        });
+
+        function openModal(id) {
+            const modal = document.getElementById(id); modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('div').classList.remove('scale-95'); }, 10);
+        }
+        function closeModal(id) {
+            const modal = document.getElementById(id); modal.classList.add('opacity-0'); modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+        document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', (e) => closeModal(e.currentTarget.dataset.target)));
+        document.getElementById('settings-btn').addEventListener('click', () => { document.getElementById('setting-time').value = Math.floor(DEFAULT_TIME_SECONDS / 60); openModal('settings-modal'); });
+        document.getElementById('save-time-btn').addEventListener('click', () => {
+            const mins = parseInt(document.getElementById('setting-time').value);
+            if(mins > 0) { DEFAULT_TIME_SECONDS = mins * 60; const btn = document.getElementById('save-time-btn'); btn.textContent = 'Đã lưu!'; btn.classList.add('bg-emerald-500'); setTimeout(() => { btn.textContent = 'Lưu'; btn.classList.remove('bg-emerald-500'); }, 1000); }
+        });
+        document.querySelectorAll('.mass-action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.currentTarget.dataset.action;
+                for(let key in globalState) {
+                    if(key.startsWith(currentClass + '_')) {
+                        if (action === 'reset-timer') { globalState[key].timeLeft = DEFAULT_TIME_SECONDS; globalState[key].isRunning = false; globalState[key].isFinished = false; } 
+                        else if (action === 'reset-status') globalState[key].status = 0;
+                        else if (action === 'reset-note') globalState[key].note = '';
+                    }
+                }
+                renderGrid(); closeModal('settings-modal');
+            });
+        });
+
+        initGlobalState(); renderGrid();
+    </script>
+
+<script>
+(()=>{
+const KEY='loplythayrang_attendance_v2', START=new Date(2026,9,19,12), LABELS=['Chưa điểm danh','Có mặt, đã làm bài','Có mặt, chưa làm bài','Vắng','Vắng, đã nộp bài'], MARKS=['—','✓','×','✕','◇'];
+let store={records:{},extraWeeks:0}, activeClass='11', dates=[], pickedCell=null;
+try{store=JSON.parse(localStorage.getItem(KEY))||store}catch(e){}
+if(!store.records)store.records={};
+// Một lần chuyển dữ liệu từ bộ trạng thái cũ sang bộ màu mới: giữ các giá trị chắc chắn,
+// đưa các trạng thái cũ 'đi trễ/có phép' về chưa điểm danh thay vì gán sai ý nghĩa bài tập.
+if(Number(store.schemaVersion||0)<2){
+  Object.values(store.records).forEach(record=>{if(!record||typeof record!=='object')return;Object.keys(record).forEach(name=>{const old=Number(record[name]||0);record[name]=old===1?1:old===2?3:0;});});
+  store.schemaVersion=2;
+}
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));$('att-save-state').textContent='● Đã lưu tự động lúc '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}catch(e){$('att-save-state').textContent='Không thể lưu: bộ nhớ trình duyệt đầy';} }
+function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function parseDateKey(k){let m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k||'');return m?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null}
+function getDates(){let out=[],d=new Date(START),end=new Date(START);end.setDate(end.getDate()+(12+Number(store.extraWeeks||0))*7);let today=new Date();today.setHours(12,0,0,0);let rollingEnd=new Date(today);rollingEnd.setDate(rollingEnd.getDate()+28);if(rollingEnd>end)end=rollingEnd;for(;d<=end;d.setDate(d.getDate()+1)){if([1,3,5].includes(d.getDay()))out.push(new Date(d));}
+  // Lịch chính chỉ tạo các buổi thứ 2, thứ 4, thứ 6; không thêm ngày riêng lẻ từ dữ liệu cũ.
+  out.sort((a,b)=>a-b);return out}
+function fmt(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')}
+function weekday(d){return ['CN','T2','T3','T4','T5','T6','T7'][d.getDay()]}
+function nearestDate(list){let now=new Date();now.setHours(12,0,0,0);return [...list].sort((a,b)=>Math.abs(a-now)-Math.abs(b-now)||((a<=now && b>now)?-1:((b<=now&&a>now)?1:a-b)))[0]}
+function getStudents(cls){let names=[];(CLASS_DATA[cls]||[]).forEach(row=>row.forEach(n=>{if(n==='TRIPLE_RIGHT')CLASS_11_TRIPLE.forEach(x=>names.push(x));else if(n&&n.trim())names.push(n)}));return [...new Set(names)]}
+function rec(d){let k=activeClass+'_'+dateKey(d);if(!store.records[k])store.records[k]={};return store.records[k]}
+function status(d,name){return Number(rec(d)[name]||0)}
+function statusInClass(cls,d,name){return Number(((store.records||{})[cls+'_'+dateKey(d)]||{})[name]||0)}
+function render(){
+ dates=getDates();let selected=store.selectedDate||$('att-date').value; if(!selected||!dates.some(d=>dateKey(d)===selected))selected=dateKey(nearestDate(dates));
+ $('att-date').innerHTML=dates.map(d=>`<option value="${dateKey(d)}">${weekday(d)} ${fmt(d)}-${d.getFullYear()}</option>`).join('');$('att-date').value=selected;
+ let students=getStudents(activeClass),thead='<tr><th class="att-name-head">HỌ TÊN HỌC SINH</th>'+dates.map(d=>{const key=dateKey(d),chosen=key===selected;return `<th class="att-date-column ${chosen?'att-date-selected':''}" data-date-action="${key}" role="button" tabindex="0" aria-label="Chọn buổi ${weekday(d)} ${fmt(d)}/${d.getFullYear()}" title="Bấm để chọn buổi này"><div class="att-date-head"><small>${weekday(d)}</small><strong>${fmt(d)}</strong><small>${d.getFullYear()}</small></div></th>`}).join('')+'</tr>';
+ $('att-thead').innerHTML=thead;
+ $('att-tbody').innerHTML=students.map((name,i)=>`<tr><th class="att-name"><span class="att-index">${String(i+1).padStart(2,'0')}</span>${escapeHtml(name)}</th>${dates.map(d=>{let st=status(d,name);return `<td><button class="att-cell att-${st}" data-student="${escapeAttr(name)}" data-date="${dateKey(d)}" title="${escapeAttr(name)} · ${weekday(d)} ${fmt(d)}/${d.getFullYear()} · ${LABELS[st]}">${MARKS[st]}</button></td>`}).join('')}</tr>`).join('');
+ updateStats();updateCurrentDateLabel();updateSecondarySaveLabel();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escapeAttr(s){return escapeHtml(s)}
+function updateStats(){let d=dates.find(x=>dateKey(x)===$('att-date').value)||dates[0];if(!d)return;let counts=[0,0,0,0,0];getStudents(activeClass).forEach(n=>counts[status(d,n)]++);$('stat-unmarked').textContent=counts[0];$('stat-present-homework').textContent=counts[1];$('stat-present-nohomework').textContent=counts[2];$('stat-absent').textContent=counts[3];$('stat-absent-homework').textContent=counts[4]}
+function updateCurrentDateLabel(){const d=dates.find(x=>dateKey(x)===$('att-date').value)||parseDateKey(store.selectedDate||'');if(d)$('att-current-date').textContent=`Ngày đang chọn: ${weekdayLong(d)} ${fmt(d)}/${d.getFullYear()}`;}
+function weekdayLong(d){return ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()]}
+function updateSecondarySaveLabel(){const d=dates.find(x=>dateKey(x)===$('att-date').value)||parseDateKey(store.selectedDate||'')||nearestDate(dates);if(!d)return;const btn=$('save-seat-today');btn.textContent=`✓ Lưu ${weekday(d)} ${fmt(d)}`;btn.title=`Lưu điểm danh lớp ${currentClass} cho ${weekdayLong(d)}, ngày ${fmt(d)}/${d.getFullYear()}`;}
+let toastTimer;function toast(msg){$('att-toast').textContent=msg;$('att-toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('att-toast').classList.remove('show'),2100)}
+function selectDate(key,manual=true){if(manual)store.selectedDate=key;$('att-date').value=key;save();updateStats();updateCurrentDateLabel();updateSecondarySaveLabel();$('att-thead').querySelectorAll('[data-date-action]').forEach(th=>th.classList.toggle('att-date-selected',th.dataset.dateAction===key));}
+function showStatusOptions(name,key){pickedCell={name,key};let d=parseDateKey(key);$('att-status-detail').textContent=`${name} · Lớp ${activeClass} · ${d?weekday(d)+' '+fmt(d)+'/'+d.getFullYear():key}`;$('att-status-modal').classList.add('show');let current=Number((store.records[activeClass+'_'+key]||{})[name]||0);$('att-status-modal').querySelectorAll('[data-status]').forEach(b=>{b.style.outline=Number(b.dataset.status)===current?'2px solid #0f766e':'none';b.style.outlineOffset='1px'});$('att-status-close').focus()}
+function closeStatusOptions(){$('att-status-modal').classList.remove('show');pickedCell=null}
+$('att-class').addEventListener('change',e=>{activeClass=e.target.value;render()});
+$('att-date').addEventListener('change',e=>{store.selectedDate=e.target.value;save();updateStats()});
+$('att-tbody').addEventListener('click',e=>{let b=e.target.closest('[data-student]');if(!b)return;let dkey=b.dataset.date;selectDate(dkey,true);showStatusOptions(b.dataset.student,dkey)});
+$('att-status-modal').addEventListener('click',e=>{if(e.target===$('att-status-modal'))closeStatusOptions();let b=e.target.closest('[data-status]');if(!b||!pickedCell)return;let r=store.records[activeClass+'_'+pickedCell.key]||(store.records[activeClass+'_'+pickedCell.key]={});r[pickedCell.name]=Number(b.dataset.status);store.selectedDate=pickedCell.key;save();closeStatusOptions();render();toast('Đã cập nhật: '+LABELS[Number(b.dataset.status)])});
+$('att-status-close').addEventListener('click',closeStatusOptions);$('att-status-cancel').addEventListener('click',closeStatusOptions);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStatusOptions()});
+$('att-thead').addEventListener('click',e=>{const b=e.target.closest('[data-date-action]');if(b){const key=b.dataset.dateAction;selectDate(key,true);const d=parseDateKey(key);toast('Đã chọn buổi '+(d?weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear():key));}});
+$('att-thead').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const b=e.target.closest('[data-date-action]');if(b){e.preventDefault();selectDate(b.dataset.dateAction,true);}}});
+$('att-all-present').addEventListener('click',()=>{let d=dates.find(x=>dateKey(x)===$('att-date').value);if(!d)return;if(!confirm('Đánh dấu tất cả học sinh lớp '+activeClass+' có mặt VÀ đã làm bài ngày '+weekday(d)+' '+fmt(d)+'/'+d.getFullYear()+'?'))return;let r=rec(d);getStudents(activeClass).forEach(n=>r[n]=1);save();render();toast('Đã đánh dấu cả lớp: có mặt + làm bài')});
+$('att-clear-day').addEventListener('click',()=>{let d=dates.find(x=>dateKey(x)===$('att-date').value);if(!d)return;if(!confirm('Xóa điểm danh lớp '+activeClass+' ngày '+fmt(d)+'?'))return;store.records[activeClass+'_'+dateKey(d)]={};save();render();toast('Đã xóa điểm danh ngày')});
+$('att-nearest-date').addEventListener('click',()=>{delete store.selectedDate;dates=getDates();let d=nearestDate(dates);$('att-date').value=dateKey(d);render();save();toast('Đã chọn ngày gần nhất: '+weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear())});
+$('att-add-week').addEventListener('click',()=>{store.extraWeeks=Number(store.extraWeeks||0)+4;save();render();toast('Đã thêm 4 tuần lịch')});
+
+// Sao lưu JSON thô trước; chỉ xóa dữ liệu sau khi người dùng xác nhận đã nhận file.
+$('att-clear-all-data').addEventListener('click',()=>{
+ const enteredPassword=prompt('Nhập mật khẩu để sao lưu và xóa dữ liệu:');
+ if(enteredPassword!=='123456'){if(enteredPassword!==null)alert('Mật khẩu không đúng. Không thực hiện hành động nào.');return;}
+ const initialConfirm=confirm('Sẽ tạo một file sao lưu dữ liệu gốc (.json), sau đó bạn có thể xác nhận để xóa TOÀN BỘ dữ liệu điểm danh và công cụ. Bạn có muốn tiếp tục không?');
+ if(!initialConfirm)return;
+ const backup={
+   format:'lop-ly-thay-rang-raw-backup-v1',
+   title:'Lớp Lý Thầy Rạng',
+   exportedAt:new Date().toISOString(),
+   attendance:{...store,records:JSON.parse(JSON.stringify(store.records||{}))},
+   secondaryTools:{
+     classNotes:{...classNotes}, currentClass,
+     globalState:JSON.parse(JSON.stringify(globalState)),
+     defaultTimeSeconds:DEFAULT_TIME_SECONDS
+   },
+   rosters:{'11':getStudents('11'),'12':getStudents('12')},
+   note:'Bản sao dữ liệu gốc để lưu trữ. Danh sách học sinh cố định của ứng dụng được kèm trong rosters.'
+ };
+ let url='';
+ try {
+   const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'});
+   url=URL.createObjectURL(blob);
+   const a=document.createElement('a');a.href=url;
+   a.download='Lop-Ly-Thay-Rang-raw-backup-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';
+   document.body.appendChild(a);a.click();a.remove();
+ } catch(err) {
+   toast('Không tạo được file sao lưu; dữ liệu chưa bị xóa.');
+   if(url)URL.revokeObjectURL(url);
+   return;
+ }
+ setTimeout(()=>{if(url)URL.revokeObjectURL(url)},2500);
+ const confirmDelete=confirm('Đã yêu cầu tải file JSON sao lưu. Hãy kiểm tra thư mục tải xuống để chắc chắn file đã được lưu.\n\nNhấn OK để xóa dữ liệu trong ứng dụng; nhấn Hủy để giữ nguyên dữ liệu.');
+ if(!confirmDelete){toast('Đã tạo yêu cầu sao lưu; dữ liệu vẫn được giữ nguyên.');return;}
+
+ // Xóa mọi trạng thái động trong sơ đồ lớp, ghi chú, giờ đếm và bản ghi điểm danh.
+ Object.keys(globalState).forEach(k=>{
+   const st=globalState[k];
+   if(st){st.status=0;st.timeLeft=DEFAULT_TIME_SECONDS;st.isRunning=false;st.isFinished=false;st.note='';}
+ });
+ classNotes['11']='';classNotes['12']='';currentClass='11';activeClass='11';
+ store={records:{},extraWeeks:0};
+ try{localStorage.removeItem(KEY);}catch(e){}
+ $('att-class').value='11';
+ $('att-save-state').textContent='Đã xóa dữ liệu sau khi sao lưu';
+ renderGrid();render();switchSecondary(false);
+ toast('Đã xóa toàn bộ dữ liệu động. File raw JSON đã được yêu cầu tải xuống.');
+});
+async function ensureReportFonts(){
+ try {
+   if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+   if(document.fonts&&document.fonts.load){
+     await Promise.all([
+       document.fonts.load('900 32px "Nunito", "Segoe UI", Arial, sans-serif','LỚP LÝ THẦY RẠNG'),
+       document.fonts.load('700 18px "Nunito", "Segoe UI", Arial, sans-serif','Đặng Nguyễn ă â ê ô ơ ư đ'),
+       document.fonts.load('800 28px "Nunito", "Segoe UI", Arial, sans-serif','BÁO CÁO ĐIỂM DANH')
+     ]);
+   }
+ } catch(e) { /* Canvas vẫn dùng sans-serif dự phòng nếu không tải được font web. */ }
+}
+function canvasText(ctx,text,x,y,maxWidth){let str=String(text??'');if(maxWidth&&ctx.measureText(str).width>maxWidth){while(str.length>1&&ctx.measureText(str+'…').width>maxWidth)str=str.slice(0,-1);str+='…'}ctx.fillText(str,x,y)}
+function roundedRect(ctx,x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):(ctx.rect(x,y,w,h));ctx.fillStyle=fill;ctx.fill()}
+function downloadCanvas(canvas,filename){try{canvas.toBlob(blob=>{if(!blob){toast('Không thể tạo ảnh trên trình duyệt này');return}let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Đã xuất ảnh PNG')},'image/png')}catch(e){try{let a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=filename;a.click();toast('Đã xuất ảnh PNG')}catch(err){toast('Không thể xuất ảnh: '+err.message)}}}
+const COLORS={0:['#f8fafc','#64748b'],1:['#d1fae5','#047857'],2:['#fee2e2','#b91c1c'],3:['#fef3c7','#92400e'],4:['#dbeafe','#1d4ed8']};
+$('att-export-day').addEventListener('click',async()=>{
+ await ensureReportFonts();
+ let d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(dates),students=getStudents(activeClass),counts=[0,0,0,0,0];students.forEach(n=>counts[status(d,n)]++);
+ let w=1000,top=170,rowH=44,h=top+students.length*rowH+75,c=document.createElement('canvas');c.width=w;c.height=h;let x=c.getContext('2d');x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);x.fillStyle='#0f172a';x.font='900 30px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('LỚP LÝ THẦY RẠNG — LỚP '+activeClass,34,48);x.fillStyle='#475569';x.font='18px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Ngày '+weekday(d)+' '+fmt(d)+'/'+d.getFullYear(),34,80);
+ let sx=34,sy=104,cardW=174;[['Có mặt + làm bài',counts[1],'#d1fae5'],['Có mặt, chưa làm bài',counts[2],'#fee2e2'],['Vắng',counts[3],'#fef3c7'],['Vắng + nộp bài',counts[4],'#dbeafe']].forEach((z,i)=>{let xx=sx+i*(cardW+10);roundedRect(x,xx,sy,cardW,44,9,z[2]);x.fillStyle='#334155';x.font='bold 12px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(z[0],xx+12,sy+17);x.fillStyle='#0f172a';x.font='900 19px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(String(z[1]),xx+12,sy+37)});
+ let y=top,nameX=34,numW=64,nameW=600,statusW=268;roundedRect(x,nameX,y,w-68,38,7,'#dbeafe');x.fillStyle='#1e293b';x.font='900 14px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('STT',nameX+15,y+24);x.fillText('HỌ TÊN HỌC SINH',nameX+numW,y+24);x.fillText('TRẠNG THÁI',nameX+numW+nameW,y+24);
+ students.forEach((n,i)=>{let yy=y+38+i*rowH,st=status(d,n);x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(nameX,yy,w-68,rowH);x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(nameX,yy+rowH);x.lineTo(w-34,yy+rowH);x.stroke();x.fillStyle='#64748b';x.font='bold 13px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(String(i+1).padStart(2,'0'),nameX+15,yy+27);x.fillStyle='#0f172a';x.font='bold 15px "Nunito", "Segoe UI", Arial, sans-serif';canvasText(x,n,nameX+numW,yy+27,nameW-20);let bx=nameX+numW+nameW+10,by=yy+8;roundedRect(x,bx,by,statusW-20,28,7,COLORS[st][0]);x.fillStyle=COLORS[st][1];x.font='900 13px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(LABELS[st],bx+12,by+19)});
+ x.fillStyle='#64748b';x.font='12px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Báo cáo được tạo bởi Thanh Ngà · '+new Date().toLocaleString('vi-VN'),34,h-22);downloadCanvas(c,`diem-danh-lop-${activeClass}-${dateKey(d)}.png`)
+});
+$('att-export-all').addEventListener('click',async()=>{
+ await ensureReportFonts();
+ let students=getStudents(activeClass),nameW=235,dateW=88,margin=24,top=116,rowH=38,headH=66,w=margin*2+nameW+dates.length*dateW,h=top+headH+students.length*rowH+54;
+ if(w>14000||h>14000){toast('Bảng quá lớn để xuất thành một ảnh duy nhất');return}
+ let c=document.createElement('canvas');c.width=w;c.height=h;let x=c.getContext('2d');x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);x.fillStyle='#0f172a';x.font='900 27px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('LỚP LÝ THẦY RẠNG — ĐIỂM DANH TOÀN BỘ — LỚP '+activeClass,margin,39);x.fillStyle='#475569';x.font='14px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Từ '+fmt(dates[0])+'/'+dates[0].getFullYear()+' đến '+fmt(dates[dates.length-1])+'/'+dates[dates.length-1].getFullYear()+' · '+dates.length+' buổi học · '+students.length+' học sinh',margin,68);
+ let y=top;x.fillStyle='#dbeafe';x.fillRect(margin,y,nameW,headH);x.strokeStyle='#cbd5e1';x.strokeRect(margin,y,nameW,headH);x.fillStyle='#1e293b';x.font='900 13px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('HỌ TÊN HỌC SINH',margin+12,y+36);
+ dates.forEach((d,j)=>{let xx=margin+nameW+j*dateW;x.fillStyle='#eaf0f8';x.fillRect(xx,y,dateW,headH);x.strokeStyle='#cbd5e1';x.strokeRect(xx,y,dateW,headH);x.fillStyle='#475569';x.font='bold 11px "Nunito", "Segoe UI", Arial, sans-serif';x.textAlign='center';x.fillText(weekday(d),xx+dateW/2,y+19);x.fillStyle='#0f172a';x.font='900 13px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(fmt(d),xx+dateW/2,y+39);x.fillStyle='#64748b';x.font='10px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(String(d.getFullYear()),xx+dateW/2,y+54);x.textAlign='left'});
+ students.forEach((n,i)=>{let yy=y+headH+i*rowH;x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(margin,yy,nameW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(margin,yy,nameW,rowH);x.fillStyle='#64748b';x.font='bold 11px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(String(i+1).padStart(2,'0'),margin+9,yy+23);x.fillStyle='#0f172a';x.font='bold 12px "Nunito", "Segoe UI", Arial, sans-serif';canvasText(x,n,margin+37,yy+23,nameW-47);
+   dates.forEach((d,j)=>{let xx=margin+nameW+j*dateW,st=status(d,n);x.fillStyle=COLORS[st][0];x.fillRect(xx,yy,dateW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,dateW,rowH);x.fillStyle=COLORS[st][1];x.font='900 14px "Nunito", "Segoe UI", Arial, sans-serif';x.textAlign='center';x.fillText(['—','✓','×','⌛','◇'][st],xx+dateW/2,yy+24);x.textAlign='left'});
+ });
+ let fy=y+headH+students.length*rowH+23;x.fillStyle='#475569';x.font='bold 11px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Chú thích: — Chưa điểm danh   ✓ Có mặt + làm bài   × Có mặt, chưa làm bài   ✕ Vắng   ◇ Vắng + đã nộp bài',margin,fy);x.font='bold 12px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Báo cáo được tạo bởi Thanh Ngà · '+new Date().toLocaleString('vi-VN'),margin,fy+19);downloadCanvas(c,`diem-danh-toan-bo-lop-${activeClass}.png`)
+});
+function syncAttendanceToSeatMap(cls,key){
+ const record=store.records[cls+'_'+key]||{};
+ Object.keys(globalState).forEach(k=>{
+   if(!k.startsWith(cls+'_'))return;
+   const st=globalState[k];
+   if(!st||!st.name)return;
+   const value=Number(record[st.name]||0);
+   st.status=Number.isFinite(value)?Math.max(0,Math.min(4,value)):0;
+ });
+}
+window.syncAttendanceToSeatMapForSelectedDate=function(cls){
+ dates=getDates();const target=dates.find(d=>dateKey(d)===$('att-date').value)||parseDateKey(store.selectedDate||'')||nearestDate(dates);
+ if(target)syncAttendanceToSeatMap(cls,dateKey(target));updateSecondarySaveLabel();
+};
+function switchSecondary(on){
+ document.body.classList.toggle('secondary-mode',on);
+ $('secondary-aisle-actions').style.display=on?'flex':'none';
+ if(on){
+   dates=getDates();
+   const target=dates.find(d=>dateKey(d)===$('att-date').value)||parseDateKey(store.selectedDate||'')||nearestDate(dates);
+   currentClass=activeClass;
+   if(target)syncAttendanceToSeatMap(currentClass,dateKey(target));
+   updateSecondarySaveLabel();renderGrid();
+ }
+}
+$('open-secondary').addEventListener('click',()=>{currentClass=activeClass;switchSecondary(true)});$('return-attendance').addEventListener('click',()=>switchSecondary(false));
+$('save-seat-today').addEventListener('click',()=>{
+ dates=getDates();const target=dates.find(d=>dateKey(d)===$('att-date').value)||parseDateKey(store.selectedDate||'')||nearestDate(dates);if(!target){toast('Chưa có ngày học phù hợp trong lịch');return}const key=dateKey(target),record={};let count=0,marked=0;
+ Object.keys(globalState).forEach(k=>{if(k.startsWith(currentClass+'_')){const st=globalState[k];if(st.name){const value=Math.max(0,Math.min(4,Number(st.status)||0));record[st.name]=value;count++;if(value>0)marked++;}}});
+ const question=`Bạn có chắc chắn muốn lưu sơ đồ lớp vào bảng điểm danh không?\n\nLớp ${currentClass} · ${weekdayLong(target)} ${fmt(target)}/${target.getFullYear()}\n\nThao tác này sẽ ghi đè trạng thái điểm danh hiện có của lớp ${currentClass} trong ngày này.\nSố học sinh có trạng thái: ${marked}/${count}.`;
+ if(!confirm(question))return;
+ store.records[currentClass+'_'+key]=record;store.selectedDate=key;activeClass=currentClass;$('att-class').value=currentClass;save();dates=getDates();$('att-date').value=key;render();switchSecondary(false);toast(`Đã lưu ${count} học sinh lớp ${currentClass} vào ${weekdayLong(target)} ${fmt(target)}/${target.getFullYear()}; thống kê đã cập nhật`)
+});
+// Báo cáo PNG tổng quát: cùng ngày, hai lớp, bốn cột.
+function wrapCanvasLines(ctx,text,maxWidth){
+ const out=[];
+ String(text??'').split('\n').forEach(paragraph=>{
+   const words=paragraph.split(/\s+/).filter(Boolean);
+   if(!words.length){out.push('');return;}
+   let line='';
+   words.forEach(word=>{
+     const candidate=line?line+' '+word:word;
+     if(line&&ctx.measureText(candidate).width>maxWidth){out.push(line);line=word;}else line=candidate;
+   });
+   out.push(line);
+ });
+ return out.length?out:[''];
+}
+function openGeneralReport(){
+ const d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(getDates());
+ $('att-report-date-label').textContent=(d?weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear():'Ngày đang chọn')+' · Lớp 11 và lớp 12';
+ // Mỗi lần mở đều có sẵn khung ghi chú cho hai lớp; người dùng chỉnh sửa trước khi xuất.
+ $('att-report-note').value='Lớp 11:\nLớp 12:';
+ $('att-report-preserve-lines').checked=true;
+ $('att-report-modal').classList.add('show');
+ setTimeout(()=>$('att-report-note').focus(),40);
+}
+function closeGeneralReport(){$('att-report-modal').classList.remove('show');}
+$('att-export-general').addEventListener('click',openGeneralReport);
+$('att-report-close').addEventListener('click',closeGeneralReport);
+$('att-report-cancel').addEventListener('click',closeGeneralReport);
+$('att-report-modal').addEventListener('click',e=>{if(e.target===$('att-report-modal'))closeGeneralReport();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGeneralReport();});
+$('att-report-export').addEventListener('click',async()=>{
+ await ensureReportFonts();
+ const d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(getDates());
+ if(!d){toast('Không tìm được ngày đang chọn');return;}
+ const students11=getStudents('11'),students12=getStudents('12'),rows=Math.max(students11.length,students12.length);
+ const noteInput=$('att-report-note').value||'';
+ const note=$('att-report-preserve-lines').checked?noteInput:noteInput.replace(/\s*\n\s*/g,' ');
+ // 9:16 portrait image suitable for a phone screen or story-style sharing.
+ const W=1080,H=1920,margin=30,inner=W-margin*2,blockW=inner/2,nameW=278,statusW=blockW-nameW;
+ const defaultTableTop=220,noteTop=184,groupH=54,colH=52,footerReserve=62,noteGap=18;
+ const temp=document.createElement('canvas').getContext('2d');
+ let noteFont=28,noteLines=[],noteLineH=38,noteH=0,rowH=0,top=defaultTableTop;
+ const tryLayout=size=>{
+   temp.font=`700 ${size}px "Nunito", "Segoe UI", Arial, sans-serif`;
+   const lines=note.trim()?wrapCanvasLines(temp,note,inner-36):[];
+   const lineH=size+10;
+   const boxH=lines.length?54+lines.length*lineH+12:0;
+   const tableTop=lines.length?noteTop+boxH+noteGap:defaultTableTop;
+   const available=H-(tableTop+groupH+colH)-footerReserve;
+   return {size,lines,lineH,boxH,tableTop,rowH:rows?Math.floor(available/rows):52};
+ };
+ let layout=null;
+ for(const size of [28,26,24,22,20,18]){
+   const candidate=tryLayout(size);
+   if(candidate.rowH>=30){layout=candidate;break;}
+ }
+ if(!layout){toast('Chú thích quá dài để vừa ảnh 9:16. Vui lòng rút gọn nội dung rồi xuất lại.');return;}
+ noteFont=layout.size;noteLines=layout.lines;noteLineH=layout.lineH;noteH=layout.boxH;rowH=Math.min(52,layout.rowH);top=layout.tableTop;
+ const tableBottom=top+groupH+colH+rows*rowH;
+ const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.fillStyle='#f8fafc';x.fillRect(0,0,W,H);
+ // Headings are deliberately large; use the loaded Unicode-capable Nunito font.
+ x.fillStyle='#0f172a';x.font='900 48px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('LỚP LÝ THẦY RẠNG',margin,62);
+ x.fillStyle='#0f766e';x.font='900 32px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('BÁO CÁO ĐIỂM DANH',margin,112);
+ x.fillStyle='#475569';x.font='700 24px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('Ngày '+weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear(),margin,162);
+ if(noteLines.length){
+   roundedRect(x,margin,noteTop,inner,noteH-8,12,'#e2e8f0');
+   x.fillStyle='#0f172a';x.font='900 24px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText('CHÚ THÍCH',margin+16,noteTop+32);
+   x.fillStyle='#334155';x.font=`800 ${noteFont}px "Nunito", "Segoe UI", Arial, sans-serif`;
+   noteLines.forEach((line,i)=>x.fillText(line,margin+16,noteTop+62+i*noteLineH));
+ }
+ const headY=top;
+ roundedRect(x,margin,headY,blockW,groupH,9,'#1d4ed8');roundedRect(x,margin+blockW,headY,blockW,groupH,9,'#0f766e');
+ x.fillStyle='#fff';x.font='900 25px "Nunito", "Segoe UI", Arial, sans-serif';x.textAlign='center';x.fillText('LỚP 11',margin+blockW/2,headY+35);x.fillText('LỚP 12',margin+blockW+blockW/2,headY+35);x.textAlign='left';
+ const headers=[
+   {x:margin,w:nameW,label:'HỌ TÊN HỌC SINH'},
+   {x:margin+nameW,w:statusW,label:'TRẠNG THÁI'},
+   {x:margin+blockW,w:nameW,label:'HỌ TÊN HỌC SINH'},
+   {x:margin+blockW+nameW,w:statusW,label:'TRẠNG THÁI'}
+ ];
+ headers.forEach(a=>{x.fillStyle='#dbeafe';x.fillRect(a.x,headY+groupH,a.w,colH);x.strokeStyle='#cbd5e1';x.strokeRect(a.x,headY+groupH,a.w,colH);x.fillStyle='#1e293b';x.font='900 16px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(a.label,a.x+10,headY+groupH+32);});
+ const stLabels=LABELS;
+ for(let i=0;i<rows;i++){
+   const yy=headY+groupH+colH+i*rowH;
+   const n11=students11[i]||'',n12=students12[i]||'';
+   const arr=[{name:n11,st:n11?statusInClass('11',d,n11):0},{name:n11,st:n11?statusInClass('11',d,n11):0},{name:n12,st:n12?statusInClass('12',d,n12):0},{name:n12,st:n12?statusInClass('12',d,n12):0}];
+   arr.forEach((a,j)=>{
+     const col=headers[j],xx=col.x,ww=col.w;
+     x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(xx,yy,ww,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,ww,rowH);
+     const baseY=yy+Math.floor(rowH/2)+6;
+     if(j===0||j===2){
+       if(a.name){x.fillStyle='#64748b';x.font='700 14px "Nunito", "Segoe UI", Arial, sans-serif';x.fillText(String(i+1).padStart(2,'0'),xx+8,baseY);x.fillStyle='#0f172a';x.font='800 18px "Nunito", "Segoe UI", Arial, sans-serif';canvasText(x,a.name,xx+36,baseY,ww-43);}
+     }else{
+       x.fillStyle=COLORS[a.st][0];x.fillRect(xx+5,yy+4,ww-10,rowH-8);x.fillStyle=COLORS[a.st][1];x.font='900 15px "Nunito", "Segoe UI", Arial, sans-serif';canvasText(x,a.name?stLabels[a.st]:'',xx+12,baseY,ww-24);
+     }
+   });
+ }
+ x.fillStyle='#64748b';x.font='700 16px "Nunito", "Segoe UI", Arial, sans-serif';x.textAlign='center';x.fillText('Báo cáo được tạo bởi Thanh Ngà',W/2,H-25);x.textAlign='left';
+ downloadCanvas(c,`bao-cao-tong-quat-${dateKey(d)}-9x16.png`);closeGeneralReport();
+});
+// Nút bật/tắt chế độ toàn màn hình và giữ màn hình luôn sáng.
+async function toggleFullScreenAwake(){
+ const btn=$('att-fullscreen-awake');
+ if(!keepScreenAwake){
+   keepScreenAwake=true;
+   let fullScreenOK=false;
+   try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen){await document.documentElement.requestFullscreen();fullScreenOK=true;}else fullScreenOK=!!document.fullscreenElement;}catch(e){}
+   const awakeOK=await requestWakeLock();
+   btn.setAttribute('aria-pressed','true');btn.textContent=awakeOK?'✓ Đang giữ màn hình sáng':'✓ Đã bật chế độ';
+   btn.classList.add('primary');
+   toast(fullScreenOK&&awakeOK?'Đã bật toàn màn hình và giữ màn hình sáng':fullScreenOK?'Đã bật toàn màn hình; trình duyệt không hỗ trợ giữ sáng':awakeOK?'Đã giữ màn hình sáng; trình duyệt không cho toàn màn hình':'Trình duyệt không hỗ trợ một hoặc cả hai tính năng');
+ }else{
+   keepScreenAwake=false;
+   try{if(wakeLock){await wakeLock.release();wakeLock=null;}}catch(e){}
+   try{if(document.fullscreenElement&&document.exitFullscreen)await document.exitFullscreen();}catch(e){}
+   btn.setAttribute('aria-pressed','false');btn.textContent='⛶ Toàn màn hình + giữ sáng';btn.classList.remove('primary');
+   toast('Đã tắt toàn màn hình và chế độ giữ sáng');
+ }
+}
+$('att-fullscreen-awake').addEventListener('click',toggleFullScreenAwake);
+document.addEventListener('fullscreenchange',()=>{
+ const btn=$('att-fullscreen-awake');
+ if(!keepScreenAwake&&document.fullscreenElement){btn.textContent='⛶ Toàn màn hình + giữ sáng';}
+});
+
+// Mở lại các công cụ gốc ngay từ giao diện điểm danh.
+$('att-open-settings').addEventListener('click',()=>{
+ currentClass=activeClass;
+ switchSecondary(true);
+ $('settings-btn').click();
+});
+$('att-open-random').addEventListener('click',()=>{
+ currentClass=activeClass;
+ switchSecondary(true);
+ if(isSelectionMode)exitSelectionMode();
+ $('enter-spin-mode-btn').click();
+});
+
+// Thống kê tổng hợp theo từng học sinh qua các buổi trong lịch.
+function renderStats(){
+ dates=getDates();
+ const filter=$('att-stats-class').value;
+ const classes=filter==='all'?['11','12']:[filter];
+ const data=[];
+ const totals={work:0,presentNoWork:0,absent:0,submitted:0,attended:0};
+ classes.forEach(cls=>{
+   getStudents(cls).forEach((name,index)=>{
+     const row={cls,name,index:index+1,work:0,presentNoWork:0,absent:0,submitted:0,attended:0};
+     dates.forEach(d=>{
+       const st=statusInClass(cls,d,name);
+       if(st===1){row.work++;row.attended++;}
+       else if(st===2){row.presentNoWork++;row.attended++;}
+       else if(st===3){row.absent++;row.attended++;}
+       else if(st===4){row.submitted++;row.attended++;}
+     });
+     totals.work+=row.work;totals.presentNoWork+=row.presentNoWork;totals.absent+=row.absent;totals.submitted+=row.submitted;totals.attended+=row.attended;
+     data.push(row);
+   });
+ });
+ const daysWithRecords=dates.filter(d=>classes.some(cls=>Object.values((store.records||{})[cls+'_'+dateKey(d)]||{}).some(v=>Number(v)>0))).length;
+ $('att-stats-period').textContent=`${dates.length} buổi trong lịch · Có dữ liệu ở ${daysWithRecords} buổi`;
+ $('att-stats-summary').innerHTML=[
+   ['Lượt có mặt + làm bài',totals.work,'#d1fae5','#047857'],
+   ['Lượt có mặt chưa làm bài',totals.presentNoWork,'#fee2e2','#b91c1c'],
+   ['Lượt vắng',totals.absent,'#fef3c7','#92400e'],
+   ['Lượt vắng + nộp bài',totals.submitted,'#dbeafe','#1d4ed8'],
+   ['Tổng lượt đã điểm danh',totals.attended,'#f1f5f9','#0f172a']
+ ].map(a=>`<div class="att-stats-card" style="background:${a[2]}"><small style="color:${a[3]}">${a[0]}</small><strong style="color:${a[3]}">${a[1]}</strong></div>`).join('');
+ const all=filter==='all';
+ $('att-stats-table').querySelector('thead').innerHTML=`<tr>${all?'<th>Lớp</th>':''}<th style="text-align:left">Học sinh</th><th class="stat-col-work">Có làm bài</th><th class="stat-col-present-no-work">Có mặt, chưa làm</th><th class="stat-col-absent">Vắng</th><th class="stat-col-submitted">Vắng + nộp bài</th><th>Tổng buổi đã điểm danh</th></tr>`;
+ $('att-stats-table').querySelector('tbody').innerHTML=data.map(r=>`<tr>${all?`<td><b>${r.cls}</b></td>`:''}<th><span style="display:inline-block;min-width:27px;color:#94a3b8;font-size:10px">${String(r.index).padStart(2,'0')}</span>${escapeHtml(r.name)}</th><td class="stat-col-work"><b>${r.work}</b></td><td class="stat-col-present-no-work"><b>${r.presentNoWork}</b></td><td class="stat-col-absent"><b>${r.absent}</b></td><td class="stat-col-submitted"><b>${r.submitted}</b></td><td><b>${r.attended}</b></td></tr>`).join('');
+}
+function openStats(){renderStats();$('att-stats-modal').classList.add('show');}
+function closeStats(){$('att-stats-modal').classList.remove('show');}
+$('att-open-stats').addEventListener('click',openStats);
+$('att-stats-class').addEventListener('change',renderStats);
+$('att-stats-close').addEventListener('click',closeStats);
+$('att-stats-modal').addEventListener('click',e=>{if(e.target===$('att-stats-modal'))closeStats();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStats();});
+
+// Menu dồn các thao tác ảnh và random thành một nút trên điện thoại dọc.
+const mobileToolsToggle=$('att-mobile-tools-toggle');
+const mobileToolsMenu=$('att-mobile-tools-menu');
+function closeMobileTools(){mobileToolsMenu.classList.remove('open');mobileToolsMenu.setAttribute('aria-hidden','true');mobileToolsToggle.setAttribute('aria-expanded','false');}
+mobileToolsToggle.addEventListener('click',e=>{
+ e.stopPropagation();
+ const open=!mobileToolsMenu.classList.contains('open');
+ mobileToolsMenu.classList.toggle('open',open);
+ mobileToolsMenu.setAttribute('aria-hidden',String(!open));
+ mobileToolsToggle.setAttribute('aria-expanded',String(open));
+});
+mobileToolsMenu.addEventListener('click',e=>{if(e.target.closest('button'))closeMobileTools();});
+document.addEventListener('click',e=>{if(!e.target.closest('.att-mobile-tools'))closeMobileTools();});
+window.addEventListener('orientationchange',closeMobileTools);
+
+// Trên điện thoại, ẩn dải điều khiển khi cuộn xuống danh sách; chỉ hiện lại sát đầu bảng.
+const mobileControlsQuery=window.matchMedia('(max-width: 650px)');
+function syncMobileControls(){
+ const wrap=document.querySelector('.att-table-wrap');
+ if(!mobileControlsQuery.matches){$('attendance-view').classList.remove('mobile-controls-hidden');return;}
+ if(wrap&&wrap.scrollTop<=1)$('attendance-view').classList.remove('mobile-controls-hidden');
+ else $('attendance-view').classList.add('mobile-controls-hidden');
+}
+document.querySelector('.att-table-wrap').addEventListener('scroll',()=>{
+ if(!mobileControlsQuery.matches)return;
+ const wrap=document.querySelector('.att-table-wrap');
+ if(wrap.scrollTop>1){
+   closeMobileTools();
+   $('attendance-view').classList.add('mobile-controls-hidden');
+ }else{
+   $('attendance-view').classList.remove('mobile-controls-hidden');
+ }
+},{passive:true});
+window.addEventListener('resize',syncMobileControls);
+syncMobileControls();
+
+render();
+})();
+</script>
+
+</body>
+</html>
