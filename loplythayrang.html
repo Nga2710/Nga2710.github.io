@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Lớp Lý Thầy Rạng — v11</title>
+    <title>Lớp Lý Thầy Rạng — Điểm danh &amp; Bảng điểm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
@@ -410,12 +410,10 @@
           *, *::before, *::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
         }
         #att-report-modal .att-status-dialog { width:min(680px,100%); }
-        #att-report-note { font-size:16px; line-height:1.6; min-height:150px; }
         @media(max-width:650px) {
           #att-report-modal { padding:9px; align-items:center; }
           #att-report-modal .att-status-dialog { width:100%; max-height:calc(100svh - 18px); padding:15px; border-radius:15px; }
           #att-report-title { font-size:20px!important; line-height:1.25; }
-          #att-report-note { min-height:150px; max-height:35svh; font-size:16px!important; }
           #att-report-modal .att-status-dialog > div:last-of-type { gap:7px!important; }
           #att-report-modal .att-btn { min-height:44px; font-size:13px; }
         }
@@ -461,6 +459,191 @@
 #att-mobile-tools-toggle {
   display: none !important;
 }
+        .att-home-card > * { flex-shrink:0; }
+        .att-home-card { justify-content:flex-start; }
+        .att-home-icon { margin-top:auto; }
+        .att-home-shortcuts { margin-bottom:auto; }
+        #home-go-grades { grid-column:1 / -1; border-color:#99f6e4; background:#f0fdfa; }
+        .att-list-nav { justify-content:space-between; gap:8px; }
+        #settings-box, #report-box { max-height:calc(100dvh - 24px); overflow-y:auto; }
+        .grade-dialog, .grade-dialog * { box-sizing:border-box; }
+        #gradebook-modal { z-index:130; padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left)); user-select:text; }
+        .grade-dialog { display:flex; flex-direction:column; width:min(1160px,100%); height:min(780px,100%); min-height:0; padding:20px; gap:12px; overflow:hidden; background:#fff; color:#0f172a; border-radius:20px; box-shadow:0 24px 70px #02061750; animation:attPopIn .18s ease-out; font-family:'Nunito',sans-serif; }
+        .grade-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-shrink:0; }
+        #gradebook-title { margin:0; font-size:22px; font-weight:900; line-height:1.2; }
+        #gradebook-title i { color:#0f766e; }
+        .grade-subtitle { margin:5px 0 0; font-size:12px; color:#64748b; line-height:1.5; }
+        .grade-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; }
+        .grade-controls label { display:flex; align-items:center; gap:9px; font-size:12px; font-weight:900; }
+        .grade-controls select, .grade-field input, .grade-field select { min-width:0; max-width:100%; border:1px solid #cbd5e1; border-radius:9px; padding:9px 10px; background:#f8fafc; color:#0f172a; font:800 14px 'Nunito',sans-serif; }
+        .grade-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; flex-shrink:0; }
+        .grade-summary > div { padding:10px 12px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; min-width:0; }
+        .grade-summary > div:nth-child(2) { background:#f0fdfa; border-color:#99f6e4; }
+        .grade-summary > div:nth-child(3) { background:#eff6ff; border-color:#bfdbfe; }
+        .grade-summary span { display:block; font-size:11px; color:#475569; font-weight:900; }
+        .grade-summary strong { display:block; margin-top:3px; font-size:23px; line-height:1.25; font-weight:900; }
+        #grade-class-average { color:#0f766e; }
+        #grade-class-highest { color:#1d4ed8; }
+        #grade-column-form { flex-shrink:0; padding:12px; border:1px solid #99f6e4; border-radius:12px; background:#f0fdfa; max-height:45%; overflow-y:auto; }
+        #grade-column-form[hidden] { display:none; }
+        .grade-dialog.grade-editing .grade-summary { display:none; }
+        .grade-form-grid { display:grid; grid-template-columns:minmax(150px,2fr) minmax(130px,1fr) minmax(85px,.7fr); gap:9px; }
+        .grade-field { display:flex; flex-direction:column; gap:5px; min-width:0; font-size:11px; font-weight:900; color:#334155; }
+        .grade-form-actions { display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-top:10px; }
+        #grade-column-delete { margin-left:auto; }
+        #grade-column-delete[hidden] { display:none; }
+        .grade-table-wrap { flex:1; min-height:0; overflow:auto; border:1px solid #cbd5e1; border-radius:12px; position:relative; isolation:isolate; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+        #grade-table { width:100%; min-width:540px; border-collapse:separate; border-spacing:0; table-layout:fixed; font-size:12px; background:#fff; }
+        #grade-table th, #grade-table td { border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; padding:7px; text-align:center; }
+        #grade-table thead th { position:sticky; top:0; z-index:3; height:72px; background:#eaf0f8; color:#334155; font-weight:900; }
+        #grade-table .grade-name { position:sticky; left:0; z-index:2; width:180px; text-align:left; background:#fff; font-weight:900; overflow-wrap:anywhere; }
+        #grade-table thead .grade-name { z-index:5; background:#dbeafe; }
+        #grade-table tbody tr:nth-child(even) td, #grade-table tbody tr:nth-child(even) .grade-name { background:#f8fafc; }
+        #grade-table .grade-average { color:#0f766e; font-weight:900; }
+        #grade-table .grade-highest { color:#1d4ed8; font-weight:900; }
+        #grade-table .grade-summary-col { width:86px; }
+        #grade-table .grade-score-col { width:112px; }
+        .grade-name small { display:block; margin-top:3px; color:#94a3b8; font-size:10px; }
+        .grade-column-btn { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; width:100%; min-height:54px; border:0; background:transparent; padding:0; color:inherit; font:900 12px 'Nunito',sans-serif; cursor:pointer; }
+        .grade-column-btn span { max-width:100%; white-space:normal; overflow-wrap:anywhere; line-height:1.25; }
+        .grade-column-btn small { font-size:10px; color:#64748b; font-weight:800; }
+        .grade-score { width:100%; min-width:0; min-height:40px; padding:7px 3px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; text-align:center; color:#0f172a; font:900 16px 'Nunito',sans-serif; user-select:text; transition:border-color .15s,box-shadow .15s; }
+        .grade-score:focus { border-color:#0d9488; box-shadow:0 0 0 3px #14b8a629; }
+        .grade-score[aria-invalid="true"] { border-color:#ef4444; background:#fef2f2; box-shadow:0 0 0 2px #ef444429; }
+        .grade-empty { display:none; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc; color:#64748b; font-size:12px; line-height:1.5; }
+        .grade-empty.show { display:block; }
+        .grade-footer { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:5px 12px; flex-shrink:0; font-size:11px; line-height:1.5; color:#64748b; }
+        #grade-validation { min-height:17px; margin:0; color:#b91c1c; font-size:11px; flex-shrink:0; }
+        #grade-save-state { color:#0f766e; font-weight:900; }
+        .grade-dialog button:focus-visible, .grade-dialog select:focus-visible, .grade-field input:focus-visible, #home-go-grades:focus-visible { outline:3px solid #14b8a6; outline-offset:2px; }
+        @media(max-width:650px) {
+          #gradebook-modal { padding:6px; }
+          .grade-dialog { width:100%; height:100%; padding:12px; gap:9px; border-radius:14px; }
+          #gradebook-title { font-size:20px; }
+          .grade-subtitle { font-size:11px; }
+          .grade-summary { gap:5px; }
+          .grade-summary > div { padding:8px 6px; border-radius:9px; }
+          .grade-summary span { font-size:10px; line-height:1.35; }
+          .grade-summary strong { font-size:20px; }
+          .grade-form-grid { grid-template-columns:minmax(0,1.4fr) minmax(80px,.8fr); }
+          .grade-field:first-child { grid-column:1 / -1; }
+          .grade-controls select, .grade-field input, .grade-field select { font-size:16px; }
+          .grade-controls .att-btn { min-height:42px; padding:8px 10px; }
+          #grade-table { min-width:440px; font-size:11px; }
+          #grade-table .grade-name { width:122px; font-size:11px; padding:7px 6px; }
+          #grade-table .grade-summary-col { width:74px; }
+          #grade-table .grade-score-col { width:100px; }
+          #grade-table th, #grade-table td { padding:5px; }
+          .grade-score { min-height:44px; }
+          .grade-footer { font-size:10px; }
+          #grade-column-form { padding:9px; }
+        }
+        @media(max-width:650px) and (orientation:portrait) {
+          .att-actions { grid-template-columns:repeat(4,minmax(0,1fr)); }
+          .att-mobile-tools { grid-column:span 3; }
+          .att-mobile-tools-menu { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+          .att-mobile-tools-menu .att-btn { min-width:0; width:100%; padding:8px 4px; font-size:10px; justify-content:center; text-align:center; line-height:1.4; }
+          .att-mobile-tools-menu #att-export-general { grid-column:auto; }
+          #att-open-settings { grid-column:auto; min-width:0; padding:7px 4px; }
+          #attendance-view .att-toolbar .att-class-picker { flex:1 1 auto; order:0; }
+          #attendance-view #att-nearest-date { order:1; flex:0 0 auto; font-size:10px; padding:7px; min-height:34px; }
+          #attendance-view #att-current-date { order:2; flex:1 1 100%; width:100%; font-size:13px; }
+        }
+        @media(orientation:portrait) {
+          #app { overflow-y:auto; align-items:flex-start!important; overscroll-behavior:contain; padding-bottom:max(4px,env(safe-area-inset-bottom)); }
+          #grid-container { height:auto!important; min-height:100%; grid-template-rows:82px repeat(6,minmax(112px,1fr))!important; }
+          #grid-container .student-cell .status-radio { height:24px!important; min-height:24px; }
+          #grid-container .student-cell .status-radio i { font-size:11px!important; }
+          #grid-container .student-cell .play-btn, #grid-container .student-cell .reset-btn { min-width:22px; min-height:25px; }
+          #grid-container .student-cell .play-btn i { font-size:19px!important; }
+          #grid-container .student-cell .time-display { font-size:12px!important; }
+          #grid-container .student-cell.flex-1 > div:nth-of-type(2) { flex-wrap:wrap; padding:0 1px; }
+          #grid-container .student-cell.flex-1 .time-display { order:-1; flex:0 0 100%; text-align:center; font-size:11px!important; }
+          #grid-container .student-cell .note-input { height:24px; min-height:24px; font-size:10px!important; }
+          #grid-container .student-cell > div:first-of-type > span { white-space:normal; overflow-wrap:anywhere; font-size:11px; line-height:1.2; }
+        }
+        @media(max-width:380px) {
+          #gradebook-title { font-size:18px; }
+          .grade-subtitle { display:none; }
+          .grade-controls { flex-wrap:nowrap; }
+          .grade-controls label { font-size:11px; gap:6px; }
+          .grade-controls select { font-size:14px; padding:7px 5px; }
+          .grade-controls .att-btn { font-size:11px; padding:7px 8px; min-height:38px; }
+          #grid-container .student-cell > div:nth-of-type(2) { flex-wrap:wrap; padding:0 1px; }
+          #grid-container .student-cell .time-display { order:-1; flex:0 0 100%; text-align:center; }
+          #grid-container .student-cell.flex-1 .play-btn, #grid-container .student-cell.flex-1 .reset-btn { min-width:18px; }
+        }
+        @media(orientation:landscape) and (max-height:600px) {
+          #app { overflow:auto; align-items:flex-start!important; }
+          #grid-container { min-height:630px; min-width:620px; }
+          .att-home-card { justify-content:flex-start; }
+          #gradebook-modal { padding:6px; }
+          .grade-dialog { padding:10px; gap:6px; }
+          .grade-summary > div { padding:5px 9px; }
+          .grade-summary strong { font-size:19px; }
+          .grade-subtitle { display:none; }
+        }
+        .grade-export-actions { display:flex; align-items:center; flex-wrap:wrap; gap:7px; }
+        .grade-export-actions .att-btn { min-height:40px; }
+        .seat-name-btn { display:block; width:100%; min-height:25px; padding:1px 0; border:0; background:none; text-align:left; color:#1e293b; font:900 12px 'Nunito',sans-serif; line-height:1.2; overflow-wrap:anywhere; cursor:pointer; }
+        .seat-name-btn:focus-visible { outline:2px solid #0f766e; border-radius:4px; }
+        #undo-bar { display:none; position:fixed; z-index:350; left:50%; bottom:max(12px,env(safe-area-inset-bottom)); transform:translateX(-50%); width:max-content; max-width:calc(100vw - 20px); align-items:center; gap:12px; border:1px solid #334155; border-radius:12px; padding:10px 12px; background:#0f172a; color:#fff; box-shadow:0 10px 30px #0004; font-size:12px; }
+        #undo-bar.show { display:flex; animation:attFadeIn .15s ease-out; }
+        body.undo-visible #app { padding-bottom:84px; }
+        body.undo-visible .grade-dialog:not(.grade-editing) .grade-footer { padding-bottom:58px; }
+        body:has(.att-modal-backdrop.show:not(#gradebook-modal),.grade-dialog.grade-editing,#settings-modal:not(.hidden),#report-modal:not(.hidden),#winner-modal:not(.hidden)) #undo-bar { display:none; }
+        #undo-message { min-width:0; max-width:540px; line-height:1.4; }
+        #undo-action { flex:none; border:0; border-radius:8px; padding:9px 12px; min-height:38px; background:#5eead4; color:#134e4a; font-weight:900; cursor:pointer; }
+        #undo-dismiss { flex:none; border:0; background:transparent; color:#cbd5e1; font-size:24px; cursor:pointer; padding:2px 5px; }
+        .data-restore-dialog { width:min(560px,100%); max-height:calc(100dvh - 24px); overflow:auto; }
+        .data-restore-summary { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:14px 0; }
+        .data-restore-summary > div { border:1px solid #e2e8f0; background:#f8fafc; border-radius:10px; padding:12px; font-size:12px; line-height:1.8; }
+        .data-restore-note { margin:12px 0; color:#475569; font-size:12px; line-height:1.6; }
+        #restore-error { color:#b91c1c; font-weight:800; font-size:12px; }
+        @media(max-width:650px) {
+          .grade-controls { align-items:stretch; }
+          .grade-export-actions { flex:1 1 100%; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+          .grade-export-actions .att-btn { padding:7px 4px; font-size:11px; min-width:0; white-space:normal; }
+          .grade-controls > label { align-self:flex-start; }
+          #grade-add-column { grid-column:span 1; }
+          #undo-bar { padding:8px; gap:7px; font-size:11px; }
+          #undo-action { padding:8px; }
+          .seat-name-btn { font-size:11px; }
+        }
+        @media(max-width:380px) { .grade-controls { flex-wrap:wrap; } .grade-export-actions .att-btn i { display:none; } }
+        .daily-notes { width:min(920px,100%); flex-shrink:0; margin-top:18px; padding:16px; border:1px solid #cbd5e1; border-radius:16px; background:#fff; text-align:left; }
+        .daily-notes-head, .daily-notes-toolbar, .daily-note-entry-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+        .daily-notes h2 { margin:0; color:#0f172a; font-size:17px; font-weight:900; }
+        .daily-notes-hint { margin:5px 0 12px; color:#64748b; font-size:12px; line-height:1.5; }
+        .daily-notes-toolbar { margin-bottom:12px; }
+        .daily-notes-toolbar label { display:flex; align-items:center; flex-wrap:wrap; gap:7px; color:#334155; font-size:12px; font-weight:900; }
+        #daily-note-date { max-width:100%; min-height:40px; padding:7px 9px; border:1px solid #cbd5e1; border-radius:9px; background:#f8fafc; color:#0f172a; font:800 14px 'Nunito',sans-serif; }
+        .daily-note-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .daily-note-field { min-width:0; color:#0f766e; font-size:13px; font-weight:900; }
+        .daily-note-field textarea { display:block; width:100%; min-height:110px; margin-top:6px; padding:11px; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc; color:#0f172a; font:700 16px/1.55 'Nunito',sans-serif; resize:vertical; user-select:text; }
+        .daily-note-field textarea:focus, #daily-note-date:focus-visible { outline:2px solid #0f766e; outline-offset:2px; background:#fff; }
+        #daily-note-save-state { color:#0f766e; font-size:11px; font-weight:800; }
+        .daily-notes-history-title { margin:16px 0 8px; color:#334155; font-size:12px; font-weight:900; }
+        #daily-notes-list { display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; overscroll-behavior:contain; }
+        .daily-note-entry { flex-shrink:0; padding:11px 12px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc; }
+        .daily-note-entry.current { border-color:#5eead4; background:#f0fdfa; }
+        .daily-note-entry-head strong { color:#0f172a; font-size:12px; font-weight:900; }
+        .daily-note-entry .att-btn { min-height:32px; padding:5px 10px; font-size:11px; }
+        .daily-note-entry p { margin:6px 0 0; color:#475569; font-size:12px; font-weight:700; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; }
+        .daily-note-entry p b { color:#0f766e; }
+        .daily-notes-empty { margin:0; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; color:#64748b; font-size:12px; line-height:1.6; }
+        #att-report-note-preview { margin:10px 0; padding:12px; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc; color:#334155; font:700 15px/1.6 'Nunito',sans-serif; white-space:pre-wrap; overflow-wrap:anywhere; max-height:35svh; overflow:auto; }
+        .daily-notes .att-btn:disabled { opacity:.5; cursor:default; }
+        .att-home-card > * { flex-shrink:0; }
+        .att-home-card { justify-content:flex-start; }
+        @media(max-width:650px) {
+          .daily-notes { padding:12px; margin-top:12px; }
+          .daily-note-fields { grid-template-columns:1fr; gap:10px; }
+          .daily-notes-toolbar { align-items:stretch; }
+          .daily-notes-toolbar label, #daily-note-date { width:100%; }
+          .daily-notes-toolbar .att-btn { width:100%; justify-content:center; }
+          .daily-note-field textarea { min-height:95px; }
+        }
     </style>
 </head>
 <body class="page-home">
@@ -475,7 +658,7 @@
         <div class="att-actions">
           <div class="att-mobile-tools">
             <button class="att-btn att-mobile-tools-toggle" id="att-mobile-tools-toggle" type="button" aria-expanded="false" aria-controls="att-mobile-tools-menu"><i class="ph-bold ph-list"></i> Báo cáo ▾</button>
-            <div class="att-mobile-tools-menu" id="att-mobile-tools-menu" aria-hidden="true">
+            <div class="att-mobile-tools-menu" id="att-mobile-tools-menu" aria-hidden="false">
               <button class="att-btn primary" id="att-export-day"><i class="ph-bold ph-image"></i> Ảnh ngày</button>
               <button class="att-btn" id="att-export-all"><i class="ph-bold ph-images"></i> Ảnh toàn bộ</button>
               <button class="att-btn" id="att-export-general"><i class="ph-bold ph-file-text"></i> Báo cáo tổng quát ngày</button>
@@ -524,7 +707,28 @@
             <span class="att-shortcut-key"><i class="ph-bold ph-arrow-right"></i></span>
             <span><strong>Danh sách điểm danh</strong><small>Chuyển sang phải</small></span>
           </button>
+          <button type="button" id="home-go-grades" class="att-home-shortcut att-home-nav-btn">
+            <span class="att-shortcut-key"><i class="ph-bold ph-exam"></i></span>
+            <span><strong>Bảng điểm học sinh</strong><small>Nhập điểm · Điểm trung bình · Điểm cao nhất</small></span>
+          </button>
         </div>
+        <section id="daily-notes" class="daily-notes" aria-labelledby="daily-notes-title">
+          <div class="daily-notes-head">
+            <h2 id="daily-notes-title"><i class="ph-bold ph-notebook"></i> Ghi chú theo ngày</h2>
+            <span id="daily-note-save-state" role="status" aria-live="polite">Tự động lưu trên trình duyệt</span>
+          </div>
+          <p class="daily-notes-hint">Ghi tiến độ sửa bài của từng lớp. Chọn lại ngày để chỉnh sửa; ghi chú được đưa vào ảnh và báo cáo của đúng ngày đó.</p>
+          <div class="daily-notes-toolbar">
+            <label for="daily-note-date">Ngày ghi chú <select id="daily-note-date"></select></label>
+            <button id="daily-note-copy-previous" type="button" class="att-btn"><i class="ph-bold ph-copy"></i> Dùng ghi chú buổi trước</button>
+          </div>
+          <div class="daily-note-fields">
+            <label class="daily-note-field" for="daily-note-11">Lớp 11<textarea id="daily-note-11" rows="3" maxlength="10000" placeholder="Ví dụ: tờ 16/10 đã sửa đến câu 20"></textarea></label>
+            <label class="daily-note-field" for="daily-note-12">Lớp 12<textarea id="daily-note-12" rows="3" maxlength="10000" placeholder="Ví dụ: tờ 12/10 LT còn câu 20–33, tờ 16/10 chưa sửa."></textarea></label>
+          </div>
+          <h3 class="daily-notes-history-title">Danh sách ghi chú đã lưu <span id="daily-notes-count"></span></h3>
+          <div id="daily-notes-list" role="region" aria-label="Danh sách ghi chú theo ngày" tabindex="0"></div>
+        </section>
       </main>
       <footer class="att-foot"><span id="att-save-state">● Tự động lưu đang bật</span><span>Đã lưu tự động</span></footer>
     </section>
@@ -533,6 +737,7 @@
     <section id="attendance-list-view" aria-label="Danh sách điểm danh">
       <nav class="att-list-nav" aria-label="Điều hướng danh sách điểm danh">
         <button type="button" class="att-btn" id="att-list-home-btn"><i class="ph-bold ph-house"></i> Trang chủ</button>
+        <button type="button" class="att-btn" id="att-list-grades"><i class="ph-bold ph-exam"></i> Bảng điểm</button>
       </nav>
       <div class="att-legend"><span><i class="att-dot" style="background:#fff;border:1px solid #cbd5e1"></i> Chưa điểm danh</span><span><i class="att-dot" style="background:#a7f3d0"></i> Có mặt và làm bài</span><span><i class="att-dot" style="background:#fecaca"></i> Có mặt nhưng không làm bài</span><span><i class="att-dot" style="background:#fde68a"></i> Vắng</span><span><i class="att-dot" style="background:#bfdbfe"></i> Vắng nhưng đã nộp bài</span></div>
       <div class="att-table-wrap"><table id="attendance-table"><thead id="att-thead"></thead><tbody id="att-tbody"></tbody></table></div>
@@ -540,6 +745,45 @@
     </section>
 
     <div class="att-toast" id="att-toast">Đã lưu</div>
+    <div id="gradebook-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gradebook-title" aria-describedby="gradebook-help">
+      <section class="grade-dialog">
+        <div class="grade-heading">
+          <div><h2 id="gradebook-title"><i class="ph-bold ph-exam"></i> Bảng điểm học sinh</h2><p class="grade-subtitle">Danh sách học sinh và điểm được tách riêng theo lớp.</p></div>
+          <button id="gradebook-close" type="button" class="settings-close-btn" aria-label="Đóng bảng điểm">×</button>
+        </div>
+        <div class="grade-controls">
+          <label for="grade-class">Chọn lớp <select id="grade-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label>
+          <div class="grade-export-actions">
+            <button id="grade-add-column" type="button" class="att-btn primary"><i class="ph-bold ph-plus"></i> Thêm cột điểm</button>
+            <button id="grade-export-png" type="button" class="att-btn"><i class="ph-bold ph-image"></i> Ảnh bảng điểm</button>
+            <button id="grade-export-csv" type="button" class="att-btn"><i class="ph-bold ph-file-csv"></i> CSV / Excel</button>
+          </div>
+        </div>
+        <div class="grade-summary">
+          <div><span>Học sinh có điểm</span><strong id="grade-marked-count">0 / 0</strong></div>
+          <div title="Trung bình các điểm trung bình chưa làm tròn của học sinh đã có điểm; mỗi học sinh có trọng số như nhau."><span>Trung bình lớp</span><strong id="grade-class-average">—</strong></div>
+          <div><span>Điểm cao nhất lớp</span><strong id="grade-class-highest">—</strong></div>
+        </div>
+        <form id="grade-column-form" hidden>
+          <div class="grade-form-grid">
+            <label class="grade-field" for="grade-column-title">Tên cột điểm<input id="grade-column-title" type="text" maxlength="60" required placeholder="Ví dụ: Kiểm tra 15 phút"></label>
+            <label class="grade-field" for="grade-column-date">Ngày kiểm tra<input id="grade-column-date" type="date" required></label>
+            <label class="grade-field" for="grade-column-weight">Hệ số<select id="grade-column-weight"><option value="1">Hệ số 1</option><option value="2">Hệ số 2</option><option value="3">Hệ số 3</option></select></label>
+          </div>
+          <div class="grade-form-actions">
+            <button id="grade-column-submit" class="att-btn primary" type="submit">Thêm cột</button>
+            <button id="grade-column-cancel" class="att-btn" type="button">Hủy</button>
+            <button id="grade-column-delete" class="att-btn danger" type="button" hidden><i class="ph-bold ph-trash"></i> Xóa cột</button>
+          </div>
+        </form>
+        <div id="grade-empty" class="grade-empty">Chưa có cột điểm. Bấm “Thêm cột điểm” để tạo bài kiểm tra, sau đó nhập điểm cho từng học sinh.</div>
+        <div class="grade-table-wrap" tabindex="0" role="region" aria-label="Bảng điểm cuộn ngang và dọc">
+          <table id="grade-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Bảng điểm từng học sinh, điểm trung bình có hệ số và điểm cao nhất</caption><colgroup id="grade-colgroup"></colgroup><thead id="grade-thead"></thead><tbody id="grade-tbody"></tbody></table>
+        </div>
+        <p id="grade-validation" role="status" aria-live="polite"></p>
+        <footer class="grade-footer"><span id="gradebook-help">Thang 0–10 · Ô trống không tính, điểm 0 vẫn tính · TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm).<br>TB lớp = trung bình TB của các học sinh có điểm · Kết quả hiển thị làm tròn 2 chữ số · Chạm tên cột để sửa.</span><span id="grade-save-state" role="status" aria-live="polite">Tự động lưu</span></footer>
+      </section>
+    </div>
 
     <!-- MODALS BẢNG ĐIỂM DANH -->
     <div id="att-status-modal" class="att-modal-backdrop" role="dialog" aria-modal="true">
@@ -559,19 +803,18 @@
       </div>
     </div>
     
-    <div id="att-report-modal" class="att-modal-backdrop" role="dialog" aria-modal="true">
+    <div id="att-report-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-report-title">
       <div class="att-status-dialog" style="width:min(620px,100%);max-height:calc(100dvh - 28px);overflow:auto">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
           <div><div id="att-report-title" style="font-size:18px;font-weight:900">Báo cáo tổng quát trong ngày</div><div id="att-report-date-label" style="font-size:12px;color:#64748b;margin-top:4px">Lớp 11 và lớp 12</div></div>
           <button id="att-report-close" aria-label="Đóng" style="border:0;background:#f1f5f9;border-radius:9px;width:32px;height:32px;font-size:20px;cursor:pointer">×</button>
         </div>
-        <label for="att-report-note" style="display:block;font-size:12px;font-weight:900;color:#334155;margin-top:18px;margin-bottom:6px">Chú thích của báo cáo</label>
-        <textarea id="att-report-note" rows="5" placeholder="Nhập chú thích muốn đưa vào báo cáo..." style="width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px;resize:vertical;min-height:140px;font:700 16px/1.5 'Nunito',sans-serif;box-sizing:border-box">Lớp 11:
-Lớp 12:</textarea>
-        <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#475569;margin-top:9px"><input id="att-report-preserve-lines" type="checkbox" checked style="width:16px;height:16px;accent-color:#0f766e"> Giữ các lần xuống dòng trong chú thích</label>
+        <div style="font-size:12px;font-weight:900;color:#334155;margin-top:18px">Ghi chú đã lưu của ngày này</div>
+        <div id="att-report-note-preview"></div>
+        <button id="att-report-edit-notes" type="button" class="att-btn"><i class="ph-bold ph-pencil-simple"></i> Sửa ghi chú theo ngày</button>
         <div style="display:flex;gap:8px;margin-top:16px">
           <button id="att-report-export" class="att-btn primary" style="flex:1;white-space:normal">Xuất báo cáo PNG</button>
-          <button id="att-report-cancel" class="att-btn" style="flex:1">Hủy</button>
+          <button id="att-report-cancel" class="att-btn" style="flex:1">Đóng</button>
         </div>
       </div>
     </div>
@@ -612,7 +855,23 @@ Lớp 12:</textarea>
           </div>
         </section>
         <button id="fab-fullscreen" class="att-btn settings-action settings-fullscreen" title="Toàn màn hình và giữ sáng"><i class="ph-bold ph-corners-out" id="fullscreen-icon"></i><span>Toàn màn hình &amp; giữ sáng</span></button>
-        <button class="att-btn danger settings-action" id="att-clear-all-data"><i class="ph-bold ph-database"></i> Sao lưu và xóa toàn bộ dữ liệu</button>
+        <button class="att-btn settings-action" id="att-backup-data"><i class="ph-bold ph-download-simple"></i> Sao lưu dữ liệu JSON</button>
+        <button class="att-btn settings-action" id="att-restore-data"><i class="ph-bold ph-upload-simple"></i> Khôi phục từ file JSON</button>
+        <input id="restore-file-input" type="file" accept=".json,application/json" hidden>
+        <button class="att-btn danger settings-action" id="att-clear-all-data"><i class="ph-bold ph-trash"></i> Xóa toàn bộ dữ liệu</button>
+      </div>
+    </div>
+
+    <div id="undo-bar" role="region" aria-label="Hoàn tác thay đổi"><span id="undo-message" role="status" aria-live="polite"></span><button id="undo-action" type="button">Hoàn tác</button><button id="undo-dismiss" type="button" aria-label="Ẩn thông báo hoàn tác">×</button></div>
+    <div id="restore-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="restore-title">
+      <div class="att-status-dialog data-restore-dialog">
+        <div class="settings-menu-heading"><div id="restore-title" style="font-size:20px;font-weight:900">Khôi phục dữ liệu</div><button id="restore-close" type="button" class="settings-close-btn" aria-label="Đóng khôi phục">×</button></div>
+        <p id="restore-filename" class="data-restore-note"></p>
+        <div id="restore-summary" class="data-restore-summary"></div>
+        <p class="data-restore-note">Dữ liệu trong file sẽ thay thế điểm danh, bảng điểm và ghi chú hiện tại. Sơ đồ mới được giữ nguyên: lớp 11 không có An; lớp 12 có Tiến và Lê Duy ngồi cạnh Q Duy. Đồng hồ được khôi phục ở trạng thái tạm dừng.</p>
+        <p class="data-restore-note">Ứng dụng sẽ tải một bản sao lưu dữ liệu hiện tại trước khi khôi phục. Bạn cũng có thể hoàn tác ngay sau đó.</p>
+        <p id="restore-error" role="alert"></p>
+        <div style="display:flex;gap:8px"><button id="restore-apply" type="button" class="att-btn primary" style="flex:1">Khôi phục dữ liệu</button><button id="restore-cancel" type="button" class="att-btn" style="flex:1">Hủy</button></div>
       </div>
     </div>
 
@@ -760,37 +1019,128 @@ Lớp 12:</textarea>
         // PHẦN 1: CẤU HÌNH SƠ ĐỒ LỚP (DỄ DÀNG CHỈNH SỬA)
         // ==========================================
         
-        const SEAT_MAPS = {
+        const STUDENT_SEEDS = {
             '11': [
-                ['Trân', 'Đạt', 'Phúc', 'Chấn'],
-                ['Thư', 'Giang', 'Vân Anh', 'Hường'],
-                ['Khiết Minh', 'Vân', 'Minh Anh', 'An'],
-                ['Tiến', 'Trâm', ['Tươi', 'Vy', 'Phương'],""], 
-                ['P.Anh', 'Nghi', 'Hạnh', 'Ly'],
-                ['Khánh', 'H.Minh', 'Khoa', 'Trang']
+                ['s11_001','Trân'],['s11_002','Đạt'],['s11_003','Phúc'],['s11_004','Chấn'],
+                ['s11_005','Thư'],['s11_006','Giang'],['s11_007','Vân Anh'],['s11_008','Hương'],
+                ['s11_009','Khiết Minh'],['s11_010','Vân'],['s11_011','Minh Anh'],['s11_012','An',false],
+                ['s11_013','Tiến'],['s11_014','Trâm'],['s11_015','Tươi'],['s11_016','Vy'],['s11_017','Phương'],
+                ['s11_018','P.Anh'],['s11_019','Nghi'],['s11_020','Hạnh'],['s11_021','Ly'],
+                ['s11_022','Khánh'],['s11_023','H.Minh'],['s11_024','Khoa'],['s11_025','Trang']
             ],
             '12': [
-                ['Lê Duy', 'Đạt', 'Nam', 'Huy'],
-                ['Thái', 'Thành', 'Thanh Nhi (NCT)', ''],
-                ['Hạnh', 'Long', 'Ngọc', ''],
-                ['Ngọc Ngân', 'Ngọc Nhi (NH)', 'Đông', 'Tuấn'],
-                ['Kiệt', 'Hân', 'Linh', 'Khoa'],
-                ['Trâm', 'Phương', 'Q Duy', '']
+                ['s12_001','Lê Duy'],['s12_002','Đạt'],['s12_003','Nam'],['s12_004','Huy'],
+                ['s12_005','Thái'],['s12_006','Thành'],['s12_007','Thanh Nhi (NCT)'],
+                ['s12_008','Hạnh'],['s12_009','Long'],['s12_010','Ngọc'],
+                ['s12_011','Ngọc Ngân'],['s12_012','Ngọc Nhi (NH)'],['s12_013','Đông'],['s12_014','Tuấn'],
+                ['s12_015','Kiệt'],['s12_016','Hân'],['s12_017','Linh'],['s12_018','Khoa'],
+                ['s12_019','Trâm'],['s12_020','Phương'],['s12_021','Q Duy'],['s12_022','Tiến']
+            ]
+        };
+        const SEAT_MAPS = {
+            '11': [
+                ['s11_001','s11_002','s11_003','s11_004'],
+                ['s11_005','s11_006','s11_007','s11_008'],
+                ['s11_009','s11_010','s11_011',''],
+                ['s11_013','s11_014',['s11_015','s11_016','s11_017'],''],
+                ['s11_018','s11_019','s11_020','s11_021'],
+                ['s11_022','s11_023','s11_024','s11_025']
+            ],
+            '12': [
+                ['s12_022','s12_002','s12_003','s12_004'],
+                ['s12_005','s12_006','s12_007',''],
+                ['s12_008','s12_009','s12_010',''],
+                ['s12_011','s12_012','s12_013','s12_014'],
+                ['s12_015','s12_016','s12_017','s12_018'],
+                ['s12_019','s12_020','s12_021','s12_001']
             ]
         };
 
         function getStudents(cls) {
-            let names = [];
-            (SEAT_MAPS[cls] || []).forEach(row => {
-                row.forEach(item => {
-                    if (Array.isArray(item)) {
-                        item.forEach(n => { if(n && n.trim()) names.push(n); });
-                    } else if (item && item.trim()) {
-                        names.push(item);
-                    }
+            return [...new Set((SEAT_MAPS[cls] || []).flat(2).filter(id => id && store.students[id]?.active))];
+        }
+        function studentName(id) { return store.students[id]?.name || ''; }
+        function cloneData(value) { return JSON.parse(JSON.stringify(value)); }
+        function isObject(value) { return !!value && typeof value === 'object' && !Array.isArray(value); }
+        function normalizeData(raw) {
+            if (!isObject(raw) || !isObject(raw.records)) throw new Error('Thiếu dữ liệu điểm danh hợp lệ.');
+            if (Number(raw.schemaVersion || 0) > 3) throw new Error('Bản sao lưu thuộc phiên bản mới hơn; chưa thể đọc an toàn.');
+            const out = {schemaVersion:3,rosterRevision:3,students:{},records:{},gradebooks:{},seatTools:{},dailyNotes:{},extraWeeks:Math.max(0,Math.min(520,Math.floor(Number(raw.extraWeeks)||0))),selectedDate:typeof raw.selectedDate==='string'?raw.selectedDate:null,defaultTimeSeconds:Math.max(60,Math.min(86400,Math.floor(Number(raw.defaultTimeSeconds)||900)))};
+            const lookup = {'11':new Map(),'12':new Map()};
+            ['11','12'].forEach(cls => {
+                STUDENT_SEEDS[cls].forEach(([id,name,active=true]) => {
+                    const saved = isObject(raw.students?.[id]) ? raw.students[id] : {};
+                    out.students[id] = {id,cls,name:typeof saved.name==='string'&&saved.name.trim()?saved.name.trim().slice(0,100):name,active};
+                    if (id==='s11_008' && out.students[id].name==='Hường') out.students[id].name='Hương';
+                    lookup[cls].set(name,id); lookup[cls].set(out.students[id].name,id);
+                    if (id==='s11_008') lookup[cls].set('Hường',id);
                 });
             });
-            return [...new Set(names)];
+            if (isObject(raw.students)) Object.entries(raw.students).forEach(([id,student]) => {
+                if (out.students[id] || !/^[a-zA-Z0-9_-]{1,80}$/.test(id) || !isObject(student) || !['11','12'].includes(student.cls) || typeof student.name!=='string') return;
+                out.students[id] = {id,cls:student.cls,name:student.name.slice(0,100),active:false};
+                if (!lookup[student.cls].has(student.name)) lookup[student.cls].set(student.name,id);
+            });
+            const resolve = (cls,oldKey) => {
+                if (out.students[oldKey]?.cls === cls) return oldKey;
+                if (lookup[cls].has(oldKey)) return lookup[cls].get(oldKey);
+                let hash=2166136261; for (const char of oldKey) hash=Math.imul(hash^char.charCodeAt(0),16777619)>>>0;
+                let id='archived_'+cls+'_'+hash.toString(36),suffix=0;
+                while(out.students[id]&&out.students[id].name!==oldKey) id='archived_'+cls+'_'+hash.toString(36)+'_'+(++suffix);
+                out.students[id]={id,cls,name:String(oldKey).slice(0,100),active:false}; lookup[cls].set(oldKey,id); return id;
+            };
+            const mapValues = (source,cls,convert) => {
+                const target={};
+                if (!isObject(source)) throw new Error('Dữ liệu của học sinh không hợp lệ.');
+                Object.entries(source).sort(([a],[b])=>Number(!!out.students[b])-Number(!!out.students[a])).forEach(([oldKey,value]) => {
+                    const id=resolve(cls,oldKey), converted=convert(value);
+                    if (converted!==null && !Object.hasOwn(target,id)) target[id]=converted;
+                }); return target;
+            };
+            Object.entries(raw.records).forEach(([key,record]) => {
+                if (!/^(11|12)_\d{4}-\d{2}-\d{2}$/.test(key)) return;
+                const cls=key.slice(0,2), parsed=parseDateKey(key.slice(3));
+                if (!parsed || dateKey(parsed)!==key.slice(3)) throw new Error('Ngày điểm danh không hợp lệ.');
+                out.records[key]=mapValues(record,cls,value=>{
+                    let n=Number(value);
+                    if (!Number.isInteger(n)||n<0||n>4) throw new Error('Trạng thái điểm danh không hợp lệ.');
+                    if (Number(raw.schemaVersion||0)<2) n=n===1?1:n===2?3:0;
+                    return n;
+                });
+            });
+            if (raw.gradebooks!==undefined && !isObject(raw.gradebooks)) throw new Error('Bảng điểm không hợp lệ.');
+            ['11','12'].forEach(cls=>{
+                const source=raw.gradebooks?.[cls]||{columns:[],scores:{}};
+                if (!isObject(source)||!Array.isArray(source.columns)||!isObject(source.scores)) throw new Error('Thiếu cấu trúc bảng điểm lớp '+cls+'.');
+                const seen=new Set(),book={columns:[],scores:{}};
+                source.columns.forEach(column=>{
+                    if (!isObject(column)||typeof column.id!=='string'||!/^[a-zA-Z0-9_-]{1,100}$/.test(column.id)||['__proto__','constructor','prototype'].includes(column.id)||seen.has(column.id)||typeof column.title!=='string'||!column.title.trim()||![1,2,3].includes(Number(column.weight))) throw new Error('Cột điểm không hợp lệ hoặc trùng mã.');
+                    const d=parseDateKey(column.date); if(!d||dateKey(d)!==column.date) throw new Error('Ngày kiểm tra không hợp lệ.');
+                    seen.add(column.id);book.columns.push({id:column.id,title:column.title.trim().slice(0,60),date:column.date,weight:Number(column.weight)});
+                    book.scores[column.id]=mapValues(source.scores[column.id]||{},cls,value=>{
+                        if (value===null||value==='') return null;
+                        const n=typeof value==='number'?value:Number(String(value).replace(',','.'));
+                        if (!Number.isFinite(n)||n<0||n>10) throw new Error('Điểm phải từ 0 đến 10.');
+                        return Math.round(n*100)/100;
+                    });
+                }); out.gradebooks[cls]=book;
+            });
+            if (isObject(raw.seatTools)) Object.entries(raw.seatTools).forEach(([id,value])=>{
+                if (!out.students[id]||!isObject(value)) return;
+                out.seatTools[id]={note:typeof value.note==='string'?value.note.slice(0,10000):'',timeLeft:Math.max(0,Math.min(86400,Math.floor(Number(value.timeLeft)||0))),isFinished:!!value.isFinished};
+            });
+            if (raw.dailyNotes!==undefined && !isObject(raw.dailyNotes)) throw new Error('Danh sách ghi chú theo ngày không hợp lệ.');
+            Object.entries(raw.dailyNotes||{}).forEach(([key,value])=>{
+                const d=parseDateKey(key);
+                if (!d || dateKey(d)!==key || !isObject(value)) throw new Error('Ngày ghi chú không hợp lệ.');
+                const note={};
+                ['11','12'].forEach(cls=>{
+                    if (value[cls]!==undefined && typeof value[cls]!=='string') throw new Error('Nội dung ghi chú theo ngày không hợp lệ.');
+                    note[cls]=(value[cls]||'').replace(/\r\n?/g,'\n').slice(0,10000);
+                });
+                if (note['11'].trim()||note['12'].trim()) out.dailyNotes[key]=note;
+            });
+            return out;
         }
 
         // ==========================================
@@ -802,19 +1152,12 @@ Lớp 12:</textarea>
         const MARKS = ['—', '✓', '×', '✕', '◇'];
         const STATUS_BG = ['bg-slate-50 border-slate-300', 'bg-emerald-100 border-emerald-400','bg-rose-100 border-rose-400','bg-amber-100 border-amber-400','bg-sky-100 border-sky-400'];
 
-        let store = { records: {}, extraWeeks: 0, selectedDate: null };
-        try { store = JSON.parse(localStorage.getItem(KEY)) || store; } catch(e){}
-        if (!store.records) store.records = {};
-        if (Number(store.schemaVersion || 0) < 2) {
-            Object.values(store.records).forEach(rec => {
-                if(!rec || typeof rec !== 'object') return;
-                Object.keys(rec).forEach(name => { const old = Number(rec[name]||0); rec[name] = old === 1 ? 1 : old === 2 ? 3 : 0; });
-            });
-            store.schemaVersion = 2;
-        }
+        let store, startupError = '';
+        try { store=normalizeData(JSON.parse(localStorage.getItem(KEY))||{records:{},schemaVersion:3}); }
+        catch(error) { startupError='Không đọc được dữ liệu cũ: '+error.message; store=normalizeData({records:{},schemaVersion:3}); }
 
         let currentClass = '11';
-        let DEFAULT_TIME_SECONDS = 900; 
+        let DEFAULT_TIME_SECONDS = store.defaultTimeSeconds;
         const globalState = {}; 
         
         let audioCtx = null;
@@ -828,8 +1171,10 @@ Lớp 12:</textarea>
         let dates = [];
 
         const $ = id => document.getElementById(id);
+        let undoStack = [], undoSequence = 0, attendancePicker = null, pendingRestore = null;
         
         function initGlobalState() {
+            Object.keys(globalState).forEach(key=>delete globalState[key]);
             ['11', '12'].forEach(cls => {
                 (SEAT_MAPS[cls] || []).forEach((row, r) => {
                     row.forEach((item, c) => {
@@ -837,11 +1182,11 @@ Lớp 12:</textarea>
                         if(c === 0) logicCol = 0; else if(c === 1) logicCol = 1; else if(c === 2) logicCol = 2; else if(c === 3) logicCol = 3;
                         
                         if (Array.isArray(item)) {
-                            item.forEach((name, i) => {
-                                globalState[`${cls}_${r}_${logicCol}_${i}`] = { name, status: 0, timeLeft: DEFAULT_TIME_SECONDS, isRunning: false, isFinished: false, note: '' };
+                            item.forEach((studentId, i) => {
+                                globalState[`${cls}_${r}_${logicCol}_${i}`] = { studentId, name:studentName(studentId), status:0,timeLeft:DEFAULT_TIME_SECONDS,isRunning:false,isFinished:false,note:'',...(store.seatTools[studentId]||{}) };
                             });
                         } else {
-                            globalState[`${cls}_${r}_${logicCol}`] = { name: item, status: 0, timeLeft: DEFAULT_TIME_SECONDS, isRunning: false, isFinished: false, note: '' };
+                            globalState[`${cls}_${r}_${logicCol}`] = { studentId:item,name:studentName(item),status:0,timeLeft:DEFAULT_TIME_SECONDS,isRunning:false,isFinished:false,note:'',...(store.seatTools[item]||{}) };
                         }
                     });
                 });
@@ -853,22 +1198,29 @@ Lớp 12:</textarea>
         // PHẦN 3: LOGIC DỮ LIỆU & LƯU TRỮ
         // ==========================================
         function save() {
+            if (startupError) { $('att-save-state').textContent=startupError+' · Hãy xuất dữ liệu lỗi trước khi khôi phục.'; return false; }
             try { 
+                store.defaultTimeSeconds=DEFAULT_TIME_SECONDS;
+                Object.values(globalState).forEach(st=>{if(st.studentId)store.seatTools[st.studentId]={note:st.note,timeLeft:st.timeLeft,isFinished:st.isFinished};});
                 localStorage.setItem(KEY, JSON.stringify(store));
                 $('att-save-state').textContent = '● Đã lưu tự động lúc ' + new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-            } catch(e) { $('att-save-state').textContent = 'Không thể lưu'; }
+                if ($('grade-save-state')) { $('grade-save-state').textContent='● Đã lưu tự động'; $('grade-save-state').style.color='#0f766e'; }
+                return true;
+            } catch(e) { $('att-save-state').textContent = 'Không thể lưu'; if($('grade-save-state')){$('grade-save-state').textContent='Không thể lưu — kiểm tra bộ nhớ trình duyệt';$('grade-save-state').style.color='#b91c1c';} return false; }
         }
         function dateKey(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
         function parseDateKey(k) { let m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k||''); return m ? new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), 12) : null; }
-        function getDates() {
+        function getDates(data = store) {
             let out = [], d = new Date(START), end = new Date(START);
-            end.setDate(end.getDate() + (12 + Number(store.extraWeeks||0))*7);
+            end.setDate(end.getDate() + (12 + Number(data.extraWeeks||0))*7);
             let today = new Date(); today.setHours(12,0,0,0);
             let rollingEnd = new Date(today); rollingEnd.setDate(rollingEnd.getDate() + 28);
             if (rollingEnd > end) end = rollingEnd;
             for (; d <= end; d.setDate(d.getDate()+1)) {
                 if ([1,3,5].includes(d.getDay())) out.push(new Date(d));
             }
+            // Giữ những ngày ghi chú đã nhập từ bản sao lưu trong bộ chọn ngày.
+            Object.keys(data.dailyNotes||{}).forEach(key=>{const day=parseDateKey(key);if(day&&!out.some(value=>dateKey(value)===key))out.push(day);});
             out.sort((a,b) => a-b); return out;
         }
         function fmt(d) { return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0'); }
@@ -881,6 +1233,67 @@ Lớp 12:</textarea>
         function rec(d) { let k = currentClass + '_' + dateKey(d); if(!store.records[k]) store.records[k] = {}; return store.records[k]; }
         function status(d, name) { return Number(rec(d)[name] || 0); }
         function statusInClass(cls, d, name) { return Number(((store.records||{})[cls+'_'+dateKey(d)]||{})[name]||0); }
+
+        function dailyNoteDateLabel(key) {
+            const d=parseDateKey(key);
+            return d ? (d.getDay()===0?'Chủ nhật':'Thứ '+(d.getDay()+1))+' ngày '+fmt(d)+'/'+d.getFullYear() : '';
+        }
+        function dailyNoteText(key,cls=null) {
+            const note=store.dailyNotes[key]||{};
+            return (cls?[cls]:['11','12']).filter(value=>(note[value]||'').trim()).map(value=>'Lớp '+value+': '+note[value].trim()).join('\n');
+        }
+        function previousDailyNoteKey(key) {
+            return Object.keys(store.dailyNotes).filter(day=>day<key).sort().pop();
+        }
+        function renderDailyNotesHistory() {
+            const selected=$('att-date').value||store.selectedDate;
+            const keys=Object.keys(store.dailyNotes).sort().reverse();
+            $('daily-notes-count').textContent='('+keys.length+' ngày)';
+            $('daily-notes-list').innerHTML=keys.length?keys.map(key=>{
+                const note=store.dailyNotes[key];
+                return '<article class="daily-note-entry'+(key===selected?' current':'')+'"><div class="daily-note-entry-head"><strong>'+dailyNoteDateLabel(key)+'</strong><button type="button" class="att-btn" data-edit-daily-note="'+key+'" aria-label="Sửa ghi chú '+dailyNoteDateLabel(key)+'">Sửa</button></div>'+['11','12'].filter(cls=>(note[cls]||'').trim()).map(cls=>'<p><b>Lớp '+cls+': </b>'+escapeHtml(note[cls])+'</p>').join('')+'</article>';
+            }).join(''):'<p class="daily-notes-empty">Chưa có ghi chú. Nhập nội dung cho ngày đang chọn ở phía trên; ghi chú sẽ xuất hiện trong danh sách này.</p>';
+            $('daily-note-copy-previous').disabled=!previousDailyNoteKey(selected);
+            $('att-report-note-preview').textContent=dailyNoteText(selected)||'Ngày này chưa có ghi chú. Bạn có thể thêm ghi chú trước khi xuất.';
+        }
+        function renderDailyNotes() {
+            const key=$('att-date').value||store.selectedDate;
+            if (!key) return;
+            const picker=$('daily-note-date');
+            const options=dates.map(d=>'<option value="'+dateKey(d)+'">'+dailyNoteDateLabel(dateKey(d))+'</option>').join('');
+            if (picker.innerHTML!==options) picker.innerHTML=options;
+            picker.value=key;
+            ['11','12'].forEach(cls=>{const input=$('daily-note-'+cls),value=store.dailyNotes[key]?.[cls]||'';if(input.value!==value)input.value=value;});
+            renderDailyNotesHistory();
+        }
+        function saveDailyNoteInputs() {
+            const key=$('daily-note-date').value;
+            if (!key) return;
+            const note={'11':$('daily-note-11').value,'12':$('daily-note-12').value};
+            if (note['11'].trim()||note['12'].trim()) store.dailyNotes[key]=note;
+            else delete store.dailyNotes[key];
+            const saved=save(),state=$('daily-note-save-state');
+            state.textContent=saved?'● Đã lưu trên trình duyệt':'Chưa lưu được — hãy sao chép nội dung';
+            state.style.color=saved?'#0f766e':'#b91c1c';
+            renderDailyNotesHistory();
+        }
+        $('daily-note-date').addEventListener('change',event=>selectDate(event.target.value,true));
+        ['11','12'].forEach(cls=>$('daily-note-'+cls).addEventListener('input',saveDailyNoteInputs));
+        $('daily-notes-list').addEventListener('click',event=>{
+            const button=event.target.closest('[data-edit-daily-note]');
+            if (!button) return;
+            selectDate(button.dataset.editDailyNote,true);
+            $('daily-note-11').focus({preventScroll:true});$('daily-notes').scrollIntoView({block:'start',behavior:'smooth'});
+        });
+        $('daily-note-copy-previous').addEventListener('click',()=>{
+            const key=$('daily-note-date').value,previousKey=previousDailyNoteKey(key);
+            if (!previousKey) return;
+            const before=store.dailyNotes[key]?cloneData(store.dailyNotes[key]):null;
+            store.dailyNotes[key]=cloneData(store.dailyNotes[previousKey]);
+            recordUndo('Đã dùng ghi chú buổi trước cho '+dailyNoteDateLabel(key),()=>{if(before)store.dailyNotes[key]=before;else delete store.dailyNotes[key];});
+            renderDailyNotes();saveDailyNoteInputs();
+            toast('Đã chép ghi chú từ '+dailyNoteDateLabel(previousKey)+'. Bạn có thể sửa tiếp.');
+        });
         
         let toastTimer;
         function toast(msg) {
@@ -894,24 +1307,14 @@ Lớp 12:</textarea>
                 if(!k.startsWith(cls + '_')) return;
                 const st = globalState[k];
                 if(!st || !st.name) return;
-                const value = Number(record[st.name] || 0);
+                const value = Number(record[st.studentId] || 0);
                 st.status = Number.isFinite(value) ? Math.max(0, Math.min(4, value)) : 0;
             });
         }
 
-        function autoSyncSeatToAttendance(cls, studentName, newStatus) {
-            if(!studentName) return;
-            const targetDateKey = store.selectedDate || $('att-date').value;
-            if(!targetDateKey) return;
-            
-            let r = store.records[cls + '_' + targetDateKey];
-            if (!r) { r = {}; store.records[cls + '_' + targetDateKey] = r; }
-            
-            r[studentName] = newStatus;
-            save(); 
-            
-            updateStats();
-            renderAttendanceList();
+        function autoSyncSeatToAttendance(cls, studentId, newStatus) {
+            if (!studentId) return;
+            setAttendance(cls, store.selectedDate || $('att-date').value, studentId, newStatus);
         }
 
         // ==========================================
@@ -947,6 +1350,7 @@ Lớp 12:</textarea>
                 const gridDate = $('grid-date-display');
                 if(gridDate) gridDate.textContent = `${fmt(d)}`;
             }
+            renderDailyNotes();
         }
         function selectDate(key, manual=true) {
             if(manual) store.selectedDate = key;
@@ -972,9 +1376,9 @@ Lớp 12:</textarea>
             }).join('') + '</tr>';
             $('att-thead').innerHTML = thead;
             
-            $('att-tbody').innerHTML = students.map((name, i) => `<tr><th class="att-name"><span class="att-index">${String(i+1).padStart(2,'0')}</span>${escapeHtml(name)}</th>${dates.map(d => {
+            $('att-tbody').innerHTML = students.map((name, i) => `<tr><th class="att-name"><span class="att-index">${String(i+1).padStart(2,'0')}</span>${escapeHtml(studentName(name))}</th>${dates.map(d => {
                 let st = status(d, name);
-                return `<td><button class="att-cell att-${st}" data-student="${escapeAttr(name)}" data-date="${dateKey(d)}" title="${escapeAttr(name)} · ${LABELS[st]}">${MARKS[st]}</button></td>`
+                return `<td><button class="att-cell att-${st}" data-student="${escapeAttr(name)}" data-date="${dateKey(d)}" title="${escapeAttr(studentName(name))} · ${LABELS[st]}">${MARKS[st]}</button></td>`
             }).join('')}</tr>`).join('');
             
             updateStats(); updateCurrentDateLabel();
@@ -1022,7 +1426,7 @@ Lớp 12:</textarea>
                 <div data-key="${key}" class="student-cell flex flex-col justify-between overflow-hidden border-2 rounded-xl transition-all duration-200 ${cellClass} ${isEmp ? 'opacity-30 pointer-events-none' : ''} ${flexClass} p-[3px] sm:p-1 relative" style="${styleProps}">
                     ${selectionOverlay}
                     <div class="flex flex-col mb-[2px] gap-[2px] w-full">
-                        <span class="font-black ${textSize} leading-tight truncate text-slate-800">${state.name || 'Trống'}</span>
+                        <button type="button" class="seat-name-btn ${textSize}" data-open-student="${escapeAttr(state.studentId)}" title="${escapeAttr(state.name || 'Trống')} · ${escapeAttr(state.studentId)}">${escapeHtml(state.name || 'Trống')}</button>
                         <div class="flex w-full bg-white/60 rounded-md overflow-hidden border border-white/50 shadow-sm">
                             <button data-status="0" class="status-radio flex-1 ${radioH} flex justify-center items-center transition-all ${r0}"><i class="ph-bold ph-minus ${radioIcon}"></i></button>
                             <button data-status="1" title="Có mặt và đã làm bài" class="status-radio flex-1 border-l border-white/40 ${radioH} flex justify-center items-center transition-all ${r1}"><i class="ph-bold ph-check ${radioIcon}"></i></button>
@@ -1036,7 +1440,7 @@ Lớp 12:</textarea>
                         <span class="time-display font-mono ${timeSize} font-black tracking-tighter ${timerColor}">${state.isFinished ? 'HẾT!' : formatTime(state.timeLeft)}</span>
                         <button class="reset-btn active:scale-75 transition-transform"><i class="ph-bold ph-arrow-counter-clockwise ${state.isFinished ? 'text-red-600' : 'text-slate-400'} text-[12px] sm:text-[14px] hover:text-slate-800"></i></button>
                     </div>
-                    <input type="text" class="note-input w-full text-[9px] px-1 py-[2px] border-none bg-white/50 focus:bg-white rounded-md outline-none text-slate-800 font-bold shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] transition-colors placeholder:text-[8px]" placeholder="Ghi chú..." value="${state.note}">
+                    <input type="text" class="note-input w-full text-[9px] px-1 py-[2px] border-none bg-white/50 focus:bg-white rounded-md outline-none text-slate-800 font-bold shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] transition-colors placeholder:text-[8px]" placeholder="Ghi chú..." value="${escapeAttr(state.note)}">
                 </div>
             `;
         }
@@ -1296,7 +1700,7 @@ if (Array.isArray(row[3])) {
                 if (radioBtn) { 
                     state.status = parseInt(radioBtn.dataset.status); 
                     updateCellDOM(key); 
-                    autoSyncSeatToAttendance(currentClass, state.name, state.status);
+                    autoSyncSeatToAttendance(currentClass, state.studentId, state.status);
                     return; 
                 }
                 if (e.target.closest('.play-btn')) {
@@ -1306,45 +1710,17 @@ if (Array.isArray(row[3])) {
                 }
             }
             
-            let b = e.target.closest('[data-student]');
-            if(b && activePage === 'list') {
-                let dkey = b.dataset.date;
-                selectDate(dkey, true);
-                let pickedName = b.dataset.student;
-                let d = parseDateKey(dkey);
-                $('att-status-detail').textContent = `${pickedName} · Lớp ${currentClass} · ${d?weekday(d)+' '+fmt(d)+'/'+d.getFullYear():dkey}`;
-                $('att-status-modal').classList.add('show');
-                let current = Number((store.records[currentClass+'_'+dkey]||{})[pickedName]||0);
-                $('att-status-modal').querySelectorAll('[data-status]').forEach(btn => {
-                    btn.style.outline = Number(btn.dataset.status) === current ? '2px solid #0f766e' : 'none';
-                    btn.style.outlineOffset = '1px';
-                });
-                $('att-status-close').focus();
-                
-                const handlePopupClick = (ev) => {
-                    let popBtn = ev.target.closest('[data-status]');
-                    if (popBtn) {
-                        let newStatus = Number(popBtn.dataset.status);
-                        let r = store.records[currentClass+'_'+dkey] || {};
-                        r[pickedName] = newStatus;
-                        store.records[currentClass+'_'+dkey] = r;
-                        store.selectedDate = dkey;
-                        save();
-                        $('att-status-modal').classList.remove('show');
-                        $('att-status-modal').removeEventListener('click', handlePopupClick);
-                        renderAttendanceList();
-                        toast('Đã cập nhật: ' + LABELS[newStatus]);
-                    }
-                };
-                const oldClone = $('att-status-modal').cloneNode(true);
-                $('att-status-modal').parentNode.replaceChild(oldClone, $('att-status-modal'));
-                
-                $('att-status-modal').addEventListener('click', handlePopupClick);
-                $('att-status-close').addEventListener('click', () => $('att-status-modal').classList.remove('show'));
-                $('att-status-cancel').addEventListener('click', () => $('att-status-modal').classList.remove('show'));
-                $('att-status-modal').addEventListener('click', ev => { if(ev.target === $('att-status-modal')) $('att-status-modal').classList.remove('show'); });
+            const seatName = e.target.closest('[data-open-student]');
+            if (seatName && activePage === 'grid') {
+                openAttendancePicker(currentClass, store.selectedDate || $('att-date').value, seatName.dataset.openStudent);
+                return;
             }
-            
+            const b = e.target.closest('[data-student]');
+            if (b && activePage === 'list') {
+                selectDate(b.dataset.date, true);
+                openAttendancePicker(currentClass, b.dataset.date, b.dataset.student);
+            }
+
             if(e.target.closest('#att-nearest-date')) {
                 delete store.selectedDate; dates = getDates(); let d = nearestDate(dates);
                 $('att-date').value = dateKey(d); selectDate(dateKey(d), true); toast('Đã chọn ngày gần nhất');
@@ -1354,7 +1730,7 @@ if (Array.isArray(row[3])) {
         document.body.addEventListener('input', (e) => {
             if (e.target.classList.contains('note-input')) {
                 const key = e.target.closest('.student-cell').dataset.key;
-                globalState[key].note = e.target.value;
+                globalState[key].note = e.target.value; save();
             }
         });
 
@@ -1368,23 +1744,20 @@ if (Array.isArray(row[3])) {
         $('settings-btn').addEventListener('click', () => { $('setting-time').value = Math.floor(DEFAULT_TIME_SECONDS / 60); openModal('settings-modal'); });
         $('save-time-btn').addEventListener('click', () => {
             const mins = parseInt($('setting-time').value);
-            if(mins > 0) { DEFAULT_TIME_SECONDS = mins * 60; const btn = $('save-time-btn'); btn.innerHTML = '<i class="ph-bold ph-check"></i>'; btn.classList.add('bg-emerald-500'); setTimeout(() => { btn.textContent = 'Lưu'; btn.classList.remove('bg-emerald-500'); }, 1000); }
+            if(mins > 0 && mins <= 1440) { DEFAULT_TIME_SECONDS = mins * 60; save(); const btn = $('save-time-btn'); btn.innerHTML = '<i class="ph-bold ph-check"></i>'; btn.classList.add('bg-emerald-500'); setTimeout(() => { btn.textContent = 'Lưu'; btn.classList.remove('bg-emerald-500'); }, 1000); }
         });
         
         document.querySelectorAll('.mass-action-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = e.currentTarget.dataset.action;
+                if (action === 'reset-status') { clearClassAttendance(); closeModal('settings-modal'); return; }
                 for(let key in globalState) {
                     if(key.startsWith(currentClass + '_')) {
                         if (action === 'reset-timer') { globalState[key].timeLeft = DEFAULT_TIME_SECONDS; globalState[key].isRunning = false; globalState[key].isFinished = false; } 
-                        else if (action === 'reset-status') {
-                            globalState[key].status = 0;
-                            autoSyncSeatToAttendance(currentClass, globalState[key].name, 0); 
-                        }
                         else if (action === 'reset-note') globalState[key].note = '';
                     }
                 }
-                renderGrid(); closeModal('settings-modal');
+                save(); renderGrid(); closeModal('settings-modal');
                 if(action === 'reset-status') toast('Đã xóa trắng trạng thái lớp ' + currentClass);
             });
         });
@@ -1415,7 +1788,7 @@ if (Array.isArray(row[3])) {
 
         function showBigWinnerModal(winnerKeys) {
             const winnerModal = $('winner-modal'); const winnerBox = $('winner-box'); const winnerNamesDiv = $('winner-names');
-            const names = winnerKeys.map(k => globalState[k].name);
+            const names = winnerKeys.map(k => escapeHtml(globalState[k].name));
             if (names.length === 1) {
                 winnerNamesDiv.innerHTML = names[0];
                 winnerNamesDiv.className = 'text-white font-black drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] text-[45px] sm:text-6xl md:text-8xl py-4 break-words leading-tight w-full text-center';
@@ -1466,7 +1839,7 @@ if (Array.isArray(row[3])) {
         });
 
         function generateReportText() {
-            const d = new Date();
+            const d = parseDateKey($('att-date').value || store.selectedDate) || nearestDate(getDates());
             const header = `Dạ em gửi báo cáo ${['Chủ nhật','thứ 2','thứ 3','thứ 4','thứ 5','thứ 6','thứ 7'][d.getDay()]} (${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')})`;
             const t11 = $('rep-11-to').value || '...'; const lt11 = $('rep-11-lt').value || '...'; const bt11 = $('rep-11-bt').value || '...';
             const t12 = $('rep-12-to').value || '...'; const lt12 = $('rep-12-lt').value || '...'; const bt12 = $('rep-12-bt').value || '...';
@@ -1503,7 +1876,7 @@ if (Array.isArray(row[3])) {
         
         const mobileToolsToggle=$('att-mobile-tools-toggle');
         const mobileToolsMenu=$('att-mobile-tools-menu');
-        function closeMobileTools(){mobileToolsMenu.classList.remove('open');mobileToolsMenu.setAttribute('aria-hidden','true');mobileToolsToggle.setAttribute('aria-expanded','false');}
+        function closeMobileTools(){mobileToolsMenu.classList.remove('open');mobileToolsMenu.setAttribute('aria-hidden','false');mobileToolsToggle.setAttribute('aria-expanded','false');}
         mobileToolsToggle.addEventListener('click',e=>{
             e.stopPropagation();
             const open=!mobileToolsMenu.classList.contains('open');
@@ -1518,34 +1891,17 @@ if (Array.isArray(row[3])) {
         // TÍNH NĂNG NÂNG CAO KHÁC (Xuất ảnh, sao lưu)
         // ==========================================
         $('att-clear-all-data').addEventListener('click',()=>{
-            const enteredPassword=prompt('Nhập mật khẩu để sao lưu và xóa dữ liệu:');
-            if(enteredPassword!=='123456'){if(enteredPassword!==null)alert('Mật khẩu không đúng. Không thực hiện hành động nào.');return;}
-            const initialConfirm=confirm('Sẽ tạo một file sao lưu dữ liệu gốc (.json), sau đó xóa TOÀN BỘ dữ liệu điểm danh và công cụ. Bạn có muốn tiếp tục?');
-            if(!initialConfirm)return;
-            const backup={ format:'lop-ly-thay-rang-raw-backup-v2', exportedAt:new Date().toISOString(), attendance:{...store}, rosters: SEAT_MAPS };
-            let url='';
-            try {
-                const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'});
-                url=URL.createObjectURL(blob);
-                const a=document.createElement('a');a.href=url;
-                a.download='Lop-Ly-Thay-Rang-backup-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';
-                document.body.appendChild(a);a.click();a.remove();
-            } catch(err) { toast('Không tạo được file sao lưu; dữ liệu chưa bị xóa.'); if(url)URL.revokeObjectURL(url); return; }
-            setTimeout(()=>{if(url)URL.revokeObjectURL(url)},2500);
-            
-            if(!confirm('Đã yêu cầu tải file JSON sao lưu. Nhấn OK để xóa dữ liệu trong ứng dụng.')){toast('Đã hủy xóa.');return;}
-
-            Object.keys(globalState).forEach(k=>{ const st=globalState[k]; if(st){st.status=0;st.timeLeft=DEFAULT_TIME_SECONDS;st.isRunning=false;st.isFinished=false;st.note='';} });
-            store={records:{},extraWeeks:0,selectedDate:dateKey(nearestDate(getDates()))};
-            try{localStorage.removeItem(KEY);}catch(e){}
-            $('att-class').value='11'; currentClass='11';
-            $('att-save-state').textContent='Đã xóa dữ liệu sau khi sao lưu';
-            renderGrid(); renderAttendanceList();
+            const enteredPassword=prompt('Nhập mật khẩu để xóa dữ liệu:');
+            if(enteredPassword!=='123456'){if(enteredPassword!==null)alert('Mật khẩu không đúng.');return;}
+            if(!confirm('Xóa toàn bộ điểm danh, bảng điểm và ghi chú? Hãy dùng nút Sao lưu dữ liệu JSON nếu cần giữ bản sao.'))return;
+            const previous=snapshotData();
+            const next=normalizeData({records:{},schemaVersion:3,selectedDate:store.selectedDate});
+            if(!replaceStore(next)){toast('Không thể xóa; dữ liệu hiện tại vẫn được giữ.');return;}
+            undoStack=[]; recordUndo('Đã xóa dữ liệu',()=>replaceStore(previous));
             $('att-data-settings-modal').classList.remove('show');
-            if(activePage === 'list') setPage('home');
-            toast('Đã xóa toàn bộ dữ liệu động.');
+            toast('Đã xóa dữ liệu. Có thể hoàn tác trong phiên này.');
         });
-        
+
         async function toggleFullScreenAwake(){
              const icon = $('fullscreen-icon');
              if(!keepScreenAwake){
@@ -1592,13 +1948,17 @@ if (Array.isArray(row[3])) {
         $('att-export-day').addEventListener('click',async()=>{
              await ensureReportFonts();
              let d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(dates),students=getStudents(currentClass),counts=[0,0,0,0,0];students.forEach(n=>counts[status(d,n)]++);
-             let w=1000,top=140,rowH=44,h=top+students.length*rowH+75,c=document.createElement('canvas');c.width=w;c.height=h;let x=c.getContext('2d');x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);
+             const noteKey=dateKey(d),measure=document.createElement('canvas').getContext('2d'),noteBlock=measureDailyNoteBlock(measure,noteKey,currentClass,932);
+             let w=1000,top=140+(noteBlock.height?noteBlock.height+16:0),rowH=44,h=top+students.length*rowH+75,c=document.createElement('canvas');
+             if(h>14000){toast('Ghi chú quá dài để xuất ảnh ngày. Hãy rút gọn nội dung.');return;}
+             c.width=w;c.height=h;let x=c.getContext('2d');x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);
              x.fillStyle='#0f172a';x.font='900 26px "Nunito", sans-serif';
              x.fillText('LỚP LÝ THẦY RẠNG — LỚP '+currentClass+' — Ngày '+weekday(d)+' '+fmt(d)+'/'+d.getFullYear(),34,48);
              let sx=34,sy=78,cardW=174;
              [['Có mặt + làm bài',counts[1],'#d1fae5'],['Có mặt, chưa làm',counts[2],'#fee2e2'],['Vắng',counts[3],'#fef3c7'],['Vắng + nộp bài',counts[4],'#dbeafe']].forEach((z,i)=>{let xx=sx+i*(cardW+10);roundedRect(x,xx,sy,cardW,44,9,z[2]);x.fillStyle='#334155';x.font='bold 12px "Nunito", sans-serif';x.fillText(z[0],xx+12,sy+17);x.fillStyle='#0f172a';x.font='900 19px "Nunito", sans-serif';x.fillText(String(z[1]),xx+12,sy+37)});
+             drawDailyNoteBlock(x,noteBlock,noteKey,34,140,932);
              let y=top,nameX=34,numW=64,nameW=600,statusW=268;roundedRect(x,nameX,y,w-68,38,7,'#dbeafe');x.fillStyle='#1e293b';x.font='900 14px "Nunito", sans-serif';x.fillText('STT',nameX+15,y+24);x.fillText('HỌ TÊN HỌC SINH',nameX+numW,y+24);x.fillText('TRẠNG THÁI',nameX+numW+nameW,y+24);
-             students.forEach((n,i)=>{let yy=y+38+i*rowH,st=status(d,n);x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(nameX,yy,w-68,rowH);x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(nameX,yy+rowH);x.lineTo(w-34,yy+rowH);x.stroke();x.fillStyle='#64748b';x.font='bold 13px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),nameX+15,yy+27);x.fillStyle='#0f172a';x.font='bold 15px "Nunito", sans-serif';canvasText(x,n,nameX+numW,yy+27,nameW-20);let bx=nameX+numW+nameW+10,by=yy+8;roundedRect(x,bx,by,statusW-20,28,7,COLORS[st][0]);x.fillStyle=COLORS[st][1];x.font='900 13px "Nunito", sans-serif';x.fillText(LABELS[st],bx+12,by+19)});
+             students.forEach((n,i)=>{let yy=y+38+i*rowH,st=status(d,n);x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(nameX,yy,w-68,rowH);x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(nameX,yy+rowH);x.lineTo(w-34,yy+rowH);x.stroke();x.fillStyle='#64748b';x.font='bold 13px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),nameX+15,yy+27);x.fillStyle='#0f172a';x.font='bold 15px "Nunito", sans-serif';canvasText(x,studentName(n),nameX+numW,yy+27,nameW-20);let bx=nameX+numW+nameW+10,by=yy+8;roundedRect(x,bx,by,statusW-20,28,7,COLORS[st][0]);x.fillStyle=COLORS[st][1];x.font='900 13px "Nunito", sans-serif';x.fillText(LABELS[st],bx+12,by+19)});
              x.fillStyle='#64748b';x.font='12px "Nunito", sans-serif';x.fillText('Báo cáo được tạo bởi Thanh Ngà · '+new Date().toLocaleString('vi-VN'),34,h-22);downloadCanvas(c,`diem-danh-lop-${currentClass}-${dateKey(d)}.png`)
         });
         
@@ -1675,7 +2035,7 @@ if (Array.isArray(row[3])) {
                const yy=y+headH+i*rowH;
                x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(margin,yy,nameW,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(margin,yy,nameW,rowH);
                x.fillStyle='#64748b';x.font='bold 11px "Nunito", sans-serif';x.fillText(String(i+1).padStart(2,'0'),margin+9,yy+23);
-               x.fillStyle='#0f172a';x.font='bold 12px "Nunito", sans-serif';canvasText(x,name,margin+37,yy+23,nameW-47);
+               x.fillStyle='#0f172a';x.font='bold 12px "Nunito", sans-serif';canvasText(x,studentName(name),margin+37,yy+23,nameW-47);
                const person=perStudent[i]; let sx=margin+nameW;
                statCols.forEach(col=>{
                  x.fillStyle=i%2?'#f8fafc':'#ffffff';x.fillRect(sx,yy,col.width,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(sx,yy,col.width,rowH);
@@ -1698,25 +2058,58 @@ if (Array.isArray(row[3])) {
            const words=paragraph.split(/\s+/).filter(Boolean);
            if(!words.length){out.push('');return;}
            let line='';
-           words.forEach(word=>{ const candidate=line?line+' '+word:word; if(line&&ctx.measureText(candidate).width>maxWidth){out.push(line);line=word;}else line=candidate; });
-           out.push(line);
+           words.forEach(word=>{
+             const candidate=line?line+' '+word:word;
+             if(ctx.measureText(candidate).width<=maxWidth){line=candidate;return;}
+             if(line){out.push(line);line='';}
+             for(const char of word){if(line&&ctx.measureText(line+char).width>maxWidth){out.push(line);line='';}line+=char;}
+           });
+           if(line)out.push(line);
          }); return out.length?out:[''];
+        }
+        function measureDailyNoteBlock(ctx,key,cls,width) {
+            ctx.font='700 18px "Nunito",sans-serif';
+            const text=dailyNoteText(key,cls),lines=text?wrapCanvasLines(ctx,text,width-32):[];
+            return {lines,height:lines.length?50+lines.length*26:0};
+        }
+        function drawDailyNoteBlock(ctx,block,key,left,top,width) {
+            if(!block.height)return;
+            roundedRect(ctx,left,top,width,block.height,10,'#e2e8f0');
+            ctx.fillStyle='#0f766e';ctx.font='900 14px "Nunito",sans-serif';ctx.fillText('GHI CHÚ · '+dailyNoteDateLabel(key),left+16,top+27);
+            ctx.fillStyle='#334155';ctx.font='700 18px "Nunito",sans-serif';
+            block.lines.forEach((line,index)=>ctx.fillText(line,left+16,top+54+index*26));
         }
         $('att-export-general').addEventListener('click', () => {
             const d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(getDates());
-            $('att-report-date-label').textContent=(d?weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear():'Ngày đang chọn')+' · Lớp 11 và lớp 12';
-            $('att-report-note').value='Lớp 11:\nLớp 12:'; $('att-report-preserve-lines').checked=true;
+            $('att-report-modal').dataset.date=dateKey(d);
+            $('att-report-date-label').textContent=dailyNoteDateLabel(dateKey(d))+' · Lớp 11 và lớp 12';
+            $('att-report-note-preview').textContent=dailyNoteText(dateKey(d))||'Ngày này chưa có ghi chú. Bạn có thể thêm ghi chú trước khi xuất.';
             $('att-report-modal').classList.add('show');
-            setTimeout(()=>$('att-report-note').focus(),40);
+            $('att-report-edit-notes').focus();
         });
-        $('att-report-close').addEventListener('click', ()=> $('att-report-modal').classList.remove('show'));
-        $('att-report-cancel').addEventListener('click', ()=> $('att-report-modal').classList.remove('show'));
+        function closeDailyReport(){$('att-report-modal').classList.remove('show');$('att-export-general').focus();}
+        $('att-report-close').addEventListener('click',closeDailyReport);
+        $('att-report-cancel').addEventListener('click',closeDailyReport);
+        $('att-report-edit-notes').addEventListener('click',()=>{
+            const key=$('att-report-modal').dataset.date;
+            closeDailyReport();setPage('home');selectDate(key,true);
+            $('daily-notes').scrollIntoView({block:'start',behavior:'smooth'});$('daily-note-11').focus({preventScroll:true});
+        });
+        $('att-report-modal').addEventListener('click',event=>{if(event.target===$('att-report-modal'))closeDailyReport();});
+        $('att-report-modal').addEventListener('keydown',event=>{
+            if(event.key==='Escape'){event.preventDefault();closeDailyReport();}
+            if(event.key==='Tab'){
+                const buttons=[...$('att-report-modal').querySelectorAll('button')],first=buttons[0],last=buttons[buttons.length-1];
+                if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+                else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+            }
+        });
         
         $('att-report-export').addEventListener('click',async()=>{
+             const d=parseDateKey($('att-report-modal').dataset.date); if(!d)return;
+             const note=dailyNoteText(dateKey(d));
              await ensureReportFonts();
-             const d=dates.find(x=>dateKey(x)===$('att-date').value)||nearestDate(getDates()); if(!d) return;
              const students11=getStudents('11'), students12=getStudents('12'), rows=Math.max(students11.length,students12.length);
-             const note=$('att-report-preserve-lines').checked?($('att-report-note').value||''):($('att-report-note').value||'').replace(/\s*\n\s*/g,' ');
              const W=1080,H=1920,margin=30,inner=W-margin*2,blockW=inner/2,nameW=278,statusW=blockW-nameW;
              const defaultTableTop=220,noteTop=184,groupH=54,colH=52,footerReserve=62,noteGap=18;
              const temp=document.createElement('canvas').getContext('2d');
@@ -1730,7 +2123,7 @@ if (Array.isArray(row[3])) {
                return {size,lines,lineH,boxH,tableTop,rowH:rows?Math.floor(available/rows):52};
              };
              let layout=null; for(const size of [28,26,24,22,20,18]){ const candidate=tryLayout(size); if(candidate.rowH>=30){layout=candidate;break;} }
-             if(!layout){toast('Chú thích quá dài!');return;}
+             if(!layout){toast('Ghi chú quá dài cho báo cáo 9:16. Hãy rút gọn nội dung hoặc dùng Ảnh ngày.');return;}
              noteFont=layout.size;noteLines=layout.lines;noteLineH=layout.lineH;noteH=layout.boxH;rowH=Math.min(52,layout.rowH);top=layout.tableTop;
              
              const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
@@ -1740,7 +2133,7 @@ if (Array.isArray(row[3])) {
              x.fillStyle='#475569';x.font='700 24px "Nunito", sans-serif';x.fillText('Ngày '+weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear(),margin,162);
              if(noteLines.length){
                roundedRect(x,margin,noteTop,inner,noteH-8,12,'#e2e8f0');
-               x.fillStyle='#0f172a';x.font='900 24px "Nunito", sans-serif';x.fillText('CHÚ THÍCH',margin+16,noteTop+32);
+               x.fillStyle='#0f172a';x.font='900 24px "Nunito", sans-serif';x.fillText('GHI CHÚ THEO NGÀY',margin+16,noteTop+32);
                x.fillStyle='#334155';x.font=`800 ${noteFont}px "Nunito", sans-serif`;
                noteLines.forEach((line,i)=>x.fillText(line,margin+16,noteTop+62+i*noteLineH));
              }
@@ -1753,7 +2146,7 @@ if (Array.isArray(row[3])) {
              for(let i=0;i<rows;i++){
                const yy=headY+groupH+colH+i*rowH;
                const n11=students11[i]||'',n12=students12[i]||'';
-               const arr=[{name:n11,st:n11?statusInClass('11',d,n11):0},{name:n11,st:n11?statusInClass('11',d,n11):0},{name:n12,st:n12?statusInClass('12',d,n12):0},{name:n12,st:n12?statusInClass('12',d,n12):0}];
+               const arr=[{name:studentName(n11),st:n11?statusInClass('11',d,n11):0},{name:studentName(n11),st:n11?statusInClass('11',d,n11):0},{name:studentName(n12),st:n12?statusInClass('12',d,n12):0},{name:studentName(n12),st:n12?statusInClass('12',d,n12):0}];
                arr.forEach((a,j)=>{
                  const col=headers[j],xx=col.x,ww=col.w;
                  x.fillStyle=i%2?'#f1f5f9':'#ffffff';x.fillRect(xx,yy,ww,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,ww,rowH);
@@ -1766,7 +2159,7 @@ if (Array.isArray(row[3])) {
                });
              }
              x.fillStyle='#64748b';x.font='700 16px "Nunito", sans-serif';x.textAlign='center';x.fillText('Báo cáo được tạo bởi Thanh Ngà',W/2,H-25);x.textAlign='left';
-             downloadCanvas(c,`bao-cao-tong-quat-${dateKey(d)}-9x16.png`); $('att-report-modal').classList.remove('show');
+             downloadCanvas(c,`bao-cao-tong-quat-${dateKey(d)}-9x16.png`); closeDailyReport();
         });
 
         function renderStats(){
@@ -1783,7 +2176,7 @@ if (Array.isArray(row[3])) {
                  data.push(row);
                });
              });
-             const daysWithRecords=dates.filter(d=>classes.some(cls=>Object.values((store.records||{})[cls+'_'+dateKey(d)]||{}).some(v=>Number(v)>0))).length;
+             const daysWithRecords=dates.filter(d=>classes.some(cls=>getStudents(cls).some(id=>statusInClass(cls,d,id)>0))).length;
              $('att-stats-period').textContent=`${dates.length} buổi trong lịch · Có dữ liệu ở ${daysWithRecords} buổi`;
              $('att-stats-summary').innerHTML=[
                ['Lượt có mặt + làm bài',totals.work,'#d1fae5','#047857'], ['Lượt có mặt chưa làm',totals.presentNoWork,'#fee2e2','#b91c1c'],
@@ -1791,11 +2184,454 @@ if (Array.isArray(row[3])) {
              ].map(a=>`<div class="att-stats-card" style="background:${a[2]}"><small style="color:${a[3]}">${a[0]}</small><strong style="color:${a[3]}">${a[1]}</strong></div>`).join('');
              const all=filter==='all';
              $('att-stats-table').querySelector('thead').innerHTML=`<tr>${all?'<th>Lớp</th>':''}<th style="text-align:left">Học sinh</th><th class="stat-col-work">Có làm bài</th><th class="stat-col-present-no-work">Có mặt, chưa làm</th><th class="stat-col-absent">Vắng</th><th class="stat-col-submitted">Vắng + nộp bài</th><th>Tổng buổi đã điểm danh</th></tr>`;
-             $('att-stats-table').querySelector('tbody').innerHTML=data.map(r=>`<tr>${all?`<td><b>${r.cls}</b></td>`:''}<th><span style="display:inline-block;min-width:27px;color:#94a3b8;font-size:10px">${String(r.index).padStart(2,'0')}</span>${escapeHtml(r.name)}</th><td class="stat-col-work"><b>${r.work}</b></td><td class="stat-col-present-no-work"><b>${r.presentNoWork}</b></td><td class="stat-col-absent"><b>${r.absent}</b></td><td class="stat-col-submitted"><b>${r.submitted}</b></td><td><b>${r.attended}</b></td></tr>`).join('');
+             $('att-stats-table').querySelector('tbody').innerHTML=data.map(r=>`<tr>${all?`<td><b>${r.cls}</b></td>`:''}<th><span style="display:inline-block;min-width:27px;color:#94a3b8;font-size:10px">${String(r.index).padStart(2,'0')}</span>${escapeHtml(studentName(r.name))}</th><td class="stat-col-work"><b>${r.work}</b></td><td class="stat-col-present-no-work"><b>${r.presentNoWork}</b></td><td class="stat-col-absent"><b>${r.absent}</b></td><td class="stat-col-submitted"><b>${r.submitted}</b></td><td><b>${r.attended}</b></td></tr>`).join('');
         }
         $('att-open-stats').addEventListener('click', () => { $('att-data-settings-modal').classList.remove('show'); renderStats(); $('att-stats-modal').classList.add('show'); });
         $('att-stats-class').addEventListener('change', renderStats);
         $('att-stats-close').addEventListener('click', () => $('att-stats-modal').classList.remove('show'));
+
+        let gradeClass = currentClass, editingGradeColumn = null, gradeReturnFocus = null;
+        const gradeEditGroups = new WeakMap();
+        const gradeNumberFormat = new Intl.NumberFormat('vi-VN', { minimumFractionDigits:2, maximumFractionDigits:2 });
+        function gradebook(cls = gradeClass) {
+            if (!store.gradebooks || typeof store.gradebooks !== 'object' || Array.isArray(store.gradebooks)) store.gradebooks = {};
+            if (!store.gradebooks[cls]) store.gradebooks[cls] = { columns:[], scores:{} };
+            const book = store.gradebooks[cls];
+            if (!Array.isArray(book.columns)) book.columns = [];
+            if (!book.scores || typeof book.scores !== 'object' || Array.isArray(book.scores)) book.scores = {};
+            return book;
+        }
+        function gradeValue(book, columnId, name) {
+            const value = book.scores[columnId]?.[name];
+            return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 10 ? value : null;
+        }
+        function gradeSummary(book, name) {
+            let total = 0, weight = 0, count = 0, highest = null;
+            book.columns.forEach(column => {
+                const value = gradeValue(book, column.id, name);
+                if (value === null) return;
+                const factor = Number(column.weight) > 0 ? Number(column.weight) : 1;
+                total += value * factor; weight += factor; count++;
+                highest = highest === null ? value : Math.max(highest, value);
+            });
+            return { average:weight ? total / weight : null, highest, count };
+        }
+        function gradeText(value) { return value === null ? '—' : gradeNumberFormat.format(value); }
+        function gradeInputText(value) { return value === null ? '' : String(value).replace('.', ','); }
+        function saveGrades() {
+            const saved = save();
+            $('grade-save-state').textContent = saved ? '● Đã lưu tự động' : 'Không thể lưu — hãy kiểm tra bộ nhớ trình duyệt';
+            $('grade-save-state').style.color = saved ? '#0f766e' : '#b91c1c';
+            return saved;
+        }
+        function updateGradeTotals() {
+            const book = gradebook(), students = getStudents(gradeClass);
+            const summaries = students.map(name => gradeSummary(book, name));
+            const marked = summaries.filter(row => row.count > 0);
+            $('grade-marked-count').textContent = marked.length + ' / ' + students.length;
+            $('grade-class-average').textContent = gradeText(marked.length ? marked.reduce((sum, row) => sum + row.average, 0) / marked.length : null);
+            $('grade-class-highest').textContent = gradeText(marked.length ? Math.max(...marked.map(row => row.highest)) : null);
+            $('grade-tbody').querySelectorAll('tr[data-grade-name]').forEach(row => {
+                const summary = gradeSummary(book, row.dataset.gradeName);
+                row.querySelector('.grade-average').textContent = gradeText(summary.average);
+                row.querySelector('.grade-highest').textContent = gradeText(summary.highest);
+                row.querySelector('.grade-name small').textContent = row.dataset.gradeName + ' · ' + summary.count + '/' + book.columns.length + ' cột';
+            });
+        }
+        function renderGradebook() {
+            const book = gradebook(), students = getStudents(gradeClass);
+            $('grade-class').value = gradeClass;
+            $('gradebook-title').innerHTML = '<i class="ph-bold ph-exam"></i> Bảng điểm · Lớp ' + escapeHtml(gradeClass);
+            $('grade-empty').classList.toggle('show', book.columns.length === 0);
+            $('grade-colgroup').innerHTML = '<col class="grade-name"><col class="grade-summary-col"><col class="grade-summary-col">' + book.columns.map(() => '<col class="grade-score-col">').join('');
+            $('grade-thead').innerHTML = '<tr><th class="grade-name" scope="col">HỌ TÊN HỌC SINH</th><th class="grade-average" scope="col">Trung bình</th><th class="grade-highest" scope="col">Cao nhất</th>' + book.columns.map(column => {
+                const d = parseDateKey(column.date), label = d ? fmt(d) + '/' + d.getFullYear() : column.date;
+                return `<th scope="col"><button type="button" class="grade-column-btn" data-grade-edit="${escapeAttr(column.id)}" title="Sửa cột ${escapeAttr(column.title)}"><span>${escapeHtml(column.title)} <i class="ph-bold ph-pencil-simple" aria-hidden="true"></i></span><small>${escapeHtml(label)} · HS ${escapeHtml(column.weight)}</small></button></th>`;
+            }).join('') + '</tr>';
+            $('grade-tbody').innerHTML = students.map((name, index) => `<tr data-grade-name="${escapeAttr(name)}"><th scope="row" class="grade-name"><span style="color:#94a3b8;font-size:10px">${String(index+1).padStart(2,'0')}.</span> ${escapeHtml(studentName(name))}<small></small></th><td class="grade-average">—</td><td class="grade-highest">—</td>${book.columns.map(column => `<td><input type="text" class="grade-score" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="—" aria-label="${escapeAttr(studentName(name))} · ${escapeAttr(column.title)} · điểm từ 0 đến 10" aria-describedby="grade-validation" data-grade-column="${escapeAttr(column.id)}" data-grade-student="${escapeAttr(name)}" value="${gradeInputText(gradeValue(book, column.id, name))}"></td>`).join('')}</tr>`).join('');
+            updateGradeTotals();
+        }
+        function openGradebook() {
+            gradeReturnFocus = document.activeElement;
+            gradeClass = currentClass;
+            closeGradeColumn(false);
+            $('grade-validation').textContent = '';
+            $('grade-save-state').textContent = 'Tự động lưu trên trình duyệt này';
+            $('grade-save-state').style.color = '#0f766e';
+            renderGradebook();
+            $('gradebook-modal').classList.add('show');
+            $('gradebook-close').focus();
+        }
+        function closeGradebook() {
+            $('gradebook-modal').classList.remove('show');
+            closeGradeColumn(false);
+            if (gradeReturnFocus?.isConnected) gradeReturnFocus.focus({preventScroll:true});
+        }
+        function closeGradeColumn(focus = true) {
+            $('grade-column-form').hidden = true;
+            $('gradebook-modal').querySelector('.grade-dialog').classList.remove('grade-editing');
+            editingGradeColumn = null;
+            if (focus) $('grade-add-column').focus();
+        }
+        function openGradeColumn(id = null) {
+            const column = id ? gradebook().columns.find(item => item.id === id) : null;
+            if (id && !column) return;
+            editingGradeColumn = column ? column.id : null;
+            $('grade-column-title').value = column ? column.title : '';
+            $('grade-column-date').value = column ? column.date : ($('att-date').value || dateKey(new Date()));
+            $('grade-column-weight').value = String(column ? column.weight : 1);
+            $('grade-column-submit').textContent = column ? 'Lưu thay đổi' : 'Thêm cột';
+            $('grade-column-delete').hidden = !column;
+            $('grade-column-form').hidden = false;
+            $('gradebook-modal').querySelector('.grade-dialog').classList.add('grade-editing');
+            $('grade-column-title').setCustomValidity('');
+            $('grade-column-title').focus();
+        }
+        function validateGradeInput(input) {
+            const text = input.value.trim().replace(',', '.');
+            if (text === '') return { valid:true, value:null };
+            if (!/^\d{1,2}(?:\.\d{1,2})?$/.test(text)) return { valid:false };
+            const value = Number(text);
+            return { valid:Number.isFinite(value) && value >= 0 && value <= 10, value };
+        }
+        $('home-go-grades').addEventListener('click', openGradebook);
+        $('att-list-grades').addEventListener('click', openGradebook);
+        $('gradebook-close').addEventListener('click', closeGradebook);
+        $('gradebook-modal').addEventListener('click', event => {
+            if (event.target === $('gradebook-modal')) { closeGradebook(); return; }
+            const button = event.target.closest('[data-grade-edit]');
+            if (button) openGradeColumn(button.dataset.gradeEdit);
+        });
+        $('grade-class').addEventListener('change', event => {
+            gradeClass = event.target.value;
+            applyClassChange(gradeClass);
+            closeGradeColumn(false);
+            $('grade-validation').textContent = '';
+            renderGradebook();
+            $('grade-table').parentElement.scrollTo(0, 0);
+        });
+        $('grade-add-column').addEventListener('click', () => openGradeColumn());
+        $('grade-column-cancel').addEventListener('click', () => closeGradeColumn());
+        $('grade-column-title').addEventListener('input', () => $('grade-column-title').setCustomValidity(''));
+        $('grade-column-form').addEventListener('submit', event => {
+            event.preventDefault();
+            const title = $('grade-column-title').value.trim(), date = $('grade-column-date').value;
+            if (!title) { $('grade-column-title').setCustomValidity('Vui lòng nhập tên cột điểm.'); $('grade-column-title').reportValidity(); return; }
+            const parsed = parseDateKey(date);
+            if (!parsed || dateKey(parsed) !== date) { $('grade-column-date').focus(); return; }
+            const weight = Number($('grade-column-weight').value);
+            if (![1,2,3].includes(weight)) return;
+            const book = gradebook(), oldBook = cloneData(book), editedClass = gradeClass;
+            let id = editingGradeColumn;
+            if (id) {
+                const column = book.columns.find(item => item.id === id);
+                if (!column) return;
+                Object.assign(column, {title, date, weight});
+            } else {
+                id = globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : 'g_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2);
+                book.columns.push({id, title, date, weight});
+                book.scores[id] = {};
+            }
+            const saved = saveGrades();
+            recordUndo('Đã lưu cột “'+title+'” · Lớp '+editedClass,()=>{store.gradebooks[editedClass]=cloneData(oldBook);});
+            closeGradeColumn(false);
+            renderGradebook();
+            const columnIndex = book.columns.findIndex(column => column.id === id);
+            const firstInput = $('grade-tbody').querySelector('tr')?.querySelectorAll('.grade-score')[columnIndex];
+            if (firstInput) firstInput.focus();
+            if (saved) toast('Đã lưu cột điểm: ' + title);
+        });
+        $('grade-column-delete').addEventListener('click', () => {
+            const book = gradebook(), column = book.columns.find(item => item.id === editingGradeColumn);
+            if (!column || !confirm('Xóa cột “' + column.title + '” và toàn bộ điểm trong cột này của lớp ' + gradeClass + '?')) return;
+            const oldBook=cloneData(book), editedClass=gradeClass;
+            book.columns = book.columns.filter(item => item.id !== column.id);
+            delete book.scores[column.id];
+            const saved = saveGrades();
+            recordUndo('Đã xóa cột “'+column.title+'” · Lớp '+editedClass,()=>{store.gradebooks[editedClass]=cloneData(oldBook);});
+            closeGradeColumn(); renderGradebook();
+            if (saved) toast('Đã xóa cột điểm');
+        });
+        $('grade-tbody').addEventListener('focusin', event => {
+            if (event.target.matches('.grade-score')) gradeEditGroups.set(event.target,'grade-edit-'+(++undoSequence));
+        });
+        $('grade-tbody').addEventListener('input', event => {
+            const input = event.target.closest('.grade-score');
+            if (!input) return;
+            const result = validateGradeInput(input);
+            input.setAttribute('aria-invalid', String(!result.valid));
+            $('grade-validation').textContent = result.valid ? '' : 'Điểm phải từ 0 đến 10, tối đa 2 chữ số thập phân. Giá trị không hợp lệ chưa được lưu.';
+            if (!result.valid) return;
+            const book = gradebook(), id = input.dataset.gradeColumn, name = input.dataset.gradeStudent;
+            if (!book.columns.some(column => column.id === id) || !getStudents(gradeClass).includes(name)) return;
+            const before=gradeValue(book,id,name), editedClass=gradeClass;
+            if (before===result.value) return;
+            if (!gradeEditGroups.has(input)) gradeEditGroups.set(input,'grade-edit-'+(++undoSequence));
+            if (!book.scores[id]) book.scores[id] = {};
+            if (result.value === null) delete book.scores[id][name];
+            else book.scores[id][name] = result.value;
+            const label=studentName(name)+' · '+(book.columns.find(column=>column.id===id)?.title||'Điểm')+' → '+gradeText(result.value);
+            recordUndo(label,()=>{
+                const target=store.gradebooks[editedClass]?.scores[id]; if(!target)return;
+                if(before===null)delete target[name];else target[name]=before;
+            },gradeEditGroups.get(input));
+            saveGrades(); updateGradeTotals();
+        });
+        $('grade-tbody').addEventListener('focusout', event => {
+            const input = event.target.closest('.grade-score');
+            if (!input) return;
+            const valid = validateGradeInput(input).valid;
+            input.value = gradeInputText(gradeValue(gradebook(), input.dataset.gradeColumn, input.dataset.gradeStudent));
+            input.removeAttribute('aria-invalid');
+            if (!valid) { $('grade-validation').textContent = 'Đã khôi phục điểm hợp lệ gần nhất cho ' + studentName(input.dataset.gradeStudent) + '.'; toast('Điểm không hợp lệ; giữ lại giá trị hợp lệ gần nhất.'); }
+        });
+        $('gradebook-modal').addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                event.preventDefault(); event.stopPropagation();
+                if (!$('grade-column-form').hidden) closeGradeColumn(); else closeGradebook();
+                return;
+            }
+            if (event.key === 'Enter' && event.target.matches('.grade-score')) {
+                event.preventDefault();
+                if (!validateGradeInput(event.target).valid) return;
+                const row = event.target.closest('tr'), index = [...row.querySelectorAll('.grade-score')].indexOf(event.target);
+                const next = row.nextElementSibling?.querySelectorAll('.grade-score')[index];
+                if (next) next.focus(); else event.target.blur();
+            }
+            if (event.key === 'Tab') {
+                const focusable = [...$('gradebook-modal').querySelectorAll('button, input, select, [tabindex="0"]'),...document.querySelectorAll('#undo-bar.show button')].filter(element => !element.disabled && element.getClientRects().length);
+                const first = focusable[0], last = focusable[focusable.length-1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+            }
+        });
+
+        function refreshDataViews() {
+            renderAttendanceList();
+            syncAttendanceToSeatMap(currentClass,store.selectedDate||$('att-date').value); renderGrid();
+            if ($('gradebook-modal').classList.contains('show')) { closeGradeColumn(false); renderGradebook(); }
+            if ($('att-stats-modal').classList.contains('show')) renderStats();
+            updateReportPreview();
+        }
+        function recordUndo(label,undo,group='') {
+            const last=undoStack[undoStack.length-1];
+            if(group&&last?.group===group)last.label=label;
+            else{undoStack.push({label,undo,group});if(undoStack.length>30)undoStack.shift();}
+            showUndo();
+        }
+        function showUndo() {
+            const entry=undoStack[undoStack.length-1];
+            $('undo-message').textContent=entry?.label||'';
+            $('undo-bar').classList.toggle('show',!!entry);
+            document.body.classList.toggle('undo-visible',!!entry);
+            $('undo-action').title='Ctrl+Z khi không nhập liệu; Ctrl+Alt+Z ở mọi nơi';
+        }
+        function undoLatest() {
+            if (!undoStack.length || isSpinning) return;
+            const entry=undoStack.pop();
+            try {
+                if(entry.undo()===false){undoStack.push(entry);toast('Chưa thể hoàn tác; dữ liệu không bị thay đổi.');showUndo();return;}
+                const saved=save();refreshDataViews();showUndo();
+                toast(saved?'Đã hoàn tác: '+entry.label:'Đã hoàn tác trong phiên này nhưng chưa lưu được.');
+            } catch(error){undoStack.push(entry);showUndo();toast('Không thể hoàn tác: '+error.message);}
+        }
+        $('undo-action').addEventListener('click',undoLatest);
+        $('undo-dismiss').addEventListener('click',()=>{$('undo-bar').classList.remove('show');document.body.classList.remove('undo-visible');});
+        document.addEventListener('keydown',event=>{
+            if(event.key==='Escape'){
+                if($('restore-modal').classList.contains('show'))closeRestore();
+                else if($('att-status-modal').classList.contains('show'))closeAttendancePicker();
+                else if($('gradebook-modal').classList.contains('show')){if(!$('grade-column-form').hidden)closeGradeColumn();else closeGradebook();}
+                return;
+            }
+            if(event.key.toLowerCase()!=='z'||(!event.ctrlKey&&!event.metaKey)||event.shiftKey)return;
+            if(!event.altKey&&event.target.closest('input,textarea,select,[contenteditable="true"]'))return;
+            event.preventDefault();undoLatest();
+        });
+        function setAttendance(cls,key,id,value) {
+            if (!store.students[id]?.active || store.students[id].cls!==cls || !parseDateKey(key) || !Number.isInteger(value) || value<0 || value>4) return;
+            const recordKey=cls+'_'+key, record=store.records[recordKey]||(store.records[recordKey]={}), before=Number(record[id]||0);
+            if(before===value)return;
+            record[id]=value;
+            recordUndo(studentName(id)+' · Lớp '+cls+' · '+fmt(parseDateKey(key))+': '+LABELS[value],()=>{
+                const target=store.records[recordKey]||(store.records[recordKey]={});
+                if(before===0)delete target[id];else target[id]=before;
+            });
+            const saved=save(); refreshDataViews();
+            if(!saved)toast('Đã cập nhật trong phiên này nhưng chưa lưu được.');
+        }
+        function clearClassAttendance() {
+            const cls=currentClass,key=store.selectedDate||$('att-date').value,recordKey=cls+'_'+key,before=cloneData(store.records[recordKey]||{});
+            if(!getStudents(cls).some(id=>Number(before[id]||0)>0)){toast('Lớp chưa có trạng thái để xóa.');return;}
+            const record=store.records[recordKey]||(store.records[recordKey]={});getStudents(cls).forEach(id=>delete record[id]);
+            recordUndo('Đã xóa trạng thái lớp '+cls+' · '+fmt(parseDateKey(key)),()=>{store.records[recordKey]=cloneData(before);});
+            save();refreshDataViews();toast('Đã xóa trạng thái. Có thể hoàn tác.');
+        }
+        function openAttendancePicker(cls,key,id) {
+            if(!store.students[id]?.active)return;
+            attendancePicker={cls,key,id,returnFocus:document.activeElement};
+            const d=parseDateKey(key),value=Number(store.records[cls+'_'+key]?.[id]||0);
+            $('att-status-title').textContent='Điểm danh · '+studentName(id);
+            $('att-status-detail').textContent='Lớp '+cls+' · '+id+' · '+(d?weekdayLong(d)+' '+fmt(d)+'/'+d.getFullYear():key);
+            $('att-status-modal').querySelectorAll('[data-status]').forEach(button=>{
+                button.style.outline=Number(button.dataset.status)===value?'2px solid #0f766e':'none';
+                button.style.outlineOffset='1px';
+            });
+            $('att-status-modal').classList.add('show');$('att-status-close').focus();
+        }
+        function closeAttendancePicker() {
+            $('att-status-modal').classList.remove('show');
+            const previous=attendancePicker;attendancePicker=null;
+            if(!previous)return;
+            if(previous.returnFocus?.isConnected)previous.returnFocus.focus({preventScroll:true});
+            else {
+                const selector=activePage==='grid'?'[data-open-student="'+previous.id+'"]':'[data-student="'+previous.id+'"][data-date="'+previous.key+'"]';
+                document.querySelector(selector)?.focus({preventScroll:true});
+            }
+        }
+        $('att-status-modal').addEventListener('click',event=>{
+            const button=event.target.closest('[data-status]');
+            if(button&&attendancePicker){const {cls,key,id}=attendancePicker;setAttendance(cls,key,id,Number(button.dataset.status));closeAttendancePicker();return;}
+            if(event.target===$('att-status-modal'))closeAttendancePicker();
+        });
+        $('att-status-close').addEventListener('click',closeAttendancePicker);
+        $('att-status-cancel').addEventListener('click',closeAttendancePicker);
+        $('att-status-modal').addEventListener('keydown',event=>{
+            if(event.key==='Escape'){event.preventDefault();closeAttendancePicker();}
+            if(event.key==='Tab'){
+                const buttons=[...$('att-status-modal').querySelectorAll('button')],first=buttons[0],last=buttons[buttons.length-1];
+                if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+                else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+            }
+        });
+        function snapshotData() {
+            const snapshot=cloneData(store);snapshot.defaultTimeSeconds=DEFAULT_TIME_SECONDS;
+            Object.values(globalState).forEach(st=>{if(st.studentId)snapshot.seatTools[st.studentId]={note:st.note,timeLeft:st.timeLeft,isFinished:st.isFinished};});
+            return snapshot;
+        }
+        function downloadBlob(blob,filename) {
+            let url='';
+            try{url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);return true;}
+            catch(error){if(url)URL.revokeObjectURL(url);toast('Không tạo được tệp tải xuống: '+error.message);return false;}
+        }
+        function downloadBackup(prefix='sao-luu') {
+            if(startupError){const original=localStorage.getItem(KEY)||'';return downloadBlob(new Blob([original],{type:'application/json;charset=utf-8'}),'du-lieu-goc-can-khoi-phuc.json');}
+            const backup={format:'lop-ly-thay-rang-raw-backup-v3',exportedAt:new Date().toISOString(),attendance:snapshotData(),rosters:SEAT_MAPS};
+            return downloadBlob(new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'}),'Lop-Ly-Thay-Rang-'+prefix+'-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json');
+        }
+        function replaceStore(next) {
+            let safe;
+            try {
+                safe=normalizeData(next);
+                const list=getDates(safe);
+                if(!list.some(d=>dateKey(d)===safe.selectedDate))safe.selectedDate=dateKey(nearestDate(list));
+                localStorage.setItem(KEY,JSON.stringify(safe));
+            }catch(error){toast('Không thể ghi dữ liệu: '+error.message);return false;}
+            store=safe;startupError='';DEFAULT_TIME_SECONDS=store.defaultTimeSeconds;
+            selectedForSpin.clear();activeWinnerKeys=[];initGlobalState();refreshDataViews();
+            return true;
+        }
+        $('att-backup-data').addEventListener('click',()=>{if(downloadBackup())toast('Đã tạo bản sao lưu JSON; dữ liệu hiện tại được giữ nguyên.');});
+        $('att-restore-data').addEventListener('click',()=>{$('restore-file-input').value='';$('restore-file-input').click();});
+        $('restore-file-input').addEventListener('change',async event=>{
+            const file=event.target.files?.[0];if(!file)return;
+            pendingRestore=null;$('restore-error').textContent='';
+            try{
+                if(file.size>20*1024*1024)throw new Error('File lớn hơn 20 MB.');
+                const json=JSON.parse((await file.text()).replace(/^\uFEFF/,''));
+                if(!isObject(json))throw new Error('Nội dung JSON không đúng định dạng.');
+                if(json.format&&!['lop-ly-thay-rang-raw-backup-v2','lop-ly-thay-rang-raw-backup-v3'].includes(json.format))throw new Error('Không phải bản sao lưu của ứng dụng.');
+                pendingRestore=normalizeData(json.attendance||json);
+                $('restore-filename').textContent='File: '+file.name+(json.exportedAt?' · Tạo lúc '+new Date(json.exportedAt).toLocaleString('vi-VN'):'');
+                $('restore-summary').innerHTML=['11','12'].map(cls=>{
+                    const ids=getStudents(cls),book=pendingRestore.gradebooks[cls];
+                    const marks=Object.entries(pendingRestore.records).filter(([key])=>key.startsWith(cls+'_')).reduce((sum,[,record])=>sum+ids.filter(id=>Number(record[id]||0)>0).length,0);
+                    const scores=book.columns.reduce((sum,column)=>sum+ids.filter(id=>typeof book.scores[column.id]?.[id]==='number').length,0);
+                    return '<div><strong>Lớp '+cls+'</strong><br>'+ids.length+' học sinh hiện tại<br>'+marks+' lượt điểm danh<br>'+book.columns.length+' cột · '+scores+' điểm đã nhập</div>';
+                }).join('');
+                $('att-data-settings-modal').classList.remove('show');$('restore-modal').classList.add('show');$('restore-close').focus();
+            }catch(error){pendingRestore=null;toast('Không thể khôi phục: '+error.message);}
+        });
+        function closeRestore(){$('restore-modal').classList.remove('show');pendingRestore=null;$('att-open-settings').focus();}
+        $('restore-close').addEventListener('click',closeRestore);$('restore-cancel').addEventListener('click',closeRestore);
+        $('restore-modal').addEventListener('click',event=>{if(event.target===$('restore-modal'))closeRestore();});
+        $('restore-modal').addEventListener('keydown',event=>{
+            if(event.key==='Escape'){event.preventDefault();closeRestore();}
+            if(event.key==='Tab'){
+                const first=$('restore-close'),last=$('restore-cancel');
+                if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+                else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+            }
+        });
+        $('restore-apply').addEventListener('click',()=>{
+            if(!pendingRestore)return;
+            const previous=snapshotData();
+            if(!downloadBackup('truoc-khoi-phuc')){$('restore-error').textContent='Chưa tạo được bản sao lưu hiện tại; chưa khôi phục.';return;}
+            if(!replaceStore(pendingRestore)){$('restore-error').textContent='Không thể lưu dữ liệu khôi phục. Dữ liệu trước đó được giữ nguyên.';return;}
+            undoStack=[];recordUndo('Đã khôi phục từ bản sao lưu',()=>replaceStore(previous));
+            closeRestore();toast('Đã khôi phục điểm danh, bảng điểm và ghi chú.');
+        });
+        $('grade-export-csv').addEventListener('click',()=>{
+            const book=gradebook(),cls=gradeClass,ids=getStudents(cls);
+            const cell=value=>{let text=String(value??'');if(/^\s*[=+@-]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';};
+            const number=value=>value===null?'':gradeNumberFormat.format(value);
+            const rows=[['Mã học sinh','Họ tên','Lớp',...book.columns.map(column=>column.title+' ('+column.date+'; HS '+column.weight+')'),'Trung bình','Cao nhất']];
+            ids.forEach(id=>{const summary=gradeSummary(book,id);rows.push([id,studentName(id),cls,...book.columns.map(column=>number(gradeValue(book,column.id,id))),number(summary.average),number(summary.highest)]);});
+            const csv='\uFEFF'+rows.map(row=>row.map(cell).join(';')).join('\r\n');
+            if(downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'bang-diem-lop-'+cls+'-'+($('att-date').value||dateKey(new Date()))+'.csv'))toast('Đã xuất CSV có thể mở bằng Excel.');
+        });
+        function makeZip(files) {
+            const encoder=new TextEncoder(),parts=[],directory=[];let offset=0;
+            const table=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xedb88320^(c>>>1):c>>>1;table[n]=c>>>0;}
+            for(const file of files){
+                const name=encoder.encode(file.name),data=file.data;let crc=0xffffffff;
+                for(const byte of data)crc=table[(crc^byte)&255]^(crc>>>8);crc=(crc^0xffffffff)>>>0;
+                const local=new Uint8Array(30),lv=new DataView(local.buffer);
+                lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0x800,true);lv.setUint16(12,33,true);lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,name.length,true);
+                const central=new Uint8Array(46),cv=new DataView(central.buffer);
+                cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,name.length,true);cv.setUint32(42,offset,true);
+                parts.push(local,name,data);directory.push(central,name);offset+=local.length+name.length+data.length;
+            }
+            const directorySize=directory.reduce((sum,part)=>sum+part.length,0),end=new Uint8Array(22),ev=new DataView(end.buffer);
+            ev.setUint32(0,0x06054b50,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);ev.setUint32(12,directorySize,true);ev.setUint32(16,offset,true);
+            return new Blob([...parts,...directory,end],{type:'application/zip'});
+        }
+        $('grade-export-png').addEventListener('click',async()=>{
+            const button=$('grade-export-png');if(button.disabled)return;
+            const cls=gradeClass,book=cloneData(gradebook()),students=getStudents(cls).map(id=>({id,name:studentName(id),summary:gradeSummary(book,id)})),reportDate=$('att-date').value||dateKey(new Date());
+            const original=button.innerHTML;button.disabled=true;button.textContent='Đang tạo ảnh…';
+            try{
+                await ensureReportFonts();const pages=Math.max(1,Math.ceil(book.columns.length/8)),files=[];
+                const marked=students.filter(student=>student.summary.count),average=marked.length?marked.reduce((sum,student)=>sum+student.summary.average,0)/marked.length:null,highest=marked.length?Math.max(...marked.map(student=>student.summary.highest)):null;
+                for(let page=0;page<pages;page++){
+                    const columns=book.columns.slice(page*8,(page+1)*8),margin=30,statW=110,scoreW=150,nameW=Math.max(250,1000-margin*2-statW*2-columns.length*scoreW),headH=118,rowH=48;
+                    const w=Math.max(1000,margin*2+nameW+statW*2+columns.length*scoreW),measure=document.createElement('canvas').getContext('2d'),noteBlock=measureDailyNoteBlock(measure,reportDate,cls,w-margin*2),top=218+(noteBlock.height?noteBlock.height+16:0),h=top+headH+students.length*rowH+90;
+                    if(w>14000||h>14000||w*h>120000000)throw new Error('Bảng quá lớn để xuất ảnh; hãy dùng CSV.');
+                    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const x=canvas.getContext('2d');
+                    x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);x.fillStyle='#0f172a';x.font='900 30px "Nunito",sans-serif';x.fillText('LỚP LÝ THẦY RẠNG — BẢNG ĐIỂM LỚP '+cls,margin,48);
+                    x.fillStyle='#475569';x.font='700 15px "Nunito",sans-serif';x.fillText('Ngày báo cáo: '+fmt(parseDateKey(reportDate))+'/'+parseDateKey(reportDate).getFullYear()+' · '+students.length+' học sinh · '+book.columns.length+' cột điểm'+(pages>1?' · Phần '+(page+1)+'/'+pages:''),margin,78);
+                    const summaries=[['Học sinh có điểm',marked.length+' / '+students.length,'#f1f5f9','#334155'],['Trung bình lớp',gradeText(average),'#ccfbf1','#0f766e'],['Điểm cao nhất lớp',gradeText(highest),'#dbeafe','#1d4ed8']];
+                    summaries.forEach((item,index)=>{const xx=margin+index*285;roundedRect(x,xx,98,270,66,10,item[2]);x.fillStyle=item[3];x.font='800 13px "Nunito",sans-serif';x.fillText(item[0],xx+13,120);x.font='900 25px "Nunito",sans-serif';x.fillText(item[1],xx+13,151);});
+                    x.fillStyle='#64748b';x.font='700 12px "Nunito",sans-serif';x.fillText('Thang 0–10 · TB tính theo hệ số, bỏ ô trống, tính điểm 0 · Các cột thuộc mọi ngày kiểm tra',margin,192);
+                    drawDailyNoteBlock(x,noteBlock,reportDate,margin,218,w-margin*2);
+                    const defs=[{label:'HỌ TÊN HỌC SINH',w:nameW},{label:'TRUNG BÌNH',w:statW},{label:'CAO NHẤT',w:statW},...columns.map(column=>({label:column.title,w:scoreW,column}))];
+                    let xx=margin;
+                    defs.forEach(def=>{x.fillStyle='#dbeafe';x.fillRect(xx,top,def.w,headH);x.strokeStyle='#cbd5e1';x.strokeRect(xx,top,def.w,headH);x.fillStyle='#1e293b';x.font='900 13px "Nunito",sans-serif';const lines=wrapCanvasLines(x,def.label,def.w-18).slice(0,4);lines.forEach((line,index)=>canvasText(x,line,xx+9,top+22+index*17,def.w-18));if(def.column){const d=parseDateKey(def.column.date);x.fillStyle='#64748b';x.font='700 11px "Nunito",sans-serif';x.fillText(fmt(d)+'/'+d.getFullYear(),xx+9,top+92);x.fillText('Hệ số '+def.column.weight,xx+9,top+109);}xx+=def.w;});
+                    students.forEach((student,index)=>{
+                        const yy=top+headH+index*rowH;let xx=margin;
+                        const values=[student.name,gradeText(student.summary.average),gradeText(student.summary.highest),...columns.map(column=>gradeText(gradeValue(book,column.id,student.id)))];
+                        defs.forEach((def,col)=>{x.fillStyle=index%2?'#f1f5f9':'#fff';x.fillRect(xx,yy,def.w,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,def.w,rowH);x.fillStyle=col===1?'#0f766e':col===2?'#1d4ed8':'#0f172a';x.font='900 15px "Nunito",sans-serif';if(col===0){canvasText(x,String(index+1).padStart(2,'0')+'. '+values[col],xx+10,yy+22,def.w-20);x.fillStyle='#64748b';x.font='700 10px "Nunito",sans-serif';x.fillText(student.id,xx+10,yy+39);}else{x.textAlign='center';x.fillText(values[col],xx+def.w/2,yy+30);x.textAlign='left';}xx+=def.w;});
+                    });
+                    x.fillStyle='#64748b';x.font='700 12px "Nunito",sans-serif';x.fillText('TB lớp = trung bình các TB chưa làm tròn của học sinh có điểm · Kết quả hiển thị làm tròn 2 chữ số.',margin,h-48);x.fillText('Báo cáo được tạo bởi Thanh Ngà',margin,h-24);
+                    const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('Không tạo được ảnh PNG.')),'image/png'));
+                    files.push({name:'bang-diem-lop-'+cls+'-'+reportDate+(pages>1?'-phan-'+(page+1):'')+'.png',data:new Uint8Array(await blob.arrayBuffer())});
+                }
+                const ok=files.length===1?downloadBlob(new Blob([files[0].data],{type:'image/png'}),files[0].name):downloadBlob(makeZip(files),'bang-diem-lop-'+cls+'-'+reportDate+'.zip');
+                if(ok)toast(files.length===1?'Đã xuất ảnh bảng điểm PNG.':'Đã xuất '+files.length+' ảnh PNG trong file ZIP.');
+            }catch(error){toast('Không xuất được bảng điểm: '+error.message);}
+            finally{button.disabled=false;button.innerHTML=original;}
+        });
+        if(startupError)toast(startupError);
 
     })();
     </script>
