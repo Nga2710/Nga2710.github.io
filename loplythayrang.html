@@ -500,7 +500,7 @@
         #grade-table thead .grade-name { z-index:5; background:#dbeafe; }
         #grade-table tbody tr:nth-child(even) td, #grade-table tbody tr:nth-child(even) .grade-name { background:#f8fafc; }
         #grade-table .grade-average { color:#0f766e; font-weight:900; }
-        #grade-table .grade-highest { color:#1d4ed8; font-weight:900; }
+        #grade-table .grade-rank { font-weight:900; }
         #grade-table .grade-summary-col { width:86px; }
         #grade-table .grade-score-col { width:112px; }
         .grade-name small { display:block; margin-top:3px; color:#94a3b8; font-size:10px; }
@@ -644,6 +644,55 @@
           .daily-notes-toolbar .att-btn { width:100%; justify-content:center; }
           .daily-note-field textarea { min-height:95px; }
         }
+
+        /* Bảng điểm: xếp hạng, màu điểm và giao diện xuất thống nhất. */
+        .grade-dialog { border:1px solid #dbe4ee; background:linear-gradient(180deg,#f8fafc 0,#fff 140px); }
+        .grade-heading { padding-bottom:12px; border-bottom:1px solid #e2e8f0; }
+        .grade-selects { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; }
+        .grade-controls .grade-selects select { font-size:12px; min-height:40px; }
+        .grade-summary > div { box-shadow:0 3px 9px #0f172a05; }
+        .grade-summary > div:nth-child(3) { background:#faf5ff; border-color:#e9d5ff; }
+        #grade-class-highest { color:#7e22ce; }
+        .grade-legend { display:flex; align-items:center; flex-wrap:wrap; gap:5px 14px; flex-shrink:0; padding:8px 12px; border:1px solid #e2e8f0; border-radius:10px; background:#fff; color:#475569; font-size:11px; font-weight:800; }
+        .grade-legend span { display:inline-flex; align-items:center; gap:6px; }
+        .grade-legend i { width:11px; height:11px; display:inline-block; border-radius:4px; box-shadow:inset 0 0 0 1px #0f172a0c; }
+        .grade-legend-empty { margin-left:auto; color:#94a3b8; }
+        #grade-table { min-width:610px; }
+        #grade-table .grade-name { width:190px; }
+        #grade-table thead th { background:#edf3f8; }
+        #grade-table thead .grade-name { background:#e0f2f1; color:#115e59; }
+        #grade-table .grade-rank-col { width:72px; }
+        #grade-table td.grade-value-cell { background:var(--grade-bg,#f8fafc) !important; color:var(--grade-fg,#94a3b8); }
+        #grade-table td.grade-average { font-size:16px; }
+        #grade-table td.grade-value-cell[data-grade-tone="empty"] { background:#f8fafc !important; }
+        #grade-table td.grade-value-cell .grade-score { background:var(--grade-bg,#fff); color:var(--grade-fg,#0f172a); border-color:var(--grade-border,#cbd5e1); }
+        #grade-table td.grade-value-cell[data-grade-tone="empty"] .grade-score { background:#fff; color:#0f172a; }
+        #grade-table td.grade-value-cell .grade-score[aria-invalid="true"] { background:#fef2f2; color:#b91c1c; border-color:#ef4444; }
+        .grade-rank-badge { display:inline-flex; align-items:center; justify-content:center; min-width:34px; min-height:32px; padding:3px 7px; border-radius:10px; color:#475569; background:#e2e8f0; font-size:14px; font-weight:900; }
+        .grade-rank-badge[data-rank="1"] { background:#fef3c7; color:#92400e; box-shadow:inset 0 0 0 1px #fcd34d; }
+        .grade-rank-badge[data-rank="2"] { background:#e2e8f0; color:#334155; box-shadow:inset 0 0 0 1px #cbd5e1; }
+        .grade-rank-badge[data-rank="3"] { background:#ffedd5; color:#9a3412; box-shadow:inset 0 0 0 1px #fdba74; }
+        .grade-rank-badge[data-rank=""] { background:transparent; color:#94a3b8; }
+        @media(max-width:650px) {
+          .grade-controls { flex-wrap:wrap; }
+          .grade-selects { width:100%; justify-content:space-between; gap:6px; }
+          .grade-selects label { font-size:10px; gap:5px; }
+          .grade-controls .grade-selects select { max-width:156px; font-size:12px; padding:7px; }
+          .grade-legend { padding:7px 9px; gap:5px 9px; font-size:10px; }
+          .grade-legend-empty { margin-left:0; }
+          #grade-table { min-width:520px; }
+          #grade-table .grade-name { width:128px; }
+          #grade-table .grade-rank-col { width:58px; }
+          #grade-table td.grade-average { font-size:14px; }
+          .grade-rank-badge { min-width:28px; font-size:12px; border-radius:8px; }
+          .grade-footer { max-height:82px; overflow:auto; }
+        }
+        @media(max-height:600px) and (orientation:landscape) {
+          .grade-heading { padding-bottom:6px; }
+          .grade-legend { padding:4px 9px; }
+          .grade-footer { max-height:42px; overflow:auto; }
+        }
+
     </style>
 </head>
 <body class="page-home">
@@ -709,7 +758,7 @@
           </button>
           <button type="button" id="home-go-grades" class="att-home-shortcut att-home-nav-btn">
             <span class="att-shortcut-key"><i class="ph-bold ph-exam"></i></span>
-            <span><strong>Bảng điểm học sinh</strong><small>Nhập điểm · Điểm trung bình · Điểm cao nhất</small></span>
+            <span><strong>Bảng điểm học sinh</strong><small>Nhập điểm · Điểm trung bình · Xếp hạng</small></span>
           </button>
         </div>
         <section id="daily-notes" class="daily-notes" aria-labelledby="daily-notes-title">
@@ -748,11 +797,11 @@
     <div id="gradebook-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gradebook-title" aria-describedby="gradebook-help">
       <section class="grade-dialog">
         <div class="grade-heading">
-          <div><h2 id="gradebook-title"><i class="ph-bold ph-exam"></i> Bảng điểm học sinh</h2><p class="grade-subtitle">Danh sách học sinh và điểm được tách riêng theo lớp.</p></div>
+          <div><h2 id="gradebook-title"><i class="ph-bold ph-exam"></i> Bảng điểm học sinh</h2><p class="grade-subtitle">Điểm trung bình có hệ số · Xếp hạng trong từng lớp · Tự động lưu.</p></div>
           <button id="gradebook-close" type="button" class="settings-close-btn" aria-label="Đóng bảng điểm">×</button>
         </div>
         <div class="grade-controls">
-          <label for="grade-class">Chọn lớp <select id="grade-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label>
+          <div class="grade-selects"><label for="grade-class">Chọn lớp <select id="grade-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label><label for="grade-sort">Sắp xếp <select id="grade-sort"><option value="average">Điểm TB giảm dần</option><option value="roster">Danh sách lớp</option></select></label></div>
           <div class="grade-export-actions">
             <button id="grade-add-column" type="button" class="att-btn primary"><i class="ph-bold ph-plus"></i> Thêm cột điểm</button>
             <button id="grade-export-png" type="button" class="att-btn"><i class="ph-bold ph-image"></i> Ảnh bảng điểm</button>
@@ -762,8 +811,9 @@
         <div class="grade-summary">
           <div><span>Học sinh có điểm</span><strong id="grade-marked-count">0 / 0</strong></div>
           <div title="Trung bình các điểm trung bình chưa làm tròn của học sinh đã có điểm; mỗi học sinh có trọng số như nhau."><span>Trung bình lớp</span><strong id="grade-class-average">—</strong></div>
-          <div><span>Điểm cao nhất lớp</span><strong id="grade-class-highest">—</strong></div>
+          <div title="Điểm trung bình có hệ số cao nhất trong các học sinh đã có điểm."><span>Điểm trung bình cao nhất</span><strong id="grade-class-highest">—</strong></div>
         </div>
+        <div class="grade-legend" aria-label="Chú giải màu điểm"><span><i style="background:#fecaca"></i>Dưới 5</span><span><i style="background:#fde68a"></i>5 đến dưới 7</span><span><i style="background:#86efac"></i>7 đến dưới 8</span><span><i style="background:#d8b4fe"></i>Từ 8 trở lên</span><span class="grade-legend-empty">— Chưa có điểm</span></div>
         <form id="grade-column-form" hidden>
           <div class="grade-form-grid">
             <label class="grade-field" for="grade-column-title">Tên cột điểm<input id="grade-column-title" type="text" maxlength="60" required placeholder="Ví dụ: Kiểm tra 15 phút"></label>
@@ -778,10 +828,10 @@
         </form>
         <div id="grade-empty" class="grade-empty">Chưa có cột điểm. Bấm “Thêm cột điểm” để tạo bài kiểm tra, sau đó nhập điểm cho từng học sinh.</div>
         <div class="grade-table-wrap" tabindex="0" role="region" aria-label="Bảng điểm cuộn ngang và dọc">
-          <table id="grade-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Bảng điểm từng học sinh, điểm trung bình có hệ số và điểm cao nhất</caption><colgroup id="grade-colgroup"></colgroup><thead id="grade-thead"></thead><tbody id="grade-tbody"></tbody></table>
+          <table id="grade-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Bảng điểm từng học sinh, xếp hạng theo điểm trung bình có hệ số</caption><colgroup id="grade-colgroup"></colgroup><thead id="grade-thead"></thead><tbody id="grade-tbody"></tbody></table>
         </div>
         <p id="grade-validation" role="status" aria-live="polite"></p>
-        <footer class="grade-footer"><span id="gradebook-help">Thang 0–10 · Ô trống không tính, điểm 0 vẫn tính · TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm).<br>TB lớp = trung bình TB của các học sinh có điểm · Kết quả hiển thị làm tròn 2 chữ số · Chạm tên cột để sửa.</span><span id="grade-save-state" role="status" aria-live="polite">Tự động lưu</span></footer>
+        <footer class="grade-footer"><span id="gradebook-help">Thang 0–10 · Ô trống không tính, điểm 0 vẫn tính · TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm).<br>TB lớp = trung bình TB của học sinh có điểm · Điểm hiển thị 2 chữ số; màu và hạng theo TB chưa làm tròn.<br>Cùng TB cùng hạng (1, 1, 3); chưa có điểm chưa xếp hạng · Danh sách sắp lại khi rời bảng nhập · Chạm tên cột để sửa.</span><span id="grade-save-state" role="status" aria-live="polite">Tự động lưu</span></footer>
       </section>
     </div>
 
@@ -2206,15 +2256,47 @@ if (Array.isArray(row[3])) {
             return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 10 ? value : null;
         }
         function gradeSummary(book, name) {
-            let total = 0, weight = 0, count = 0, highest = null;
+            let total = 0, weight = 0, count = 0;
             book.columns.forEach(column => {
                 const value = gradeValue(book, column.id, name);
                 if (value === null) return;
                 const factor = Number(column.weight) > 0 ? Number(column.weight) : 1;
                 total += value * factor; weight += factor; count++;
-                highest = highest === null ? value : Math.max(highest, value);
             });
-            return { average:weight ? total / weight : null, highest, count };
+            return { average:weight ? total / weight : null, count };
+        }
+        // Tính hạng từ dữ liệu, giữ nguyên thứ tự danh sách lớp và mã học sinh.
+        function buildGradeRows(book = gradebook(), cls = gradeClass) {
+            const rows = getStudents(cls).map((id, originalIndex) => ({id, name:studentName(id), originalIndex, summary:gradeSummary(book,id), rank:null}));
+            const epsilon = 1e-9;
+            rows.sort((a,b) => {
+                if (a.summary.average === null) return b.summary.average === null ? a.originalIndex-b.originalIndex : 1;
+                if (b.summary.average === null) return -1;
+                const difference = b.summary.average-a.summary.average;
+                return Math.abs(difference) <= epsilon ? a.originalIndex-b.originalIndex : difference;
+            });
+            let previousAverage = null, previousRank = null;
+            rows.forEach((row,index) => {
+                if (row.summary.average === null) return;
+                row.rank = previousAverage !== null && Math.abs(row.summary.average-previousAverage) <= epsilon ? previousRank : index+1;
+                previousAverage = row.summary.average; previousRank = row.rank;
+            });
+            return rows;
+        }
+        function gradeTone(value) {
+            if (value === null || !Number.isFinite(value)) return {key:'empty',bg:'#f8fafc',fg:'#94a3b8',border:'#cbd5e1',label:'Chưa có điểm'};
+            if (value < 5) return {key:'red',bg:'#fee2e2',fg:'#b91c1c',border:'#fca5a5',label:'Dưới 5'};
+            if (value < 7) return {key:'yellow',bg:'#fef3c7',fg:'#92400e',border:'#fcd34d',label:'5 đến dưới 7'};
+            if (value < 8) return {key:'green',bg:'#dcfce7',fg:'#166534',border:'#86efac',label:'7 đến dưới 8'};
+            return {key:'purple',bg:'#f3e8ff',fg:'#7e22ce',border:'#d8b4fe',label:'Từ 8 trở lên'};
+        }
+        function applyGradeTone(element, value) {
+            if (!element) return;
+            const tone = gradeTone(value);
+            element.dataset.gradeTone = tone.key;
+            element.style.setProperty('--grade-bg', tone.bg);
+            element.style.setProperty('--grade-fg', tone.fg);
+            element.style.setProperty('--grade-border', tone.border);
         }
         function gradeText(value) { return value === null ? '—' : gradeNumberFormat.format(value); }
         function gradeInputText(value) { return value === null ? '' : String(value).replace('.', ','); }
@@ -2224,31 +2306,47 @@ if (Array.isArray(row[3])) {
             $('grade-save-state').style.color = saved ? '#0f766e' : '#b91c1c';
             return saved;
         }
+        function orderGradeRows(rows = buildGradeRows()) {
+            const tbody = $('grade-tbody'), currentRows = new Map([...tbody.querySelectorAll('tr[data-grade-name]')].map(row => [row.dataset.gradeName,row]));
+            const ordered = $('grade-sort').value === 'roster' ? [...rows].sort((a,b) => a.originalIndex-b.originalIndex) : rows;
+            ordered.forEach(student => { const row=currentRows.get(student.id); if(row) tbody.appendChild(row); });
+        }
         function updateGradeTotals() {
-            const book = gradebook(), students = getStudents(gradeClass);
-            const summaries = students.map(name => gradeSummary(book, name));
-            const marked = summaries.filter(row => row.count > 0);
-            $('grade-marked-count').textContent = marked.length + ' / ' + students.length;
-            $('grade-class-average').textContent = gradeText(marked.length ? marked.reduce((sum, row) => sum + row.average, 0) / marked.length : null);
-            $('grade-class-highest').textContent = gradeText(marked.length ? Math.max(...marked.map(row => row.highest)) : null);
+            const book = gradebook(), rows = buildGradeRows(book, gradeClass), byId = new Map(rows.map(row => [row.id,row]));
+            const marked = rows.filter(row => row.summary.count > 0);
+            $('grade-marked-count').textContent = marked.length + ' / ' + rows.length;
+            $('grade-class-average').textContent = gradeText(marked.length ? marked.reduce((sum,row) => sum+row.summary.average,0)/marked.length : null);
+            $('grade-class-highest').textContent = gradeText(marked.length ? marked[0].summary.average : null);
             $('grade-tbody').querySelectorAll('tr[data-grade-name]').forEach(row => {
-                const summary = gradeSummary(book, row.dataset.gradeName);
-                row.querySelector('.grade-average').textContent = gradeText(summary.average);
-                row.querySelector('.grade-highest').textContent = gradeText(summary.highest);
-                row.querySelector('.grade-name small').textContent = row.dataset.gradeName + ' · ' + summary.count + '/' + book.columns.length + ' cột';
+                const student = byId.get(row.dataset.gradeName);
+                if (!student) return;
+                const {summary,rank} = student, averageCell = row.querySelector('.grade-average');
+                averageCell.textContent = gradeText(summary.average);
+                applyGradeTone(averageCell,summary.average);
+                averageCell.title = gradeTone(summary.average).label;
+                const badge = row.querySelector('.grade-rank-badge');
+                badge.textContent = rank === null ? '—' : String(rank);
+                badge.dataset.rank = rank === null ? '' : String(rank);
+                badge.title = rank === null ? 'Chưa có điểm, chưa xếp hạng' : 'Hạng ' + rank + ' theo điểm trung bình có hệ số';
+                row.querySelector('.grade-name small').textContent = student.id + ' · ' + summary.count + '/' + book.columns.length + ' cột';
+                row.querySelectorAll('.grade-score').forEach(input => applyGradeTone(input.closest('td'),gradeValue(book,input.dataset.gradeColumn,student.id)));
             });
         }
         function renderGradebook() {
-            const book = gradebook(), students = getStudents(gradeClass);
+            const book = gradebook(), ranked = buildGradeRows(book,gradeClass);
+            const students = $('grade-sort').value === 'roster' ? [...ranked].sort((a,b) => a.originalIndex-b.originalIndex) : ranked;
             $('grade-class').value = gradeClass;
             $('gradebook-title').innerHTML = '<i class="ph-bold ph-exam"></i> Bảng điểm · Lớp ' + escapeHtml(gradeClass);
             $('grade-empty').classList.toggle('show', book.columns.length === 0);
-            $('grade-colgroup').innerHTML = '<col class="grade-name"><col class="grade-summary-col"><col class="grade-summary-col">' + book.columns.map(() => '<col class="grade-score-col">').join('');
-            $('grade-thead').innerHTML = '<tr><th class="grade-name" scope="col">HỌ TÊN HỌC SINH</th><th class="grade-average" scope="col">Trung bình</th><th class="grade-highest" scope="col">Cao nhất</th>' + book.columns.map(column => {
+            $('grade-colgroup').innerHTML = '<col class="grade-name"><col class="grade-rank-col"><col class="grade-summary-col">' + book.columns.map(() => '<col class="grade-score-col">').join('');
+            $('grade-thead').innerHTML = '<tr><th class="grade-name" scope="col">HỌ TÊN HỌC SINH</th><th class="grade-rank" scope="col">Xếp hạng</th><th class="grade-average" scope="col">Điểm TB</th>' + book.columns.map(column => {
                 const d = parseDateKey(column.date), label = d ? fmt(d) + '/' + d.getFullYear() : column.date;
                 return `<th scope="col"><button type="button" class="grade-column-btn" data-grade-edit="${escapeAttr(column.id)}" title="Sửa cột ${escapeAttr(column.title)}"><span>${escapeHtml(column.title)} <i class="ph-bold ph-pencil-simple" aria-hidden="true"></i></span><small>${escapeHtml(label)} · HS ${escapeHtml(column.weight)}</small></button></th>`;
             }).join('') + '</tr>';
-            $('grade-tbody').innerHTML = students.map((name, index) => `<tr data-grade-name="${escapeAttr(name)}"><th scope="row" class="grade-name"><span style="color:#94a3b8;font-size:10px">${String(index+1).padStart(2,'0')}.</span> ${escapeHtml(studentName(name))}<small></small></th><td class="grade-average">—</td><td class="grade-highest">—</td>${book.columns.map(column => `<td><input type="text" class="grade-score" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="—" aria-label="${escapeAttr(studentName(name))} · ${escapeAttr(column.title)} · điểm từ 0 đến 10" aria-describedby="grade-validation" data-grade-column="${escapeAttr(column.id)}" data-grade-student="${escapeAttr(name)}" value="${gradeInputText(gradeValue(book, column.id, name))}"></td>`).join('')}</tr>`).join('');
+            $('grade-tbody').innerHTML = students.map(student => {
+                const {id,name,originalIndex} = student;
+                return `<tr data-grade-name="${escapeAttr(id)}"><th scope="row" class="grade-name"><span style="color:#94a3b8;font-size:10px">${String(originalIndex+1).padStart(2,'0')}.</span> ${escapeHtml(name)}<small></small></th><td class="grade-rank"><span class="grade-rank-badge"></span></td><td class="grade-average grade-value-cell">—</td>${book.columns.map(column => `<td class="grade-value-cell"><input type="text" class="grade-score" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="—" aria-label="${escapeAttr(name)} · ${escapeAttr(column.title)} · điểm từ 0 đến 10" aria-describedby="grade-validation" data-grade-column="${escapeAttr(column.id)}" data-grade-student="${escapeAttr(id)}" value="${gradeInputText(gradeValue(book,column.id,id))}"></td>`).join('')}</tr>`;
+            }).join('');
             updateGradeTotals();
         }
         function openGradebook() {
@@ -2310,6 +2408,7 @@ if (Array.isArray(row[3])) {
             renderGradebook();
             $('grade-table').parentElement.scrollTo(0, 0);
         });
+        $('grade-sort').addEventListener('change', renderGradebook);
         $('grade-add-column').addEventListener('click', () => openGradeColumn());
         $('grade-column-cancel').addEventListener('click', () => closeGradeColumn());
         $('grade-column-title').addEventListener('input', () => $('grade-column-title').setCustomValidity(''));
@@ -2383,6 +2482,10 @@ if (Array.isArray(row[3])) {
             const valid = validateGradeInput(input).valid;
             input.value = gradeInputText(gradeValue(gradebook(), input.dataset.gradeColumn, input.dataset.gradeStudent));
             input.removeAttribute('aria-invalid');
+            updateGradeTotals();
+            requestAnimationFrame(() => {
+                if ($('gradebook-modal').classList.contains('show') && !document.activeElement?.matches('.grade-score')) orderGradeRows();
+            });
             if (!valid) { $('grade-validation').textContent = 'Đã khôi phục điểm hợp lệ gần nhất cho ' + studentName(input.dataset.gradeStudent) + '.'; toast('Điểm không hợp lệ; giữ lại giá trị hợp lệ gần nhất.'); }
         });
         $('gradebook-modal').addEventListener('keydown', event => {
@@ -2572,13 +2675,13 @@ if (Array.isArray(row[3])) {
             closeRestore();toast('Đã khôi phục điểm danh, bảng điểm và ghi chú.');
         });
         $('grade-export-csv').addEventListener('click',()=>{
-            const book=gradebook(),cls=gradeClass,ids=getStudents(cls);
+            const book=gradebook(),cls=gradeClass,students=buildGradeRows(book,cls);
             const cell=value=>{let text=String(value??'');if(/^\s*[=+@-]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';};
             const number=value=>value===null?'':gradeNumberFormat.format(value);
-            const rows=[['Mã học sinh','Họ tên','Lớp',...book.columns.map(column=>column.title+' ('+column.date+'; HS '+column.weight+')'),'Trung bình','Cao nhất']];
-            ids.forEach(id=>{const summary=gradeSummary(book,id);rows.push([id,studentName(id),cls,...book.columns.map(column=>number(gradeValue(book,column.id,id))),number(summary.average),number(summary.highest)]);});
+            const rows=[['Xếp hạng','Mã học sinh','Họ tên','Lớp','Điểm trung bình',...book.columns.map(column=>column.title+' ('+column.date+'; HS '+column.weight+')')]];
+            students.forEach(student=>rows.push([student.rank??'',student.id,student.name,cls,number(student.summary.average),...book.columns.map(column=>number(gradeValue(book,column.id,student.id)))]));
             const csv='\uFEFF'+rows.map(row=>row.map(cell).join(';')).join('\r\n');
-            if(downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'bang-diem-lop-'+cls+'-'+($('att-date').value||dateKey(new Date()))+'.csv'))toast('Đã xuất CSV có thể mở bằng Excel.');
+            if(downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'bang-diem-lop-'+cls+'-'+($('att-date').value||dateKey(new Date()))+'.csv'))toast('Đã xuất CSV có xếp hạng theo điểm trung bình, mở được bằng Excel.');
         });
         function makeZip(files) {
             const encoder=new TextEncoder(),parts=[],directory=[];let offset=0;
@@ -2596,40 +2699,187 @@ if (Array.isArray(row[3])) {
             ev.setUint32(0,0x06054b50,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);ev.setUint32(12,directorySize,true);ev.setUint32(16,offset,true);
             return new Blob([...parts,...directory,end],{type:'application/zip'});
         }
-        $('grade-export-png').addEventListener('click',async()=>{
-            const button=$('grade-export-png');if(button.disabled)return;
-            const cls=gradeClass,book=cloneData(gradebook()),students=getStudents(cls).map(id=>({id,name:studentName(id),summary:gradeSummary(book,id)})),reportDate=$('att-date').value||dateKey(new Date());
-            const original=button.innerHTML;button.disabled=true;button.textContent='Đang tạo ảnh…';
-            try{
-                await ensureReportFonts();const pages=Math.max(1,Math.ceil(book.columns.length/8)),files=[];
-                const marked=students.filter(student=>student.summary.count),average=marked.length?marked.reduce((sum,student)=>sum+student.summary.average,0)/marked.length:null,highest=marked.length?Math.max(...marked.map(student=>student.summary.highest)):null;
-                for(let page=0;page<pages;page++){
-                    const columns=book.columns.slice(page*8,(page+1)*8),margin=30,statW=110,scoreW=150,nameW=Math.max(250,1000-margin*2-statW*2-columns.length*scoreW),headH=118,rowH=48;
-                    const w=Math.max(1000,margin*2+nameW+statW*2+columns.length*scoreW),measure=document.createElement('canvas').getContext('2d'),noteBlock=measureDailyNoteBlock(measure,reportDate,cls,w-margin*2),top=218+(noteBlock.height?noteBlock.height+16:0),h=top+headH+students.length*rowH+90;
-                    if(w>14000||h>14000||w*h>120000000)throw new Error('Bảng quá lớn để xuất ảnh; hãy dùng CSV.');
-                    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const x=canvas.getContext('2d');
-                    x.fillStyle='#f8fafc';x.fillRect(0,0,w,h);x.fillStyle='#0f172a';x.font='900 30px "Nunito",sans-serif';x.fillText('LỚP LÝ THẦY RẠNG — BẢNG ĐIỂM LỚP '+cls,margin,48);
-                    x.fillStyle='#475569';x.font='700 15px "Nunito",sans-serif';x.fillText('Ngày báo cáo: '+fmt(parseDateKey(reportDate))+'/'+parseDateKey(reportDate).getFullYear()+' · '+students.length+' học sinh · '+book.columns.length+' cột điểm'+(pages>1?' · Phần '+(page+1)+'/'+pages:''),margin,78);
-                    const summaries=[['Học sinh có điểm',marked.length+' / '+students.length,'#f1f5f9','#334155'],['Trung bình lớp',gradeText(average),'#ccfbf1','#0f766e'],['Điểm cao nhất lớp',gradeText(highest),'#dbeafe','#1d4ed8']];
-                    summaries.forEach((item,index)=>{const xx=margin+index*285;roundedRect(x,xx,98,270,66,10,item[2]);x.fillStyle=item[3];x.font='800 13px "Nunito",sans-serif';x.fillText(item[0],xx+13,120);x.font='900 25px "Nunito",sans-serif';x.fillText(item[1],xx+13,151);});
-                    x.fillStyle='#64748b';x.font='700 12px "Nunito",sans-serif';x.fillText('Thang 0–10 · TB tính theo hệ số, bỏ ô trống, tính điểm 0 · Các cột thuộc mọi ngày kiểm tra',margin,192);
-                    drawDailyNoteBlock(x,noteBlock,reportDate,margin,218,w-margin*2);
-                    const defs=[{label:'HỌ TÊN HỌC SINH',w:nameW},{label:'TRUNG BÌNH',w:statW},{label:'CAO NHẤT',w:statW},...columns.map(column=>({label:column.title,w:scoreW,column}))];
-                    let xx=margin;
-                    defs.forEach(def=>{x.fillStyle='#dbeafe';x.fillRect(xx,top,def.w,headH);x.strokeStyle='#cbd5e1';x.strokeRect(xx,top,def.w,headH);x.fillStyle='#1e293b';x.font='900 13px "Nunito",sans-serif';const lines=wrapCanvasLines(x,def.label,def.w-18).slice(0,4);lines.forEach((line,index)=>canvasText(x,line,xx+9,top+22+index*17,def.w-18));if(def.column){const d=parseDateKey(def.column.date);x.fillStyle='#64748b';x.font='700 11px "Nunito",sans-serif';x.fillText(fmt(d)+'/'+d.getFullYear(),xx+9,top+92);x.fillText('Hệ số '+def.column.weight,xx+9,top+109);}xx+=def.w;});
-                    students.forEach((student,index)=>{
-                        const yy=top+headH+index*rowH;let xx=margin;
-                        const values=[student.name,gradeText(student.summary.average),gradeText(student.summary.highest),...columns.map(column=>gradeText(gradeValue(book,column.id,student.id)))];
-                        defs.forEach((def,col)=>{x.fillStyle=index%2?'#f1f5f9':'#fff';x.fillRect(xx,yy,def.w,rowH);x.strokeStyle='#e2e8f0';x.strokeRect(xx,yy,def.w,rowH);x.fillStyle=col===1?'#0f766e':col===2?'#1d4ed8':'#0f172a';x.font='900 15px "Nunito",sans-serif';if(col===0){canvasText(x,String(index+1).padStart(2,'0')+'. '+values[col],xx+10,yy+22,def.w-20);x.fillStyle='#64748b';x.font='700 10px "Nunito",sans-serif';x.fillText(student.id,xx+10,yy+39);}else{x.textAlign='center';x.fillText(values[col],xx+def.w/2,yy+30);x.textAlign='left';}xx+=def.w;});
+        function drawGradeReportLines(ctx, text, left, top, width, maxLines, lineHeight) {
+            const lines = wrapCanvasLines(ctx, text, width);
+            lines.slice(0, maxLines).forEach((line, index) => {
+                const suffix = index === maxLines - 1 && lines.length > maxLines ? '…' : '';
+                canvasText(ctx, line + suffix, left, top + index * lineHeight, width);
+            });
+        }
+        function drawGradeRank(ctx, rank, centerX, centerY) {
+            const medal = rank === 1 ? ['#fef3c7','#92400e'] : rank === 2 ? ['#e2e8f0','#334155'] : rank === 3 ? ['#ffedd5','#9a3412'] : ['#eef2f6','#64748b'];
+            roundedRect(ctx, centerX - 23, centerY - 18, 46, 36, 12, medal[0]);
+            ctx.fillStyle = medal[1];
+            ctx.font = '900 18px "Nunito",sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(rank === null ? '—' : String(rank), centerX, centerY + 6);
+            ctx.textAlign = 'left';
+        }
+        $('grade-export-png').addEventListener('click', async () => {
+            const button = $('grade-export-png');
+            if (button.disabled) return;
+            // Keep one consistent snapshot while fonts and PNG encoding finish.
+            const cls = gradeClass, book = cloneData(gradebook());
+            const students = buildGradeRows(book, cls);
+            const reportDate = $('att-date').value || dateKey(new Date());
+            const reportNote = dailyNoteText(reportDate, cls);
+            const original = button.innerHTML;
+            button.disabled = true;
+            button.textContent = 'Đang tạo ảnh…';
+            try {
+                await ensureReportFonts();
+                const pages = Math.max(1, Math.ceil(book.columns.length / 8)), files = [];
+                const marked = students.filter(student => student.summary.average !== null);
+                const average = marked.length ? marked.reduce((sum, student) => sum + student.summary.average, 0) / marked.length : null;
+                const highestAverage = marked.length ? Math.max(...marked.map(student => student.summary.average)) : null;
+                for (let page = 0; page < pages; page++) {
+                    const columns = book.columns.slice(page * 8, (page + 1) * 8);
+                    const margin = 40, rankW = 82, averageW = 124, scoreW = 142, rowH = 58, headH = 116;
+                    const w = Math.max(1180, margin * 2 + 274 + rankW + averageW + columns.length * scoreW);
+                    const nameW = w - margin * 2 - rankW - averageW - columns.length * scoreW;
+                    const measure = document.createElement('canvas').getContext('2d');
+                    if (!measure) throw new Error('Trình duyệt không hỗ trợ tạo ảnh.');
+                    measure.font = '700 18px "Nunito",sans-serif';
+                    const noteLines = reportNote ? wrapCanvasLines(measure, reportNote, w - margin * 2 - 32) : [];
+                    const noteBlock = { lines:noteLines, height:noteLines.length ? 50 + noteLines.length * 26 : 0 };
+                    const notesTop = 394, top = notesTop + (noteBlock.height ? noteBlock.height + 24 : 0);
+                    const tableBottom = top + headH + students.length * rowH;
+                    const h = tableBottom + 132;
+                    if (w > 14000 || h > 14000 || w * h > 120000000) throw new Error('Bảng quá lớn để xuất ảnh; hãy dùng CSV.');
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    const x = canvas.getContext('2d');
+                    if (!x) throw new Error('Trình duyệt không hỗ trợ tạo ảnh.');
+                    x.fillStyle = '#f1f5f9'; x.fillRect(0, 0, w, h);
+
+                    // Brand masthead, with room for the report title and date.
+                    const masthead = x.createLinearGradient(0, 0, w, 174);
+                    masthead.addColorStop(0, '#0f172a'); masthead.addColorStop(.68, '#172554'); masthead.addColorStop(1, '#0f766e');
+                    x.fillStyle = masthead; x.fillRect(0, 0, w, 174);
+                    x.fillStyle = '#5eead4'; x.fillRect(margin, 34, 5, 24);
+                    x.font = '900 14px "Nunito",sans-serif';
+                    x.fillText('LỚP LÝ THẦY RẠNG', margin + 17, 52);
+                    x.fillStyle = '#fff'; x.font = '900 37px "Nunito",sans-serif';
+                    x.fillText('BẢNG ĐIỂM · LỚP ' + cls, margin, 108);
+                    const d = parseDateKey(reportDate), displayDate = d ? fmt(d) + '/' + d.getFullYear() : reportDate;
+                    x.fillStyle = '#cbd5e1'; x.font = '700 14px "Nunito",sans-serif';
+                    x.fillText('Ngày báo cáo ' + displayDate + '   ·   ' + students.length + ' học sinh   ·   ' + book.columns.length + ' cột điểm', margin, 140);
+                    roundedRect(x, w - margin - 168, 92, 168, 42, 12, '#ffffff18');
+                    x.fillStyle = '#ccfbf1'; x.font = '900 13px "Nunito",sans-serif'; x.textAlign = 'center';
+                    x.fillText(pages > 1 ? 'PHẦN ' + (page + 1) + ' / ' + pages : 'THANG ĐIỂM 10', w - margin - 84, 119);
+                    x.textAlign = 'left';
+
+                    const cardGap = 16, cardW = (w - margin * 2 - cardGap * 2) / 3;
+                    const summaries = [
+                        {label:'HỌC SINH CÓ ĐIỂM', value:marked.length + ' / ' + students.length, bg:'#fff', color:'#0f172a', accent:'#0f766e', detail:'Đã có ít nhất một điểm'},
+                        {label:'ĐIỂM TRUNG BÌNH LỚP', value:gradeText(average), bg:'#f0fdfa', color:'#0f766e', accent:'#14b8a6', detail:'Mỗi học sinh có trọng số như nhau'},
+                        {label:'ĐIỂM TB CAO NHẤT', value:gradeText(highestAverage), bg:'#faf5ff', color:'#7e22ce', accent:'#a855f7', detail:'Lấy từ điểm trung bình của học sinh'}
+                    ];
+                    summaries.forEach((item, index) => {
+                        const left = margin + index * (cardW + cardGap);
+                        roundedRect(x, left, 196, cardW, 108, 16, item.bg);
+                        roundedRect(x, left + 15, 211, 4, 19, 2, item.accent);
+                        x.fillStyle = '#64748b'; x.font = '900 12px "Nunito",sans-serif';
+                        x.fillText(item.label, left + 29, 225);
+                        x.fillStyle = item.color; x.font = '900 31px "Nunito",sans-serif';
+                        x.fillText(item.value, left + 18, 262);
+                        x.fillStyle = '#64748b'; x.font = '700 11px "Nunito",sans-serif';
+                        canvasText(x, item.detail, left + 18, 286, cardW - 36);
                     });
-                    x.fillStyle='#64748b';x.font='700 12px "Nunito",sans-serif';x.fillText('TB lớp = trung bình các TB chưa làm tròn của học sinh có điểm · Kết quả hiển thị làm tròn 2 chữ số.',margin,h-48);x.fillText('Báo cáo được tạo bởi Thanh Ngà',margin,h-24);
-                    const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('Không tạo được ảnh PNG.')),'image/png'));
-                    files.push({name:'bang-diem-lop-'+cls+'-'+reportDate+(pages>1?'-phan-'+(page+1):'')+'.png',data:new Uint8Array(await blob.arrayBuffer())});
+
+                    // Explicit intervals make the color rules readable in shared images.
+                    x.font = '900 12px "Nunito",sans-serif';
+                    const legend = [[4,'Dưới 5'],[5,'5 đến dưới 7'],[7,'7 đến dưới 8'],[8,'Từ 8 trở lên']];
+                    let legendX = margin;
+                    legend.forEach(([value, label]) => {
+                        const tone = gradeTone(value), width = x.measureText(label).width + 44;
+                        roundedRect(x, legendX, 322, width, 32, 10, tone.bg);
+                        x.fillStyle = tone.fg; x.beginPath(); x.arc(legendX + 14, 338, 4, 0, Math.PI * 2); x.fill();
+                        x.fillText(label, legendX + 25, 342); legendX += width + 9;
+                    });
+                    x.fillStyle = '#64748b'; x.font = '700 12px "Nunito",sans-serif';
+                    x.textAlign = 'right'; x.fillText('Ô trống: chưa có điểm', w - margin, 342); x.textAlign = 'left';
+                    x.fillStyle = '#334155'; x.font = '900 12px "Nunito",sans-serif';
+                    x.fillText('XẾP HẠNG THEO ĐIỂM TRUNG BÌNH GIẢM DẦN', margin, 378);
+                    x.fillStyle = '#64748b'; x.font = '700 12px "Nunito",sans-serif'; x.textAlign = 'right';
+                    x.fillText('Bằng điểm TB cùng hạng · Chưa có điểm chưa xếp hạng', w - margin, 378); x.textAlign = 'left';
+                    drawDailyNoteBlock(x, noteBlock, reportDate, margin, notesTop, w - margin * 2);
+
+                    const defs = [
+                        {label:'HỌ TÊN HỌC SINH', kind:'name', w:nameW},
+                        {label:'HẠNG', kind:'rank', w:rankW},
+                        {label:'ĐIỂM TB', kind:'average', w:averageW},
+                        ...columns.map(column => ({label:column.title, kind:'score', w:scoreW, column}))
+                    ];
+                    let cellX = margin;
+                    defs.forEach(def => {
+                        x.fillStyle = def.kind === 'average' ? '#0f766e' : '#1e293b';
+                        x.fillRect(cellX, top, def.w, headH);
+                        x.fillStyle = '#fff'; x.font = '900 13px "Nunito",sans-serif';
+                        if (def.column) {
+                            drawGradeReportLines(x, def.label, cellX + 14, top + 25, def.w - 28, 3, 17);
+                            const examDate = parseDateKey(def.column.date);
+                            x.fillStyle = '#cbd5e1'; x.font = '700 11px "Nunito",sans-serif';
+                            canvasText(x, examDate ? fmt(examDate) + '/' + examDate.getFullYear() : def.column.date, cellX + 14, top + 86, def.w - 28);
+                            x.fillText('Hệ số ' + def.column.weight, cellX + 14, top + 103);
+                        } else if (def.kind === 'name') {
+                            x.fillText(def.label, cellX + 18, top + 51);
+                            x.fillStyle = '#94a3b8'; x.font = '700 11px "Nunito",sans-serif';
+                            x.fillText('Mã học sinh · Số cột đã nhập', cellX + 18, top + 73);
+                        } else {
+                            x.textAlign = 'center'; x.fillText(def.label, cellX + def.w / 2, top + 57);
+                            x.fillStyle = def.kind === 'average' ? '#99f6e4' : '#94a3b8'; x.font = '700 10px "Nunito",sans-serif';
+                            x.fillText(def.kind === 'average' ? 'CÓ HỆ SỐ' : 'THEO ĐIỂM TB', cellX + def.w / 2, top + 76);
+                            x.textAlign = 'left';
+                        }
+                        x.fillStyle = '#ffffff20'; x.fillRect(cellX + def.w - 1, top, 1, headH);
+                        cellX += def.w;
+                    });
+                    students.forEach((student, index) => {
+                        const rowTop = top + headH + index * rowH;
+                        let left = margin;
+                        defs.forEach(def => {
+                            const value = def.kind === 'average' ? student.summary.average : def.kind === 'score' ? gradeValue(book, def.column.id, student.id) : null;
+                            const tone = gradeTone(value), numeric = def.kind === 'average' || def.kind === 'score';
+                            x.fillStyle = numeric && value !== null ? tone.bg : index % 2 ? '#f8fafc' : '#fff';
+                            x.fillRect(left, rowTop, def.w, rowH);
+                            x.strokeStyle = numeric && value !== null ? '#fff' : '#e2e8f0';
+                            x.lineWidth = 1; x.strokeRect(left + .5, rowTop + .5, def.w - 1, rowH - 1);
+                            if (def.kind === 'name') {
+                                x.fillStyle = '#0f172a'; x.font = '900 16px "Nunito",sans-serif';
+                                canvasText(x, student.name, left + 18, rowTop + 25, def.w - 36);
+                                x.fillStyle = '#64748b'; x.font = '700 10px "Nunito",sans-serif';
+                                canvasText(x, student.id + ' · ' + student.summary.count + '/' + book.columns.length + ' cột', left + 18, rowTop + 44, def.w - 36);
+                            } else if (def.kind === 'rank') {
+                                drawGradeRank(x, student.rank, left + def.w / 2, rowTop + rowH / 2);
+                            } else {
+                                x.fillStyle = tone.fg; x.font = (def.kind === 'average' ? '900 21px' : '900 18px') + ' "Nunito",sans-serif';
+                                x.textAlign = 'center'; x.fillText(gradeText(value), left + def.w / 2, rowTop + 36); x.textAlign = 'left';
+                            }
+                            left += def.w;
+                        });
+                    });
+                    x.strokeStyle = '#cbd5e1'; x.lineWidth = 1;
+                    x.strokeRect(margin + .5, top + .5, w - margin * 2 - 1, headH + students.length * rowH - 1);
+                    x.fillStyle = '#475569'; x.font = '700 12px "Nunito",sans-serif';
+                    x.fillText('TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm) · Bỏ ô trống, tính cả điểm 0.', margin, tableBottom + 31);
+                    x.fillText('Hạng và màu theo điểm chưa làm tròn · Hiển thị 2 chữ số thập phân · TB lớp là trung bình TB học sinh có điểm.', margin, tableBottom + 53);
+                    x.strokeStyle = '#cbd5e1'; x.beginPath(); x.moveTo(margin, tableBottom + 75); x.lineTo(w - margin, tableBottom + 75); x.stroke();
+                    x.fillStyle = '#0f766e'; x.font = '900 11px "Nunito",sans-serif';
+                    x.fillText('LỚP LÝ THẦY RẠNG', margin, tableBottom + 102);
+                    x.fillStyle = '#64748b'; x.font = '700 11px "Nunito",sans-serif'; x.textAlign = 'right';
+                    x.fillText('Báo cáo được tạo bởi Thanh Ngà' + (pages > 1 ? ' · Phần ' + (page + 1) + '/' + pages : ''), w - margin, tableBottom + 102); x.textAlign = 'left';
+                    const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('Không tạo được ảnh PNG.')), 'image/png'));
+                    files.push({name:'bang-diem-lop-' + cls + '-' + reportDate + (pages > 1 ? '-phan-' + (page + 1) : '') + '.png', data:new Uint8Array(await blob.arrayBuffer())});
                 }
-                const ok=files.length===1?downloadBlob(new Blob([files[0].data],{type:'image/png'}),files[0].name):downloadBlob(makeZip(files),'bang-diem-lop-'+cls+'-'+reportDate+'.zip');
-                if(ok)toast(files.length===1?'Đã xuất ảnh bảng điểm PNG.':'Đã xuất '+files.length+' ảnh PNG trong file ZIP.');
-            }catch(error){toast('Không xuất được bảng điểm: '+error.message);}
-            finally{button.disabled=false;button.innerHTML=original;}
+                const ok = files.length === 1 ? downloadBlob(new Blob([files[0].data], {type:'image/png'}), files[0].name) : downloadBlob(makeZip(files), 'bang-diem-lop-' + cls + '-' + reportDate + '.zip');
+                if (ok) toast(files.length === 1 ? 'Đã xuất ảnh bảng điểm PNG theo xếp hạng.' : 'Đã xuất ' + files.length + ' ảnh bảng điểm trong file ZIP.');
+            } catch (error) {
+                toast('Không xuất được bảng điểm: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = original;
+            }
         });
         if(startupError)toast(startupError);
 
