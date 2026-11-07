@@ -1018,8 +1018,8 @@
         /* Light titles; empty save regions are shown only when an error needs attention. */
         html, body { background-color:#eff6fb; }
         #attendance-view .att-top, .att-list-top, #gradebook-view .grade-heading {
-          background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22150%22%20viewBox%3D%220%200%20480%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%238ee8df%22%20stroke-width%3D%221.6%22%20opacity%3D%22.13%22%3E%3Cg%20transform%3D%22translate(220%2075)%22%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%2F%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%20transform%3D%22rotate(60)%22%2F%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%20transform%3D%22rotate(120)%22%2F%3E%3Ccircle%20r%3D%226%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M322%2088c20-65%2040-65%2060%200s40%2065%2060%200M325%2088h140%22%2F%3E%3Cpath%20d%3D%22M78%2022h66m-33%200-25%2084%22%2F%3E%3Ccircle%20cx%3D%2286%22%20cy%3D%22111%22%20r%3D%2210%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),linear-gradient(120deg,#0b1830,#123852 56%,#0d5f60);
-          background-repeat:no-repeat; background-position:right center,center; background-size:480px auto,cover;
+          background-image:linear-gradient(120deg,#0b1830,#123852 56%,#0d5f60);
+          background-repeat:no-repeat; background-position:center; background-size:cover;
           color:#f0fdfa; border-bottom:1px solid #23616d; box-shadow:0 5px 16px #0b183026;
         }
         .att-sub, .att-list-sub { color:#bdd8e5; }
@@ -1039,26 +1039,33 @@
         .att-title { display:flex; align-items:center; gap:10px; }
         .att-title > .physics-icon { color:#7ee8dc; width:34px; height:34px; }
         .att-home-icon > .physics-icon, .template-empty-icon > .physics-icon { width:42px; height:42px; }
-        .physics-motifs { display:flex; justify-content:center; gap:12px; margin:14px 0 18px; flex-shrink:0; max-width:100%; }
-        .physics-motif { width:47px; height:47px; display:grid; place-items:center; border:1px solid #bae6e5; border-radius:14px; background:#f0fdfa; color:#0f766e; box-shadow:0 3px 8px #0f766e06; }
-        .physics-motif .physics-icon { width:28px; height:28px; }
-        .physics-wave, .physics-circuit { background:#eff6ff; color:#2563eb; border-color:#bfdbfe; }
-        .physics-magnet, .physics-prism { background:#f5f3ff; color:#7c3aed; border-color:#ddd6fe; }
-        .template-empty-panel .physics-motifs { margin:0; }
         #attendance-view .att-top .att-btn { background:#ffffff12; color:#f0fdfa; border-color:#ffffff35; box-shadow:0 2px 5px #02061715; }
         #attendance-view .att-top .att-btn:hover { background:#ffffff24; border-color:#89d8d2; }
         #daily-notes-title .physics-icon { color:#0f766e; margin-right:4px; }
         @media(max-width:650px) {
           .att-title { gap:7px; }
           .att-title > .physics-icon { width:27px; height:27px; }
-          .physics-motifs { width:100%; gap:8px; margin:0 0 12px; }
-          .physics-motif { width:39px; height:39px; border-radius:11px; }
-          .physics-motif .physics-icon { width:25px; height:25px; }
+        }
+
+        .att-home-stats-head strong .physics-icon { color:#0f766e; width:19px; height:19px; margin-right:3px; }
+        .physics-section-art { display:flex; align-items:center; justify-content:center; flex:0 0 auto; width:42px; height:42px; }
+        .physics-section-art .physics-icon { width:34px; height:34px; stroke-width:1.4; }
+        .physics-notes-art { margin-left:auto; color:#499b9b; }
+        .physics-grade-art { margin-left:auto; margin-right:14px; color:#9bd9d7; }
+        .seat-clock-heading { display:flex; align-items:center; justify-content:center; gap:3px; width:100%; }
+        .seat-clock-heading .physics-icon { width:15px; height:17px; color:#0f766e; }
+        .seat-clock-heading #grid-date-display { margin-bottom:0; }
+        @media(max-width:650px) {
+          .physics-section-art { width:27px; height:27px; }
+          .physics-section-art .physics-icon { width:25px; height:25px; }
+          .physics-grade-art { display:none; }
+          .seat-clock-heading { gap:2px; }
+          .seat-clock-heading .physics-icon { width:12px; height:14px; }
         }
     </style>
 </head>
 <body class="page-home">
-<svg class="physics-symbols" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="physics-atom" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="5.5"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(120 16 16)"/><circle cx="16" cy="16" r="2.1" fill="currentColor" stroke="none"/></symbol><symbol id="physics-wave" viewBox="0 0 32 32"><path d="M2 17c5-16 9-16 14 0s9 16 14 0"/><path d="M2 17h28" opacity=".3"/></symbol><symbol id="physics-magnet" viewBox="0 0 32 32"><path d="M6 4v14a10 10 0 0 0 20 0V4h-7v14a3 3 0 0 1-6 0V4Z"/><path d="M6 10h7m6 0h7"/><path d="M2 3 0 0m30 3 2-3M16 2v3" opacity=".5"/></symbol><symbol id="physics-pendulum" viewBox="0 0 32 32"><path d="M5 4h22M16 4 8 22M16 4l10 16"/><circle cx="8" cy="24" r="4"/><circle cx="27" cy="22" r="3" opacity=".4"/><path d="M13 28c5 1 10-1 13-4" stroke-dasharray="2 3"/></symbol><symbol id="physics-circuit" viewBox="0 0 32 32"><path d="M3 8h8m10 0h8v17H3V8m8-4v8m4-10v12m4-10v8"/><path d="M8 25l2-4 4 8 4-8 4 8 2-4" fill="none"/><circle cx="3" cy="17" r="2" fill="currentColor" stroke="none"/></symbol><symbol id="physics-prism" viewBox="0 0 32 32"><path d="m16 3 13 25H3Z"/><path d="M0 13h11m9 0 12-5m-10 9 10 1m-8 3 8 6"/><path d="m11 13 9 0" stroke-dasharray="2 2" opacity=".5"/></symbol><symbol id="physics-orbit" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="8" transform="rotate(-30 16 16)"/><circle cx="16" cy="16" r="5"/><circle cx="27" cy="9" r="3" fill="currentColor" stroke="none"/><path d="M16 6V3m0 26v-3M6 16H3m26 0h-3" opacity=".45"/></symbol></defs></svg>
+<svg class="physics-symbols" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="physics-atom" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="5.5"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(120 16 16)"/><circle cx="16" cy="16" r="2.1" fill="currentColor" stroke="none"/></symbol><symbol id="physics-wave" viewBox="0 0 32 32"><path d="M2 17c5-16 9-16 14 0s9 16 14 0"/><path d="M2 17h28" opacity=".3"/></symbol><symbol id="physics-magnet" viewBox="0 0 32 32"><path d="M6 4v14a10 10 0 0 0 20 0V4h-7v14a3 3 0 0 1-6 0V4Z"/><path d="M6 10h7m6 0h7"/><path d="M2 3 0 0m30 3 2-3M16 2v3" opacity=".5"/></symbol><symbol id="physics-pendulum" viewBox="0 0 32 32"><path d="M5 4h22M16 4 8 22M16 4l10 16"/><circle cx="8" cy="24" r="4"/><circle cx="27" cy="22" r="3" opacity=".4"/><path d="M13 28c5 1 10-1 13-4" stroke-dasharray="2 3"/></symbol><symbol id="physics-circuit" viewBox="0 0 32 32"><path d="M12 7H4v18h6m12 0h6V7H19M12 2v10m7-8v6"/><path d="m10 25 2-4 3 8 3-8 3 8 1-4"/><circle cx="4" cy="16" r="1.5" fill="currentColor" stroke="none"/></symbol><symbol id="physics-prism" viewBox="0 0 32 32"><path d="m17 3 12 25H4Z"/><path d="M1 14h11l12 3"/><path d="m24 17 7-6" stroke="#60a5fa"/><path d="M24 17h7" stroke="#a78bfa"/><path d="m24 17 7 6" stroke="#f9a8d4"/></symbol><symbol id="physics-orbit" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="8" transform="rotate(-30 16 16)"/><circle cx="16" cy="16" r="5"/><circle cx="27" cy="9" r="3" fill="currentColor" stroke="none"/><path d="M16 6V3m0 26v-3M6 16H3m26 0h-3" opacity=".45"/></symbol></defs></svg>
 
     <!-- TRANG CHÍNH: LỚP LÝ THẦY RẠNG -->
     <section id="attendance-view" aria-label="Trang chính Lớp Lý Thầy Rạng">
@@ -1096,7 +1103,7 @@
         <h1 id="template-empty-title">Bảng lớp đang trống</h1>
         
         <div class="template-empty-actions"><button id="template-import-json" type="button" class="att-btn primary"><i class="ph-bold ph-upload-simple"></i> Nhập dữ liệu JSON</button><button id="template-view-empty-grid" type="button" class="att-btn">Xem sơ đồ trống</button></div>
-        <div class="physics-motifs" aria-hidden="true"><span class="physics-motif physics-atom"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg></span><span class="physics-motif physics-wave"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg></span><span class="physics-motif physics-magnet"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg></span><span class="physics-motif physics-pendulum"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-pendulum"></use></svg></span><span class="physics-motif physics-circuit"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-circuit"></use></svg></span><span class="physics-motif physics-prism"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-prism"></use></svg></span></div>
+        
         <div class="template-empty-preview" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
         
       </section>
@@ -1105,11 +1112,11 @@
         <div class="att-home-icon"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-orbit"></use></svg></div>
         <div class="att-home-eyebrow">TRANG CHÍNH · QUẢN LÝ LỚP HỌC</div>
         <h1>Lớp Lý Thầy Rạng</h1>
-        <div class="physics-motifs" aria-hidden="true"><span class="physics-motif physics-atom"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg></span><span class="physics-motif physics-wave"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg></span><span class="physics-motif physics-magnet"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg></span><span class="physics-motif physics-pendulum"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-pendulum"></use></svg></span><span class="physics-motif physics-circuit"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-circuit"></use></svg></span><span class="physics-motif physics-prism"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-prism"></use></svg></span></div>
+        
         
         <section class="att-home-stats" aria-label="Thống kê hôm nay">
           <div class="att-home-stats-head">
-            <strong><i class="ph-bold ph-chart-bar" style="color:#0f766e"></i> THỐNG KÊ HÔM NAY</strong>
+            <strong><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg> THỐNG KÊ HÔM NAY</strong>
             <span id="home-stats-date">Ngày đang chọn</span>
           </div>
           <div class="att-home-stats-grid">
@@ -1137,7 +1144,7 @@
         <div style="padding:0 0 18px"><button type="button" id="home-go-roster" class="att-btn" style="width:100%;justify-content:center;min-height:48px"><i class="ph-bold ph-users"></i> Quản lý học sinh</button></div>
         <section id="daily-notes" class="daily-notes" aria-labelledby="daily-notes-title">
           <div class="daily-notes-head">
-            <h2 id="daily-notes-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg> Báo cáo ngày của từng lớp</h2>
+            <h2 id="daily-notes-title"><i class="ph-bold ph-notebook" aria-hidden="true"></i> Báo cáo ngày của từng lớp</h2><span class="physics-section-art physics-notes-art" aria-hidden="true"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-circuit"></use></svg></span>
             <span id="daily-note-save-state" role="status" aria-live="polite"></span>
           </div>
           
@@ -1178,7 +1185,7 @@
     <div id="gradebook-view" class="grade-page" role="region" aria-label="Trang bảng điểm học sinh">
       <section class="grade-dialog">
         <div class="grade-heading">
-          <div><h2 id="gradebook-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg> Bảng điểm học sinh</h2></div>
+          <div><h2 id="gradebook-title"><i class="ph-bold ph-exam" aria-hidden="true"></i> Bảng điểm học sinh</h2></div><span class="physics-section-art physics-grade-art" aria-hidden="true"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-prism"></use></svg></span>
           <button id="gradebook-close" type="button"><i class="ph-bold ph-arrow-left"></i> Quay lại</button>
         </div>
         <div class="grade-controls">
@@ -1218,7 +1225,7 @@
 
     <div id="roster-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="roster-title">
       <section class="roster-dialog">
-        <header class="roster-heading"><div><h2 id="roster-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg> Quản lý học sinh</h2></div><button id="roster-close" type="button" class="settings-close-btn" aria-label="Đóng quản lý học sinh">×</button></header>
+        <header class="roster-heading"><div><h2 id="roster-title"><i class="ph-bold ph-users" aria-hidden="true"></i> Quản lý học sinh</h2></div><button id="roster-close" type="button" class="settings-close-btn" aria-label="Đóng quản lý học sinh">×</button></header>
         <div class="roster-toolbar"><label>Lớp <select id="roster-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label><label class="roster-search">Tìm học sinh <input id="roster-search" type="search" placeholder="Tên hoặc mã học sinh"></label></div>
         <p id="roster-summary" class="roster-summary"></p>
         <form id="roster-add-form" class="roster-add"><label>Tên học sinh mới<input id="new-student-name" type="text" maxlength="100" required placeholder="Nhập họ tên"></label><label>Ghế trống<select id="new-student-seat" aria-label="Chọn ghế trống cho học sinh mới"></select></label><button class="att-btn primary" type="submit"><i class="ph-bold ph-plus"></i> Thêm học sinh</button></form>
@@ -1351,7 +1358,7 @@
             <!-- Hành lang -->
             <div id="aisle" class="col-start-3 row-start-1 row-span-6 bg-slate-200 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-between py-1 shadow-[inset_0_2px_8px_rgba(0,0,0,0.1)] z-10 overflow-hidden">
                 <div class="flex flex-col items-center w-[90%] bg-white/80 py-1.5 rounded-lg shadow-sm border border-slate-300 mt-1">
-                    <span id="grid-date-display" class="text-[11px] font-black text-slate-600 mb-0.5 leading-none">--/--</span>
+                    <div class="seat-clock-heading"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-pendulum"></use></svg><span id="grid-date-display" class="text-[11px] font-black text-slate-600 mb-0.5 leading-none">--/--</span></div>
                     <div class="flex items-baseline gap-1">
                         <span id="clock-hm" class="text-[14px] font-black text-blue-700 leading-none">00:00</span>
                         <span id="clock-s" class="text-[9px] text-slate-500 font-bold">00</span>
@@ -2740,7 +2747,7 @@
             const book = gradebook(), ranked = buildGradeRows(book,gradeClass);
             const students = $('grade-sort').value === 'roster' ? [...ranked].sort((a,b) => a.originalIndex-b.originalIndex) : ranked;
             $('grade-class').value = gradeClass;
-            $('gradebook-title').innerHTML = "<svg class=\"physics-icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\"><use href=\"#physics-atom\"></use></svg> Bảng điểm · Lớp " + escapeHtml(gradeClass);
+            $('gradebook-title').innerHTML = '<i class="ph-bold ph-exam" aria-hidden="true"></i> Bảng điểm · Lớp ' + escapeHtml(gradeClass);
             $('grade-empty').classList.toggle('show', book.columns.length === 0);
             $('grade-colgroup').innerHTML = '<col class="grade-name"><col class="grade-rank-col"><col class="grade-summary-col">' + book.columns.map(() => '<col class="grade-score-col">').join('');
             $('grade-thead').innerHTML = '<tr><th class="grade-name" scope="col">HỌ TÊN HỌC SINH</th><th class="grade-rank" scope="col">Xếp hạng</th><th class="grade-average" scope="col">Điểm TB</th>' + book.columns.map(column => {
@@ -3087,6 +3094,7 @@
         }
         // Xuất đầy đủ nội dung: một PNG duy nhất hoặc một sổ Excel có định dạng.
         const EXPORT_MAX_PIXELS=96000000,EXPORT_MAX_DIMENSION=32760;
+        const EXPORT_MARKS=['—','✓','×','○','◇'];
         function exportXml(value){return String(value??'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));}
         function exportColumn(index){let result='';for(let n=index+1;n;n=Math.floor((n-1)/26))result=String.fromCharCode(65+(n-1)%26)+result;return result;}
         function exportSheetTitle(name){return "'"+String(name).replace(/'/g,"''")+"'";}
@@ -3124,6 +3132,7 @@
                 sheet.rows.forEach(cells=>{const converted=cells.map((cell,i)=>cell&&typeof cell==='object'&&Object.hasOwn(cell,'value')?cell:exportCell(cell,sheet.columns[i]?.style||0));const lineCount=Math.max(1,...converted.map((cell,index)=>String(cell.value??'').split('\n').reduce((sum,line)=>sum+Math.max(1,Math.ceil(Array.from(line).length/Math.max(5,(sheet.columns[index].width||18)*.85))),0)));append(converted,Math.min(400,Math.max(30,lineCount*15+9)));});
                 const lastDataRow=rows.length;
                 if(sheet.totalRow){const total=sheet.totalRow,r=append(total.cells,total.height||34);merge(0,Math.min(2,count-1),r);}
+                if((sheet.legend||[]).length){append([],12);full('CHÚ THÍCH KÝ HIỆU',3,25);for(let i=0;i<sheet.legend.length;i+=2){full(sheet.legend.slice(i,i+2).map(item=>item.mark+'  '+item.label).join('     ·     '),19,28);}}
                 (sheet.notes||[]).forEach(note=>{append([],12);full(note.title||'NỘI DUNG BÁO CÁO',3,27);exportNoteChunks(note.text||'Chưa có nội dung báo cáo.').forEach(line=>full(line,19,38));});
                 const body=rows.map((row,index)=>'<row r="'+(index+1)+'" ht="'+row.height+'" customHeight="1">'+row.cells.map((cell,col)=>{
                     if(!cell)return '';const ref=exportColumn(col)+(index+1),style=cell.style||0,value=cell.value;
@@ -3151,17 +3160,17 @@
             const key=dateKey(d);
             return buildStyledWorkbook(['11','12'].map(cls=>{
                 const students=getStudents(cls),counts=exportCountStatuses(cls,[d]);
-                return {name:'Lớp '+cls,title:'BÁO CÁO NGÀY · LỚP '+cls,reportDate:key,subtitle:'',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Trạng thái điểm danh',width:32}],rows:dailyReportRows(cls,d).map(row=>[exportCell(row.index,7),exportCell(row.id,6),exportCell(row.name,5),exportCell(LABELS[row.status],exportStatusStyle(row.status))]),totalRow:{cells:[exportCell('TỔNG',20),null,null,exportCell(students.length+' học sinh\n'+LABELS.map((label,index)=>label+': '+counts[index]).join('\n'),20)],height:165},notes:[{title:'NỘI DUNG BÁO CÁO NGÀY · LỚP '+cls,text:dailyNoteText(key,cls)}]};
+                return {name:'Lớp '+cls,title:'BÁO CÁO NGÀY · LỚP '+cls,reportDate:key,subtitle:'',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Điểm danh',width:24}],rows:dailyReportRows(cls,d).map(row=>[exportCell(row.index,7),exportCell(row.id,6),exportCell(row.name,5),exportCell(EXPORT_MARKS[row.status],exportStatusStyle(row.status))]),totalRow:{cells:[exportCell('TỔNG',20),null,null,exportCell(students.length+' học sinh\n'+EXPORT_MARKS.map((mark,index)=>mark+': '+counts[index]).join('  '),20)],height:88},legend:EXPORT_MARKS.map((mark,index)=>({mark,label:LABELS[index]})),notes:[{title:'NỘI DUNG BÁO CÁO NGÀY · LỚP '+cls,text:dailyNoteText(key,cls)}]};
             }));
         }
         function makeAttendanceWorkbook(scope='all'){
             const classes=scope==='all'?['11','12']:[scope];
-            return buildStyledWorkbook(classes.map(cls=>({name:'Lớp '+cls,title:'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,reportDate:$('att-date').value||dateKey(new Date()),subtitle:exportPeriodLabel()+' · '+dates.length+' buổi · '+getStudents(cls).length+' học sinh',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},...LABELS.map(title=>({title,width:16})),...dates.map(d=>({title:dateKey(d),width:15}))],headerHeight:70,rows:getStudents(cls).map((id,index)=>{const counts=[0,0,0,0,0];dates.forEach(d=>counts[statusInClass(cls,d,id)]++);return [exportCell(index+1,7),exportCell(id,6),exportCell(studentName(id),5),...counts.map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(d=>{const st=statusInClass(cls,d,id);return exportCell(LABELS[st],exportStatusStyle(st));})];}),totalRow:{cells:[exportCell('TỔNG',20),null,null,...exportCountStatuses(cls,dates).map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(()=>exportCell('',20))]},notes:[],noPageNumbers:true})));
+            return buildStyledWorkbook(classes.map(cls=>({name:'Lớp '+cls,title:'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,reportDate:$('att-date').value||dateKey(new Date()),subtitle:exportPeriodLabel()+' · '+dates.length+' buổi · '+getStudents(cls).length+' học sinh',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},...EXPORT_MARKS.map(title=>({title,width:11})),...dates.map(d=>({title:dateKey(d),width:15}))],headerHeight:70,rows:getStudents(cls).map((id,index)=>{const counts=[0,0,0,0,0];dates.forEach(d=>counts[statusInClass(cls,d,id)]++);return [exportCell(index+1,7),exportCell(id,6),exportCell(studentName(id),5),...counts.map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(d=>{const st=statusInClass(cls,d,id);return exportCell(EXPORT_MARKS[st],exportStatusStyle(st));})];}),totalRow:{cells:[exportCell('TỔNG',20),null,null,...exportCountStatuses(cls,dates).map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(()=>exportCell('',20))]},legend:EXPORT_MARKS.map((mark,index)=>({mark,label:LABELS[index]})),notes:[],noPageNumbers:true})));
         }
         function makeGradeWorkbook(cls=gradeClass){
             const book=gradebook(cls),students=buildGradeRows(book,cls),marked=students.filter(row=>row.summary.average!==null),average=marked.length?marked.reduce((sum,row)=>sum+row.summary.average,0)/marked.length:null;
             const key=$('att-date').value||dateKey(new Date());
-            return buildStyledWorkbook([{name:'Bảng điểm lớp '+cls,title:'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,reportDate:key,subtitle:'',summary:[{label:'Tổng học sinh',value:students.length},{label:'Học sinh có điểm',value:marked.length},{label:'Điểm trung bình lớp',value:average},{label:'Điểm trung bình cao nhất',value:marked.length?Math.max(...marked.map(row=>row.summary.average)):null}],columns:[{title:'Xếp hạng',width:10},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Điểm trung bình',width:18},{title:'Số cột có điểm',width:16},...book.columns.map(column=>({title:column.title+'\n'+column.date+' · Hệ số '+column.weight,width:20}))],headerHeight:82,rows:students.map(row=>[exportCell(row.rank,21),exportCell(row.id,6),exportCell(row.name,5),exportCell(row.summary.average,exportGradeStyle(row.summary.average)),exportCell(row.summary.count,7),...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id);return exportCell(value,exportGradeStyle(value));})]),notes:[{title:'NỘI DUNG BÁO CÁO NGÀY',text:dailyNoteText(key,cls)}]}]);
+            return buildStyledWorkbook([{name:'Bảng điểm lớp '+cls,title:'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,reportDate:key,subtitle:'',summary:[{label:'Tổng học sinh',value:students.length},{label:'Học sinh có điểm',value:marked.length},{label:'Điểm trung bình lớp',value:average},{label:'Điểm trung bình cao nhất',value:marked.length?Math.max(...marked.map(row=>row.summary.average)):null}],columns:[{title:'Xếp hạng',width:10},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Điểm trung bình',width:18},{title:'Số cột có điểm',width:16},...book.columns.map(column=>({title:column.title+'\n'+column.date+' · Hệ số '+column.weight,width:20}))],headerHeight:82,rows:students.map(row=>[exportCell(row.rank,21),exportCell(row.id,6),exportCell(row.name,5),exportCell(row.summary.average,exportGradeStyle(row.summary.average)),exportCell(row.summary.count,7),...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id);return exportCell(value,exportGradeStyle(value));})]),notes:[]}]);
         }
         function exportPeriodLabel(){return dates.length?'Từ '+dateKey(dates[0])+' đến '+dateKey(dates[dates.length-1]):'Chưa có buổi học';}
         function exportAttendanceNotes(cls){return dates.map(d=>({title:'BÁO CÁO NGÀY '+dateKey(d)+' · LỚP '+cls,text:dailyNoteText(dateKey(d),cls)})).filter(note=>note.text.trim());}
@@ -3232,11 +3241,11 @@
             const columns=[{title:'XẾP HẠNG',width:90},{title:'HỌ TÊN HỌC SINH',width:310},{title:'ĐIỂM TB',width:140},...book.columns.map(column=>({title:column.title+'\n'+column.date+'\nHệ số '+column.weight,width:160}))];
             columns[1].width+=Math.max(0,1088-columns.reduce((sum,col)=>sum+col.width,0));
             const rows=students.map(row=>{const tone=gradeTone(row.summary.average);return [{text:row.rank??'—',center:true,bg:row.rank===1?'#fef3c7':'#f1f5f9',fg:'#475569',bold:900},{text:row.name},{text:gradeText(row.summary.average),center:true,bg:tone.bg,fg:tone.fg,bold:900,size:23},...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id),color=gradeTone(value);return {text:gradeText(value),center:true,bg:color.bg,fg:color.fg,bold:900};})];});
-            const table=exportTablePlan(measure,columns,rows),width=Math.max(1160,table.width+72),notes=exportNotesPlan(measure,[{title:'NỘI DUNG BÁO CÁO NGÀY',text:dailyNoteText(key,cls)}],width-72),notesHeight=notes.reduce((sum,note)=>sum+note.height+16,0),height=324+table.height+notesHeight+100,result=exportCanvasPreferred(width,height),x=result.ctx;
+            const table=exportTablePlan(measure,columns,rows),width=Math.max(1160,table.width+72),height=301+table.height+84,result=exportCanvasPreferred(width,height),x=result.ctx;
             exportDrawHeading(x,width,'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,key,students.length+' học sinh · '+book.columns.length+' cột điểm');
             const marked=students.filter(row=>row.summary.average!==null),avg=marked.length?marked.reduce((sum,row)=>sum+row.summary.average,0)/marked.length:null,items=[['HỌC SINH CÓ ĐIỂM',marked.length+' / '+students.length],['ĐIỂM TB LỚP',gradeText(avg)],['TB CAO NHẤT',gradeText(marked.length?Math.max(...marked.map(row=>row.summary.average)):null)]];
             items.forEach((item,index)=>{const left=36+index*350;roundedRect(x,left,164,330,83,12,index?'#f0fdfa':'#e0e7ff');x.fillStyle='#475569';x.font='900 14px "Nunito",sans-serif';x.fillText(item[0],left+16,189);x.fillStyle='#0f172a';x.font='900 29px "Nunito",sans-serif';x.fillText(String(item[1]),left+16,229);});
-            x.fillStyle='#64748b';x.font='700 16px "Nunito",sans-serif';x.fillText('Màu điểm: dưới 5 · 5 đến dưới 7 · 7 đến dưới 8 · từ 8 trở lên.  — Chưa có điểm.',36,279);exportDrawTable(x,table,36,301);exportDrawNotes(x,notes,36,321+table.height,width-72);exportDrawFooter(x,width,height);await exportDownloadCanvas(result,'bang-diem-lop-'+cls+'-'+key+'.png');return {message:result.exportScale===3?'Đã xuất bảng điểm 3× siêu nét.':'Đã xuất bảng điểm 2× đầy đủ; bảng quá lớn cho mức 3×.'};
+            x.fillStyle='#64748b';x.font='700 16px "Nunito",sans-serif';x.fillText('Màu điểm: dưới 5 · 5 đến dưới 7 · 7 đến dưới 8 · từ 8 trở lên.  — Chưa có điểm.',36,279);exportDrawTable(x,table,36,301);exportDrawFooter(x,width,height);await exportDownloadCanvas(result,'bang-diem-lop-'+cls+'-'+key+'.png');return {message:result.exportScale===3?'Đã xuất bảng điểm 3× siêu nét.':'Đã xuất bảng điểm 2× đầy đủ; bảng quá lớn cho mức 3×.'};
         }
         async function runExport(buttonId,action){const button=$(buttonId);if(!button||button.disabled)return;const original=button.innerHTML;button.disabled=true;button.textContent='Đang tạo báo cáo…';try{const result=await action();toast(result?.message||'Đã xuất báo cáo đầy đủ.');}catch(error){toast('Chưa xuất được: '+error.message);if($('att-report-modal').classList.contains('show'))$('att-report-export-status').textContent='Chưa xuất được: '+error.message;if($('att-all-report-modal').classList.contains('show'))$('att-all-report-status').textContent='Chưa xuất được: '+error.message;}finally{button.disabled=false;button.innerHTML=original;}}
         function exportWorkbook(blob,filename){if(!downloadBlob(blob,filename))throw new Error('Không tải được Excel.');}
