@@ -1014,15 +1014,57 @@
         #att-all-report-status { font-size:12px; line-height:1.6; color:#0f766e; margin-top:10px; }
         #att-all-report-export { flex:1; min-height:44px; justify-content:center; }
         #att-all-report-modal [hidden] { display:none!important; }
+
+        /* Light titles; empty save regions are shown only when an error needs attention. */
+        html, body { background-color:#eff6fb; }
+        #attendance-view .att-top, .att-list-top, #gradebook-view .grade-heading {
+          background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22150%22%20viewBox%3D%220%200%20480%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%238ee8df%22%20stroke-width%3D%221.6%22%20opacity%3D%22.13%22%3E%3Cg%20transform%3D%22translate(220%2075)%22%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%2F%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%20transform%3D%22rotate(60)%22%2F%3E%3Cellipse%20rx%3D%2263%22%20ry%3D%2223%22%20transform%3D%22rotate(120)%22%2F%3E%3Ccircle%20r%3D%226%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M322%2088c20-65%2040-65%2060%200s40%2065%2060%200M325%2088h140%22%2F%3E%3Cpath%20d%3D%22M78%2022h66m-33%200-25%2084%22%2F%3E%3Ccircle%20cx%3D%2286%22%20cy%3D%22111%22%20r%3D%2210%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),linear-gradient(120deg,#0b1830,#123852 56%,#0d5f60);
+          background-repeat:no-repeat; background-position:right center,center; background-size:480px auto,cover;
+          color:#f0fdfa; border-bottom:1px solid #23616d; box-shadow:0 5px 16px #0b183026;
+        }
+        .att-sub, .att-list-sub { color:#bdd8e5; }
+        .att-list-title i { color:#0f766e; }
+        .att-list-current { color:#115e59; background:#ffffffc9; border-color:#a7f3d0; }
+        #gradebook-view #gradebook-title, #gradebook-view #gradebook-title i { color:#f0fdfa; }
+        #gradebook-view #gradebook-close { color:#ecfeff; background:#ffffff12; border-color:#ffffff40; }
+        #attendance-table thead th, #grade-table thead th, #att-stats-table thead th, .roster-table th {
+          background:#e0f2fe; color:#164e63; border-color:#bae6fd;
+        }
+        #attendance-table thead .att-name-head, #grade-table thead .grade-name { background:#d1fae5; color:#134e4a; }
+        .save-status-footer:has(> span:empty) { display:none!important; }
+        #daily-note-save-state:empty, #grade-save-state:empty, #roster-save-state:empty { display:none; }
+
+        .physics-symbols { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
+        .physics-icon { display:inline-block; width:1.35em; height:1.35em; flex:0 0 auto; vertical-align:-.28em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+        .att-title { display:flex; align-items:center; gap:10px; }
+        .att-title > .physics-icon { color:#7ee8dc; width:34px; height:34px; }
+        .att-home-icon > .physics-icon, .template-empty-icon > .physics-icon { width:42px; height:42px; }
+        .physics-motifs { display:flex; justify-content:center; gap:12px; margin:14px 0 18px; flex-shrink:0; max-width:100%; }
+        .physics-motif { width:47px; height:47px; display:grid; place-items:center; border:1px solid #bae6e5; border-radius:14px; background:#f0fdfa; color:#0f766e; box-shadow:0 3px 8px #0f766e06; }
+        .physics-motif .physics-icon { width:28px; height:28px; }
+        .physics-wave, .physics-circuit { background:#eff6ff; color:#2563eb; border-color:#bfdbfe; }
+        .physics-magnet, .physics-prism { background:#f5f3ff; color:#7c3aed; border-color:#ddd6fe; }
+        .template-empty-panel .physics-motifs { margin:0; }
+        #attendance-view .att-top .att-btn { background:#ffffff12; color:#f0fdfa; border-color:#ffffff35; box-shadow:0 2px 5px #02061715; }
+        #attendance-view .att-top .att-btn:hover { background:#ffffff24; border-color:#89d8d2; }
+        #daily-notes-title .physics-icon { color:#0f766e; margin-right:4px; }
+        @media(max-width:650px) {
+          .att-title { gap:7px; }
+          .att-title > .physics-icon { width:27px; height:27px; }
+          .physics-motifs { width:100%; gap:8px; margin:0 0 12px; }
+          .physics-motif { width:39px; height:39px; border-radius:11px; }
+          .physics-motif .physics-icon { width:25px; height:25px; }
+        }
     </style>
 </head>
 <body class="page-home">
+<svg class="physics-symbols" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="physics-atom" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="5.5"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(120 16 16)"/><circle cx="16" cy="16" r="2.1" fill="currentColor" stroke="none"/></symbol><symbol id="physics-wave" viewBox="0 0 32 32"><path d="M2 17c5-16 9-16 14 0s9 16 14 0"/><path d="M2 17h28" opacity=".3"/></symbol><symbol id="physics-magnet" viewBox="0 0 32 32"><path d="M6 4v14a10 10 0 0 0 20 0V4h-7v14a3 3 0 0 1-6 0V4Z"/><path d="M6 10h7m6 0h7"/><path d="M2 3 0 0m30 3 2-3M16 2v3" opacity=".5"/></symbol><symbol id="physics-pendulum" viewBox="0 0 32 32"><path d="M5 4h22M16 4 8 22M16 4l10 16"/><circle cx="8" cy="24" r="4"/><circle cx="27" cy="22" r="3" opacity=".4"/><path d="M13 28c5 1 10-1 13-4" stroke-dasharray="2 3"/></symbol><symbol id="physics-circuit" viewBox="0 0 32 32"><path d="M3 8h8m10 0h8v17H3V8m8-4v8m4-10v12m4-10v8"/><path d="M8 25l2-4 4 8 4-8 4 8 2-4" fill="none"/><circle cx="3" cy="17" r="2" fill="currentColor" stroke="none"/></symbol><symbol id="physics-prism" viewBox="0 0 32 32"><path d="m16 3 13 25H3Z"/><path d="M0 13h11m9 0 12-5m-10 9 10 1m-8 3 8 6"/><path d="m11 13 9 0" stroke-dasharray="2 2" opacity=".5"/></symbol><symbol id="physics-orbit" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="8" transform="rotate(-30 16 16)"/><circle cx="16" cy="16" r="5"/><circle cx="27" cy="9" r="3" fill="currentColor" stroke="none"/><path d="M16 6V3m0 26v-3M6 16H3m26 0h-3" opacity=".45"/></symbol></defs></svg>
 
     <!-- TRANG CHÍNH: LỚP LÝ THẦY RẠNG -->
     <section id="attendance-view" aria-label="Trang chính Lớp Lý Thầy Rạng">
       <header class="att-top">
         <div>
-          <div class="att-title">Lớp Lý Thầy Rạng <span style="color:#6ee7b7">●</span></div>
+          <div class="att-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg>Lớp Lý Thầy Rạng <span style="color:#6ee7b7">●</span></div>
           <div class="att-sub">QUẢN LÝ LỚP HỌC · LỊCH HỌC THỨ 2 · THỨ 4 · THỨ 6</div>
         </div>
         <div class="att-actions">
@@ -1050,19 +1092,21 @@
         <button class="att-btn" id="att-nearest-date"><i class="ph-bold ph-calendar-blank"></i> Ngày gần nhất</button>
       </div>
       <section id="template-empty-state" class="template-empty-panel" aria-labelledby="template-empty-title">
-        <span class="template-empty-icon" aria-hidden="true"><i class="ph-bold ph-table"></i></span>
+        <span class="template-empty-icon" aria-hidden="true"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg></span>
         <h1 id="template-empty-title">Bảng lớp đang trống</h1>
-        <p>Nhập file JSON để mở danh sách học sinh, chỗ ngồi, điểm danh và bảng điểm của bạn.</p>
+        
         <div class="template-empty-actions"><button id="template-import-json" type="button" class="att-btn primary"><i class="ph-bold ph-upload-simple"></i> Nhập dữ liệu JSON</button><button id="template-view-empty-grid" type="button" class="att-btn">Xem sơ đồ trống</button></div>
+        <div class="physics-motifs" aria-hidden="true"><span class="physics-motif physics-atom"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg></span><span class="physics-motif physics-wave"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg></span><span class="physics-motif physics-magnet"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg></span><span class="physics-motif physics-pendulum"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-pendulum"></use></svg></span><span class="physics-motif physics-circuit"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-circuit"></use></svg></span><span class="physics-motif physics-prism"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-prism"></use></svg></span></div>
         <div class="template-empty-preview" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        <small>Sau khi nhập, dữ liệu tự lưu trên trình duyệt để mở lại lần sau.</small>
+        
       </section>
 
       <main class="att-home-card">
-        <div class="att-home-icon"><i class="ph-fill ph-student"></i></div>
+        <div class="att-home-icon"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-orbit"></use></svg></div>
         <div class="att-home-eyebrow">TRANG CHÍNH · QUẢN LÝ LỚP HỌC</div>
         <h1>Lớp Lý Thầy Rạng</h1>
-        <p class="att-home-description">Chọn lớp, theo dõi ngày học gần nhất và mở nhanh các công cụ điểm danh.</p>
+        <div class="physics-motifs" aria-hidden="true"><span class="physics-motif physics-atom"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg></span><span class="physics-motif physics-wave"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg></span><span class="physics-motif physics-magnet"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg></span><span class="physics-motif physics-pendulum"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-pendulum"></use></svg></span><span class="physics-motif physics-circuit"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-circuit"></use></svg></span><span class="physics-motif physics-prism"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-prism"></use></svg></span></div>
+        
         <section class="att-home-stats" aria-label="Thống kê hôm nay">
           <div class="att-home-stats-head">
             <strong><i class="ph-bold ph-chart-bar" style="color:#0f766e"></i> THỐNG KÊ HÔM NAY</strong>
@@ -1079,37 +1123,37 @@
         <div class="att-home-shortcuts">
           <button type="button" id="home-go-grid" class="att-home-shortcut att-home-nav-btn">
             <span class="att-shortcut-key"><i class="ph-bold ph-arrow-left"></i></span>
-            <span><strong>Sơ đồ lớp</strong><small>Quay sang trái</small></span>
+            <span><strong>Sơ đồ lớp</strong></span>
           </button>
           <button type="button" id="home-go-list" class="att-home-shortcut att-home-nav-btn">
             <span class="att-shortcut-key"><i class="ph-bold ph-arrow-right"></i></span>
-            <span><strong>Danh sách điểm danh</strong><small>Chuyển sang phải</small></span>
+            <span><strong>Danh sách điểm danh</strong></span>
           </button>
           <button type="button" id="home-go-grades" class="att-home-shortcut att-home-nav-btn">
             <span class="att-shortcut-key"><i class="ph-bold ph-exam"></i></span>
-            <span><strong>Bảng điểm học sinh</strong><small>Nhập điểm · Điểm trung bình · Xếp hạng</small></span>
+            <span><strong>Bảng điểm học sinh</strong></span>
           </button>
         </div>
         <div style="padding:0 0 18px"><button type="button" id="home-go-roster" class="att-btn" style="width:100%;justify-content:center;min-height:48px"><i class="ph-bold ph-users"></i> Quản lý học sinh</button></div>
         <section id="daily-notes" class="daily-notes" aria-labelledby="daily-notes-title">
           <div class="daily-notes-head">
-            <h2 id="daily-notes-title"><i class="ph-bold ph-notebook"></i> Báo cáo ngày của từng lớp</h2>
-            <span id="daily-note-save-state" role="status" aria-live="polite">Tự động lưu trên trình duyệt</span>
+            <h2 id="daily-notes-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-wave"></use></svg> Báo cáo ngày của từng lớp</h2>
+            <span id="daily-note-save-state" role="status" aria-live="polite"></span>
           </div>
-          <p class="daily-notes-hint">Ghi tiến độ sửa bài của từng lớp. Chọn lại ngày để chỉnh sửa; ghi chú được đưa vào ảnh và báo cáo của đúng ngày đó.</p>
+          
           <div class="daily-notes-toolbar">
             <label for="daily-note-date">Ngày ghi chú <select id="daily-note-date"></select></label>
             <button id="daily-note-copy-previous" type="button" class="att-btn"><i class="ph-bold ph-copy"></i> Dùng ghi chú buổi trước</button>
           </div>
           <div class="daily-note-fields">
-            <label class="daily-note-field" for="daily-note-11">Lớp 11<textarea id="daily-note-11" rows="3" maxlength="10000" placeholder="Ví dụ: tờ 16/10 đã sửa đến câu 20"></textarea></label>
-            <label class="daily-note-field" for="daily-note-12">Lớp 12<textarea id="daily-note-12" rows="3" maxlength="10000" placeholder="Ví dụ: tờ 12/10 LT còn câu 20–33, tờ 16/10 chưa sửa."></textarea></label>
+            <label class="daily-note-field" for="daily-note-11">Lớp 11<textarea id="daily-note-11" rows="3" maxlength="10000"></textarea></label>
+            <label class="daily-note-field" for="daily-note-12">Lớp 12<textarea id="daily-note-12" rows="3" maxlength="10000"></textarea></label>
           </div>
           <h3 class="daily-notes-history-title">Danh sách ghi chú đã lưu <span id="daily-notes-count"></span></h3>
           <div id="daily-notes-list" role="region" aria-label="Danh sách ghi chú theo ngày" tabindex="0"></div>
         </section>
       </main>
-      <footer class="att-foot"><span id="att-save-state">● Tự động lưu đang bật</span><span>Đã lưu tự động</span></footer>
+      <footer class="att-foot save-status-footer"><span id="att-save-state" role="status" aria-live="polite"></span></footer>
     </section>
 
     <!-- TRANG PHỤ BÊN PHẢI: DANH SÁCH ĐIỂM DANH -->
@@ -1134,7 +1178,7 @@
     <div id="gradebook-view" class="grade-page" role="region" aria-label="Trang bảng điểm học sinh">
       <section class="grade-dialog">
         <div class="grade-heading">
-          <div><h2 id="gradebook-title"><i class="ph-bold ph-exam"></i> Bảng điểm học sinh</h2><p class="grade-subtitle">Điểm trung bình có hệ số · Xếp hạng trong từng lớp · Tự động lưu.</p></div>
+          <div><h2 id="gradebook-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-atom"></use></svg> Bảng điểm học sinh</h2></div>
           <button id="gradebook-close" type="button"><i class="ph-bold ph-arrow-left"></i> Quay lại</button>
         </div>
         <div class="grade-controls">
@@ -1147,13 +1191,13 @@
         </div>
         <div class="grade-summary">
           <div><span>Học sinh có điểm</span><strong id="grade-marked-count">0 / 0</strong></div>
-          <div title="Trung bình các điểm trung bình chưa làm tròn của học sinh đã có điểm; mỗi học sinh có trọng số như nhau."><span>Trung bình lớp</span><strong id="grade-class-average">—</strong></div>
-          <div title="Điểm trung bình có hệ số cao nhất trong các học sinh đã có điểm."><span>Điểm trung bình cao nhất</span><strong id="grade-class-highest">—</strong></div>
+          <div><span>Trung bình lớp</span><strong id="grade-class-average">—</strong></div>
+          <div><span>Điểm trung bình cao nhất</span><strong id="grade-class-highest">—</strong></div>
         </div>
         <div class="grade-legend" aria-label="Chú giải màu điểm"><span><i style="background:#fecaca"></i>Dưới 5</span><span><i style="background:#fde68a"></i>5 đến dưới 7</span><span><i style="background:#86efac"></i>7 đến dưới 8</span><span><i style="background:#d8b4fe"></i>Từ 8 trở lên</span><span class="grade-legend-empty">— Chưa có điểm</span></div>
         <form id="grade-column-form" hidden>
           <div class="grade-form-grid">
-            <label class="grade-field" for="grade-column-title">Tên cột điểm<input id="grade-column-title" type="text" maxlength="60" required placeholder="Ví dụ: Kiểm tra 15 phút"></label>
+            <label class="grade-field" for="grade-column-title">Tên cột điểm<input id="grade-column-title" type="text" maxlength="60" required></label>
             <label class="grade-field" for="grade-column-date">Ngày kiểm tra<input id="grade-column-date" type="date" required></label>
             <label class="grade-field" for="grade-column-weight">Hệ số<select id="grade-column-weight"><option value="1">Hệ số 1</option><option value="2">Hệ số 2</option><option value="3">Hệ số 3</option></select></label>
           </div>
@@ -1163,23 +1207,23 @@
             <button id="grade-column-delete" class="att-btn danger" type="button" hidden><i class="ph-bold ph-trash"></i> Xóa cột</button>
           </div>
         </form>
-        <div id="grade-empty" class="grade-empty">Chưa có cột điểm. Bấm “Thêm cột điểm” để tạo bài kiểm tra, sau đó nhập điểm cho từng học sinh.</div>
+        <div id="grade-empty" class="grade-empty">Chưa có cột điểm.</div>
         <div class="grade-table-wrap" tabindex="0" role="region" aria-label="Bảng điểm cuộn ngang và dọc">
           <table id="grade-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Bảng điểm từng học sinh, xếp hạng theo điểm trung bình có hệ số</caption><colgroup id="grade-colgroup"></colgroup><thead id="grade-thead"></thead><tbody id="grade-tbody"></tbody></table>
         </div>
         <p id="grade-validation" role="status" aria-live="polite"></p>
-        <footer class="grade-footer"><span id="gradebook-help">Thang 0–10 · Ô trống không tính, điểm 0 vẫn tính · TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm).<br>TB lớp = trung bình TB của học sinh có điểm · Điểm hiển thị 2 chữ số; màu và hạng theo TB chưa làm tròn.<br>Cùng TB cùng hạng (1, 1, 3); chưa có điểm chưa xếp hạng · Danh sách sắp lại khi rời bảng nhập · Chạm tên cột để sửa.</span><span id="grade-save-state" role="status" aria-live="polite">Tự động lưu</span></footer>
+        <footer class="grade-footer save-status-footer"><span id="grade-save-state" role="status" aria-live="polite"></span></footer>
       </section>
     </div>
 
     <div id="roster-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="roster-title">
       <section class="roster-dialog">
-        <header class="roster-heading"><div><h2 id="roster-title">Quản lý học sinh</h2><p>Tự tạo mã UUID · Có thể chọn ghế trống khi thêm</p></div><button id="roster-close" type="button" class="settings-close-btn" aria-label="Đóng quản lý học sinh">×</button></header>
+        <header class="roster-heading"><div><h2 id="roster-title"><svg class="physics-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#physics-magnet"></use></svg> Quản lý học sinh</h2></div><button id="roster-close" type="button" class="settings-close-btn" aria-label="Đóng quản lý học sinh">×</button></header>
         <div class="roster-toolbar"><label>Lớp <select id="roster-class"><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label><label class="roster-search">Tìm học sinh <input id="roster-search" type="search" placeholder="Tên hoặc mã học sinh"></label></div>
         <p id="roster-summary" class="roster-summary"></p>
         <form id="roster-add-form" class="roster-add"><label>Tên học sinh mới<input id="new-student-name" type="text" maxlength="100" required placeholder="Nhập họ tên"></label><label>Ghế trống<select id="new-student-seat" aria-label="Chọn ghế trống cho học sinh mới"></select></label><button class="att-btn primary" type="submit"><i class="ph-bold ph-plus"></i> Thêm học sinh</button></form>
         <div class="roster-table-wrap" tabindex="0" role="region" aria-label="Danh sách chỉnh sửa học sinh"><table class="roster-table"><thead><tr><th>Họ tên / Mã riêng</th><th>Thao tác</th></tr></thead><tbody id="roster-tbody"></tbody></table></div>
-        <footer class="roster-foot"><span id="roster-save-state" role="status" aria-live="polite">Tên học sinh tự lưu khi thay đổi.</span><button id="roster-go-seat-map" type="button" class="att-btn primary">Mở sơ đồ để sắp xếp chỗ ngồi</button><small>Đổi chỗ trực tiếp trên sơ đồ lớp. Xóa khỏi danh sách vẫn giữ dữ liệu cũ theo mã và có thể hoàn tác.</small></footer>
+        <footer class="roster-foot"><span id="roster-save-state" role="status" aria-live="polite"></span><button id="roster-go-seat-map" type="button" class="att-btn primary">Mở sơ đồ để sắp xếp chỗ ngồi</button></footer>
       </section>
     </div>
 
@@ -1214,7 +1258,7 @@
           <label for="att-report-format">Định dạng xuất<select id="att-report-format"><option value="png">Ảnh PNG chất lượng cao</option><option value="xlsx">Excel (.xlsx) · 2 trang tính</option></select></label>
           <label for="att-report-resolution" id="att-report-resolution-field">Độ phân giải ảnh<select id="att-report-resolution"><option value="3">3× · Siêu nét · Một ảnh chung</option><option value="2">2× · Rõ nét · Một ảnh chung</option></select></label>
         </div>
-        <p id="att-report-export-help" class="report-export-help">Một ảnh chung có bảng điểm danh của cả hai lớp và nội dung đúng ngày đang chọn. Mặc định 3×, tự mở rộng để giữ đủ nội dung.</p>
+        
         <div class="report-dialog-actions"><button id="att-report-export" class="att-btn primary">Xuất ảnh PNG</button><button id="att-report-cancel" class="att-btn">Đóng</button></div>
         <div id="att-report-export-status" role="status" aria-live="polite"></div>
       </div>
@@ -1223,13 +1267,13 @@
     <div id="att-all-report-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-all-report-title">
       <div class="att-status-dialog report-dialog">
         <div class="report-dialog-heading"><div><div id="att-all-report-title" style="font-size:21px;font-weight:900;color:#0f172a">Tổng quát toàn bộ</div><div id="att-all-report-period" style="font-size:13px;color:#64748b;margin-top:5px"></div></div><button id="att-all-report-close" type="button" class="settings-close-btn" aria-label="Đóng tổng quát toàn bộ">×</button></div>
-        <p class="report-export-help">Bảng điểm danh của toàn bộ lịch học và số lượt từng trạng thái. Mỗi lớp có một bảng riêng.</p>
+        
         <div class="report-export-options">
           <label for="att-all-report-class">Lớp cần xuất<select id="att-all-report-class"><option value="all">Cả hai lớp · Lớp 11 và lớp 12</option><option value="11">Lớp 11</option><option value="12">Lớp 12</option></select></label>
           <label for="att-all-report-format">Định dạng xuất<select id="att-all-report-format"><option value="png">Ảnh PNG độ phân giải cao</option><option value="xlsx">Excel (.xlsx)</option></select></label>
           <label for="att-all-report-resolution" id="att-all-report-resolution-field">Độ phân giải ảnh<select id="att-all-report-resolution"><option value="3">3× · Siêu nét</option><option value="2">2× · Rõ nét</option></select></label>
         </div>
-        <p id="att-all-report-help" class="report-export-help"></p>
+        
         <div class="report-dialog-actions"><button id="att-all-report-export" type="button" class="att-btn primary">Xuất 2 ảnh PNG</button><button id="att-all-report-cancel" type="button" class="att-btn">Đóng</button></div>
         <div id="att-all-report-status" role="status" aria-live="polite"></div>
       </div>
@@ -1238,7 +1282,7 @@
     <div id="att-stats-modal" class="att-modal-backdrop" role="dialog" aria-modal="true">
       <div class="att-status-dialog" style="width:min(1000px,100%);max-height:calc(100dvh - 24px);overflow:hidden;display:flex;flex-direction:column">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-          <div><div id="att-stats-title" style="font-size:20px;font-weight:900">Thống kê học sinh</div><div style="font-size:12px;color:#64748b;margin-top:4px">Tổng hợp theo từng học sinh qua các buổi học trong lịch, tách riêng lớp 11 và lớp 12.</div></div>
+          <div><div id="att-stats-title" style="font-size:20px;font-weight:900">Thống kê học sinh</div></div>
           <button id="att-stats-close" aria-label="Đóng thống kê" style="border:0;background:#f1f5f9;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer">×</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
@@ -1256,7 +1300,7 @@
     <div id="att-data-settings-modal" class="att-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="att-data-settings-title">
       <div class="att-status-dialog settings-menu-dialog">
         <div class="settings-menu-heading">
-          <div><div id="att-data-settings-title">Cài đặt</div><div class="settings-menu-subtitle">Thống kê và công cụ hệ thống</div></div>
+          <div><div id="att-data-settings-title">Cài đặt</div></div>
           <button id="att-data-settings-close" aria-label="Đóng cài đặt" class="settings-close-btn">×</button>
         </div>
         <button class="att-btn primary settings-action" id="att-open-roster"><i class="ph-bold ph-users"></i> Quản lý học sinh</button>
@@ -1296,8 +1340,8 @@
     <div id="app" class="w-full h-[100dvh] p-1 flex items-center justify-center relative">
         <section id="grid-seat-toolbar" hidden aria-label="Thao tác đổi chỗ trên sơ đồ">
           <div id="grid-seat-editor-controls" hidden>
-            <p id="grid-seat-editor-status" role="status" aria-live="polite">Chọn một học sinh, rồi chọn chỗ mới trên sơ đồ.</p>
-            <div class="grid-seat-editor-actions"><button type="button" id="grid-seat-clear-selection" disabled>Bỏ chọn</button><button type="button" id="grid-seat-unseat" disabled>Để chưa xếp chỗ</button><button type="button" id="grid-seat-share" aria-pressed="false" disabled title="Chọn một học sinh rồi bật ngồi ghép, tối đa 3 bạn một bàn">Ngồi ghép</button><button type="button" id="grid-seat-undo">Hoàn tác</button><button type="button" id="grid-seat-edit-done">Xong</button></div>
+            <p id="grid-seat-editor-status" role="status" aria-live="polite">Xếp chỗ ngồi</p>
+            <div class="grid-seat-editor-actions"><button type="button" id="grid-seat-clear-selection" disabled>Bỏ chọn</button><button type="button" id="grid-seat-unseat" disabled>Để chưa xếp chỗ</button><button type="button" id="grid-seat-share" aria-pressed="false" disabled title="Ngồi ghép · Tối đa 3 học sinh">Ngồi ghép</button><button type="button" id="grid-seat-undo">Hoàn tác</button><button type="button" id="grid-seat-edit-done">Xong</button></div>
             <div id="grid-seat-unseated-wrap" hidden><strong>Chưa xếp chỗ</strong><div id="grid-seat-unseated"></div></div>
           </div>
         </section>
@@ -1351,7 +1395,7 @@
             <div class="bg-slate-900/60 rounded-[22px] py-10 px-4 backdrop-blur-md flex flex-col items-center justify-center min-h-[250px]">
                 <h2 class="text-white/80 font-bold text-sm sm:text-lg mb-6 uppercase tracking-[0.2em] flex items-center gap-2"><i class="ph-fill ph-confetti text-pink-400 text-2xl"></i> CHÚC MỪNG <i class="ph-fill ph-confetti text-pink-400 text-2xl"></i></h2>
                 <div id="winner-names" class="text-white font-black drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] leading-tight break-words text-center w-full px-2"></div>
-                <p class="text-white/40 text-xs mt-10 animate-pulse">(Chạm vào màn hình để đóng)</p>
+                
             </div>
         </div>
     </div>
@@ -1395,7 +1439,7 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Tờ</label>
-                            <input type="text" id="rep-11-to" placeholder="Ví dụ: 1" class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
+                            <input type="text" id="rep-11-to" class="report-input w-full bg-white border border-slate-300 rounded px-2 py-1.5 text-xs font-bold focus:border-blue-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">LT</label>
@@ -1759,8 +1803,8 @@
                 store.seatMaps=SEAT_MAPS;
                 Object.values(globalState).forEach(st=>{if(st.studentId)store.seatTools[st.studentId]={note:st.note,timeLeft:st.timeLeft,isFinished:st.isFinished};});
                 localStorage.setItem(KEY, JSON.stringify(store));
-                $('att-save-state').textContent = '● Đã lưu tự động lúc ' + new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-                if ($('grade-save-state')) { $('grade-save-state').textContent='● Đã lưu tự động'; $('grade-save-state').style.color='#0f766e'; }
+                $('att-save-state').textContent = '';
+                if ($('grade-save-state')) { $('grade-save-state').textContent=''; $('grade-save-state').style.color='#0f766e'; }
                 return true;
             } catch(e) { $('att-save-state').textContent = 'Không thể lưu'; if($('grade-save-state')){$('grade-save-state').textContent='Không thể lưu — kiểm tra bộ nhớ trình duyệt';$('grade-save-state').style.color='#b91c1c';} return false; }
         }
@@ -1809,9 +1853,9 @@
             $('daily-notes-list').innerHTML=keys.length?keys.map(key=>{
                 const note=store.dailyNotes[key];
                 return '<article class="daily-note-entry'+(key===selected?' current':'')+'"><div class="daily-note-entry-head"><strong>'+dailyNoteDateLabel(key)+'</strong><button type="button" class="att-btn" data-edit-daily-note="'+key+'" aria-label="Sửa ghi chú '+dailyNoteDateLabel(key)+'">Sửa</button></div>'+'<div class="daily-note-history-grid">'+['11','12'].map(cls=>'<section class="daily-note-history-class" data-class="'+cls+'"><h4>LỚP '+cls+'</h4><p>'+escapeHtml(note[cls]||'Chưa có nội dung báo cáo.')+'</p></section>').join('')+'</div></article>';
-            }).join(''):'<p class="daily-notes-empty">Chưa có ghi chú. Nhập nội dung cho ngày đang chọn ở phía trên; ghi chú sẽ xuất hiện trong danh sách này.</p>';
+            }).join(''):'<p class="daily-notes-empty">Chưa có ghi chú.</p>';
             $('daily-note-copy-previous').disabled=!previousDailyNoteKey(selected);
-            $('att-report-note-preview').textContent=dailyNoteText(selected)||'Ngày này chưa có ghi chú. Bạn có thể thêm ghi chú trước khi xuất.';
+            $('att-report-note-preview').textContent=dailyNoteText(selected)||'Chưa có ghi chú.';
         }
         function renderDailyNotes() {
             const key=$('att-date').value||store.selectedDate;
@@ -1830,7 +1874,7 @@
             if (note['11'].trim()||note['12'].trim()) store.dailyNotes[key]=note;
             else delete store.dailyNotes[key];
             const saved=save(),state=$('daily-note-save-state');
-            state.textContent=saved?'● Đã lưu trên trình duyệt':'Chưa lưu được — hãy sao chép nội dung';
+            state.textContent=saved?'':'Chưa lưu được — hãy sao chép nội dung';
             state.style.color=saved?'#0f766e':'#b91c1c';
             renderDailyNotesHistory();
         }
@@ -2543,7 +2587,7 @@
             const isExcel=$('att-report-format').value==='xlsx';
             $('att-report-resolution-field').hidden=isExcel;
             $('att-report-export').textContent=isExcel?'Xuất Excel (.xlsx)':'Xuất ảnh PNG';
-            $('att-report-export-help').textContent=isExcel?'Tệp Excel có hai trang tính Lớp 11 và Lớp 12, gồm mã học sinh, điểm danh, thống kê và nội dung báo cáo ngày.':'Một ảnh chung có bảng điểm danh của cả hai lớp và nội dung đúng ngày đang chọn. Mặc định 3×, tự mở rộng để giữ đủ nội dung.';
+            
         }
         $('att-report-format').addEventListener('change',refreshReportFormat);
         $('att-export-general').addEventListener('click', () => {
@@ -2662,7 +2706,7 @@
         function gradeInputText(value) { return value === null ? '' : String(value).replace('.', ','); }
         function saveGrades() {
             const saved = save();
-            $('grade-save-state').textContent = saved ? '● Đã lưu tự động' : 'Không thể lưu — hãy kiểm tra bộ nhớ trình duyệt';
+            $('grade-save-state').textContent = saved ? '' : 'Không thể lưu — hãy kiểm tra bộ nhớ trình duyệt';
             $('grade-save-state').style.color = saved ? '#0f766e' : '#b91c1c';
             return saved;
         }
@@ -2696,7 +2740,7 @@
             const book = gradebook(), ranked = buildGradeRows(book,gradeClass);
             const students = $('grade-sort').value === 'roster' ? [...ranked].sort((a,b) => a.originalIndex-b.originalIndex) : ranked;
             $('grade-class').value = gradeClass;
-            $('gradebook-title').innerHTML = '<i class="ph-bold ph-exam"></i> Bảng điểm · Lớp ' + escapeHtml(gradeClass);
+            $('gradebook-title').innerHTML = "<svg class=\"physics-icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\"><use href=\"#physics-atom\"></use></svg> Bảng điểm · Lớp " + escapeHtml(gradeClass);
             $('grade-empty').classList.toggle('show', book.columns.length === 0);
             $('grade-colgroup').innerHTML = '<col class="grade-name"><col class="grade-rank-col"><col class="grade-summary-col">' + book.columns.map(() => '<col class="grade-score-col">').join('');
             $('grade-thead').innerHTML = '<tr><th class="grade-name" scope="col">HỌ TÊN HỌC SINH</th><th class="grade-rank" scope="col">Xếp hạng</th><th class="grade-average" scope="col">Điểm TB</th>' + book.columns.map(column => {
@@ -2711,7 +2755,7 @@
         }
         function openGradebook() {
             gradeReturnFocus=document.activeElement;gradeReturnPage=activePage==='grades'?'home':activePage;
-            $('grade-validation').textContent='';$('grade-save-state').textContent='Tự động lưu trên trình duyệt này';$('grade-save-state').style.color='#0f766e';
+            $('grade-validation').textContent='';$('grade-save-state').textContent='';$('grade-save-state').style.color='#0f766e';
             setPage('grades');$('gradebook-close').focus({preventScroll:true});
         }
         function closeGradebook() {
@@ -3049,16 +3093,17 @@
         function exportNoteChunks(text,max=100){return String(text??'').split('\n').flatMap(line=>{const chars=Array.from(line),parts=[];while(chars.length)parts.push(chars.splice(0,max).join(''));return parts.length?parts:[''];});}
         function exportStatusStyle(status){return 9+status;}
         function exportGradeStyle(value){return value===null?8:value<5?14:value<7?15:value<8?16:17;}
+        function exportReportDateLabel(key){const value=key||$('att-date').value||dateKey(new Date());return 'Ngày báo cáo: '+String(value).replace(/^(\d{4})-(\d{2})-(\d{2})$/,'$3/$2/$1');}
         function exportCell(value,style=0){return {value,style};}
         function buildStyledWorkbook(sheets){
             const encoder=new TextEncoder(),files=[],definedNames=[];
             const add=(name,body)=>files.push({name,data:encoder.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+body)});
             const styleSpecs=[
-                {bg:'FFFFFF',fg:'334155'}, {bg:'0F172A',fg:'FFFFFF',size:19,bold:1}, {bg:'F1F5F9',fg:'64748B'}, {bg:'0F766E',fg:'FFFFFF',bold:1}, {bg:'1E293B',fg:'FFFFFF',bold:1,align:'center'},
+                {bg:'FFFFFF',fg:'334155'}, {bg:'E0F2FE',fg:'0C4A6E',size:28,bold:1}, {bg:'F1F5F9',fg:'64748B'}, {bg:'CCFBF1',fg:'115E59',bold:1}, {bg:'DBEAFE',fg:'1E40AF',bold:1,align:'center'},
                 {bg:'F8FAFC',fg:'0F172A'}, {bg:'FFFFFF',fg:'475569',font:'Consolas',size:10}, {bg:'FFFFFF',fg:'0F172A',align:'center'}, {bg:'F8FAFC',fg:'94A3B8',align:'center',numFmt:2},
                 {bg:'F1F5F9',fg:'64748B',align:'center'}, {bg:'D1FAE5',fg:'047857',align:'center',bold:1}, {bg:'FEE2E2',fg:'B91C1C',align:'center',bold:1}, {bg:'FEF3C7',fg:'92400E',align:'center',bold:1}, {bg:'DBEAFE',fg:'1D4ED8',align:'center',bold:1},
                 {bg:'FEE2E2',fg:'B91C1C',align:'center',numFmt:2,bold:1}, {bg:'FEF3C7',fg:'92400E',align:'center',numFmt:2,bold:1}, {bg:'DCFCE7',fg:'166534',align:'center',numFmt:2,bold:1}, {bg:'F3E8FF',fg:'7E22CE',align:'center',numFmt:2,bold:1},
-                {bg:'ECFDF5',fg:'065F46',align:'center',numFmt:2,bold:1}, {bg:'F0FDFA',fg:'334155'}, {bg:'E2E8F0',fg:'334155',bold:1}, {bg:'FFFBEB',fg:'92400E',bold:1,align:'center'}
+                {bg:'ECFDF5',fg:'065F46',align:'center',numFmt:2,bold:1}, {bg:'F0FDFA',fg:'334155'}, {bg:'D1FAE5',fg:'065F46',bold:1}, {bg:'FFFBEB',fg:'92400E',bold:1,align:'center'}, {bg:'F0FDFA',fg:'115E59',size:21,bold:1}
             ];
             const fonts=styleSpecs.map(s=>'<font>'+(s.bold?'<b/>':'')+'<sz val="'+(s.size||11)+'"/><color rgb="FF'+s.fg+'"/><name val="'+(s.font||'Calibri')+'"/></font>').join('');
             const fills='<fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>'+styleSpecs.map(s=>'<fill><patternFill patternType="solid"><fgColor rgb="FF'+s.bg+'"/><bgColor indexed="64"/></patternFill></fill>').join('');
@@ -3069,12 +3114,16 @@
                 const append=(cells,height=24)=>{rows.push({cells,height});return rows.length;};
                 const merge=(from,to,row)=>{if(to>from)merges.push(exportColumn(from)+row+':'+exportColumn(to)+row);};
                 const full=(text,style,height=28)=>{const r=append([exportCell(text,style)],height);merge(0,count-1,r);return r;};
-                full(sheet.title,1,38);full(sheet.subtitle||'',2,28);append([],10);full('TỔNG QUÁT',3,25);
-                (sheet.summary||[]).forEach(item=>{const labelTo=Math.min(2,count-2),valueFrom=labelTo+1,cells=Array(count).fill(null);cells[0]=exportCell(item.label,5);cells[valueFrom]=exportCell(item.value,item.style??18);const r=append(cells,25);merge(0,labelTo,r);merge(valueFrom,Math.min(valueFrom+1,count-1),r);});
-                append([],12);
+                full('Lớp Lý Thầy Rạng',1,52);full(exportReportDateLabel(sheet.reportDate),22,40);full([sheet.title,sheet.subtitle].filter(Boolean).join(' · '),2,32);
+                if((sheet.summary||[]).length){
+                    full('TỔNG QUÁT',3,25);
+                    sheet.summary.forEach(item=>{const labelTo=Math.min(2,count-2),valueFrom=labelTo+1,cells=Array(count).fill(null);cells[0]=exportCell(item.label,5);cells[valueFrom]=exportCell(item.value,item.style??18);const r=append(cells,25);merge(0,labelTo,r);merge(valueFrom,Math.min(valueFrom+1,count-1),r);});
+                    append([],12);
+                }
                 const headerRow=append(sheet.columns.map(col=>exportCell(col.title,4)),sheet.headerHeight||64);
                 sheet.rows.forEach(cells=>{const converted=cells.map((cell,i)=>cell&&typeof cell==='object'&&Object.hasOwn(cell,'value')?cell:exportCell(cell,sheet.columns[i]?.style||0));const lineCount=Math.max(1,...converted.map((cell,index)=>String(cell.value??'').split('\n').reduce((sum,line)=>sum+Math.max(1,Math.ceil(Array.from(line).length/Math.max(5,(sheet.columns[index].width||18)*.85))),0)));append(converted,Math.min(400,Math.max(30,lineCount*15+9)));});
                 const lastDataRow=rows.length;
+                if(sheet.totalRow){const total=sheet.totalRow,r=append(total.cells,total.height||34);merge(0,Math.min(2,count-1),r);}
                 (sheet.notes||[]).forEach(note=>{append([],12);full(note.title||'NỘI DUNG BÁO CÁO',3,27);exportNoteChunks(note.text||'Chưa có nội dung báo cáo.').forEach(line=>full(line,19,38));});
                 const body=rows.map((row,index)=>'<row r="'+(index+1)+'" ht="'+row.height+'" customHeight="1">'+row.cells.map((cell,col)=>{
                     if(!cell)return '';const ref=exportColumn(col)+(index+1),style=cell.style||0,value=cell.value;
@@ -3086,7 +3135,7 @@
                 const columns=sheet.columns.map((col,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+(col.width||18)+'" customWidth="1"/>').join('');
                 const mergeXML=merges.length?'<mergeCells count="'+merges.length+'">'+merges.map(ref=>'<mergeCell ref="'+ref+'"/>').join('')+'</mergeCells>':'';
                 const filter=lastDataRow>headerRow?'<autoFilter ref="A'+headerRow+':'+lastCol+lastDataRow+'"/>':'';
-                add('xl/worksheets/sheet'+(sheetIndex+1)+'.xml','<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:'+lastCol+rows.length+'"/><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane xSplit="'+frozen+'" ySplit="'+headerRow+'" topLeftCell="'+topLeft+'" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="24"/><cols>'+columns+'</cols><sheetData>'+body+'</sheetData>'+filter+mergeXML+'<printOptions horizontalCentered="1"/><pageMargins left="0.25" right="0.25" top="0.4" bottom="0.4" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/><headerFooter><oddHeader>&amp;C'+exportXml(sheet.title)+'</oddHeader><oddFooter>&amp;L'+exportXml('Lớp Lý Thầy Rạng')+(sheet.noPageNumbers?'':'&amp;RTrang &amp;P / &amp;N')+'</oddFooter></headerFooter></worksheet>');
+                add('xl/worksheets/sheet'+(sheetIndex+1)+'.xml','<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:'+lastCol+rows.length+'"/><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane xSplit="'+frozen+'" ySplit="'+headerRow+'" topLeftCell="'+topLeft+'" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="24"/><cols>'+columns+'</cols><sheetData>'+body+'</sheetData>'+filter+mergeXML+'<printOptions horizontalCentered="1"/><pageMargins left="0.25" right="0.25" top="0.4" bottom="0.4" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/><headerFooter><oddHeader>&amp;C'+exportXml('Lớp Lý Thầy Rạng · '+exportReportDateLabel(sheet.reportDate))+'</oddHeader><oddFooter>&amp;L'+exportXml('Lớp Lý Thầy Rạng')+(sheet.noPageNumbers?'':'&amp;RTrang &amp;P / &amp;N')+'</oddFooter></headerFooter></worksheet>');
                 definedNames.push('<definedName name="_xlnm.Print_Titles" localSheetId="'+sheetIndex+'">'+exportXml(exportSheetTitle(sheet.name)+'!$'+headerRow+':$'+headerRow)+'</definedName>');
                 definedNames.push('<definedName name="_xlnm.Print_Area" localSheetId="'+sheetIndex+'">'+exportXml(exportSheetTitle(sheet.name)+'!$A$1:$'+lastCol+'$'+rows.length)+'</definedName>');
             });
@@ -3100,16 +3149,19 @@
         function exportCountSummary(counts){return LABELS.map((label,index)=>({label,value:counts[index],style:exportStatusStyle(index)}));}
         function makeDailyReportWorkbook(d){
             const key=dateKey(d);
-            return buildStyledWorkbook(['11','12'].map(cls=>({name:'Lớp '+cls,title:'BÁO CÁO NGÀY · LỚP '+cls,subtitle:'Lớp Lý Thầy Rạng · '+dailyNoteDateLabel(key),summary:[{label:'Sĩ số',value:getStudents(cls).length},...exportCountSummary(exportCountStatuses(cls,[d]))],columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Trạng thái điểm danh',width:32}],rows:dailyReportRows(cls,d).map(row=>[exportCell(row.index,7),exportCell(row.id,6),exportCell(row.name,5),exportCell(LABELS[row.status],exportStatusStyle(row.status))]),notes:[{title:'NỘI DUNG BÁO CÁO NGÀY · LỚP '+cls,text:dailyNoteText(key,cls)}]})));
+            return buildStyledWorkbook(['11','12'].map(cls=>{
+                const students=getStudents(cls),counts=exportCountStatuses(cls,[d]);
+                return {name:'Lớp '+cls,title:'BÁO CÁO NGÀY · LỚP '+cls,reportDate:key,subtitle:'',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Trạng thái điểm danh',width:32}],rows:dailyReportRows(cls,d).map(row=>[exportCell(row.index,7),exportCell(row.id,6),exportCell(row.name,5),exportCell(LABELS[row.status],exportStatusStyle(row.status))]),totalRow:{cells:[exportCell('TỔNG',20),null,null,exportCell(students.length+' học sinh\n'+LABELS.map((label,index)=>label+': '+counts[index]).join('\n'),20)],height:165},notes:[{title:'NỘI DUNG BÁO CÁO NGÀY · LỚP '+cls,text:dailyNoteText(key,cls)}]};
+            }));
         }
         function makeAttendanceWorkbook(scope='all'){
             const classes=scope==='all'?['11','12']:[scope];
-            return buildStyledWorkbook(classes.map(cls=>({name:'Lớp '+cls,title:'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,subtitle:exportPeriodLabel()+' · '+dates.length+' buổi · '+getStudents(cls).length+' học sinh',summary:exportCountSummary(exportCountStatuses(cls,dates)),columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},...LABELS.map(title=>({title,width:16})),...dates.map(d=>({title:dateKey(d),width:15}))],headerHeight:70,rows:getStudents(cls).map((id,index)=>{const counts=[0,0,0,0,0];dates.forEach(d=>counts[statusInClass(cls,d,id)]++);return [exportCell(index+1,7),exportCell(id,6),exportCell(studentName(id),5),...counts.map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(d=>{const st=statusInClass(cls,d,id);return exportCell(LABELS[st],exportStatusStyle(st));})];}),notes:[],noPageNumbers:true})));
+            return buildStyledWorkbook(classes.map(cls=>({name:'Lớp '+cls,title:'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,reportDate:$('att-date').value||dateKey(new Date()),subtitle:exportPeriodLabel()+' · '+dates.length+' buổi · '+getStudents(cls).length+' học sinh',columns:[{title:'STT',width:8},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},...LABELS.map(title=>({title,width:16})),...dates.map(d=>({title:dateKey(d),width:15}))],headerHeight:70,rows:getStudents(cls).map((id,index)=>{const counts=[0,0,0,0,0];dates.forEach(d=>counts[statusInClass(cls,d,id)]++);return [exportCell(index+1,7),exportCell(id,6),exportCell(studentName(id),5),...counts.map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(d=>{const st=statusInClass(cls,d,id);return exportCell(LABELS[st],exportStatusStyle(st));})];}),totalRow:{cells:[exportCell('TỔNG',20),null,null,...exportCountStatuses(cls,dates).map((count,st)=>exportCell(count,exportStatusStyle(st))),...dates.map(()=>exportCell('',20))]},notes:[],noPageNumbers:true})));
         }
         function makeGradeWorkbook(cls=gradeClass){
             const book=gradebook(cls),students=buildGradeRows(book,cls),marked=students.filter(row=>row.summary.average!==null),average=marked.length?marked.reduce((sum,row)=>sum+row.summary.average,0)/marked.length:null;
             const key=$('att-date').value||dateKey(new Date());
-            return buildStyledWorkbook([{name:'Bảng điểm lớp '+cls,title:'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,subtitle:'Ngày '+key+' · TB có hệ số · Điểm 0 được tính, ô trống không tính',summary:[{label:'Tổng học sinh',value:students.length},{label:'Học sinh có điểm',value:marked.length},{label:'Điểm trung bình lớp',value:average},{label:'Điểm trung bình cao nhất',value:marked.length?Math.max(...marked.map(row=>row.summary.average)):null}],columns:[{title:'Xếp hạng',width:10},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Điểm trung bình',width:18},{title:'Số cột có điểm',width:16},...book.columns.map(column=>({title:column.title+'\n'+column.date+' · Hệ số '+column.weight,width:20}))],headerHeight:82,rows:students.map(row=>[exportCell(row.rank,21),exportCell(row.id,6),exportCell(row.name,5),exportCell(row.summary.average,exportGradeStyle(row.summary.average)),exportCell(row.summary.count,7),...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id);return exportCell(value,exportGradeStyle(value));})]),notes:[{title:'CÁCH TÍNH ĐIỂM',text:'Điểm trung bình = tổng (điểm × hệ số) / tổng hệ số của các cột đã có điểm. Ô trống không tính; điểm 0 vẫn tính. Xếp hạng dùng điểm trung bình chưa làm tròn, cùng TB cùng hạng (1, 1, 3). Các số trong file giữ nguyên độ chính xác, hiển thị 2 chữ số thập phân.'},{title:'NỘI DUNG BÁO CÁO NGÀY',text:dailyNoteText(key,cls)}]}]);
+            return buildStyledWorkbook([{name:'Bảng điểm lớp '+cls,title:'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,reportDate:key,subtitle:'',summary:[{label:'Tổng học sinh',value:students.length},{label:'Học sinh có điểm',value:marked.length},{label:'Điểm trung bình lớp',value:average},{label:'Điểm trung bình cao nhất',value:marked.length?Math.max(...marked.map(row=>row.summary.average)):null}],columns:[{title:'Xếp hạng',width:10},{title:'Mã học sinh',width:42},{title:'Họ tên học sinh',width:30},{title:'Điểm trung bình',width:18},{title:'Số cột có điểm',width:16},...book.columns.map(column=>({title:column.title+'\n'+column.date+' · Hệ số '+column.weight,width:20}))],headerHeight:82,rows:students.map(row=>[exportCell(row.rank,21),exportCell(row.id,6),exportCell(row.name,5),exportCell(row.summary.average,exportGradeStyle(row.summary.average)),exportCell(row.summary.count,7),...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id);return exportCell(value,exportGradeStyle(value));})]),notes:[{title:'NỘI DUNG BÁO CÁO NGÀY',text:dailyNoteText(key,cls)}]}]);
         }
         function exportPeriodLabel(){return dates.length?'Từ '+dateKey(dates[0])+' đến '+dateKey(dates[dates.length-1]):'Chưa có buổi học';}
         function exportAttendanceNotes(cls){return dates.map(d=>({title:'BÁO CÁO NGÀY '+dateKey(d)+' · LỚP '+cls,text:dailyNoteText(dateKey(d),cls)})).filter(note=>note.text.trim());}
@@ -3123,7 +3175,7 @@
         }
         function exportDrawTable(ctx,plan,left,top){
             let x=left;
-            plan.columns.forEach((col,index)=>{ctx.fillStyle=col.bg||'#1e293b';ctx.fillRect(x,top,col.width,plan.headHeight);ctx.fillStyle=col.fg||'#fff';ctx.font='900 '+(col.headSize||16)+'px "Nunito",sans-serif';plan.headers[index].forEach((line,i)=>ctx.fillText(line,x+12,top+25+i*22));x+=col.width;});
+            plan.columns.forEach((col,index)=>{ctx.fillStyle=col.bg||'#e0f2fe';ctx.fillRect(x,top,col.width,plan.headHeight);ctx.fillStyle=col.fg||'#164e63';ctx.font='900 '+(col.headSize||16)+'px "Nunito",sans-serif';plan.headers[index].forEach((line,i)=>ctx.fillText(line,x+12,top+25+i*22));x+=col.width;});
             let y=top+plan.headHeight;
             plan.rows.forEach((row,rowIndex)=>{let xx=left;row.cells.forEach((cell,index)=>{const width=plan.columns[index].width;ctx.fillStyle=cell.bg||(rowIndex%2?'#f8fafc':'#fff');ctx.fillRect(xx,y,width,row.height);ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(xx,y,width,row.height);ctx.fillStyle=cell.fg||'#0f172a';ctx.font=(cell.bold||700)+' '+cell.size+'px "Nunito",sans-serif';ctx.textAlign=cell.center?'center':'left';const tx=cell.center?xx+width/2:xx+12;cell.lines.forEach((line,i)=>ctx.fillText(line,tx,y+cell.size+11+i*cell.lineH));ctx.fillStyle='#64748b';ctx.font='600 13px "Nunito",sans-serif';cell.subLines.forEach((line,i)=>ctx.fillText(line,tx,y+cell.size+11+cell.lines.length*cell.lineH+i*19));ctx.textAlign='left';xx+=width;});y+=row.height;});
             return y;
@@ -3135,9 +3187,14 @@
             if(pixelWidth>EXPORT_MAX_DIMENSION||pixelHeight>EXPORT_MAX_DIMENSION||pixelWidth*pixelHeight>EXPORT_MAX_PIXELS)throw new Error('Báo cáo đầy đủ cần ảnh '+pixelWidth+' × '+pixelHeight+' px, vượt giới hạn tạo một ảnh của trình duyệt. Hãy chọn mức 2× hoặc xuất Excel để giữ toàn bộ nội dung.');
             const canvas=document.createElement('canvas');canvas.width=pixelWidth;canvas.height=pixelHeight;const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không đủ bộ nhớ tạo ảnh. Hãy xuất Excel.');ctx.scale(scale,scale);ctx.fillStyle='#edf2f7';ctx.fillRect(0,0,width,height);return {canvas,ctx,width,height};
         }
-        function exportDrawHeading(ctx,width,title,subtitle){ctx.fillStyle='#0f172a';ctx.fillRect(0,0,width,140);ctx.fillStyle='#6ee7b7';ctx.font='900 14px "Nunito",sans-serif';ctx.fillText('LỚP LÝ THẦY RẠNG',36,30);ctx.fillStyle='#fff';ctx.font='900 34px "Nunito",sans-serif';ctx.fillText(title,36,78);ctx.fillStyle='#cbd5e1';ctx.font='700 19px "Nunito",sans-serif';ctx.fillText(subtitle,36,115);}
+        function exportDrawHeading(ctx,width,title,reportDate,details=''){
+            ctx.fillStyle='#e0f2fe';ctx.fillRect(0,0,width,140);
+            ctx.fillStyle='#134e4a';ctx.font='900 48px "Nunito",sans-serif';ctx.fillText('Lớp Lý Thầy Rạng',36,60,width-72);
+            ctx.fillStyle='#0f766e';ctx.font='900 30px "Nunito",sans-serif';ctx.fillText(exportReportDateLabel(reportDate),36,104,width-72);
+            ctx.fillStyle='#475569';ctx.font='700 15px "Nunito",sans-serif';ctx.fillText([title,details].filter(Boolean).join(' · '),36,131,width-72);
+        }
         function exportDrawSummary(ctx,counts,left,top,width){const gap=10,cardW=(width-gap*4)/5;counts.forEach((count,index)=>{roundedRect(ctx,left+index*(cardW+gap),top,cardW,87,11,COLORS[index][0]);ctx.fillStyle=COLORS[index][1];ctx.font='900 15px "Nunito",sans-serif';const lines=wrapCanvasLines(ctx,LABELS[index],cardW-22);lines.forEach((line,i)=>ctx.fillText(line,left+index*(cardW+gap)+11,top+22+i*18));ctx.font='900 27px "Nunito",sans-serif';ctx.fillText(String(count),left+index*(cardW+gap)+11,top+73);});}
-        function exportDrawFooter(ctx,width,height){ctx.fillStyle='#64748b';ctx.font='700 15px "Nunito",sans-serif';ctx.fillText('Lớp Lý Thầy Rạng · Báo cáo được tạo bởi Thanh Ngà',36,height-25);ctx.textAlign='right';ctx.fillText('Một ảnh đầy đủ · '+new Date().toLocaleDateString('vi-VN'),width-36,height-25);ctx.textAlign='left';}
+        function exportDrawFooter(ctx,width,height){ctx.fillStyle='#64748b';ctx.font='700 15px "Nunito",sans-serif';ctx.fillText('Lớp Lý Thầy Rạng · Báo cáo được tạo bởi Thanh Ngà',36,height-25);ctx.textAlign='right';ctx.fillText(new Date().toLocaleDateString('vi-VN'),width-36,height-25);ctx.textAlign='left';}
         async function exportDownloadCanvas(result,filename){const blob=await new Promise((resolve,reject)=>result.canvas.toBlob(value=>value?resolve(value):reject(new Error('Không mã hóa được ảnh đầy đủ. Hãy xuất Excel.')),'image/png'));if(!downloadBlob(blob,filename))throw new Error('Không tải được ảnh PNG.');result.canvas.width=1;result.canvas.height=1;return blob;}
         function exportCheckCanvasSize(width,height,scale=3){const w=Math.ceil(width*scale),h=Math.ceil(height*scale);if(w>EXPORT_MAX_DIMENSION||h>EXPORT_MAX_DIMENSION||w*h>EXPORT_MAX_PIXELS)throw new Error('Bảng đầy đủ cần ảnh '+w+' × '+h+' px, vượt giới hạn tạo một ảnh. Hãy chọn 2× hoặc xuất Excel để giữ toàn bộ nội dung.');return {width:w,height:h};}
         function exportCanvasPreferred(width,height){try{exportCheckCanvasSize(width,height,3);return {...exportCanvas(width,height,3),exportScale:3};}catch(error){exportCheckCanvasSize(width,height,2);return {...exportCanvas(width,height,2),exportScale:2};}}
@@ -3152,20 +3209,20 @@
                 classRows.forEach(rows=>{const row=rows[index];if(!row){cells.push({text:'',bg:'#f8fafc'},{text:'',bg:'#f8fafc'});return;}cells.push({text:row.name,size:21},{text:LABELS[row.status],size:19,bg:COLORS[row.status][0],fg:COLORS[row.status][1],bold:800});});return cells;
             });
             const table=exportTablePlan(ctx,columns,paired),notesTop=346,tableTop=notesTop+noteHeight+12,height=Math.max(800,tableTop+52+table.height+84),result=exportCanvas(width,height,scale),x=result.ctx;
-            exportDrawHeading(x,width,'TỔNG QUÁT NGÀY · LỚP 11 & LỚP 12',dailyNoteDateLabel(dateKey(d))+' · Một bảng chung, đầy đủ học sinh của hai lớp');
-            classes.forEach((cls,index)=>{const left=margin+index*(half+gap),color=index?'#0f766e':'#1d4ed8';roundedRect(x,left,164,half,154,12,'#fff');roundedRect(x,left,164,half,45,10,color);x.fillStyle='#fff';x.font='900 23px "Nunito",sans-serif';x.fillText('LỚP '+cls,left+16,195);x.font='700 17px "Nunito",sans-serif';x.textAlign='right';x.fillText(classRows[index].length+' học sinh',left+half-16,194);x.textAlign='left';counts[index].forEach((count,st)=>{x.fillStyle=COLORS[st][1];x.font='800 15px "Nunito",sans-serif';x.fillText(LABELS[st]+': '+count,left+16+(st%2)*(half/2),235+Math.floor(st/2)*28);});exportDrawNotes(x,notes[index],left,notesTop,half);});
-            x.fillStyle='#475569';x.fillRect(margin,tableTop,68,52);x.fillStyle='#1d4ed8';x.fillRect(margin+68,tableTop,596,52);x.fillStyle='#0f766e';x.fillRect(margin+664,tableTop,596,52);x.fillStyle='#fff';x.font='900 23px "Nunito",sans-serif';x.textAlign='center';x.fillText('LỚP 11',margin+68+298,tableTop+35);x.fillText('LỚP 12',margin+664+298,tableTop+35);x.textAlign='left';
+            exportDrawHeading(x,width,'TỔNG QUÁT NGÀY · LỚP 11 & LỚP 12',dateKey(d));
+            classes.forEach((cls,index)=>{const left=margin+index*(half+gap),color=index?'#d1fae5':'#dbeafe';roundedRect(x,left,164,half,154,12,'#fff');roundedRect(x,left,164,half,45,10,color);x.fillStyle='#134e4a';x.font='900 23px "Nunito",sans-serif';x.fillText('LỚP '+cls,left+16,195);x.font='700 17px "Nunito",sans-serif';x.textAlign='right';x.fillText(classRows[index].length+' học sinh',left+half-16,194);x.textAlign='left';counts[index].forEach((count,st)=>{x.fillStyle=COLORS[st][1];x.font='800 15px "Nunito",sans-serif';x.fillText(LABELS[st]+': '+count,left+16+(st%2)*(half/2),235+Math.floor(st/2)*28);});exportDrawNotes(x,notes[index],left,notesTop,half);});
+            x.fillStyle='#e2e8f0';x.fillRect(margin,tableTop,68,52);x.fillStyle='#dbeafe';x.fillRect(margin+68,tableTop,596,52);x.fillStyle='#d1fae5';x.fillRect(margin+664,tableTop,596,52);x.fillStyle='#134e4a';x.font='900 23px "Nunito",sans-serif';x.textAlign='center';x.fillText('LỚP 11',margin+68+298,tableTop+35);x.fillText('LỚP 12',margin+664+298,tableTop+35);x.textAlign='left';
             exportDrawTable(x,table,margin,tableTop+52);exportDrawFooter(x,width,height);
             await exportDownloadCanvas(result,'tong-quat-ngay-'+dateKey(d)+'-hai-lop.png');return 1;
         }
         function exportAttendancePlan(cls){
-            const measure=exportMeasureContext(),students=getStudents(cls),columns=[{title:'HỌ TÊN HỌC SINH',width:300},...LABELS.map((title,st)=>({title,width:112,bg:COLORS[st][1],headSize:15})),...dates.map(d=>({title:weekday(d)+'\n'+fmt(d)+'\n'+d.getFullYear(),width:88,headSize:15}))];
+            const measure=exportMeasureContext(),students=getStudents(cls),columns=[{title:'HỌ TÊN HỌC SINH',width:300},...LABELS.map((title,st)=>({title,width:112,bg:COLORS[st][0],fg:COLORS[st][1],headSize:15})),...dates.map(d=>({title:weekday(d)+'\n'+fmt(d)+'\n'+d.getFullYear(),width:88,headSize:15}))];
             const rows=students.map((id,index)=>{const counts=[0,0,0,0,0];dates.forEach(d=>counts[statusInClass(cls,d,id)]++);return [{text:(index+1)+'. '+studentName(id),size:20},...counts.map((count,st)=>({text:count,center:true,bg:COLORS[st][0],fg:COLORS[st][1],bold:900})),...dates.map(d=>{const st=statusInClass(cls,d,id);return {text:MARKS[st],size:23,center:true,bg:COLORS[st][0],fg:COLORS[st][1],bold:900};})];});
             const table=exportTablePlan(measure,columns,rows);return {cls,students,table,width:Math.max(1160,table.width+72),height:300+table.height+70};
         }
         async function exportAttendanceAllImage(cls=currentClass,scale=3){
             await ensureReportFonts();const plan=exportAttendancePlan(cls),result=exportCanvas(plan.width,plan.height,scale),x=result.ctx;
-            exportDrawHeading(x,plan.width,'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,exportPeriodLabel()+' · '+dates.length+' buổi · '+plan.students.length+' học sinh');
+            exportDrawHeading(x,plan.width,'TỔNG QUÁT TOÀN BỘ · LỚP '+cls,$('att-date').value||dateKey(new Date()),exportPeriodLabel()+' · '+dates.length+' buổi · '+plan.students.length+' học sinh');
             exportDrawSummary(x,exportCountStatuses(cls,dates),36,164,Math.min(plan.width-72,1600));exportDrawTable(x,plan.table,36,278);exportDrawFooter(x,plan.width,plan.height);
             return exportDownloadCanvas(result,'tong-quat-toan-bo-lop-'+cls+'.png');
         }
@@ -3176,15 +3233,15 @@
             columns[1].width+=Math.max(0,1088-columns.reduce((sum,col)=>sum+col.width,0));
             const rows=students.map(row=>{const tone=gradeTone(row.summary.average);return [{text:row.rank??'—',center:true,bg:row.rank===1?'#fef3c7':'#f1f5f9',fg:'#475569',bold:900},{text:row.name},{text:gradeText(row.summary.average),center:true,bg:tone.bg,fg:tone.fg,bold:900,size:23},...book.columns.map(column=>{const value=gradeValue(book,column.id,row.id),color=gradeTone(value);return {text:gradeText(value),center:true,bg:color.bg,fg:color.fg,bold:900};})];});
             const table=exportTablePlan(measure,columns,rows),width=Math.max(1160,table.width+72),notes=exportNotesPlan(measure,[{title:'NỘI DUNG BÁO CÁO NGÀY',text:dailyNoteText(key,cls)}],width-72),notesHeight=notes.reduce((sum,note)=>sum+note.height+16,0),height=324+table.height+notesHeight+100,result=exportCanvasPreferred(width,height),x=result.ctx;
-            exportDrawHeading(x,width,'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,'Ngày '+key+' · '+students.length+' học sinh · '+book.columns.length+' cột điểm · Xếp hạng theo TB có hệ số');
+            exportDrawHeading(x,width,'BẢNG ĐIỂM HỌC SINH · LỚP '+cls,key,students.length+' học sinh · '+book.columns.length+' cột điểm');
             const marked=students.filter(row=>row.summary.average!==null),avg=marked.length?marked.reduce((sum,row)=>sum+row.summary.average,0)/marked.length:null,items=[['HỌC SINH CÓ ĐIỂM',marked.length+' / '+students.length],['ĐIỂM TB LỚP',gradeText(avg)],['TB CAO NHẤT',gradeText(marked.length?Math.max(...marked.map(row=>row.summary.average)):null)]];
             items.forEach((item,index)=>{const left=36+index*350;roundedRect(x,left,164,330,83,12,index?'#f0fdfa':'#e0e7ff');x.fillStyle='#475569';x.font='900 14px "Nunito",sans-serif';x.fillText(item[0],left+16,189);x.fillStyle='#0f172a';x.font='900 29px "Nunito",sans-serif';x.fillText(String(item[1]),left+16,229);});
-            x.fillStyle='#64748b';x.font='700 16px "Nunito",sans-serif';x.fillText('Màu điểm: dưới 5 · 5 đến dưới 7 · 7 đến dưới 8 · từ 8 trở lên.  — Chưa có điểm.',36,279);exportDrawTable(x,table,36,301);exportDrawNotes(x,notes,36,321+table.height,width-72);x.fillStyle='#475569';x.font='700 16px "Nunito",sans-serif';x.fillText('TB = Σ(điểm × hệ số) / Σ(hệ số đã có điểm) · Ô trống không tính · Điểm 0 vẫn tính · Cùng TB cùng hạng (1, 1, 3)',36,height-60);exportDrawFooter(x,width,height);await exportDownloadCanvas(result,'bang-diem-lop-'+cls+'-'+key+'.png');return {message:result.exportScale===3?'Đã xuất bảng điểm 3× siêu nét.':'Đã xuất bảng điểm 2× đầy đủ; bảng quá lớn cho mức 3×.'};
+            x.fillStyle='#64748b';x.font='700 16px "Nunito",sans-serif';x.fillText('Màu điểm: dưới 5 · 5 đến dưới 7 · 7 đến dưới 8 · từ 8 trở lên.  — Chưa có điểm.',36,279);exportDrawTable(x,table,36,301);exportDrawNotes(x,notes,36,321+table.height,width-72);exportDrawFooter(x,width,height);await exportDownloadCanvas(result,'bang-diem-lop-'+cls+'-'+key+'.png');return {message:result.exportScale===3?'Đã xuất bảng điểm 3× siêu nét.':'Đã xuất bảng điểm 2× đầy đủ; bảng quá lớn cho mức 3×.'};
         }
         async function runExport(buttonId,action){const button=$(buttonId);if(!button||button.disabled)return;const original=button.innerHTML;button.disabled=true;button.textContent='Đang tạo báo cáo…';try{const result=await action();toast(result?.message||'Đã xuất báo cáo đầy đủ.');}catch(error){toast('Chưa xuất được: '+error.message);if($('att-report-modal').classList.contains('show'))$('att-report-export-status').textContent='Chưa xuất được: '+error.message;if($('att-all-report-modal').classList.contains('show'))$('att-all-report-status').textContent='Chưa xuất được: '+error.message;}finally{button.disabled=false;button.innerHTML=original;}}
         function exportWorkbook(blob,filename){if(!downloadBlob(blob,filename))throw new Error('Không tải được Excel.');}
         function selectedAllReportClasses(){return $('att-all-report-class').value==='all'?['11','12']:[$('att-all-report-class').value];}
-        function refreshAllReportFormat(){const excel=$('att-all-report-format').value==='xlsx',both=$('att-all-report-class').value==='all';$('att-all-report-resolution-field').hidden=excel;$('att-all-report-export').textContent=excel?'Xuất Excel (.xlsx)':both?'Xuất 2 ảnh PNG':'Xuất 1 ảnh PNG';$('att-all-report-help').textContent=excel?(both?'Một tệp Excel gồm hai trang tính riêng cho lớp 11 và lớp 12.':'Một tệp Excel cho lớp đang chọn.'):(both?'Tải hai ảnh PNG riêng: một ảnh đầy đủ của lớp 11 và một ảnh đầy đủ của lớp 12.':'Tải một ảnh PNG có đầy đủ bảng điểm danh của lớp đang chọn.');}
+        function refreshAllReportFormat(){const excel=$('att-all-report-format').value==='xlsx',both=$('att-all-report-class').value==='all';$('att-all-report-resolution-field').hidden=excel;$('att-all-report-export').textContent=excel?'Xuất Excel (.xlsx)':both?'Xuất 2 ảnh PNG':'Xuất 1 ảnh PNG';}
         function closeAllReport(){$('att-all-report-modal').classList.remove('show');$('att-export-all').focus();}
         $('att-export-all').addEventListener('click',()=>{$('att-all-report-period').textContent=exportPeriodLabel()+' · '+dates.length+' buổi học';$('att-all-report-status').textContent='';refreshAllReportFormat();$('att-all-report-modal').classList.add('show');$('att-all-report-class').focus();});
         $('att-all-report-format').addEventListener('change',refreshAllReportFormat);$('att-all-report-class').addEventListener('change',refreshAllReportFormat);
@@ -3250,12 +3307,12 @@
             else $('roster-modal').querySelectorAll('select[data-roster-seat],#new-student-seat').forEach(select=>{
                 [...select.options].forEach(option=>{if(!option.value)return;const [r,c]=option.value.split('_').map(Number),names=seatMembers(store.seatMaps[$('roster-class').value][r][c]).map(studentName).join(', ');option.textContent=seatLabel(option.value)+(names?' — '+names:' — Trống');});
             });
-            $('roster-save-state').textContent='● Đã lưu trên trình duyệt';$('roster-save-state').style.color='#0f766e';return true;
+            $('roster-save-state').textContent='';$('roster-save-state').style.color='#0f766e';return true;
         }
         function renderRosterManager() {
             const cls=$('roster-class').value,query=$('roster-search').value.trim().toLocaleLowerCase('vi'),all=getStudents(cls),ids=all.filter(id=>(studentName(id)+' '+id).toLocaleLowerCase('vi').includes(query));
             const unseated=all.filter(id=>!findStudentSeat(store,cls,id)).length;
-            $('roster-summary').textContent=all.length+' học sinh · '+(all.length-unseated)+' đã xếp chỗ · '+unseated+' chưa xếp chỗ. Mở sơ đồ lớp để sắp xếp.';
+            $('roster-summary').textContent=all.length+' học sinh · '+(all.length-unseated)+' đã xếp chỗ · '+unseated+' chưa xếp chỗ.';
             $('roster-tbody').innerHTML=ids.map(id=>'<tr data-roster-id="'+escapeAttr(id)+'"><td><input type="text" maxlength="100" value="'+escapeAttr(studentName(id))+'" data-roster-name="'+escapeAttr(id)+'" aria-label="Tên học sinh '+escapeAttr(id)+'"><small>'+escapeHtml(id)+'</small></td><td><button type="button" class="att-btn danger" data-roster-remove="'+escapeAttr(id)+'" aria-label="Xóa '+escapeAttr(studentName(id))+' khỏi danh sách">Xóa</button></td></tr>').join('')||'<tr><td colspan="2" style="padding:24px;color:#64748b">Không có học sinh phù hợp.</td></tr>';
             updateNewStudentSeats();
         }
@@ -3303,7 +3360,7 @@
         function gridSeatEditorCell(key,colStart,rowStart) {
             const state=globalState[key], id=state.studentId||'', position=gridSeatPosition(key), selected=!!id&&id===seatEditStudentId;
             const instruction=selected?'Đang chọn':seatEditStudentId?(id?'Chạm để đổi chỗ':'Chạm để chuyển vào đây'):(id?'Chạm để chọn':'Chỗ trống');
-            return '<button type="button" class="student-cell seat-edit-cell'+(!id?' seat-edit-empty':'')+(selected?' seat-edit-selected':'')+'" data-key="'+key+'" data-seat-position="'+position+'" data-seat-student="'+escapeAttr(id)+'" style="'+(colStart?'grid-column:'+colStart+';grid-row:'+rowStart+';':'')+'" aria-pressed="'+selected+'" aria-label="'+escapeAttr(seatLabel(position)+' · '+(state.name||'Chỗ trống')+' · '+instruction)+'"><span class="seat-position-label">'+seatLabel(position)+'</span><strong>'+escapeHtml(state.name||'+ Chỗ trống')+'</strong>'+(id?'<small>'+escapeHtml(id)+'</small>':'')+'<span class="seat-edit-instruction">'+instruction+'</span></button>';
+            return '<button type="button" class="student-cell seat-edit-cell'+(!id?' seat-edit-empty':'')+(selected?' seat-edit-selected':'')+'" data-key="'+key+'" data-seat-position="'+position+'" data-seat-student="'+escapeAttr(id)+'" style="'+(colStart?'grid-column:'+colStart+';grid-row:'+rowStart+';':'')+'" aria-pressed="'+selected+'" aria-label="'+escapeAttr(seatLabel(position)+' · '+(state.name||'Chỗ trống')+' · '+instruction)+'"><span class="seat-position-label">'+seatLabel(position)+'</span><strong>'+escapeHtml(state.name||'+ Chỗ trống')+'</strong>'+(id?'<small>'+escapeHtml(id)+'</small>':'')+'</button>';
         }
         function updateGridSeatEditorUI() {
             if(seatEditStudentId&&(!store.students[seatEditStudentId]?.active||store.students[seatEditStudentId]?.cls!==currentClass))seatEditStudentId='';
@@ -3315,7 +3372,7 @@
             $('grid-seat-editor-controls').hidden=!isSeatEditMode;
             const position=seatEditStudentId?findStudentSeat(store,currentClass,seatEditStudentId):'';
             $('grid-seat-share').disabled=!seatEditStudentId;$('grid-seat-share').setAttribute('aria-pressed',String(seatShareMode));
-            $('grid-seat-editor-status').textContent=seatEditStudentId?'Đang chọn '+studentName(seatEditStudentId)+'. '+(seatShareMode?'Chạm bàn muốn ngồi ghép, tối đa 3 bạn một bàn.':'Chạm ghế trống để chuyển, hoặc chạm một bạn để đổi chỗ.'):'Chọn học sinh rồi chọn chỗ mới. Bật Ngồi ghép khi cần ngồi chung bàn (tối đa 3 bạn).';
+            $('grid-seat-editor-status').textContent=seatEditStudentId?'Đang chọn '+studentName(seatEditStudentId)+(seatShareMode?' · Ngồi ghép':''):'Xếp chỗ ngồi';
             $('grid-seat-clear-selection').disabled=!seatEditStudentId;
             $('grid-seat-unseat').disabled=!position;
             $('grid-seat-undo').disabled=!undoStack.length||isSpinning;
